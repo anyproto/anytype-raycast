@@ -1,13 +1,13 @@
 import { List, Toast, showToast } from "@raycast/api";
 import { useState } from "react";
+import { useMembers } from "../hooks/useMembers";
 import * as A from "../hooks/api";
 import ChatListItem from "./ChatListItem";
 
 export default function ChatList({ spaceId }: { spaceId: string }) {
   const { isLoading: isLoadingMessages, data: { chatId, messages } = {} } =
     A.useGetChatMessages(spaceId);
-  const { isLoading: isLoadingMembers, data: members } =
-    A.useGetSpaceMembers(spaceId);
+  const { members, isLoadingMembers } = useMembers(spaceId);
   const [messageText, setMessageText] = useState("");
 
   const today = new Date();

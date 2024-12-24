@@ -16,7 +16,7 @@ export async function transformSpace(spaces: S.Space[]): Promise<S.Space[]> {
   );
 }
 
-export async function transformSpaceMembers(
+export async function transformMembers(
   members: S.Member[],
 ): Promise<S.Member[]> {
   return Promise.all(

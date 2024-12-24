@@ -2,11 +2,15 @@ import { List, Image } from "@raycast/api";
 import { useState } from "react";
 import ObjectSpaceListItem from "./components/ObjectSpaceListItem";
 import { useSpaces } from "./hooks/useSpaces";
+import { useMembers } from "./hooks/useMembers";
 import { pluralize } from "./utils/helpers";
 
-export default function Command() {
+export default function BrowseSpaces() {
   const { spaces, isLoadingSpaces } = useSpaces();
   const [searchText, setSearchText] = useState("");
+
+  const membersData = spaces?.map((space) => useMembers(space.id));
+  const isLoadingMembers = membersData?.some((data) => data.isLoadingMembers);
 
   const filteredSpaces = spaces?.filter((space) =>
     space.name.toLowerCase().includes(searchText.toLowerCase()),
@@ -14,7 +18,7 @@ export default function Command() {
 
   return (
     <List
-      isLoading={isLoadingSpaces}
+      isLoading={isLoadingSpaces || isLoadingMembers}
       searchBarPlaceholder="Search spaces..."
       onSearchTextChange={setSearchText}
     >
@@ -24,16 +28,20 @@ export default function Command() {
           withNumber: true,
         })}
       >
-        {filteredSpaces?.map((space) => (
-          <ObjectSpaceListItem
-            space={space}
-            key={space.id}
-            icon={{
-              source: space.icon,
-              mask: Image.Mask.RoundedRectangle,
-            }}
-          />
-        ))}
+        {filteredSpaces?.map((space, index) => {
+          const { members } = membersData?.[index] || {};
+          return (
+            <ObjectSpaceListItem
+              space={space}
+              key={space.id}
+              icon={{
+                source: space.icon,
+                mask: Image.Mask.RoundedRectangle,
+              }}
+              members={members}
+            />
+          );
+        })}
       </List.Section>
     </List>
   );

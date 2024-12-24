@@ -41,9 +41,7 @@ export function useGetObjects(searchText: string, type: string) {
 
 /********************************
  * Spaces
- * GET /spaces
  * POST /spaces
- * GET /spaces/:spaceId/members
  ********************************/
 
 export async function createSpace(objectData: { name: string }): Promise<void> {
@@ -60,24 +58,6 @@ export async function createSpace(objectData: { name: string }): Promise<void> {
       `Failed to create space: [${response.status}] ${response.statusText}`,
     );
   }
-}
-
-export function useGetSpaceMembers(spaceId: string) {
-  return useCachedPromise(
-    async ({ signal }) => {
-      const response = await fetch(`${C.API_URL}/spaces/${spaceId}/members`, {
-        signal,
-      });
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch space members: [${response.status}] ${response.statusText}`,
-        );
-      }
-      const data = (await response.json()) as { members: S.Member[] };
-      return data.members ? H.transformSpaceMembers(data.members) : [];
-    },
-    [spaceId],
-  ) as UseCachedPromiseReturnType<S.Member[], undefined>;
 }
 
 /********************************

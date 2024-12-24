@@ -2,6 +2,7 @@ import { Icon, List, Image } from "@raycast/api";
 import { useState } from "react";
 import { format } from "date-fns";
 import ObjectListItem from "./ObjectListItem";
+import { useMembers } from "../hooks/useMembers";
 import * as A from "../hooks/api";
 import * as C from "../utils/constants";
 
@@ -14,12 +15,11 @@ export default function ObjectList({ spaceId }: { spaceId: string }) {
     A.useGetObjectsForSpace(spaceId);
   const { data: objectTypes, isLoading: loadingObjectTypes } =
     A.useGetObjectTypes(spaceId);
-  const { data: members, isLoading: loadingMembers } =
-    A.useGetSpaceMembers(spaceId);
+  const { members, isLoadingMembers } = useMembers(spaceId);
 
   return (
     <List
-      isLoading={loadingMembers || loadingObjects || loadingObjectTypes}
+      isLoading={isLoadingMembers || loadingObjects || loadingObjectTypes}
       searchBarPlaceholder={`Search ${currentView}...`}
       searchBarAccessory={
         <List.Dropdown

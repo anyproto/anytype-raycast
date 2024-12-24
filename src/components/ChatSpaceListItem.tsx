@@ -1,28 +1,20 @@
 import { Action, ActionPanel, List, Image } from "@raycast/api";
-import { useState, useEffect } from "react";
 import ChatList from "./ChatList";
-import * as A from "../hooks/api";
-import * as S from "../utils/schemas";
+import { Member, Space } from "../utils/schemas";
 import * as C from "../utils/constants";
 
 type ChatSpaceListItemProps = {
-  space: S.Space;
+  space: Space;
   icon: Image;
+  members: Member[] | undefined;
 };
 
 export default function ChatSpaceListItem({
   space,
   icon,
+  members,
 }: ChatSpaceListItemProps) {
-  const { data: members } = A.useGetSpaceMembers(space.id);
-  const [amountOfMembers, setAmountOfMembers] = useState<number>(1);
-
-  useEffect(() => {
-    if (members) {
-      setAmountOfMembers(members.length);
-    }
-  }, [members]);
-
+  const memberCount = members?.length || 0;
   return (
     <List.Item
       key={space.id}
@@ -30,8 +22,8 @@ export default function ChatSpaceListItem({
       accessories={[
         {
           icon: C.SPACE_MEMBER_ICON,
-          text: amountOfMembers.toString(),
-          tooltip: "Members: " + amountOfMembers,
+          text: memberCount.toString(),
+          tooltip: `Members: ${memberCount}`,
         },
       ]}
       icon={icon}
