@@ -11,22 +11,23 @@ import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { pluralize } from "./utils/helpers";
 import { useSpaces } from "./hooks/useSpaces";
-import * as A from "./hooks/api";
+import { useObjects } from "./hooks/useObjects";
 import * as S from "./utils/schemas";
 import * as C from "./utils/constants";
 
 export default function Search() {
   const [searchText, setSearchText] = useState("");
+  // TODO: implement object type filtering
+  const [objectType] = useState("");
   const [items, setItems] = useState<S.SpaceObject[]>([]);
   const [filteredItems, setFilteredItems] = useState<S.SpaceObject[]>([]);
   const [spaceIcons, setSpaceIcons] = useState<{ [key: string]: string }>({});
   const [filterType, setFilterType] = useState("all");
 
-  const {
-    data: objects,
-    isLoading: objectsLoading,
-    error: objectsError,
-  } = A.useGetObjects(searchText, "");
+  const { objects, objectsError, isLoadingObjects } = useObjects(
+    searchText,
+    objectType,
+  );
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
 
   useEffect(() => {
@@ -111,7 +112,7 @@ export default function Search() {
 
   return (
     <List
-      isLoading={isLoadingSpaces || objectsLoading}
+      isLoading={isLoadingSpaces || isLoadingObjects}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder="Search objects across all spaces …"
       searchBarAccessory={

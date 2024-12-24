@@ -6,40 +6,6 @@ import * as S from "../utils/schemas";
 import * as H from "../utils/helpers";
 
 /********************************
- * Search
- * GET /objects
- ********************************/
-
-export function useGetObjects(searchText: string, type: string) {
-  return useCachedPromise(
-    async ({ signal }) => {
-      const queryParams = [];
-      if (searchText) {
-        queryParams.push(`search=${encodeURIComponent(searchText)}`);
-      }
-      if (type) {
-        queryParams.push(`type=${encodeURIComponent(type)}`);
-      }
-      const queryString =
-        queryParams.length > 0 ? `?${queryParams.join("&")}` : "";
-      const response = await fetch(`${C.API_URL}/objects${queryString}`, {
-        signal,
-      });
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch objects: [${response.status}] ${response.statusText}`,
-        );
-      }
-      const data = (await response.json()) as { objects: S.SpaceObject[] };
-      return data.objects ? H.transformObjects(data.objects) : [];
-    },
-    [searchText],
-    // TODO figure out cachedPromise with type as second dependency
-    // [searchText, type],
-  ) as UseCachedPromiseReturnType<S.SpaceObject[], undefined>;
-}
-
-/********************************
  * Spaces
  * POST /spaces
  ********************************/
