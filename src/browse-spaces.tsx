@@ -1,11 +1,11 @@
 import { List, Image } from "@raycast/api";
 import { useState } from "react";
-import * as A from "./hooks/api";
 import ObjectSpaceListItem from "./components/ObjectSpaceListItem";
+import { useSpaces } from "./hooks/useSpaces";
 import { pluralize } from "./utils/helpers";
 
 export default function Command() {
-  const { isLoading: isLoadingSpaces, data: spaces } = A.useGetSpaces();
+  const { spaces, isLoadingSpaces } = useSpaces();
   const [searchText, setSearchText] = useState("");
 
   const filteredSpaces = spaces?.filter((space) =>

@@ -1,3 +1,15 @@
+export interface Pagination {
+  total: number;
+  offset: number;
+  limit: number;
+  has_next: boolean;
+}
+
+export interface SpaceResponse {
+  spaces: Space[];
+  pagination: Pagination;
+}
+
 export interface Space {
   type: string;
   id: string;
@@ -14,10 +26,15 @@ export interface Space {
   tech_space_id: string;
   timezone: string;
   network_id: string;
-  members: SpaceMember[];
+  members: Member[];
 }
 
-export interface SpaceMember {
+export interface MemberResponse {
+  members: Member[];
+  pagination: Pagination;
+}
+
+export interface Member {
   type: string;
   id: string;
   name: string;
@@ -25,6 +42,11 @@ export interface SpaceMember {
   identity: string;
   global_name: string;
   role: string;
+}
+
+export interface ObjectResponse {
+  objects: SpaceObject[];
+  pagination: Pagination;
 }
 
 export interface SpaceObject {

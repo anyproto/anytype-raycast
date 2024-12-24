@@ -10,6 +10,7 @@ import {
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { pluralize } from "./utils/helpers";
+import { useSpaces } from "./hooks/useSpaces";
 import * as A from "./hooks/api";
 import * as S from "./utils/schemas";
 import * as C from "./utils/constants";
@@ -26,11 +27,7 @@ export default function Search() {
     isLoading: objectsLoading,
     error: objectsError,
   } = A.useGetObjects(searchText, "");
-  const {
-    data: spaces,
-    isLoading: spacesLoading,
-    error: spacesError,
-  } = A.useGetSpaces();
+  const { spaces, spacesError, isLoadingSpaces } = useSpaces();
 
   useEffect(() => {
     if (spaces) {
@@ -114,7 +111,7 @@ export default function Search() {
 
   return (
     <List
-      isLoading={objectsLoading || spacesLoading}
+      isLoading={isLoadingSpaces || objectsLoading}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder="Search objects across all spaces …"
       searchBarAccessory={

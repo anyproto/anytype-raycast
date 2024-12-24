@@ -3,7 +3,7 @@ import * as S from "../utils/schemas";
 
 export default function ChatListItemDetail(
   message: S.ChatMessage,
-  members: S.SpaceMember[] | undefined,
+  members: S.Member[] | undefined,
 ) {
   function getMarkdownForMessage(message: S.ChatMessage) {
     const creatorName =

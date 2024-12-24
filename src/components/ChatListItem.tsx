@@ -16,7 +16,7 @@ type ChatListItemProps = {
   spaceId: string;
   chatId: string;
   message: S.ChatMessage;
-  members: S.SpaceMember[] | undefined;
+  members: S.Member[] | undefined;
   messageText: string;
   handleCreateMessage: (spaceId: string, messageText: string) => void;
 };
@@ -31,13 +31,13 @@ export default function ChatListItem({
 }: ChatListItemProps) {
   const reactions = Object.keys(message.reactions?.reactions || {}).join(" ");
   const [identityToMember, setIdentityToMember] = useState<
-    Record<string, S.SpaceMember>
+    Record<string, S.Member>
   >({});
 
   useEffect(() => {
     if (Array.isArray(members)) {
       const memberMap = members.reduce(
-        (acc: Record<string, S.SpaceMember>, member: S.SpaceMember) => {
+        (acc: Record<string, S.Member>, member: S.Member) => {
           acc[member.identity] = member;
           return acc;
         },

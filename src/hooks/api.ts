@@ -46,19 +46,6 @@ export function useGetObjects(searchText: string, type: string) {
  * GET /spaces/:spaceId/members
  ********************************/
 
-export function useGetSpaces() {
-  return useCachedPromise(async () => {
-    const response = await fetch(`${C.API_URL}/spaces`);
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch spaces: [${response.status}] ${response.statusText}`,
-      );
-    }
-    const data = (await response.json()) as { spaces: S.Space[] };
-    return data.spaces ? H.transformSpace(data.spaces) : [];
-  }, []) as UseCachedPromiseReturnType<S.Space[], undefined>;
-}
-
 export async function createSpace(objectData: { name: string }): Promise<void> {
   const response = await fetch(`${C.API_URL}/spaces`, {
     method: "POST",
@@ -86,11 +73,11 @@ export function useGetSpaceMembers(spaceId: string) {
           `Failed to fetch space members: [${response.status}] ${response.statusText}`,
         );
       }
-      const data = (await response.json()) as { members: S.SpaceMember[] };
+      const data = (await response.json()) as { members: S.Member[] };
       return data.members ? H.transformSpaceMembers(data.members) : [];
     },
     [spaceId],
-  ) as UseCachedPromiseReturnType<S.SpaceMember[], undefined>;
+  ) as UseCachedPromiseReturnType<S.Member[], undefined>;
 }
 
 /********************************

@@ -17,8 +17,8 @@ export async function transformSpace(spaces: S.Space[]): Promise<S.Space[]> {
 }
 
 export async function transformSpaceMembers(
-  members: S.SpaceMember[],
-): Promise<S.SpaceMember[]> {
+  members: S.Member[],
+): Promise<S.Member[]> {
   return Promise.all(
     members.map(async (member) => {
       const icon =
