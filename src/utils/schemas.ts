@@ -133,35 +133,3 @@ export interface Template {
   name: string;
   icon: string;
 }
-
-export interface ChatMessage {
-  type: string;
-  id: string;
-  order_id: string;
-  creator: string;
-  created_at: number;
-  modified_at: number;
-  reply_to_message_id: string;
-  message: MessageContent;
-  attachments: Attachment[];
-  reactions: Reactions;
-}
-
-export interface MessageContent {
-  text: string;
-  style: string;
-  marks: string[];
-}
-
-export interface Attachment {
-  target: string;
-  type: string;
-}
-
-export interface Reactions {
-  reactions: { [emoji: string]: IdentityList };
-}
-
-export interface IdentityList {
-  ids: string[];
-}

@@ -27,13 +27,6 @@
       "mode": "view"
     },
     {
-      "name": "chat",
-      "title": "Chat",
-      "subtitle": "Anytype",
-      "description": "Chat and collaborate within your Anytype spaces.",
-      "mode": "view"
-    },
-    {
       "name": "create-object",
       "title": "Create Object",
       "subtitle": "Anytype",
