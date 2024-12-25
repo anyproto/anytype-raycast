@@ -66,7 +66,7 @@ export async function getIconForObject(
 ): Promise<{ source: string } | Icon> {
   if (object.icon) {
     if (object.icon.startsWith("http://127.0.0.1")) {
-      const fetchedIcon = await fetchAndTransformIcon(object.icon);
+      const fetchedIcon = await fetchWithTimeout(object.icon, 500);
       if (fetchedIcon) {
         return { source: fetchedIcon };
       }
@@ -86,6 +86,27 @@ export async function getIconForObject(
     default:
       return C.SPACE_OBJECT_ICON;
   }
+}
+
+// timeout in milliseconds
+async function fetchWithTimeout(
+  url: string,
+  timeout: number,
+): Promise<string | undefined> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(id);
+    if (response.ok) {
+      const iconData = await response.arrayBuffer();
+      return `data:image/png;base64,${Buffer.from(iconData).toString("base64")}`;
+    }
+  } catch (error) {
+    console.error("Failed to fetch and transform icon with timeout:", error);
+  }
+  return undefined;
 }
 
 export async function transformObjects(
