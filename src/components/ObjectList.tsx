@@ -3,6 +3,7 @@ import { useState } from "react";
 import { format } from "date-fns";
 import ObjectListItem from "./ObjectListItem";
 import { useMembers } from "../hooks/useMembers";
+import { useObjectsForSpace } from "../hooks/useObjectsForSpace";
 import * as A from "../hooks/api";
 import * as C from "../utils/constants";
 
@@ -11,15 +12,14 @@ export default function ObjectList({ spaceId }: { spaceId: string }) {
     "objects" | "types" | "members"
   >("objects");
 
-  const { data: objects, isLoading: loadingObjects } =
-    A.useGetObjectsForSpace(spaceId);
+  const { objects, isLoadingObjects } = useObjectsForSpace(spaceId);
   const { data: objectTypes, isLoading: loadingObjectTypes } =
     A.useGetObjectTypes(spaceId);
   const { members, isLoadingMembers } = useMembers(spaceId);
 
   return (
     <List
-      isLoading={isLoadingMembers || loadingObjects || loadingObjectTypes}
+      isLoading={isLoadingMembers || isLoadingObjects || loadingObjectTypes}
       searchBarPlaceholder={`Search ${currentView}...`}
       searchBarAccessory={
         <List.Dropdown

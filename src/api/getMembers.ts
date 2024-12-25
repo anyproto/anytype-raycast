@@ -14,8 +14,8 @@ export async function getMembers(spaceId: string): Promise<{
       `Failed to fetch members for space ${spaceId}: [${response.status}] ${response.statusText}`,
     );
   }
-  const data = (await response.json()) as MemberResponse;
 
+  const data = (await response.json()) as MemberResponse;
   const members = data.members ? await transformMembers(data.members) : [];
   const pagination = data.pagination;
 

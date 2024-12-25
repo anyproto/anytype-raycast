@@ -18,12 +18,14 @@ export async function getObjects(
     queryParams.push(`type=${encodeURIComponent(type)}`);
   }
   const queryString = queryParams.length > 0 ? `?${queryParams.join("&")}` : "";
+
   const response = await fetch(`${API_URL}/objects${queryString}`);
   if (!response.ok) {
     throw new Error(
       `Failed to fetch objects: [${response.status}] ${response.statusText}`,
     );
   }
+
   const data = (await response.json()) as ObjectResponse;
   const objects = data.objects ? await transformObjects(data.objects) : [];
   const pagination = data.pagination;

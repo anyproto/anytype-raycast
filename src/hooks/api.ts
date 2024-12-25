@@ -28,27 +28,8 @@ export async function createSpace(objectData: { name: string }): Promise<void> {
 
 /********************************
  * SpaceObjects
- * GET /spaces/:spaceId/objects
  * POST /spaces/:spaceId/objects
  ********************************/
-
-export function useGetObjectsForSpace(spaceId: string) {
-  return useCachedPromise(
-    async ({ signal }) => {
-      const response = await fetch(`${C.API_URL}/spaces/${spaceId}/objects`, {
-        signal,
-      });
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch objects for space ${spaceId}: [${response.status}] ${response.statusText}`,
-        );
-      }
-      const data = (await response.json()) as { objects: S.SpaceObject[] };
-      return data.objects ? H.transformObjects(data.objects) : [];
-    },
-    [spaceId],
-  ) as UseCachedPromiseReturnType<S.SpaceObject[], undefined>;
-}
 
 export async function createObject(
   spaceId: string,

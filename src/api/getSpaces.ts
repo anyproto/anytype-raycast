@@ -14,8 +14,8 @@ export async function getSpaces(): Promise<{
       `Failed to fetch spaces: [${response.status}] ${response.statusText}`,
     );
   }
-  const data = (await response.json()) as SpaceResponse;
 
+  const data = (await response.json()) as SpaceResponse;
   const spaces = data.spaces ? await transformSpace(data.spaces) : [];
   const pagination = data.pagination;
 
