@@ -10,12 +10,12 @@ import {
 } from "@raycast/api";
 import { useState } from "react";
 import { useForm, FormValidation } from "@raycast/utils";
-import * as A from "../hooks/api";
-import * as S from "../utils/schemas";
+import { createObject } from "../api/createObject";
+import { Space, Type } from "../utils/schemas";
 
 type CreateObjectFormProps = {
-  spaces: S.Space[];
-  objectTypes: S.Type[];
+  spaces: Space[];
+  objectTypes: Type[];
   selectedSpace: string;
   setSelectedSpace: (spaceId: string) => void;
   isLoading: boolean;
@@ -45,7 +45,7 @@ export default function CreateObjectForm({
           title: "Creating object...",
         });
         // TODO use template_id
-        await A.createObject(selectedSpace, {
+        await createObject(selectedSpace, {
           icon: values.icon,
           name: values.name,
           template_id: "",

@@ -5,7 +5,11 @@ import ObjectListItem from "./ObjectListItem";
 import { useMembers } from "../hooks/useMembers";
 import { useObjectsForSpace } from "../hooks/useObjectsForSpace";
 import { useTypes } from "../hooks/useTypes";
-import * as C from "../utils/constants";
+import {
+  TYPE_ICON,
+  SPACE_OBJECT_ICON,
+  SPACE_MEMBER_ICON,
+} from "../utils/constants";
 
 export default function ObjectList({ spaceId }: { spaceId: string }) {
   const [currentView, setCurrentView] = useState<
@@ -31,13 +35,13 @@ export default function ObjectList({ spaceId }: { spaceId: string }) {
           <List.Dropdown.Item
             title="Objects"
             value="objects"
-            icon={C.SPACE_OBJECT_ICON}
+            icon={SPACE_OBJECT_ICON}
           />
-          <List.Dropdown.Item title="Types" value="types" icon={C.TYPE_ICON} />
+          <List.Dropdown.Item title="Types" value="types" icon={TYPE_ICON} />
           <List.Dropdown.Item
             title="Members"
             value="members"
-            icon={C.SPACE_MEMBER_ICON}
+            icon={SPACE_MEMBER_ICON}
           />
         </List.Dropdown>
       }

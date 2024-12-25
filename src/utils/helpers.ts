@@ -1,12 +1,19 @@
 import { Icon } from "@raycast/api";
 import fetch from "node-fetch";
-import * as S from "./schemas";
-import * as C from "./constants";
+import {
+  SPACE_ICON,
+  SPACE_MEMBER_ICON,
+  SPACE_OBJECT_ICON,
+  TYPE_ICON,
+  LIST_ICON,
+  BOOKMARK_ICON,
+} from "./constants";
+import { Space, SpaceObject, Member, Type } from "./schemas";
 
-export async function transformSpace(spaces: S.Space[]): Promise<S.Space[]> {
+export async function transformSpace(spaces: Space[]): Promise<Space[]> {
   return Promise.all(
     spaces.map(async (space) => {
-      const icon = (await fetchAndTransformIcon(space.icon)) || C.SPACE_ICON;
+      const icon = (await fetchAndTransformIcon(space.icon)) || SPACE_ICON;
       return {
         ...space,
         name: space.name || "Untitled",
@@ -16,13 +23,11 @@ export async function transformSpace(spaces: S.Space[]): Promise<S.Space[]> {
   );
 }
 
-export async function transformMembers(
-  members: S.Member[],
-): Promise<S.Member[]> {
+export async function transformMembers(members: Member[]): Promise<Member[]> {
   return Promise.all(
     members.map(async (member) => {
       const icon =
-        (await fetchAndTransformIcon(member.icon)) || C.SPACE_MEMBER_ICON;
+        (await fetchAndTransformIcon(member.icon)) || SPACE_MEMBER_ICON;
       return {
         ...member,
         icon: icon,
@@ -31,12 +36,12 @@ export async function transformMembers(
   );
 }
 
-export async function transformTypes(types: S.Type[]): Promise<S.Type[]> {
+export async function transformTypes(types: Type[]): Promise<Type[]> {
   return Promise.all(
     types.map(async (objectType) => {
       return {
         ...objectType,
-        icon: objectType.icon || C.TYPE_ICON,
+        icon: objectType.icon || TYPE_ICON,
       };
     }),
   );
@@ -60,7 +65,7 @@ async function fetchAndTransformIcon(
 }
 
 export async function getIconForObject(
-  object: S.SpaceObject,
+  object: SpaceObject,
 ): Promise<{ source: string } | Icon> {
   if (object.icon) {
     if (object.icon.startsWith("http://127.0.0.1")) {
@@ -76,13 +81,13 @@ export async function getIconForObject(
   switch (object.type) {
     case "set":
     case "collection":
-      return C.LIST_ICON;
+      return LIST_ICON;
     case "participant":
-      return C.SPACE_MEMBER_ICON;
+      return SPACE_MEMBER_ICON;
     case "bookmark":
-      return C.BOOKMARK_ICON;
+      return BOOKMARK_ICON;
     default:
-      return C.SPACE_OBJECT_ICON;
+      return SPACE_OBJECT_ICON;
   }
 }
 
@@ -108,8 +113,8 @@ async function fetchWithTimeout(
 }
 
 export async function transformObjects(
-  objects: S.SpaceObject[],
-): Promise<S.SpaceObject[]> {
+  objects: SpaceObject[],
+): Promise<SpaceObject[]> {
   return Promise.all(
     objects.map(async (object) => {
       const lastModified = object.details?.find(

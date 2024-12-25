@@ -7,7 +7,7 @@ import {
   popToRoot,
 } from "@raycast/api";
 import { useState } from "react";
-import * as A from "./hooks/api";
+import { createSpace } from "./api/createSpace";
 
 export default function CreateSpace() {
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ export default function CreateSpace() {
   async function handleSubmit() {
     setLoading(true);
     try {
-      await A.createSpace({ name: spaceName });
+      await createSpace({ name: spaceName });
       await showToast(Toast.Style.Success, "Space created successfully");
     } catch (error) {
       console.error("Error creating space:", error);

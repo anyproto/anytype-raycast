@@ -12,15 +12,22 @@ import { format } from "date-fns";
 import { pluralize } from "./utils/helpers";
 import { useSpaces } from "./hooks/useSpaces";
 import { useObjects } from "./hooks/useObjects";
-import * as S from "./utils/schemas";
-import * as C from "./utils/constants";
+import { SpaceObject } from "./utils/schemas";
+import {
+  SEARCH_ICON,
+  SPACE_OBJECT_ICON,
+  LIST_ICON,
+  BOOKMARK_ICON,
+  SPACE_MEMBER_ICON,
+  OTHERS_ICON,
+} from "./utils/constants";
 
 export default function Search() {
   const [searchText, setSearchText] = useState("");
   // TODO: implement object type filtering
   const [objectType] = useState("");
-  const [items, setItems] = useState<S.SpaceObject[]>([]);
-  const [filteredItems, setFilteredItems] = useState<S.SpaceObject[]>([]);
+  const [items, setItems] = useState<SpaceObject[]>([]);
+  const [filteredItems, setFilteredItems] = useState<SpaceObject[]>([]);
   const [spaceIcons, setSpaceIcons] = useState<{ [key: string]: string }>({});
   const [filterType, setFilterType] = useState("all");
 
@@ -121,32 +128,28 @@ export default function Search() {
           storeValue={true}
           onChange={(newValue) => setFilterType(newValue)}
         >
-          <List.Dropdown.Item title="All" value="all" icon={C.SEARCH_ICON} />
+          <List.Dropdown.Item title="All" value="all" icon={SEARCH_ICON} />
           <List.Dropdown.Section title="Kinds">
             <List.Dropdown.Item
               title="Pages"
               value="pages"
-              icon={C.SPACE_OBJECT_ICON}
+              icon={SPACE_OBJECT_ICON}
             />
-            <List.Dropdown.Item
-              title="Lists"
-              value="lists"
-              icon={C.LIST_ICON}
-            />
+            <List.Dropdown.Item title="Lists" value="lists" icon={LIST_ICON} />
             <List.Dropdown.Item
               title="Bookmarks"
               value="bookmarks"
-              icon={C.BOOKMARK_ICON}
+              icon={BOOKMARK_ICON}
             />
             <List.Dropdown.Item
               title="Members"
               value="members"
-              icon={C.SPACE_MEMBER_ICON}
+              icon={SPACE_MEMBER_ICON}
             />
             <List.Dropdown.Item
               title="Other"
               value="other"
-              icon={C.OTHERS_ICON}
+              icon={OTHERS_ICON}
             />
           </List.Dropdown.Section>
           <List.Dropdown.Section title="Spaces">
