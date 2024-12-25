@@ -109,7 +109,12 @@ export interface Detail {
   };
 }
 
-export interface ObjectType {
+export interface TypesResponse {
+  objectTypes: Type[];
+  pagination: Pagination;
+}
+
+export interface Type {
   type: string;
   id: string;
   unique_key: string;
@@ -117,7 +122,12 @@ export interface ObjectType {
   icon: string;
 }
 
-export interface ObjectTemplate {
+export interface TemplatesResponse {
+  templates: Template[];
+  pagination: Pagination;
+}
+
+export interface Template {
   type: string;
   id: string;
   name: string;

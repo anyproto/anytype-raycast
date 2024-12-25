@@ -3,7 +3,6 @@ import { useCachedPromise } from "@raycast/utils";
 import { UseCachedPromiseReturnType } from "@raycast/utils/dist/types";
 import * as C from "../utils/constants";
 import * as S from "../utils/schemas";
-import * as H from "../utils/helpers";
 
 /********************************
  * Spaces
@@ -53,52 +52,6 @@ export async function createObject(
       `Failed to create object in space ${spaceId}: [${response.status}] ${response.statusText}`,
     );
   }
-}
-
-/********************************
- * Types and Templates
- * GET /spaces/:spaceId/objectTypes
- * GET /spaces/:spaceId/objectTypes/:typeId/templates
- ********************************/
-
-export function useGetObjectTypes(spaceId: string) {
-  return useCachedPromise(
-    async ({ signal }) => {
-      const response = await fetch(
-        `${C.API_URL}/spaces/${spaceId}/objectTypes?limit=100&offset=0`,
-        { signal },
-      );
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch object types for space ${spaceId}: [${response.status}] ${response.statusText}`,
-        );
-      }
-      const data = (await response.json()) as { objectTypes: S.ObjectType[] };
-      return data.objectTypes ? H.transformObjectTypes(data.objectTypes) : [];
-    },
-    [spaceId],
-  ) as UseCachedPromiseReturnType<S.ObjectType[], undefined>;
-}
-
-export function useGetTemplates(spaceId: string, typeId: string) {
-  return useCachedPromise(
-    async ({ signal }) => {
-      const response = await fetch(
-        `${C.API_URL}/spaces/${spaceId}/objectTypes/${typeId}/templates`,
-        { signal },
-      );
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch templates for type ${typeId} in space ${spaceId}: [${response.status}] ${response.statusText}`,
-        );
-      }
-      const data = (await response.json()) as { templates: S.ObjectTemplate[] };
-      return data.templates ? data.templates : [];
-    },
-    [spaceId],
-    // TODO figure out cachedPromise with typeId as second dependency
-    // [spaceId, typeId],
-  ) as UseCachedPromiseReturnType<S.ObjectTemplate[], undefined>;
 }
 
 /********************************

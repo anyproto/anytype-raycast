@@ -15,7 +15,7 @@ import * as S from "../utils/schemas";
 
 type CreateObjectFormProps = {
   spaces: S.Space[];
-  objectTypes: S.ObjectType[];
+  objectTypes: S.Type[];
   selectedSpace: string;
   setSelectedSpace: (spaceId: string) => void;
   isLoading: boolean;

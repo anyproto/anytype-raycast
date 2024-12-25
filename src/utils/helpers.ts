@@ -31,14 +31,12 @@ export async function transformMembers(
   );
 }
 
-export async function transformObjectTypes(
-  types: S.ObjectType[],
-): Promise<S.ObjectType[]> {
+export async function transformTypes(types: S.Type[]): Promise<S.Type[]> {
   return Promise.all(
     types.map(async (objectType) => {
       return {
         ...objectType,
-        icon: objectType.icon || C.OBJECT_TYPE_ICON,
+        icon: objectType.icon || C.TYPE_ICON,
       };
     }),
   );

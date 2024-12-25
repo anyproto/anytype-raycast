@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import ObjectListItem from "./ObjectListItem";
 import { useMembers } from "../hooks/useMembers";
 import { useObjectsForSpace } from "../hooks/useObjectsForSpace";
-import * as A from "../hooks/api";
+import { useTypes } from "../hooks/useTypes";
 import * as C from "../utils/constants";
 
 export default function ObjectList({ spaceId }: { spaceId: string }) {
@@ -13,13 +13,12 @@ export default function ObjectList({ spaceId }: { spaceId: string }) {
   >("objects");
 
   const { objects, isLoadingObjects } = useObjectsForSpace(spaceId);
-  const { data: objectTypes, isLoading: loadingObjectTypes } =
-    A.useGetObjectTypes(spaceId);
+  const { types, isLoadingTypes } = useTypes(spaceId);
   const { members, isLoadingMembers } = useMembers(spaceId);
 
   return (
     <List
-      isLoading={isLoadingMembers || isLoadingObjects || loadingObjectTypes}
+      isLoading={isLoadingMembers || isLoadingObjects || isLoadingTypes}
       searchBarPlaceholder={`Search ${currentView}...`}
       searchBarAccessory={
         <List.Dropdown
@@ -34,11 +33,7 @@ export default function ObjectList({ spaceId }: { spaceId: string }) {
             value="objects"
             icon={C.SPACE_OBJECT_ICON}
           />
-          <List.Dropdown.Item
-            title="Types"
-            value="types"
-            icon={C.OBJECT_TYPE_ICON}
-          />
+          <List.Dropdown.Item title="Types" value="types" icon={C.TYPE_ICON} />
           <List.Dropdown.Item
             title="Members"
             value="members"
@@ -74,13 +69,13 @@ export default function ObjectList({ spaceId }: { spaceId: string }) {
           />
         ))}
       {currentView === "types" &&
-        objectTypes?.map((objectType) => (
+        types?.map((type) => (
           <ObjectListItem
-            key={objectType.id}
+            key={type.id}
             spaceId={spaceId}
-            objectId={objectType.id}
-            icon={objectType.icon}
-            title={objectType.name}
+            objectId={type.id}
+            icon={type.icon}
+            title={type.name}
           />
         ))}
       {currentView === "members" &&
