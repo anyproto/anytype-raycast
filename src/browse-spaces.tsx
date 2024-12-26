@@ -1,6 +1,6 @@
 import { List, Image } from "@raycast/api";
 import { useState } from "react";
-import ObjectSpaceListItem from "./components/ObjectSpaceListItem";
+import SpaceListItem from "./components/SpaceListItem";
 import { useSpaces } from "./hooks/useSpaces";
 import { useMembers } from "./hooks/useMembers";
 import { pluralize } from "./utils/helpers";
@@ -31,7 +31,7 @@ export default function BrowseSpaces() {
         {filteredSpaces?.map((space, index) => {
           const { members } = membersData?.[index] || {};
           return (
-            <ObjectSpaceListItem
+            <SpaceListItem
               space={space}
               key={space.id}
               icon={{

@@ -1,4 +1,6 @@
 import { List, Icon, Image, ActionPanel, Action } from "@raycast/api";
+import { Detail, Block } from "../utils/schemas";
+import ObjectDetail from "./ObjectDetail";
 
 type ObjectListItemProps = {
   spaceId: string;
@@ -6,7 +8,14 @@ type ObjectListItemProps = {
   icon: string | { source: string; mask: Image.Mask };
   title: string;
   subtitle?: { value: string; tooltip?: string };
-  accessories?: { icon?: Icon; date?: Date; text?: string; tooltip?: string }[];
+  accessories?: {
+    icon?: Icon | { source: string; mask: Image.Mask };
+    date?: Date;
+    text?: string;
+    tooltip?: string;
+  }[];
+  details?: Detail[];
+  blocks?: Block[];
 };
 
 export default function ObjectListItem({
@@ -16,6 +25,8 @@ export default function ObjectListItem({
   title,
   subtitle,
   accessories,
+  details,
+  blocks,
 }: ObjectListItemProps) {
   return (
     <List.Item
@@ -29,7 +40,7 @@ export default function ObjectListItem({
       accessories={accessories?.map((accessory) => {
         const { icon, date, text, tooltip } = accessory;
         const accessoryProps: {
-          icon?: Icon;
+          icon?: Icon | { source: string; mask: Image.Mask };
           date?: Date;
           text?: string;
           tooltip?: string;
@@ -44,11 +55,31 @@ export default function ObjectListItem({
       })}
       actions={
         <ActionPanel title={title}>
-          <Action.OpenInBrowser
-            icon={{ source: "../assets/anytype-icon.png" }}
-            title="Open in Anytype"
-            url={`anytype://object?objectId=${objectId}&spaceId=${spaceId}`}
-          />
+          {details && blocks ? (
+            <>
+              <Action.Push
+                title="Open Object Details"
+                target={
+                  <ObjectDetail
+                    title={title}
+                    details={details}
+                    blocks={blocks}
+                  />
+                }
+              />
+              <Action.OpenInBrowser
+                icon={{ source: "../assets/anytype-icon.png" }}
+                title="Open in Anytype"
+                url={`anytype://object?objectId=${objectId}&spaceId=${spaceId}`}
+              />
+            </>
+          ) : (
+            <Action.OpenInBrowser
+              icon={{ source: "../assets/anytype-icon.png" }}
+              title="Open in Anytype"
+              url={`anytype://object?objectId=${objectId}&spaceId=${spaceId}`}
+            />
+          )}
         </ActionPanel>
       }
     />

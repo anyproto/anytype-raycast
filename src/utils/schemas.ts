@@ -58,12 +58,7 @@ export interface SpaceObject {
   space_id: string;
   root_id: string;
   blocks: Block[];
-  details: {
-    id: string;
-    details: {
-      lastModifiedDate: string;
-    };
-  }[];
+  details: Detail[];
 }
 
 export interface Block {
@@ -72,13 +67,8 @@ export interface Block {
   background_color: string;
   align: string;
   vertical_align: string;
-  layout: Layout;
   text: Text;
   file: File;
-}
-
-export interface Layout {
-  style: string;
 }
 
 export interface Text {
@@ -87,7 +77,6 @@ export interface Text {
   checked: boolean;
   color: string;
   icon: string;
-  icon_image: string;
 }
 
 export interface File {
@@ -98,8 +87,8 @@ export interface File {
   size: number;
   added_at: number;
   target_object_id: string;
-  state: number;
-  style: number;
+  state: string;
+  style: string;
 }
 
 export interface Detail {
@@ -107,6 +96,12 @@ export interface Detail {
   details: {
     [key: string]: unknown;
   };
+}
+
+export interface Tag {
+  id: string;
+  name: string;
+  color: string;
 }
 
 export interface TypesResponse {

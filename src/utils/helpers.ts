@@ -119,9 +119,14 @@ export async function transformObjects(
     objects.map(async (object) => {
       const lastModified = object.details?.find(
         (d) => d.id === "lastModifiedDate",
-      )?.details.lastModifiedDate;
-      const date = lastModified
+      )?.details.lastModifiedDate as string;
+      const lastModifiedDate = lastModified
         ? new Date(parseInt(lastModified) * 1000)
+        : new Date(0);
+      const created = object.details?.find((d) => d.id === "createdDate")
+        ?.details.createdDate as string;
+      const createdDate = created
+        ? new Date(parseInt(created) * 1000)
         : new Date(0);
       const icon = await getIconForObject(object);
       return {
@@ -133,7 +138,8 @@ export async function transformObjects(
           ...detail,
           details: {
             ...detail.details,
-            lastModifiedDate: date.toISOString(),
+            lastModifiedDate: lastModifiedDate.toISOString(),
+            createdDate: createdDate.toISOString(),
           },
         })),
       };

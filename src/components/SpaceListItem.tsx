@@ -3,17 +3,17 @@ import ObjectList from "./ObjectList";
 import { Member, Space } from "../utils/schemas";
 import { SPACE_MEMBER_ICON } from "../utils/constants";
 
-type ObjectSpaceListItemProps = {
+type SpaceListItemProps = {
   space: Space;
   icon: Image;
   members: Member[] | undefined;
 };
 
-export default function ObjectSpaceListItem({
+export default function SpaceListItem({
   space,
   icon,
   members,
-}: ObjectSpaceListItemProps) {
+}: SpaceListItemProps) {
   const memberCount = members?.length || 0;
   return (
     <List.Item

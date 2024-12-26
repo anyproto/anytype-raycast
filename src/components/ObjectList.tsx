@@ -11,7 +11,11 @@ import {
   SPACE_MEMBER_ICON,
 } from "../utils/constants";
 
-export default function ObjectList({ spaceId }: { spaceId: string }) {
+type ObjectListProps = {
+  spaceId: string;
+};
+
+export default function ObjectList({ spaceId }: ObjectListProps) {
   const [currentView, setCurrentView] = useState<
     "objects" | "types" | "members"
   >("objects");
@@ -70,6 +74,8 @@ export default function ObjectList({ spaceId }: { spaceId: string }) {
                 tooltip: `Last Modified: ${format(new Date(object.details[0]?.details.lastModifiedDate), "EEEE d MMMM yyyy 'at' HH:mm")}`,
               },
             ]}
+            details={object.details}
+            blocks={object.blocks}
           />
         ))}
       {currentView === "types" &&

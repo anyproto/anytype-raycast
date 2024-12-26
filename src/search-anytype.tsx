@@ -1,12 +1,4 @@
-import {
-  ActionPanel,
-  Action,
-  Icon,
-  List,
-  showToast,
-  Toast,
-  Image,
-} from "@raycast/api";
+import { Icon, List, showToast, Toast, Image } from "@raycast/api";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { pluralize } from "./utils/helpers";
@@ -21,6 +13,7 @@ import {
   SPACE_MEMBER_ICON,
   OTHERS_ICON,
 } from "./utils/constants";
+import ObjectListItem from "./components/ObjectListItem";
 
 export default function Search() {
   const [searchText, setSearchText] = useState("");
@@ -171,40 +164,38 @@ export default function Search() {
           withNumber: true,
         })}
       >
-        {filteredItems.map((item) => (
-          <List.Item
-            key={item.id}
+        {filteredItems.map((object) => (
+          <ObjectListItem
+            key={object.id}
+            spaceId={object.space_id}
+            objectId={object.id}
             icon={{
-              source: item.icon,
+              source: object.icon,
               mask:
-                item.type === "participant" || item.type === "profile"
+                object.type === "participant" || object.type === "profile"
                   ? Image.Mask.Circle
                   : Image.Mask.RoundedRectangle,
             }}
-            title={item.name}
-            subtitle={item.object_type}
+            title={object.name}
+            subtitle={{
+              value: object.object_type,
+              tooltip: `Object Type: ${object.object_type}`,
+            }}
             accessories={[
               {
-                date: new Date(item.details[0]?.details.lastModifiedDate),
-                tooltip: `Last Modified: ${format(new Date(item.details[0]?.details.lastModifiedDate), "EEEE d MMMM yyyy 'at' HH:mm")}`,
+                date: new Date(object.details[0]?.details.lastModifiedDate),
+                tooltip: `Last Modified: ${format(new Date(object.details[0]?.details.lastModifiedDate), "EEEE d MMMM yyyy 'at' HH:mm")}`,
               },
               {
                 icon: {
-                  source: spaceIcons[item.space_id] || Icon.QuestionMark,
+                  source: spaceIcons[object.space_id] || Icon.QuestionMark,
                   mask: Image.Mask.RoundedRectangle,
                 },
-                tooltip: `Space: ${spaces?.find((space) => space.id === item.space_id)?.name}`,
+                tooltip: `Space: ${spaces?.find((space) => space.id === object.space_id)?.name}`,
               },
             ]}
-            actions={
-              <ActionPanel>
-                <Action.OpenInBrowser
-                  icon={{ source: "../assets/anytype-icon.png" }}
-                  title="Open in Anytype"
-                  url={`anytype://object?objectId=${item.id}&spaceId=${item.space_id}`}
-                />
-              </ActionPanel>
-            }
+            details={object.details}
+            blocks={object.blocks}
           />
         ))}
       </List.Section>
