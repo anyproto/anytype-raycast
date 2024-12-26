@@ -16,7 +16,7 @@ export async function getTypes(spaceId: string): Promise<{
   }
 
   const data = (await response.json()) as TypesResponse;
-  const types = data.objectTypes ? await transformTypes(data.objectTypes) : [];
+  const types = data.object_types ? await transformTypes(data.object_types) : [];
   const pagination = data.pagination;
 
   return { types, pagination };

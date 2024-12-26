@@ -110,7 +110,7 @@ export interface Detail {
 }
 
 export interface TypesResponse {
-  objectTypes: Type[];
+  object_types: Type[];
   pagination: Pagination;
 }
 
