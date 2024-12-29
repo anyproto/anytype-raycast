@@ -1,20 +1,19 @@
 import { Action, ActionPanel, List, Image } from "@raycast/api";
 import ObjectList from "./ObjectList";
-import { Member, Space } from "../utils/schemas";
+import { Space } from "../utils/schemas";
 import { SPACE_MEMBER_ICON } from "../utils/constants";
 
 type SpaceListItemProps = {
   space: Space;
   icon: Image;
-  members: Member[] | undefined;
+  memberCount: number;
 };
 
 export default function SpaceListItem({
   space,
   icon,
-  members,
+  memberCount,
 }: SpaceListItemProps) {
-  const memberCount = members?.length || 0;
   return (
     <List.Item
       key={space.id}

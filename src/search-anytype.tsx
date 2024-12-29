@@ -24,10 +24,8 @@ export default function Search() {
   const [spaceIcons, setSpaceIcons] = useState<{ [key: string]: string }>({});
   const [filterType, setFilterType] = useState("all");
 
-  const { objects, objectsError, isLoadingObjects, pagination } = useSearch(
-    searchText,
-    objectType,
-  );
+  const { objects, objectsError, isLoadingObjects, objectsPagination } =
+    useSearch(searchText, objectType);
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
 
   useEffect(() => {
@@ -115,7 +113,7 @@ export default function Search() {
       isLoading={isLoadingSpaces || isLoadingObjects}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder="Search objects across all spaces …"
-      pagination={pagination}
+      pagination={objectsPagination}
       searchBarAccessory={
         <List.Dropdown
           tooltip="Filter by kind or space"

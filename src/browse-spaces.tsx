@@ -1,16 +1,43 @@
 import { List, Image } from "@raycast/api";
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import SpaceListItem from "./components/SpaceListItem";
 import { useSpaces } from "./hooks/useSpaces";
-import { useMembers } from "./hooks/useMembers";
+import { getMembers } from "./api/getMembers";
 import { pluralize } from "./utils/helpers";
 
 export default function BrowseSpaces() {
   const { spaces, isLoadingSpaces } = useSpaces();
   const [searchText, setSearchText] = useState("");
+  const [membersData, setMembersData] = useState<{ [key: string]: number }>({});
 
-  const membersData = spaces?.map((space) => useMembers(space.id));
-  const isLoadingMembers = membersData?.some((data) => data.isLoadingMembers);
+  useEffect(() => {
+    if (spaces) {
+      const fetchMembersData = async () => {
+        const data: { [key: string]: number } = {};
+        for (const space of spaces) {
+          try {
+            const response = await getMembers(space.id, {
+              offset: 0,
+              limit: 1,
+            });
+            data[space.id] = response.pagination.total;
+          } catch (error) {
+            console.error(
+              `Failed to fetch members for space ${space.id}:`,
+              error,
+            );
+          }
+        }
+        setMembersData(data);
+      };
+      fetchMembersData();
+    }
+  }, [spaces]);
+
+  const isLoadingMembers = useMemo(
+    () => Object.keys(membersData).length !== spaces?.length,
+    [membersData, spaces],
+  );
 
   const filteredSpaces = spaces?.filter((space) =>
     space.name.toLowerCase().includes(searchText.toLowerCase()),
@@ -28,8 +55,8 @@ export default function BrowseSpaces() {
           withNumber: true,
         })}
       >
-        {filteredSpaces?.map((space, index) => {
-          const { members } = membersData?.[index] || {};
+        {filteredSpaces?.map((space) => {
+          const memberCount = membersData[space.id] || 0;
           return (
             <SpaceListItem
               space={space}
@@ -38,7 +65,7 @@ export default function BrowseSpaces() {
                 source: space.icon,
                 mask: Image.Mask.RoundedRectangle,
               }}
-              members={members}
+              memberCount={memberCount}
             />
           );
         })}
