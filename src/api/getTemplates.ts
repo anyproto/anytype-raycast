@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import { API_URL } from "../utils/constants";
-import { Template, TemplatesResponse } from "../utils/schemas";
+import { Template, PaginatedResponse } from "../utils/schemas";
 import { Pagination } from "../utils/schemas";
 
 export async function getTemplates(
@@ -19,9 +19,9 @@ export async function getTemplates(
     );
   }
 
-  const data = (await response.json()) as TemplatesResponse;
-  const templates = data.templates ? data.templates : [];
-  const pagination = data.pagination;
+  const jsonResponse = (await response.json()) as PaginatedResponse<Template>;
+  const templates = jsonResponse.data ? jsonResponse.data : [];
+  const pagination = jsonResponse.pagination;
 
   return { templates, pagination };
 }

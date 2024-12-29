@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import { API_URL } from "../utils/constants";
-import { Type, TypesResponse } from "../utils/schemas";
+import { Type, PaginatedResponse } from "../utils/schemas";
 import { transformTypes } from "../utils/helpers";
 import { Pagination } from "../utils/schemas";
 
@@ -15,11 +15,11 @@ export async function getTypes(spaceId: string): Promise<{
     );
   }
 
-  const data = (await response.json()) as TypesResponse;
-  const types = data.object_types
-    ? await transformTypes(data.object_types)
+  const jsonResponse = (await response.json()) as PaginatedResponse<Type>;
+  const types = jsonResponse.data
+    ? await transformTypes(jsonResponse.data)
     : [];
-  const pagination = data.pagination;
+  const pagination = jsonResponse.pagination;
 
   return { types, pagination };
 }

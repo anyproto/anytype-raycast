@@ -5,8 +5,8 @@ export interface Pagination {
   has_next: boolean;
 }
 
-export interface SpaceResponse {
-  spaces: Space[];
+export interface PaginatedResponse<T> {
+  data: T[];
   pagination: Pagination;
 }
 
@@ -29,11 +29,6 @@ export interface Space {
   members: Member[];
 }
 
-export interface MemberResponse {
-  members: Member[];
-  pagination: Pagination;
-}
-
 export interface Member {
   type: string;
   id: string;
@@ -42,11 +37,6 @@ export interface Member {
   identity: string;
   global_name: string;
   role: string;
-}
-
-export interface ObjectResponse {
-  objects: SpaceObject[];
-  pagination: Pagination;
 }
 
 export interface SpaceObject {
@@ -104,22 +94,12 @@ export interface Tag {
   color: string;
 }
 
-export interface TypesResponse {
-  object_types: Type[];
-  pagination: Pagination;
-}
-
 export interface Type {
   type: string;
   id: string;
   unique_key: string;
   name: string;
   icon: string;
-}
-
-export interface TemplatesResponse {
-  templates: Template[];
-  pagination: Pagination;
 }
 
 export interface Template {

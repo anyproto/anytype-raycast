@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { pluralize } from "./utils/helpers";
 import { useSpaces } from "./hooks/useSpaces";
-import { useObjects } from "./hooks/useObjects";
+import { useSearch } from "./hooks/useSearch";
 import { SpaceObject } from "./utils/schemas";
 import {
   SEARCH_ICON,
@@ -24,7 +24,7 @@ export default function Search() {
   const [spaceIcons, setSpaceIcons] = useState<{ [key: string]: string }>({});
   const [filterType, setFilterType] = useState("all");
 
-  const { objects, objectsError, isLoadingObjects } = useObjects(
+  const { objects, objectsError, isLoadingObjects } = useSearch(
     searchText,
     objectType,
   );

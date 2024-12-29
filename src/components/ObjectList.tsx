@@ -3,7 +3,7 @@ import { useState } from "react";
 import { format } from "date-fns";
 import ObjectListItem from "./ObjectListItem";
 import { useMembers } from "../hooks/useMembers";
-import { useObjectsForSpace } from "../hooks/useObjectsForSpace";
+import { useObjects } from "../hooks/useObjects";
 import { useTypes } from "../hooks/useTypes";
 import {
   TYPE_ICON,
@@ -20,7 +20,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
     "objects" | "types" | "members"
   >("objects");
 
-  const { objects, isLoadingObjects } = useObjectsForSpace(spaceId);
+  const { objects, isLoadingObjects } = useObjects(spaceId);
   const { types, isLoadingTypes } = useTypes(spaceId);
   const { members, isLoadingMembers } = useMembers(spaceId);
 

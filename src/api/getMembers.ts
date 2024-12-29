@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import { API_URL } from "../utils/constants";
-import { MemberResponse } from "../utils/schemas";
+import { PaginatedResponse } from "../utils/schemas";
 import { transformMembers } from "../utils/helpers";
 import { Member, Pagination } from "../utils/schemas";
 
@@ -15,9 +15,11 @@ export async function getMembers(spaceId: string): Promise<{
     );
   }
 
-  const data = (await response.json()) as MemberResponse;
-  const members = data.members ? await transformMembers(data.members) : [];
-  const pagination = data.pagination;
+  const jsonResponse = (await response.json()) as PaginatedResponse<Member>;
+  const members = jsonResponse.data
+    ? await transformMembers(jsonResponse.data)
+    : [];
+  const pagination = jsonResponse.pagination;
 
   return { members, pagination };
 }

@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import { API_URL } from "../utils/constants";
-import { SpaceResponse } from "../utils/schemas";
+import { PaginatedResponse } from "../utils/schemas";
 import { transformSpace } from "../utils/helpers";
 import { Space, Pagination } from "../utils/schemas";
 
@@ -15,9 +15,11 @@ export async function getSpaces(): Promise<{
     );
   }
 
-  const data = (await response.json()) as SpaceResponse;
-  const spaces = data.spaces ? await transformSpace(data.spaces) : [];
-  const pagination = data.pagination;
+  const jsonResponse = (await response.json()) as PaginatedResponse<Space>;
+  const spaces = jsonResponse.data
+    ? await transformSpace(jsonResponse.data)
+    : [];
+  const pagination = jsonResponse.pagination;
 
   return { spaces, pagination };
 }
