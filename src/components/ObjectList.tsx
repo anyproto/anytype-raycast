@@ -1,5 +1,5 @@
 import { Icon, List, Image } from "@raycast/api";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import ObjectListItem from "./ObjectListItem";
 import { useMembers } from "../hooks/useMembers";
@@ -19,39 +19,35 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   const [currentView, setCurrentView] = useState<
     "objects" | "types" | "members"
   >("objects");
+  const [searchText, setSearchText] = useState("");
 
-  const { objects, isLoadingObjects } = useObjects(spaceId);
-  const { types, isLoadingTypes } = useTypes(spaceId);
-  const { members, isLoadingMembers } = useMembers(spaceId);
+  const { objects, isLoadingObjects, objectsPagination } = useObjects(spaceId);
+  const { types, isLoadingTypes, typesPagination } = useTypes(spaceId);
+  const { members, isLoadingMembers, membersPagination } = useMembers(spaceId);
+  const [pagination, setPagination] = useState(objectsPagination);
 
-  return (
-    <List
-      isLoading={isLoadingMembers || isLoadingObjects || isLoadingTypes}
-      searchBarPlaceholder={`Search ${currentView}...`}
-      searchBarAccessory={
-        <List.Dropdown
-          tooltip="Choose View"
-          // storeValue={true}
-          onChange={(value) =>
-            setCurrentView(value as "objects" | "types" | "members")
-          }
-        >
-          <List.Dropdown.Item
-            title="Objects"
-            value="objects"
-            icon={SPACE_OBJECT_ICON}
-          />
-          <List.Dropdown.Item title="Types" value="types" icon={TYPE_ICON} />
-          <List.Dropdown.Item
-            title="Members"
-            value="members"
-            icon={SPACE_MEMBER_ICON}
-          />
-        </List.Dropdown>
-      }
-    >
-      {currentView === "objects" &&
-        objects?.map((object) => (
+  useEffect(() => {
+    const newPagination = {
+      objects: objectsPagination,
+      types: typesPagination,
+      members: membersPagination,
+    }[currentView];
+    setPagination(newPagination);
+  }, [currentView]);
+
+  const filterItems = <T extends { name: string }>(
+    items: T[],
+    searchText: string,
+  ): T[] => {
+    return items?.filter((item) =>
+      item.name.toLowerCase().includes(searchText.toLowerCase()),
+    );
+  };
+
+  const getCurrentItems = () => {
+    switch (currentView) {
+      case "objects":
+        return filterItems(objects, searchText)?.map((object) => (
           <ObjectListItem
             key={object.id}
             spaceId={spaceId}
@@ -66,7 +62,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             title={object.name}
             subtitle={{
               value: object.object_type,
-              tooltip: `Object Type: ${object.object_type}`,
+              tooltip: `Object Type: ${object.type}`,
             }}
             accessories={[
               {
@@ -79,9 +75,9 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             details={object.details}
             blocks={object.blocks}
           />
-        ))}
-      {currentView === "types" &&
-        types?.map((type) => (
+        ));
+      case "types":
+        return filterItems(types, searchText)?.map((type) => (
           <ObjectListItem
             key={type.id}
             spaceId={spaceId}
@@ -89,9 +85,9 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             icon={type.icon}
             title={type.name}
           />
-        ))}
-      {currentView === "members" &&
-        members?.map((member) => (
+        ));
+      case "members":
+        return filterItems(members, searchText)?.map((member) => (
           <ObjectListItem
             key={member.identity}
             spaceId={spaceId}
@@ -117,7 +113,53 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
               },
             ]}
           />
-        ))}
+        ));
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <List
+      isLoading={isLoadingMembers || isLoadingObjects || isLoadingTypes}
+      onSearchTextChange={setSearchText}
+      searchBarPlaceholder={`Search ${currentView}...`}
+      searchBarAccessory={
+        <List.Dropdown
+          tooltip="Choose View"
+          onChange={(value) =>
+            setCurrentView(value as "objects" | "types" | "members")
+          }
+        >
+          <List.Dropdown.Item
+            title="Objects"
+            value="objects"
+            icon={SPACE_OBJECT_ICON}
+          />
+          <List.Dropdown.Item title="Types" value="types" icon={TYPE_ICON} />
+          <List.Dropdown.Item
+            title="Members"
+            value="members"
+            icon={SPACE_MEMBER_ICON}
+          />
+        </List.Dropdown>
+      }
+      pagination={pagination}
+    >
+      <List.Section
+        title={
+          searchText
+            ? "Search Results"
+            : `${currentView.charAt(0).toUpperCase() + currentView.slice(1)}`
+        }
+        subtitle={
+          searchText
+            ? `${getCurrentItems()?.length || 0} ${currentView}`
+            : `Total: ${getCurrentItems()?.length || 0}`
+        }
+      >
+        {getCurrentItems()}
+      </List.Section>
     </List>
   );
 }
