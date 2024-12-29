@@ -158,3 +158,17 @@ export function pluralize(
   const pluralizedNoun = `${noun}${count !== 1 ? suffix : ""}`;
   return withNumber ? `${count} ${pluralizedNoun}` : pluralizedNoun;
 }
+
+export function encodeQueryParams(
+  params: Record<string, number | string>,
+): string {
+  const queryParams = [];
+  for (const key in params) {
+    if (params[key] !== undefined) {
+      queryParams.push(
+        `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`,
+      );
+    }
+  }
+  return queryParams.length > 0 ? `?${queryParams.join("&")}` : "";
+}

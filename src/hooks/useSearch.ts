@@ -17,13 +17,13 @@ export function useSearch(searchText: string, type: string) {
     [searchText, type],
     {
       keepPreviousData: true, // avoid flickering
-    }
+    },
   );
 
   return {
     objects: data,
     objectsError: error,
     isLoadingObjects: isLoading,
-    pagination: pagination,
+    objectsPagination: pagination,
   };
 }
