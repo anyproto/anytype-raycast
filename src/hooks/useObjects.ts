@@ -16,12 +16,15 @@ export function useObjects(spaceId: string) {
     },
     [spaceId],
     {
-      keepPreviousData: true, // avoid flickering
+      keepPreviousData: true,
     },
   );
 
+  // filter empty data to prevent flickering at the bottom
+  const filteredData = data?.filter((object) => object) || [];
+
   return {
-    objects: data,
+    objects: filteredData,
     objectsError: error,
     isLoadingObjects: isLoading,
     objectsPagination: pagination,

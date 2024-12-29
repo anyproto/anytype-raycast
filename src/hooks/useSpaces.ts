@@ -16,12 +16,15 @@ export function useSpaces() {
     },
     [],
     {
-      keepPreviousData: true, // avoid flickering
+      keepPreviousData: true,
     },
   );
 
+  // filter empty data to prevent flickering at the bottom
+  const filteredData = data?.filter((space) => space) || [];
+
   return {
-    spaces: data,
+    spaces: filteredData,
     spacesError: error,
     isLoadingSpaces: isLoading,
     spacesPagination: pagination,

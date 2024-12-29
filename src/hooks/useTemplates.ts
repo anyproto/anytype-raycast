@@ -16,12 +16,15 @@ export function useTemplates(spaceId: string, typeId: string) {
     },
     [spaceId, typeId],
     {
-      keepPreviousData: true, // avoid flickering
+      keepPreviousData: true,
     },
   );
 
+  // filter empty data to prevent flickering at the bottom
+  const filteredData = data?.filter((template) => template) || [];
+
   return {
-    templates: data,
+    templates: filteredData,
     templatesError: error,
     isLoadingTemplates: isLoading,
     templatesPagination: pagination,

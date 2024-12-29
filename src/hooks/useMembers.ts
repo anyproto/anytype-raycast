@@ -16,12 +16,15 @@ export function useMembers(spaceId: string) {
     },
     [spaceId],
     {
-      keepPreviousData: true, // avoid flickering
+      keepPreviousData: true,
     },
   );
 
+  // filter empty data to prevent flickering at the bottom
+  const filteredData = data?.filter((member) => member) || [];
+
   return {
-    members: data,
+    members: filteredData,
     membersError: error,
     isLoadingMembers: isLoading,
     membersPagination: pagination,

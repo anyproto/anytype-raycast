@@ -16,12 +16,15 @@ export function useTypes(spaceId: string) {
     },
     [spaceId],
     {
-      keepPreviousData: true, // avoid flickering
+      keepPreviousData: true,
     },
   );
 
+  // filter empty data to prevent flickering at the bottom
+  const filteredData = data?.filter((type) => type) || [];
+
   return {
-    types: data,
+    types: filteredData,
     typesError: error,
     isLoadingTypes: isLoading,
     typesPagination: pagination,
