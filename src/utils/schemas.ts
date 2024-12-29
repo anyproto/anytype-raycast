@@ -2,7 +2,7 @@ export interface Pagination {
   total: number;
   offset: number;
   limit: number;
-  has_next: boolean;
+  has_more: boolean;
 }
 
 export interface PaginatedResponse<T> {

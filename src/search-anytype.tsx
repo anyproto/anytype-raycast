@@ -24,7 +24,7 @@ export default function Search() {
   const [spaceIcons, setSpaceIcons] = useState<{ [key: string]: string }>({});
   const [filterType, setFilterType] = useState("all");
 
-  const { objects, objectsError, isLoadingObjects } = useSearch(
+  const { objects, objectsError, isLoadingObjects, pagination } = useSearch(
     searchText,
     objectType,
   );
@@ -115,6 +115,7 @@ export default function Search() {
       isLoading={isLoadingSpaces || isLoadingObjects}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder="Search objects across all spaces …"
+      pagination={pagination}
       searchBarAccessory={
         <List.Dropdown
           tooltip="Filter by kind or space"
