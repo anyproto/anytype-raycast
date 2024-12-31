@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { apiFetch } from "./apiClient";
 import { API_URL } from "../utils/constants";
 import { PaginatedResponse } from "../utils/schemas";
 import { transformMembers } from "../utils/helpers";
@@ -13,20 +13,17 @@ export async function getMembers(
   pagination: Pagination;
 }> {
   const queryString = encodeQueryParams(options);
+  const url = `${API_URL}/spaces/${spaceId}/members${queryString}`;
 
-  const response = await fetch(
-    `${API_URL}/spaces/${spaceId}/members${queryString}`,
-  );
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch members for space ${spaceId}: [${response.status}] ${response.statusText}`,
-    );
-  }
-
-  const jsonResponse = (await response.json()) as PaginatedResponse<Member>;
+  const response = await apiFetch<PaginatedResponse<Member>>(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   return {
-    members: jsonResponse.data ? await transformMembers(jsonResponse.data) : [],
-    pagination: jsonResponse.pagination,
+    members: response.data ? await transformMembers(response.data) : [],
+    pagination: response.pagination,
   };
 }

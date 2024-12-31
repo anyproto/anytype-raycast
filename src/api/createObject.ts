@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { apiFetch } from "./apiClient";
 import { API_URL } from "../utils/constants";
 
 export async function createObject(
@@ -10,17 +10,13 @@ export async function createObject(
     object_type_unique_key: string;
   },
 ): Promise<void> {
-  const response = await fetch(`${API_URL}/spaces/${spaceId}/objects`, {
+  const url = `${API_URL}/spaces/${spaceId}/objects`;
+
+  await apiFetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(objectData),
   });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to create object in space ${spaceId}: [${response.status}] ${response.statusText}`,
-    );
-  }
 }

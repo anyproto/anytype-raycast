@@ -55,7 +55,6 @@ export default function CreateObjectForm({
         await showToast(Toast.Style.Success, "Object created successfully");
         popToRoot();
       } catch (error) {
-        console.error("Error creating object:", error);
         await showToast(
           Toast.Style.Failure,
           "Failed to create object",

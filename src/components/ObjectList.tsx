@@ -1,4 +1,4 @@
-import { Icon, List, Image } from "@raycast/api";
+import { Icon, List, Image, showToast, Toast } from "@raycast/api";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import ObjectListItem from "./ObjectListItem";
@@ -21,9 +21,12 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   >("objects");
   const [searchText, setSearchText] = useState("");
 
-  const { objects, isLoadingObjects, objectsPagination } = useObjects(spaceId);
-  const { types, isLoadingTypes, typesPagination } = useTypes(spaceId);
-  const { members, isLoadingMembers, membersPagination } = useMembers(spaceId);
+  const { objects, objectsError, isLoadingObjects, objectsPagination } =
+    useObjects(spaceId);
+  const { types, typesError, isLoadingTypes, typesPagination } =
+    useTypes(spaceId);
+  const { members, membersError, isLoadingMembers, membersPagination } =
+    useMembers(spaceId);
   const [pagination, setPagination] = useState(objectsPagination);
 
   useEffect(() => {
@@ -34,6 +37,26 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
     }[currentView];
     setPagination(newPagination);
   }, [currentView]);
+
+  if (objectsError) {
+    showToast(
+      Toast.Style.Failure,
+      "Failed to fetch objects",
+      objectsError.message,
+    );
+  }
+
+  if (typesError) {
+    showToast(Toast.Style.Failure, "Failed to fetch types", typesError.message);
+  }
+
+  if (membersError) {
+    showToast(
+      Toast.Style.Failure,
+      "Failed to fetch members",
+      membersError.message,
+    );
+  }
 
   const filterItems = <T extends { name: string }>(
     items: T[],

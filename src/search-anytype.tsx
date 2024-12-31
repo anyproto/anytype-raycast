@@ -100,10 +100,9 @@ export default function Search() {
   }, [items, filterType]);
 
   if (objectsError || spacesError) {
-    console.error("Error fetching data:", objectsError || spacesError);
     showToast(
       Toast.Style.Failure,
-      "Failed to fetch data",
+      "Failed to fetch latest data",
       (objectsError || spacesError)?.message,
     );
   }

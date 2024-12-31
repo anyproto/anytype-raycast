@@ -1,3 +1,4 @@
+import { Toast, showToast } from "@raycast/api";
 import CreateObjectForm from "./components/CreateObjectForm";
 import { useState, useEffect } from "react";
 import { useSpaces } from "./hooks/useSpaces";
@@ -15,11 +16,15 @@ export default function CreateObject() {
   }, [spaces]);
 
   if (spacesError) {
-    console.error("Failed to fetch spaces:", spacesError);
+    showToast(
+      Toast.Style.Failure,
+      "Failed to fetch spaces",
+      spacesError.message,
+    );
   }
 
   if (typesError) {
-    console.error("Failed to fetch types for space:", typesError);
+    showToast(Toast.Style.Failure, "Failed to fetch types", typesError.message);
   }
 
   return (

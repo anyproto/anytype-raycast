@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { apiFetch } from "./apiClient";
 import { API_URL } from "../utils/constants";
 import { Template, PaginatedResponse } from "../utils/schemas";
 import { Pagination } from "../utils/schemas";
@@ -16,19 +16,16 @@ export async function getTemplates(
   pagination: Pagination;
 }> {
   const queryString = encodeQueryParams(options);
-  const response = await fetch(
-    `${API_URL}/spaces/${spaceId}/objectTypes/${typeId}/templates${queryString}`,
-  );
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch templates for space ${spaceId} and type ${typeId}: [${response.status}] ${response.statusText}`,
-    );
-  }
-
-  const jsonResponse = (await response.json()) as PaginatedResponse<Template>;
+  const url = `${API_URL}/spaces/${spaceId}/objectTypes/${typeId}/templates${queryString}`;
+  const response = await apiFetch<PaginatedResponse<Template>>(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   return {
-    templates: jsonResponse.data ? jsonResponse.data : [],
-    pagination: jsonResponse.pagination,
+    templates: response.data ? response.data : [],
+    pagination: response.pagination,
   };
 }

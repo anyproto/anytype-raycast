@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { apiFetch } from "./apiClient";
 import { API_URL } from "../utils/constants";
 import { Type, PaginatedResponse } from "../utils/schemas";
 import { transformTypes } from "../utils/helpers";
@@ -16,19 +16,16 @@ export async function getTypes(
   pagination: Pagination;
 }> {
   const queryString = encodeQueryParams(options);
-  const response = await fetch(
-    `${API_URL}/spaces/${spaceId}/objectTypes${queryString}`,
-  );
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch types for space ${spaceId}: [${response.status}] ${response.statusText}`,
-    );
-  }
-
-  const jsonResponse = (await response.json()) as PaginatedResponse<Type>;
+  const url = `${API_URL}/spaces/${spaceId}/objectTypes${queryString}`;
+  const response = await apiFetch<PaginatedResponse<Type>>(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   return {
-    types: jsonResponse.data ? await transformTypes(jsonResponse.data) : [],
-    pagination: jsonResponse.pagination,
+    types: response.data ? await transformTypes(response.data) : [],
+    pagination: response.pagination,
   };
 }

@@ -1,18 +1,14 @@
-import fetch from "node-fetch";
+import { apiFetch } from "./apiClient";
 import { API_URL } from "../utils/constants";
 
 export async function createSpace(objectData: { name: string }): Promise<void> {
-  const response = await fetch(`${API_URL}/spaces`, {
+  const url = `${API_URL}/spaces`;
+
+  await apiFetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ name: objectData.name }),
   });
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to create space: [${response.status}] ${response.statusText}`,
-    );
-  }
 }

@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { apiFetch } from "./apiClient";
 import { API_URL } from "../utils/constants";
 import { PaginatedResponse } from "../utils/schemas";
 import { transformSpace } from "../utils/helpers";
@@ -13,17 +13,16 @@ export async function getSpaces(options: {
   pagination: Pagination;
 }> {
   const queryParams = encodeQueryParams(options);
-  const response = await fetch(`${API_URL}/spaces${queryParams}`);
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch spaces: [${response.status}] ${response.statusText}`,
-    );
-  }
-
-  const jsonResponse = (await response.json()) as PaginatedResponse<Space>;
+  const url = `${API_URL}/spaces${queryParams}`;
+  const response = await apiFetch<PaginatedResponse<Space>>(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   return {
-    spaces: jsonResponse.data ? await transformSpace(jsonResponse.data) : [],
-    pagination: jsonResponse.pagination,
+    spaces: response.data ? await transformSpace(response.data) : [],
+    pagination: response.pagination,
   };
 }

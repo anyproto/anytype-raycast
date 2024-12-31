@@ -1,4 +1,4 @@
-import { List, Image } from "@raycast/api";
+import { List, Image, Toast, showToast } from "@raycast/api";
 import { useState, useEffect, useMemo, useRef } from "react";
 import SpaceListItem from "./components/SpaceListItem";
 import { useSpaces } from "./hooks/useSpaces";
@@ -6,7 +6,7 @@ import { getMembers } from "./api/getMembers";
 import { pluralize } from "./utils/helpers";
 
 export default function BrowseSpaces() {
-  const { spaces, isLoadingSpaces } = useSpaces();
+  const { spaces, spacesError, isLoadingSpaces } = useSpaces();
   const [searchText, setSearchText] = useState("");
   const membersDataRef = useRef<{ [key: string]: number }>({});
 
@@ -28,7 +28,19 @@ export default function BrowseSpaces() {
               });
               data[id] = response.pagination.total;
             } catch (error) {
-              console.error(`Failed to fetch members for space ${id}:`, error);
+              if (error instanceof Error) {
+                showToast(
+                  Toast.Style.Failure,
+                  "Failed to fetch members",
+                  error.message,
+                );
+              } else {
+                showToast(
+                  Toast.Style.Failure,
+                  "Failed to fetch members",
+                  "An unknown error occurred.",
+                );
+              }
             }
           }),
         );
@@ -47,6 +59,14 @@ export default function BrowseSpaces() {
   const filteredSpaces = spaces?.filter((space) =>
     space.name.toLowerCase().includes(searchText.toLowerCase()),
   );
+
+  if (spacesError) {
+    showToast(
+      Toast.Style.Failure,
+      "Failed to fetch spaces",
+      spacesError.message,
+    );
+  }
 
   return (
     <List

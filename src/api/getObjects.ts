@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { apiFetch } from "./apiClient";
 import { API_URL } from "../utils/constants";
 import { transformObjects } from "../utils/helpers";
 import { PaginatedResponse, Pagination, SpaceObject } from "../utils/schemas";
@@ -12,21 +12,17 @@ export async function getObjects(
   pagination: Pagination;
 }> {
   const queryString = encodeQueryParams(options);
+  const url = `${API_URL}/spaces/${spaceId}/objects${queryString}`;
 
-  const response = await fetch(
-    `${API_URL}/spaces/${spaceId}/objects${queryString}`,
-  );
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch objects for space ${spaceId}: [${response.status}] ${response.statusText}`,
-    );
-  }
-
-  const jsonResponse =
-    (await response.json()) as PaginatedResponse<SpaceObject>;
+  const response = await apiFetch<PaginatedResponse<SpaceObject>>(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
   return {
-    objects: jsonResponse.data ? await transformObjects(jsonResponse.data) : [],
-    pagination: jsonResponse.pagination,
+    objects: response.data ? await transformObjects(response.data) : [],
+    pagination: response.pagination,
   };
 }

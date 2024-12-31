@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { apiFetch } from "./apiClient";
 import { API_URL } from "../utils/constants";
 import { SpaceObject, PaginatedResponse } from "../utils/schemas";
 import { transformObjects } from "../utils/helpers";
@@ -15,18 +15,16 @@ export async function search(
     offset: options.offset,
     limit: options.limit,
   });
+  const url = `${API_URL}/search${queryString}`;
+  const response = await apiFetch<PaginatedResponse<SpaceObject>>(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-  const response = await fetch(`${API_URL}/search${queryString}`);
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch objects: [${response.status}] ${response.statusText}`,
-    );
-  }
-
-  const jsonResponse =
-    (await response.json()) as PaginatedResponse<SpaceObject>;
   return {
-    data: jsonResponse.data ? await transformObjects(jsonResponse.data) : [],
-    pagination: jsonResponse.pagination,
+    data: response.data ? await transformObjects(response.data) : [],
+    pagination: response.pagination,
   };
 }
