@@ -1,5 +1,6 @@
 import { useCachedPromise } from "@raycast/utils";
 import { getTypes } from "../api/getTypes";
+import { useMemo } from "react";
 
 export function useTypes(spaceId: string) {
   const limit = 50;
@@ -21,7 +22,10 @@ export function useTypes(spaceId: string) {
   );
 
   // filter empty data to prevent flickering at the bottom
-  const filteredData = data?.filter((type) => type) || [];
+  const filteredData = useMemo(
+    () => data?.filter((type) => type) || [],
+    [data],
+  );
 
   return {
     types: filteredData,

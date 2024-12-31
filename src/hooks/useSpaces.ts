@@ -1,5 +1,6 @@
 import { useCachedPromise } from "@raycast/utils";
 import { getSpaces } from "../api/getSpaces";
+import { useMemo } from "react";
 
 export function useSpaces() {
   const limit = 50;
@@ -21,7 +22,10 @@ export function useSpaces() {
   );
 
   // filter empty data to prevent flickering at the bottom
-  const filteredData = data?.filter((space) => space) || [];
+  const filteredData = useMemo(
+    () => data?.filter((space) => space) || [],
+    [data],
+  );
 
   return {
     spaces: filteredData,

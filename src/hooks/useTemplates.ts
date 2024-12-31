@@ -1,5 +1,6 @@
 import { useCachedPromise } from "@raycast/utils";
 import { getTemplates } from "../api/getTemplates";
+import { useMemo } from "react";
 
 export function useTemplates(spaceId: string, typeId: string) {
   const limit = 50;
@@ -21,7 +22,10 @@ export function useTemplates(spaceId: string, typeId: string) {
   );
 
   // filter empty data to prevent flickering at the bottom
-  const filteredData = data?.filter((template) => template) || [];
+  const filteredData = useMemo(
+    () => data?.filter((template) => template) || [],
+    [data],
+  );
 
   return {
     templates: filteredData,

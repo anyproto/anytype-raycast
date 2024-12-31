@@ -1,5 +1,6 @@
 import { useCachedPromise } from "@raycast/utils";
 import { getObjects } from "../api/getObjects";
+import { useMemo } from "react";
 
 export function useObjects(spaceId: string) {
   const limit = 50;
@@ -21,7 +22,10 @@ export function useObjects(spaceId: string) {
   );
 
   // filter empty data to prevent flickering at the bottom
-  const filteredData = data?.filter((object) => object) || [];
+  const filteredData = useMemo(
+    () => data?.filter((object) => object) || [],
+    [data],
+  );
 
   return {
     objects: filteredData,

@@ -1,5 +1,6 @@
 import { useCachedPromise } from "@raycast/utils";
 import { getMembers } from "../api/getMembers";
+import { useMemo } from "react";
 
 export function useMembers(spaceId: string) {
   const limit = 50;
@@ -21,7 +22,10 @@ export function useMembers(spaceId: string) {
   );
 
   // filter empty data to prevent flickering at the bottom
-  const filteredData = data?.filter((member) => member) || [];
+  const filteredData = useMemo(
+    () => data?.filter((member) => member) || [],
+    [data],
+  );
 
   return {
     members: filteredData,
