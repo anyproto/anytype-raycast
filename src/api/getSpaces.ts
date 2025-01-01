@@ -14,6 +14,7 @@ export async function getSpaces(options: {
 }> {
   const queryParams = encodeQueryParams(options);
   const url = `${API_URL}/spaces${queryParams}`;
+
   const response = await apiFetch<PaginatedResponse<Space>>(url, {
     method: "GET",
     headers: {

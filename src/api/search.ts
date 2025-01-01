@@ -16,6 +16,7 @@ export async function search(
     limit: options.limit,
   });
   const url = `${API_URL}/search${queryString}`;
+
   const response = await apiFetch<PaginatedResponse<SpaceObject>>(url, {
     method: "GET",
     headers: {

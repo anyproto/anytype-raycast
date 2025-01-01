@@ -36,7 +36,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
       members: membersPagination,
     }[currentView];
     setPagination(newPagination);
-  }, [currentView]);
+  }, [currentView, objects, types, members]);
 
   if (objectsError) {
     showToast(

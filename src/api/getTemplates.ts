@@ -17,6 +17,7 @@ export async function getTemplates(
 }> {
   const queryString = encodeQueryParams(options);
   const url = `${API_URL}/spaces/${spaceId}/objectTypes/${typeId}/templates${queryString}`;
+
   const response = await apiFetch<PaginatedResponse<Template>>(url, {
     method: "GET",
     headers: {
