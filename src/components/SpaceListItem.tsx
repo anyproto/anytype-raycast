@@ -9,11 +9,7 @@ type SpaceListItemProps = {
   memberCount: number;
 };
 
-export default function SpaceListItem({
-  space,
-  icon,
-  memberCount,
-}: SpaceListItemProps) {
+export default function SpaceListItem({ space, icon, memberCount }: SpaceListItemProps) {
   return (
     <List.Item
       key={space.id}
@@ -28,10 +24,7 @@ export default function SpaceListItem({
       icon={icon}
       actions={
         <ActionPanel title={space.name}>
-          <Action.Push
-            title="View Objects"
-            target={<ObjectList key={space.id} spaceId={space.id} />}
-          />
+          <Action.Push title="View Objects" target={<ObjectList key={space.id} spaceId={space.id} />} />
           {/* <Action.OpenInBrowser
             icon={{ source: "../assets/anytype-icon.png" }}
             title="Open Space in Anytype"

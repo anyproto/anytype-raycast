@@ -22,10 +22,7 @@ export function useSpaces() {
   );
 
   // filter empty data to prevent flickering at the bottom
-  const filteredData = useMemo(
-    () => data?.filter((space) => space) || [],
-    [data],
-  );
+  const filteredData = useMemo(() => data?.filter((space) => space) || [], [data]);
 
   return {
     spaces: filteredData,

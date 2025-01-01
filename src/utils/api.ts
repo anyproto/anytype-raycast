@@ -6,22 +6,15 @@ interface FetchOptions {
   body?: string;
 }
 
-export async function apiFetch<T>(
-  url: string,
-  options: FetchOptions,
-): Promise<T> {
+export async function apiFetch<T>(url: string, options: FetchOptions): Promise<T> {
   try {
     const response = await fetch(url, options);
 
     if (!response.ok) {
       if (response.status === 403) {
-        throw new Error(
-          "It seems you're not logged in. Please log in and try again.",
-        );
+        throw new Error("It seems you're not logged in. Please log in and try again.");
       } else {
-        throw new Error(
-          `API request failed: [${response.status}] ${response.statusText}`,
-        );
+        throw new Error(`API request failed: [${response.status}] ${response.statusText}`);
       }
     }
 

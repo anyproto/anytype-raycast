@@ -22,10 +22,7 @@ export function useTypes(spaceId: string) {
   );
 
   // filter empty data to prevent flickering at the bottom
-  const filteredData = useMemo(
-    () => data?.filter((type) => type) || [],
-    [data],
-  );
+  const filteredData = useMemo(() => data?.filter((type) => type) || [], [data]);
 
   return {
     types: filteredData,

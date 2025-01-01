@@ -1,4 +1,4 @@
-import { apiFetch } from "./apiClient";
+import { apiFetch } from "../utils/api";
 import { API_URL } from "../utils/constants";
 import { SpaceObject, PaginatedResponse } from "../utils/schemas";
 import { transformObjects } from "../utils/helpers";

@@ -1,14 +1,11 @@
-import { apiFetch } from "./apiClient";
+import { apiFetch } from "../utils/api";
 import { API_URL } from "../utils/constants";
 import { PaginatedResponse } from "../utils/schemas";
 import { transformSpace } from "../utils/helpers";
 import { Space, Pagination } from "../utils/schemas";
 import { encodeQueryParams } from "../utils/helpers";
 
-export async function getSpaces(options: {
-  offset: number;
-  limit: number;
-}): Promise<{
+export async function getSpaces(options: { offset: number; limit: number }): Promise<{
   spaces: Space[];
   pagination: Pagination;
 }> {

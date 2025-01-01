@@ -31,11 +31,7 @@ export default function ObjectListItem({
   return (
     <List.Item
       title={title}
-      subtitle={
-        subtitle
-          ? { value: subtitle.value, tooltip: subtitle.tooltip }
-          : undefined
-      }
+      subtitle={subtitle ? { value: subtitle.value, tooltip: subtitle.tooltip } : undefined}
       icon={typeof icon === "string" ? { source: icon } : icon}
       accessories={accessories?.map((accessory) => {
         const { icon, date, text, tooltip } = accessory;
@@ -59,13 +55,7 @@ export default function ObjectListItem({
             <>
               <Action.Push
                 title="Open Object Details"
-                target={
-                  <ObjectDetail
-                    title={title}
-                    details={details}
-                    blocks={blocks}
-                  />
-                }
+                target={<ObjectDetail title={title} details={details} blocks={blocks} />}
               />
               <Action.OpenInBrowser
                 icon={{ source: "../assets/anytype-icon.png" }}

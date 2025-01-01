@@ -1,13 +1,6 @@
 import { Icon } from "@raycast/api";
 import fetch from "node-fetch";
-import {
-  SPACE_ICON,
-  SPACE_MEMBER_ICON,
-  SPACE_OBJECT_ICON,
-  TYPE_ICON,
-  LIST_ICON,
-  BOOKMARK_ICON,
-} from "./constants";
+import { SPACE_ICON, SPACE_MEMBER_ICON, SPACE_OBJECT_ICON, TYPE_ICON, LIST_ICON, BOOKMARK_ICON } from "./constants";
 import { Space, SpaceObject, Member, Type } from "./schemas";
 
 export async function transformSpace(spaces: Space[]): Promise<Space[]> {
@@ -26,8 +19,7 @@ export async function transformSpace(spaces: Space[]): Promise<Space[]> {
 export async function transformMembers(members: Member[]): Promise<Member[]> {
   return Promise.all(
     members.map(async (member) => {
-      const icon =
-        (await fetchAndTransformIcon(member.icon)) || SPACE_MEMBER_ICON;
+      const icon = (await fetchAndTransformIcon(member.icon)) || SPACE_MEMBER_ICON;
       return {
         ...member,
         icon: icon,
@@ -47,9 +39,7 @@ export async function transformTypes(types: Type[]): Promise<Type[]> {
   );
 }
 
-async function fetchAndTransformIcon(
-  iconUrl: string,
-): Promise<string | undefined> {
+async function fetchAndTransformIcon(iconUrl: string): Promise<string | undefined> {
   if (iconUrl && iconUrl.startsWith("http://127.0.0.1")) {
     try {
       const response = await fetch(iconUrl);
@@ -64,9 +54,7 @@ async function fetchAndTransformIcon(
   return undefined;
 }
 
-export async function getIconForObject(
-  object: SpaceObject,
-): Promise<{ source: string } | Icon> {
+export async function getIconForObject(object: SpaceObject): Promise<{ source: string } | Icon> {
   if (object.icon) {
     if (object.icon.startsWith("http://127.0.0.1")) {
       const fetchedIcon = await fetchWithTimeout(object.icon, 500);
@@ -92,10 +80,7 @@ export async function getIconForObject(
 }
 
 // timeout in milliseconds
-async function fetchWithTimeout(
-  url: string,
-  timeout: number,
-): Promise<string | undefined> {
+async function fetchWithTimeout(url: string, timeout: number): Promise<string | undefined> {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
 
@@ -112,22 +97,13 @@ async function fetchWithTimeout(
   return undefined;
 }
 
-export async function transformObjects(
-  objects: SpaceObject[],
-): Promise<SpaceObject[]> {
+export async function transformObjects(objects: SpaceObject[]): Promise<SpaceObject[]> {
   return Promise.all(
     objects.map(async (object) => {
-      const lastModified = object.details?.find(
-        (d) => d.id === "lastModifiedDate",
-      )?.details.lastModifiedDate as string;
-      const lastModifiedDate = lastModified
-        ? new Date(parseInt(lastModified) * 1000)
-        : new Date(0);
-      const created = object.details?.find((d) => d.id === "createdDate")
-        ?.details.createdDate as string;
-      const createdDate = created
-        ? new Date(parseInt(created) * 1000)
-        : new Date(0);
+      const lastModified = object.details?.find((d) => d.id === "lastModifiedDate")?.details.lastModifiedDate as string;
+      const lastModifiedDate = lastModified ? new Date(parseInt(lastModified) * 1000) : new Date(0);
+      const created = object.details?.find((d) => d.id === "createdDate")?.details.createdDate as string;
+      const createdDate = created ? new Date(parseInt(created) * 1000) : new Date(0);
       const icon = await getIconForObject(object);
       return {
         ...object,
@@ -150,24 +126,17 @@ export async function transformObjects(
 export function pluralize(
   count: number,
   noun: string,
-  {
-    suffix = "s",
-    withNumber = false,
-  }: { suffix?: string; withNumber?: boolean } = {},
+  { suffix = "s", withNumber = false }: { suffix?: string; withNumber?: boolean } = {},
 ): string {
   const pluralizedNoun = `${noun}${count !== 1 ? suffix : ""}`;
   return withNumber ? `${count} ${pluralizedNoun}` : pluralizedNoun;
 }
 
-export function encodeQueryParams(
-  params: Record<string, number | string>,
-): string {
+export function encodeQueryParams(params: Record<string, number | string>): string {
   const queryParams = [];
   for (const key in params) {
     if (params[key] !== undefined) {
-      queryParams.push(
-        `${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`,
-      );
+      queryParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
     }
   }
   return queryParams.length > 0 ? `?${queryParams.join("&")}` : "";

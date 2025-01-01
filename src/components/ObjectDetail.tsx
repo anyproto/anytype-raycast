@@ -8,11 +8,7 @@ type ObjectDetailProps = {
   blocks: Block[];
 };
 
-export default function ObjectDetail({
-  title,
-  details,
-  blocks,
-}: ObjectDetailProps) {
+export default function ObjectDetail({ title, details, blocks }: ObjectDetailProps) {
   const styleMap: { [key: string]: string } = {
     Paragraph: "",
     Header1: "#",
@@ -59,10 +55,7 @@ export default function ObjectDetail({
       metadata={
         <Detail.Metadata>
           {createdDate ? (
-            <Detail.Metadata.Label
-              title="Created Date"
-              text={format(new Date(createdDate), "MMMM d, yyyy")}
-            />
+            <Detail.Metadata.Label title="Created Date" text={format(new Date(createdDate), "MMMM d, yyyy")} />
           ) : null}
           {lastModifiedDate ? (
             <Detail.Metadata.Label
@@ -73,11 +66,7 @@ export default function ObjectDetail({
           {tags.length > 0 ? (
             <Detail.Metadata.TagList title="Tags">
               {tags.map((tag) => (
-                <Detail.Metadata.TagList.Item
-                  key={tag.id}
-                  text={tag.name}
-                  color={tag.color}
-                />
+                <Detail.Metadata.TagList.Item key={tag.id} text={tag.name} color={tag.color} />
               ))}
             </Detail.Metadata.TagList>
           ) : null}

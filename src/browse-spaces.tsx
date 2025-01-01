@@ -15,9 +15,7 @@ export default function BrowseSpaces() {
       const fetchMembersData = async () => {
         const data: { [key: string]: number } = {};
         const spaceIds = spaces.map((space) => space.id);
-        const uniqueSpaceIds = spaceIds.filter(
-          (id) => !(id in membersDataRef.current),
-        );
+        const uniqueSpaceIds = spaceIds.filter((id) => !(id in membersDataRef.current));
 
         await Promise.all(
           uniqueSpaceIds.map(async (id) => {
@@ -29,17 +27,9 @@ export default function BrowseSpaces() {
               data[id] = response.pagination.total;
             } catch (error) {
               if (error instanceof Error) {
-                showToast(
-                  Toast.Style.Failure,
-                  "Failed to fetch members",
-                  error.message,
-                );
+                showToast(Toast.Style.Failure, "Failed to fetch members", error.message);
               } else {
-                showToast(
-                  Toast.Style.Failure,
-                  "Failed to fetch members",
-                  "An unknown error occurred.",
-                );
+                showToast(Toast.Style.Failure, "Failed to fetch members", "An unknown error occurred.");
               }
             }
           }),
@@ -56,16 +46,10 @@ export default function BrowseSpaces() {
     [membersDataRef.current, spaces],
   );
 
-  const filteredSpaces = spaces?.filter((space) =>
-    space.name.toLowerCase().includes(searchText.toLowerCase()),
-  );
+  const filteredSpaces = spaces?.filter((space) => space.name.toLowerCase().includes(searchText.toLowerCase()));
 
   if (spacesError) {
-    showToast(
-      Toast.Style.Failure,
-      "Failed to fetch spaces",
-      spacesError.message,
-    );
+    showToast(Toast.Style.Failure, "Failed to fetch spaces", spacesError.message);
   }
 
   return (

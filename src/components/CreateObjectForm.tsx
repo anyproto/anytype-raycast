@@ -1,13 +1,4 @@
-import {
-  ActionPanel,
-  Action,
-  Form,
-  Icon,
-  showToast,
-  Toast,
-  Image,
-  popToRoot,
-} from "@raycast/api";
+import { ActionPanel, Action, Form, Icon, showToast, Toast, Image, popToRoot } from "@raycast/api";
 import { useState } from "react";
 import { useForm, FormValidation } from "@raycast/utils";
 import { createObject } from "../api/createObject";
@@ -55,11 +46,7 @@ export default function CreateObjectForm({
         await showToast(Toast.Style.Success, "Object created successfully");
         popToRoot();
       } catch (error) {
-        await showToast(
-          Toast.Style.Failure,
-          "Failed to create object",
-          (error as Error).message,
-        );
+        await showToast(Toast.Style.Failure, "Failed to create object", (error as Error).message);
       } finally {
         setLoading(false);
       }
@@ -79,20 +66,11 @@ export default function CreateObjectForm({
       isLoading={loading || isLoading}
       actions={
         <ActionPanel title="Create New Object">
-          <Action.SubmitForm
-            title="Create Object"
-            icon={Icon.Plus}
-            onSubmit={handleSubmit}
-          />
+          <Action.SubmitForm title="Create Object" icon={Icon.Plus} onSubmit={handleSubmit} />
         </ActionPanel>
       }
     >
-      <Form.Dropdown
-        id="space"
-        title="Space"
-        value={selectedSpace}
-        onChange={setSelectedSpace}
-      >
+      <Form.Dropdown id="space" title="Space" value={selectedSpace} onChange={setSelectedSpace}>
         {spaces?.map((space) => (
           <Form.Dropdown.Item
             key={space.id}
@@ -105,31 +83,13 @@ export default function CreateObjectForm({
           />
         ))}
       </Form.Dropdown>
-      <Form.Dropdown
-        id="objectType"
-        title="Object Type"
-        value={selectedType}
-        onChange={setSelectedType}
-      >
+      <Form.Dropdown id="objectType" title="Object Type" value={selectedType} onChange={setSelectedType}>
         {objectTypes?.map((type) => (
-          <Form.Dropdown.Item
-            key={type.unique_key}
-            value={type.unique_key}
-            title={type.name}
-            icon={type.icon}
-          />
+          <Form.Dropdown.Item key={type.unique_key} value={type.unique_key} title={type.name} icon={type.icon} />
         ))}
       </Form.Dropdown>
-      <Form.TextField
-        title="Name"
-        placeholder="Enter name of the object ..."
-        {...itemProps.name}
-      />
-      <Form.TextField
-        title="Icon"
-        placeholder="Enter single emoji as icon ..."
-        {...itemProps.icon}
-      />
+      <Form.TextField title="Name" placeholder="Enter name of the object ..." {...itemProps.name} />
+      <Form.TextField title="Icon" placeholder="Enter single emoji as icon ..." {...itemProps.icon} />
     </Form>
   );
 }

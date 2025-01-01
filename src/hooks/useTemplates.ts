@@ -22,10 +22,7 @@ export function useTemplates(spaceId: string, typeId: string) {
   );
 
   // filter empty data to prevent flickering at the bottom
-  const filteredData = useMemo(
-    () => data?.filter((template) => template) || [],
-    [data],
-  );
+  const filteredData = useMemo(() => data?.filter((template) => template) || [], [data]);
 
   return {
     templates: filteredData,

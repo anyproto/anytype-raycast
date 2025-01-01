@@ -22,10 +22,7 @@ export function useMembers(spaceId: string) {
   );
 
   // filter empty data to prevent flickering at the bottom
-  const filteredData = useMemo(
-    () => data?.filter((member) => member) || [],
-    [data],
-  );
+  const filteredData = useMemo(() => data?.filter((member) => member) || [], [data]);
 
   return {
     members: filteredData,

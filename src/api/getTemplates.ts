@@ -1,4 +1,4 @@
-import { apiFetch } from "./apiClient";
+import { apiFetch } from "../utils/api";
 import { API_URL } from "../utils/constants";
 import { Template, PaginatedResponse } from "../utils/schemas";
 import { Pagination } from "../utils/schemas";

@@ -22,10 +22,7 @@ export function useSearch(searchText: string, type: string) {
   );
 
   // filter empty data to prevent flickering at the bottom
-  const filteredData = useMemo(
-    () => data?.filter((object) => object) || [],
-    [data],
-  );
+  const filteredData = useMemo(() => data?.filter((object) => object) || [], [data]);
 
   return {
     objects: filteredData,

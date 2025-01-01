@@ -24,8 +24,7 @@ export default function Search() {
   const [spaceIcons, setSpaceIcons] = useState<{ [key: string]: string }>({});
   const [filterType, setFilterType] = useState("all");
 
-  const { objects, objectsError, isLoadingObjects, objectsPagination } =
-    useSearch(searchText, objectType);
+  const { objects, objectsError, isLoadingObjects, objectsPagination } = useSearch(searchText, objectType);
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
 
   useEffect(() => {
@@ -63,11 +62,7 @@ export default function Search() {
         const matchesType = (() => {
           switch (filterType) {
             case "pages":
-              return (
-                item.type === "basic" ||
-                item.type === "profile" ||
-                item.type === "todo"
-              );
+              return item.type === "basic" || item.type === "profile" || item.type === "todo";
             case "lists":
               return item.type === "set" || item.type === "collection";
             case "bookmarks":
@@ -75,15 +70,7 @@ export default function Search() {
             case "members":
               return item.type === "participant";
             case "other":
-              return ![
-                "basic",
-                "profile",
-                "todo",
-                "set",
-                "collection",
-                "bookmark",
-                "participant",
-              ].includes(item.type);
+              return !["basic", "profile", "todo", "set", "collection", "bookmark", "participant"].includes(item.type);
             default:
               return false;
           }
@@ -100,11 +87,7 @@ export default function Search() {
   }, [items, filterType]);
 
   if (objectsError || spacesError) {
-    showToast(
-      Toast.Style.Failure,
-      "Failed to fetch latest data",
-      (objectsError || spacesError)?.message,
-    );
+    showToast(Toast.Style.Failure, "Failed to fetch latest data", (objectsError || spacesError)?.message);
   }
 
   return (
@@ -121,27 +104,11 @@ export default function Search() {
         >
           <List.Dropdown.Item title="All" value="all" icon={SEARCH_ICON} />
           <List.Dropdown.Section title="Kinds">
-            <List.Dropdown.Item
-              title="Pages"
-              value="pages"
-              icon={SPACE_OBJECT_ICON}
-            />
+            <List.Dropdown.Item title="Pages" value="pages" icon={SPACE_OBJECT_ICON} />
             <List.Dropdown.Item title="Lists" value="lists" icon={LIST_ICON} />
-            <List.Dropdown.Item
-              title="Bookmarks"
-              value="bookmarks"
-              icon={BOOKMARK_ICON}
-            />
-            <List.Dropdown.Item
-              title="Members"
-              value="members"
-              icon={SPACE_MEMBER_ICON}
-            />
-            <List.Dropdown.Item
-              title="Other"
-              value="other"
-              icon={OTHERS_ICON}
-            />
+            <List.Dropdown.Item title="Bookmarks" value="bookmarks" icon={BOOKMARK_ICON} />
+            <List.Dropdown.Item title="Members" value="members" icon={SPACE_MEMBER_ICON} />
+            <List.Dropdown.Item title="Other" value="other" icon={OTHERS_ICON} />
           </List.Dropdown.Section>
           <List.Dropdown.Section title="Spaces">
             {spaces?.map((space) => (
@@ -181,9 +148,7 @@ export default function Search() {
             }}
             accessories={[
               {
-                date: new Date(
-                  object.details[0]?.details.lastModifiedDate as string,
-                ),
+                date: new Date(object.details[0]?.details.lastModifiedDate as string),
                 tooltip: `Last Modified: ${format(new Date(object.details[0]?.details.lastModifiedDate as string), "EEEE d MMMM yyyy 'at' HH:mm")}`,
               },
               {
