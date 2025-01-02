@@ -12,12 +12,7 @@ export async function getSpaces(options: { offset: number; limit: number }): Pro
   const queryParams = encodeQueryParams(options);
   const url = `${API_URL}/spaces${queryParams}`;
 
-  const response = await apiFetch<PaginatedResponse<Space>>(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await apiFetch<PaginatedResponse<Space>>(url, { method: "GET" });
 
   return {
     spaces: response.data ? await transformSpace(response.data) : [],

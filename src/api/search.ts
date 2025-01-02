@@ -17,12 +17,7 @@ export async function search(
   });
   const url = `${API_URL}/search${queryString}`;
 
-  const response = await apiFetch<PaginatedResponse<SpaceObject>>(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await apiFetch<PaginatedResponse<SpaceObject>>(url, { method: "GET" });
 
   return {
     data: response.data ? await transformObjects(response.data) : [],

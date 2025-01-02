@@ -14,12 +14,7 @@ export async function getObjects(
   const queryString = encodeQueryParams(options);
   const url = `${API_URL}/spaces/${spaceId}/objects${queryString}`;
 
-  const response = await apiFetch<PaginatedResponse<SpaceObject>>(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await apiFetch<PaginatedResponse<SpaceObject>>(url, { method: "GET" });
 
   return {
     objects: response.data ? await transformObjects(response.data) : [],

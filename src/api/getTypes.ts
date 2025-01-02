@@ -18,12 +18,7 @@ export async function getTypes(
   const queryString = encodeQueryParams(options);
   const url = `${API_URL}/spaces/${spaceId}/objectTypes${queryString}`;
 
-  const response = await apiFetch<PaginatedResponse<Type>>(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await apiFetch<PaginatedResponse<Type>>(url, { method: "GET" });
 
   return {
     types: response.data ? await transformTypes(response.data) : [],

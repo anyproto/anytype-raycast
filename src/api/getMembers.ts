@@ -15,12 +15,7 @@ export async function getMembers(
   const queryString = encodeQueryParams(options);
   const url = `${API_URL}/spaces/${spaceId}/members${queryString}`;
 
-  const response = await apiFetch<PaginatedResponse<Member>>(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await apiFetch<PaginatedResponse<Member>>(url, { method: "GET" });
 
   return {
     members: response.data ? await transformMembers(response.data) : [],

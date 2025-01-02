@@ -6,9 +6,6 @@ export async function createSpace(objectData: { name: string }): Promise<void> {
 
   await apiFetch(url, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({ name: objectData.name }),
   });
 }

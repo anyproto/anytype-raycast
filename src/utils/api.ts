@@ -1,20 +1,31 @@
 import fetch from "node-fetch";
+import { getPreferenceValues } from "@raycast/api";
 
 interface FetchOptions {
-  method: string;
-  headers: Record<string, string>;
+  method?: "GET" | "POST" | "PUT" | "DELETE";
+  headers?: Record<string, string>;
   body?: string;
 }
 
 export async function apiFetch<T>(url: string, options: FetchOptions): Promise<T> {
+  const preferences = getPreferenceValues<Preferences>();
+
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(url, {
+      method: options.method || "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${preferences.bearerToken}`,
+        ...options.headers,
+      },
+      body: options.body,
+    });
 
     if (!response.ok) {
       if (response.status === 403) {
         throw new Error("It seems you're not logged in. Please log in and try again.");
       } else {
-        throw new Error(`API request failed: [${response.status}] ${response.statusText}`);
+        throw new Error(`API request failed: [${response.status}] ${response.statusText} ${await response.text()}`);
       }
     }
 
