@@ -1,57 +1,29 @@
-import { Detail } from "@raycast/api";
+import { Action, ActionPanel, Detail, showToast, Toast } from "@raycast/api";
 import { format } from "date-fns";
-import type { Detail as ObjectDetail, Block, Tag } from "../utils/schemas";
+import type { Detail as ObjectDetail, Tag } from "../utils/schemas";
+import { useObjectAs } from "../hooks/useObjectAs";
 
 type ObjectDetailProps = {
-  title: string;
+  spaceId: string;
+  objectId: string;
   details: ObjectDetail[];
-  blocks: Block[];
 };
 
-export default function ObjectDetail({ title, details, blocks }: ObjectDetailProps) {
-  const styleMap: { [key: string]: string } = {
-    Paragraph: "",
-    Header1: "#",
-    Header2: "##",
-    Header3: "###",
-    Header4: "####",
-    Quote: ">",
-    Code: "```",
-    Title: "#",
-    Checkbox: "- [ ]",
-    Marked: "*",
-    Numbered: "1.",
-    // TODO: toggle
-    Toggle: "",
-    Description: "_",
-    Callout: ">",
-  };
-
-  const renderBlocks =
-    `# ${title}\n\n` +
-    blocks[0]?.children_ids
-      .map((childId) => blocks.find((block) => block.id === childId))
-      .filter((block) => block !== undefined)
-      .map((block) => {
-        if (block && block.text) {
-          const stylePrefix = styleMap[block.text.style] || "";
-          let content = `${stylePrefix} ${block.text.text}`;
-          if (block.text.style === "Code" || block.text.style === "Toggle") {
-            content += stylePrefix;
-          }
-          return content;
-        }
-        return "";
-      })
-      .join("\n");
+export default function ObjectDetail({ spaceId, objectId, details }: ObjectDetailProps) {
+  const { objectAs, objectAsError, isLoadingObjectAs } = useObjectAs(spaceId, objectId, "markdown");
 
   const createdDate = details[0].details.createdDate as Date;
   const lastModifiedDate = details[0].details.lastModifiedDate as Date;
   const tags = details.flatMap((detail) => detail.details.tags || []) as Tag[];
 
+  if (objectAsError) {
+    showToast(Toast.Style.Failure, "Failed to fetch object as markdown", objectAsError.message);
+  }
+
   return (
     <Detail
-      markdown={renderBlocks}
+      markdown={objectAs?.markdown}
+      isLoading={isLoadingObjectAs}
       metadata={
         <Detail.Metadata>
           {createdDate ? (
@@ -71,6 +43,15 @@ export default function ObjectDetail({ title, details, blocks }: ObjectDetailPro
             </Detail.Metadata.TagList>
           ) : null}
         </Detail.Metadata>
+      }
+      actions={
+        <ActionPanel>
+          <Action.OpenInBrowser
+            icon={{ source: "../assets/anytype-icon.png" }}
+            title="Open in Anytype"
+            url={`anytype://object?objectId=${objectId}&spaceId=${spaceId}`}
+          />
+        </ActionPanel>
       }
     />
   );

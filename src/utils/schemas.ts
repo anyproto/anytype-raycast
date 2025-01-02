@@ -39,6 +39,10 @@ export interface Member {
   role: string;
 }
 
+export interface ObjectAs {
+  markdown?: string;
+}
+
 export interface SpaceObject {
   type: string;
   id: string;

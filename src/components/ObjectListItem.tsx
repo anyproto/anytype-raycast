@@ -26,7 +26,6 @@ export default function ObjectListItem({
   subtitle,
   accessories,
   details,
-  blocks,
 }: ObjectListItemProps) {
   return (
     <List.Item
@@ -51,25 +50,16 @@ export default function ObjectListItem({
       })}
       actions={
         <ActionPanel title={title}>
-          {details && blocks ? (
-            <>
-              <Action.Push
-                title="Open Object Details"
-                target={<ObjectDetail title={title} details={details} blocks={blocks} />}
-              />
-              <Action.OpenInBrowser
-                icon={{ source: "../assets/anytype-icon.png" }}
-                title="Open in Anytype"
-                url={`anytype://object?objectId=${objectId}&spaceId=${spaceId}`}
-              />
-            </>
-          ) : (
-            <Action.OpenInBrowser
-              icon={{ source: "../assets/anytype-icon.png" }}
-              title="Open in Anytype"
-              url={`anytype://object?objectId=${objectId}&spaceId=${spaceId}`}
-            />
-          )}
+          <Action.Push
+            icon={{ source: Icon.Sidebar }}
+            title="Show Details"
+            target={<ObjectDetail spaceId={spaceId} objectId={objectId} details={details || []} />}
+          />
+          <Action.OpenInBrowser
+            icon={{ source: "../assets/anytype-icon.png" }}
+            title="Open in Anytype"
+            url={`anytype://object?objectId=${objectId}&spaceId=${spaceId}`}
+          />
         </ActionPanel>
       }
     />

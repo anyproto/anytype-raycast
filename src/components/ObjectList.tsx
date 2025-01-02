@@ -72,7 +72,6 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
               },
             ]}
             details={object.details}
-            blocks={object.blocks}
           />
         ));
       case "types":
