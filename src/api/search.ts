@@ -6,12 +6,12 @@ import { encodeQueryParams } from "../utils/helpers";
 
 export async function search(
   searchText: string,
-  type: string,
+  types: string[],
   options: { offset: number; limit: number },
 ): Promise<PaginatedResponse<SpaceObject>> {
   const queryString = encodeQueryParams({
     query: searchText,
-    type: type,
+    object_types: types,
     offset: options.offset,
     limit: options.limit,
   });

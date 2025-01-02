@@ -132,11 +132,20 @@ export function pluralize(
   return withNumber ? `${count} ${pluralizedNoun}` : pluralizedNoun;
 }
 
-export function encodeQueryParams(params: Record<string, number | string>): string {
+export function encodeQueryParams(params: Record<string, number | string | string[]>): string {
   const queryParams = [];
   for (const key in params) {
-    if (params[key] !== undefined) {
-      queryParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(params[key])}`);
+    const value = params[key];
+    if (value !== undefined) {
+      if (Array.isArray(value)) {
+        // encode array values as multiple query parameters with the same key
+        value.forEach((item) => {
+          queryParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(item)}`);
+        });
+      } else {
+        // encode single values as a single query parameter
+        queryParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+      }
     }
   }
   return queryParams.length > 0 ? `?${queryParams.join("&")}` : "";
