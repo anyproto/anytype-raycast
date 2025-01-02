@@ -32,13 +32,6 @@
       "subtitle": "Anytype",
       "description": "Create a new Anytype object in any of your spaces.",
       "mode": "view"
-    },
-    {
-      "name": "create-space",
-      "title": "Create Space",
-      "subtitle": "Anytype",
-      "description": "Create a new Anytype space to organize or collaborate.",
-      "mode": "view"
     }
   ],
   "dependencies": {
