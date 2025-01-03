@@ -1,7 +1,7 @@
 import { Action, ActionPanel, Detail, showToast, Toast } from "@raycast/api";
 import { format } from "date-fns";
 import type { Detail as ObjectDetail, Tag } from "../utils/schemas";
-import { useObjectAs } from "../hooks/useObjectAs";
+import { useExport } from "../hooks/useExport";
 
 type ObjectDetailProps = {
   spaceId: string;
@@ -10,20 +10,20 @@ type ObjectDetailProps = {
 };
 
 export default function ObjectDetail({ spaceId, objectId, details }: ObjectDetailProps) {
-  const { objectAs, objectAsError, isLoadingObjectAs } = useObjectAs(spaceId, objectId, "markdown");
+  const { objectExport, objectExportError, isLoadingObjectExport } = useExport(spaceId, objectId, "markdown");
 
   const createdDate = details[0].details.createdDate as Date;
   const lastModifiedDate = details[0].details.lastModifiedDate as Date;
   const tags = details.flatMap((detail) => detail.details.tags || []) as Tag[];
 
-  if (objectAsError) {
-    showToast(Toast.Style.Failure, "Failed to fetch object as markdown", objectAsError.message);
+  if (objectExportError) {
+    showToast(Toast.Style.Failure, "Failed to fetch object as markdown", objectExportError.message);
   }
 
   return (
     <Detail
-      markdown={objectAs?.markdown}
-      isLoading={isLoadingObjectAs}
+      markdown={objectExport?.markdown}
+      isLoading={isLoadingObjectExport}
       metadata={
         <Detail.Metadata>
           {createdDate ? (
