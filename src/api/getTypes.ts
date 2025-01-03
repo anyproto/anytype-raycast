@@ -16,7 +16,7 @@ export async function getTypes(
   pagination: Pagination;
 }> {
   const queryString = encodeQueryParams(options);
-  const url = `${API_URL}/spaces/${spaceId}/objectTypes${queryString}`;
+  const url = `${API_URL}/spaces/${spaceId}/object_types${queryString}`;
 
   const response = await apiFetch<PaginatedResponse<Type>>(url, { method: "GET" });
 
