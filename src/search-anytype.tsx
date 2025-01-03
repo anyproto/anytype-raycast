@@ -140,7 +140,7 @@ export default function Search() {
               icon={{
                 source: object.icon,
                 mask:
-                  object.type === "participant" || object.type === "profile"
+                  (object.type === "participant" || object.type === "profile") && object.icon != SPACE_OBJECT_ICON
                     ? Image.Mask.Circle
                     : Image.Mask.RoundedRectangle,
               }}
