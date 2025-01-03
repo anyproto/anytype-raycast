@@ -4,6 +4,7 @@ import SpaceListItem from "./components/SpaceListItem";
 import { useSpaces } from "./hooks/useSpaces";
 import { getMembers } from "./api/getMembers";
 import { pluralize } from "./utils/helpers";
+import EmptyView from "./components/EmptyView";
 
 export default function BrowseSpaces() {
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
@@ -58,27 +59,31 @@ export default function BrowseSpaces() {
       searchBarPlaceholder="Search spaces..."
       onSearchTextChange={setSearchText}
     >
-      <List.Section
-        title={searchText ? "Search Results" : "All Spaces"}
-        subtitle={pluralize(filteredSpaces?.length || 0, "space", {
-          withNumber: true,
-        })}
-      >
-        {filteredSpaces?.map((space) => {
-          const memberCount = membersDataRef.current[space.id] || 0;
-          return (
-            <SpaceListItem
-              space={space}
-              key={space.id}
-              icon={{
-                source: space.icon,
-                mask: Image.Mask.RoundedRectangle,
-              }}
-              memberCount={memberCount}
-            />
-          );
-        })}
-      </List.Section>
+      {filteredSpaces?.length > 0 ? (
+        <List.Section
+          title={searchText ? "Search Results" : "All Spaces"}
+          subtitle={pluralize(filteredSpaces.length, "space", {
+            withNumber: true,
+          })}
+        >
+          {filteredSpaces.map((space) => {
+            const memberCount = membersDataRef.current[space.id] || 0;
+            return (
+              <SpaceListItem
+                space={space}
+                key={space.id}
+                icon={{
+                  source: space.icon,
+                  mask: Image.Mask.RoundedRectangle,
+                }}
+                memberCount={memberCount}
+              />
+            );
+          })}
+        </List.Section>
+      ) : (
+        <EmptyView title="No Spaces Found" />
+      )}
     </List>
   );
 }

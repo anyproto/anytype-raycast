@@ -5,6 +5,7 @@ import ObjectListItem from "./ObjectListItem";
 import { useMembers } from "../hooks/useMembers";
 import { useObjects } from "../hooks/useObjects";
 import { useTypes } from "../hooks/useTypes";
+import EmptyView from "./EmptyView";
 import { TYPE_ICON, SPACE_OBJECT_ICON, SPACE_MEMBER_ICON } from "../utils/constants";
 
 type ObjectListProps = {
@@ -111,6 +112,8 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
     }
   };
 
+  const currentItems = getCurrentItems();
+
   return (
     <List
       isLoading={isLoadingMembers || isLoadingObjects || isLoadingTypes}
@@ -128,14 +131,18 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
       }
       pagination={pagination}
     >
-      <List.Section
-        title={searchText ? "Search Results" : `${currentView.charAt(0).toUpperCase() + currentView.slice(1)}`}
-        subtitle={
-          searchText ? `${getCurrentItems()?.length || 0} ${currentView}` : `Total: ${getCurrentItems()?.length || 0}`
-        }
-      >
-        {getCurrentItems()}
-      </List.Section>
+      {currentItems && currentItems?.length > 0 ? (
+        <List.Section
+          title={searchText ? "Search Results" : `${currentView.charAt(0).toUpperCase() + currentView.slice(1)}`}
+          subtitle={
+            searchText ? `${getCurrentItems()?.length || 0} ${currentView}` : `Total: ${getCurrentItems()?.length || 0}`
+          }
+        >
+          {getCurrentItems()}
+        </List.Section>
+      ) : (
+        <EmptyView title={`No ${currentView.charAt(0).toUpperCase() + currentView.slice(1)} Found`} />
+      )}
     </List>
   );
 }

@@ -5,6 +5,8 @@ import { pluralize } from "./utils/helpers";
 import { useSpaces } from "./hooks/useSpaces";
 import { useSearch } from "./hooks/useSearch";
 import { SpaceObject } from "./utils/schemas";
+import ObjectListItem from "./components/ObjectListItem";
+import EmptyView from "./components/EmptyView";
 import {
   SEARCH_ICON,
   SPACE_OBJECT_ICON,
@@ -13,7 +15,6 @@ import {
   SPACE_MEMBER_ICON,
   OTHERS_ICON,
 } from "./utils/constants";
-import ObjectListItem from "./components/ObjectListItem";
 
 export default function Search() {
   const [searchText, setSearchText] = useState("");
@@ -94,8 +95,9 @@ export default function Search() {
     <List
       isLoading={isLoadingSpaces || isLoadingObjects}
       onSearchTextChange={setSearchText}
-      searchBarPlaceholder="Search objects across all spaces …"
+      searchBarPlaceholder="Globally search objects across spaces..."
       pagination={objectsPagination}
+      throttle={true}
       searchBarAccessory={
         <List.Dropdown
           tooltip="Filter by kind or space"
@@ -123,47 +125,50 @@ export default function Search() {
         </List.Dropdown>
       }
     >
-      <List.Section
-        title={searchText ? "Search Results" : "Modified Recently"}
-        subtitle={pluralize(filteredItems.length, "object", {
-          withNumber: true,
-        })}
-      >
-        {filteredItems.map((object) => (
-          <ObjectListItem
-            key={object.id}
-            spaceId={object.space_id}
-            objectId={object.id}
-            icon={{
-              source: object.icon,
-              mask:
-                object.type === "participant" || object.type === "profile"
-                  ? Image.Mask.Circle
-                  : Image.Mask.RoundedRectangle,
-            }}
-            title={object.name}
-            subtitle={{
-              value: object.object_type,
-              tooltip: `Object Type: ${object.object_type}`,
-            }}
-            accessories={[
-              {
-                date: new Date(object.details[0]?.details.lastModifiedDate as string),
-                tooltip: `Last Modified: ${format(new Date(object.details[0]?.details.lastModifiedDate as string), "EEEE d MMMM yyyy 'at' HH:mm")}`,
-              },
-              {
-                icon: {
-                  source: spaceIcons[object.space_id] || Icon.QuestionMark,
-                  mask: Image.Mask.RoundedRectangle,
+      {filteredItems.length > 0 ? (
+        <List.Section
+          title={searchText ? "Search Results" : "Modified Recently"}
+          subtitle={pluralize(filteredItems.length, "object", {
+            withNumber: true,
+          })}
+        >
+          {filteredItems.map((object) => (
+            <ObjectListItem
+              key={object.id}
+              spaceId={object.space_id}
+              objectId={object.id}
+              icon={{
+                source: object.icon,
+                mask:
+                  object.type === "participant" || object.type === "profile"
+                    ? Image.Mask.Circle
+                    : Image.Mask.RoundedRectangle,
+              }}
+              title={object.name}
+              subtitle={{
+                value: object.object_type,
+                tooltip: `Object Type: ${object.object_type}`,
+              }}
+              accessories={[
+                {
+                  date: new Date(object.details[0]?.details.lastModifiedDate as string),
+                  tooltip: `Last Modified: ${format(new Date(object.details[0]?.details.lastModifiedDate as string), "EEEE d MMMM yyyy 'at' HH:mm")}`,
                 },
-                tooltip: `Space: ${spaces?.find((space) => space.id === object.space_id)?.name}`,
-              },
-            ]}
-            details={object.details}
-            blocks={object.blocks}
-          />
-        ))}
-      </List.Section>
+                {
+                  icon: {
+                    source: spaceIcons[object.space_id] || Icon.QuestionMark,
+                    mask: Image.Mask.RoundedRectangle,
+                  },
+                  tooltip: `Space: ${spaces?.find((space) => space.id === object.space_id)?.name}`,
+                },
+              ]}
+              details={object.details}
+            />
+          ))}
+        </List.Section>
+      ) : (
+        <EmptyView title="No Objects Found" />
+      )}
     </List>
-  );
+    );
 }
