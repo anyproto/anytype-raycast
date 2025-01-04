@@ -7,6 +7,9 @@ export function useTypes(spaceId: string) {
 
   const { data, error, isLoading, pagination } = useCachedPromise(
     (spaceId: string) => async (options: { page: number }) => {
+      if (!spaceId) {
+        return { data: [], hasMore: false };
+      }
       const offset = options.page * limit;
       const response = await getTypes(spaceId, { offset, limit });
 
@@ -27,7 +30,7 @@ export function useTypes(spaceId: string) {
   return {
     types: filteredData,
     typesError: error,
-    isLoadingTypes: isLoading,
+    isLoadingTypes: isLoading && !!spaceId,
     typesPagination: pagination,
   };
 }
