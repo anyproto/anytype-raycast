@@ -7,25 +7,16 @@ import { useSearch } from "./hooks/useSearch";
 import { SpaceObject } from "./utils/schemas";
 import ObjectListItem from "./components/ObjectListItem";
 import EmptyView from "./components/EmptyView";
-import {
-  SEARCH_ICON,
-  SPACE_OBJECT_ICON,
-  LIST_ICON,
-  BOOKMARK_ICON,
-  SPACE_MEMBER_ICON,
-  OTHERS_ICON,
-} from "./utils/constants";
+import { SEARCH_ICON, OBJECT_ICON, LIST_ICON, BOOKMARK_ICON, MEMBER_ICON } from "./utils/constants";
 
 export default function Search() {
   const [searchText, setSearchText] = useState("");
-  // TODO: implement object type filtering
-  const [objectType] = useState("");
-  const [items, setItems] = useState<SpaceObject[]>([]);
+  const [objectTypes, setObjectTypes] = useState<string[]>([]);
   const [filteredItems, setFilteredItems] = useState<SpaceObject[]>([]);
   const [spaceIcons, setSpaceIcons] = useState<{ [key: string]: string }>({});
   const [filterType, setFilterType] = useState("all");
 
-  const { objects, objectsError, isLoadingObjects, objectsPagination } = useSearch(searchText, objectType);
+  const { objects, objectsError, isLoadingObjects, objectsPagination } = useSearch(searchText, objectTypes);
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
 
   useEffect(() => {
@@ -43,49 +34,26 @@ export default function Search() {
 
   useEffect(() => {
     if (objects) {
-      // TODO investigate object_type matching on api side; currently only name is matched
       const filteredObjects = objects.filter(
         (object) =>
           object.name.toLowerCase().includes(searchText.toLowerCase()) ||
           object.object_type.toLowerCase().includes(searchText.toLowerCase()),
       );
-      setItems(filteredObjects);
+      setFilteredItems(filteredObjects);
     }
   }, [objects, searchText]);
 
   useEffect(() => {
-    const applyFilter = () => {
-      const filtered = items.filter((item) => {
-        if (filterType === "all") {
-          return true;
-        }
-
-        const matchesType = (() => {
-          switch (filterType) {
-            case "pages":
-              return item.type === "basic" || item.type === "profile" || item.type === "todo";
-            case "lists":
-              return item.type === "set" || item.type === "collection";
-            case "bookmarks":
-              return item.type === "bookmark";
-            case "members":
-              return item.type === "participant";
-            case "other":
-              return !["basic", "profile", "todo", "set", "collection", "bookmark", "participant"].includes(item.type);
-            default:
-              return false;
-          }
-        })();
-
-        const matchesSpace = item.space_id === filterType;
-
-        return matchesType || matchesSpace;
-      });
-      setFilteredItems(filtered);
+    const objectTypeMap: { [key: string]: string[] } = {
+      all: [],
+      pages: ["ot-note", "ot-page"],
+      lists: ["ot-set", "ot-collection"],
+      bookmarks: ["ot-bookmark"],
+      members: ["ot-profile"],
     };
 
-    applyFilter();
-  }, [items, filterType]);
+    setObjectTypes(objectTypeMap[filterType] || []);
+  }, [filterType]);
 
   if (objectsError || spacesError) {
     showToast(Toast.Style.Failure, "Failed to fetch latest data", (objectsError || spacesError)?.message);
@@ -105,23 +73,10 @@ export default function Search() {
           onChange={(newValue) => setFilterType(newValue)}
         >
           <List.Dropdown.Item title="All" value="all" icon={SEARCH_ICON} />
-          <List.Dropdown.Section title="Kinds">
-            <List.Dropdown.Item title="Pages" value="pages" icon={SPACE_OBJECT_ICON} />
-            <List.Dropdown.Item title="Lists" value="lists" icon={LIST_ICON} />
-            <List.Dropdown.Item title="Bookmarks" value="bookmarks" icon={BOOKMARK_ICON} />
-            <List.Dropdown.Item title="Members" value="members" icon={SPACE_MEMBER_ICON} />
-            <List.Dropdown.Item title="Other" value="other" icon={OTHERS_ICON} />
-          </List.Dropdown.Section>
-          <List.Dropdown.Section title="Spaces">
-            {spaces?.map((space) => (
-              <List.Dropdown.Item
-                key={space.id}
-                title={space.name}
-                value={space.id}
-                icon={{ source: space.icon, mask: Image.Mask.RoundedRectangle }}
-              />
-            ))}
-          </List.Dropdown.Section>
+          <List.Dropdown.Item title="Pages" value="pages" icon={OBJECT_ICON} />
+          <List.Dropdown.Item title="Lists" value="lists" icon={LIST_ICON} />
+          <List.Dropdown.Item title="Bookmarks" value="bookmarks" icon={BOOKMARK_ICON} />
+          <List.Dropdown.Item title="Members" value="members" icon={MEMBER_ICON} />
         </List.Dropdown>
       }
     >
@@ -140,7 +95,7 @@ export default function Search() {
               icon={{
                 source: object.icon,
                 mask:
-                  (object.type === "participant" || object.type === "profile") && object.icon != SPACE_OBJECT_ICON
+                  (object.layout === "participant" || object.layout === "profile") && object.icon != OBJECT_ICON
                     ? Image.Mask.Circle
                     : Image.Mask.RoundedRectangle,
               }}
@@ -170,5 +125,5 @@ export default function Search() {
         <EmptyView title="No Objects Found" />
       )}
     </List>
-    );
+  );
 }
