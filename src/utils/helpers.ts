@@ -1,6 +1,6 @@
 import { Icon } from "@raycast/api";
 import fetch from "node-fetch";
-import { SPACE_ICON, MEMBER_ICON, SPACE_OBJECT_ICON, TYPE_ICON, LIST_ICON, BOOKMARK_ICON } from "./constants";
+import { SPACE_ICON, MEMBER_ICON, OBJECT_ICON, TYPE_ICON, LIST_ICON, BOOKMARK_ICON } from "./constants";
 import { Space, SpaceObject, Member, Type } from "./schemas";
 
 export async function transformSpace(spaces: Space[]): Promise<Space[]> {
@@ -75,7 +75,7 @@ export async function getIconForObject(object: SpaceObject): Promise<{ source: s
     case "bookmark":
       return BOOKMARK_ICON;
     default:
-      return SPACE_OBJECT_ICON;
+      return OBJECT_ICON;
   }
 }
 

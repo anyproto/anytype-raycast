@@ -6,7 +6,7 @@ import { useMembers } from "../hooks/useMembers";
 import { useObjects } from "../hooks/useObjects";
 import { useTypes } from "../hooks/useTypes";
 import EmptyView from "./EmptyView";
-import { TYPE_ICON, SPACE_OBJECT_ICON, MEMBER_ICON } from "../utils/constants";
+import { TYPE_ICON, OBJECT_ICON, MEMBER_ICON } from "../utils/constants";
 
 type ObjectListProps = {
   spaceId: string;
@@ -57,7 +57,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             icon={{
               source: object.icon,
               mask:
-                (object.layout === "participant" || object.layout === "profile") && object.icon != SPACE_OBJECT_ICON
+                (object.layout === "participant" || object.layout === "profile") && object.icon != OBJECT_ICON
                   ? Image.Mask.Circle
                   : Image.Mask.RoundedRectangle,
             }}
@@ -124,7 +124,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
           tooltip="Choose View"
           onChange={(value) => setCurrentView(value as "objects" | "types" | "members")}
         >
-          <List.Dropdown.Item title="Objects" value="objects" icon={SPACE_OBJECT_ICON} />
+          <List.Dropdown.Item title="Objects" value="objects" icon={OBJECT_ICON} />
           <List.Dropdown.Item title="Types" value="types" icon={TYPE_ICON} />
           <List.Dropdown.Item title="Members" value="members" icon={MEMBER_ICON} />
         </List.Dropdown>
