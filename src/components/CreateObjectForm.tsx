@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Form, Icon, Image, LaunchProps, popToRoot, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Form, Icon, Image, popToRoot, showToast, Toast } from "@raycast/api";
 import { useForm } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { createObject } from "../api/createObject";
@@ -14,7 +14,7 @@ export interface CreateObjectFormValues {
   source?: string;
 }
 
-interface CreateObjectFormProps extends Partial<LaunchProps<{ draftValues: CreateObjectFormValues }>> {
+interface CreateObjectFormProps {
   spaces: Space[];
   objectTypes: Type[];
   selectedSpace: string;
@@ -48,7 +48,7 @@ export default function CreateObjectForm({
     setFilteredTypes(objectTypes.filter((type) => !disallowed.includes(type.unique_key)));
   }, [objectTypes]);
 
-  const { handleSubmit } = useForm<CreateObjectFormValues>({
+  const { handleSubmit, itemProps } = useForm<CreateObjectFormValues>({
     initialValues: draftValues,
     onSubmit: async (values) => {
       setLoading(true);
@@ -66,7 +66,7 @@ export default function CreateObjectForm({
         });
 
         await showToast(Toast.Style.Success, "Object created successfully");
-        popToRoot(); // Once submitted, drafts are dropped by Raycast
+        popToRoot();
       } catch (error) {
         await showToast(Toast.Style.Failure, "Failed to create object", String(error));
       } finally {
@@ -75,7 +75,6 @@ export default function CreateObjectForm({
     },
     validation: {
       name: (value) => {
-        // If it's not a bookmark or note, name is required
         if (!["ot-bookmark", "ot-note"].includes(selectedType) && !value) {
           return "Name is required";
         }
@@ -86,7 +85,6 @@ export default function CreateObjectForm({
         }
       },
       source: (value) => {
-        // Bookmarks specifically require a Source
         if (selectedType === "ot-bookmark" && !value) {
           return "Source is required for Bookmarks";
         }
@@ -135,6 +133,7 @@ export default function CreateObjectForm({
 
       {selectedType === "ot-bookmark" ? (
         <Form.TextField
+          {...itemProps.source}
           id="source"
           title="Source"
           placeholder="Enter a Source ..."
@@ -145,6 +144,7 @@ export default function CreateObjectForm({
         <>
           {!["ot-note"].includes(selectedType) && (
             <Form.TextField
+              {...itemProps.name}
               id="name"
               title="Name"
               placeholder="Enter an Object Name ..."
@@ -154,6 +154,7 @@ export default function CreateObjectForm({
           )}
           {!["ot-task", "ot-note"].includes(selectedType) && (
             <Form.TextField
+              {...itemProps.icon}
               id="icon"
               title="Icon"
               placeholder="Enter an Icon ..."
@@ -162,6 +163,7 @@ export default function CreateObjectForm({
             />
           )}
           <Form.TextField
+            {...itemProps.description}
             id="description"
             title="Description"
             placeholder="Enter a Description ..."
@@ -170,6 +172,7 @@ export default function CreateObjectForm({
           />
           {!["ot-set", "ot-collection"].includes(selectedType) && (
             <Form.TextArea
+              {...itemProps.body}
               id="body"
               title="Body"
               placeholder="Enter a Body ..."
