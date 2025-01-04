@@ -42,6 +42,37 @@
       "subtitle": "Anytype",
       "description": "Create a new Anytype object in any of your spaces.",
       "mode": "view"
+    },
+    {
+      "name": "create-bookmark",
+      "title": "Create Bookmark",
+      "subtitle": "Anytype",
+      "description": "Create a new bookmark in a specified space.",
+      "mode": "no-view",
+      "arguments": [
+        {
+          "name": "space",
+          "type": "dropdown",
+          "title": "Space",
+          "description": "Select the space where the bookmark will be created.",
+          "placeholder": "Select a space",
+          "required": true,
+          "data": [
+            {
+              "title": "TODO",
+              "value": "todo"
+            }
+          ]
+        },
+        {
+          "name": "url",
+          "type": "text",
+          "title": "URL",
+          "description": "Enter the URL for the bookmark.",
+          "placeholder": "https://example.com",
+          "required": true
+        }
+      ]
     }
   ],
   "dependencies": {
