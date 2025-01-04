@@ -6,6 +6,9 @@ export async function createObject(
   objectData: {
     icon: string;
     name: string;
+    description: string;
+    body: string;
+    source: string;
     template_id: string;
     object_type_unique_key: string;
   },

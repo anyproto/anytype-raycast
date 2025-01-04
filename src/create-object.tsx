@@ -1,11 +1,13 @@
-import { Toast, showToast } from "@raycast/api";
-import CreateObjectForm from "./components/CreateObjectForm";
-import { useState, useEffect } from "react";
+import { Toast, showToast, LaunchProps } from "@raycast/api";
+import { useEffect, useState } from "react";
 import { useSpaces } from "./hooks/useSpaces";
 import { useTypes } from "./hooks/useTypes";
+import CreateObjectForm, { CreateObjectFormValues } from "./components/CreateObjectForm";
 
-export default function CreateObject() {
-  const [selectedSpace, setSelectedSpace] = useState<string>("");
+interface CreateObjectProps extends LaunchProps<{ draftValues: CreateObjectFormValues }> {}
+
+export default function CreateObject({ draftValues }: CreateObjectProps) {
+  const [selectedSpace, setSelectedSpace] = useState(draftValues?.space || "");
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
   const { types, typesError, isLoadingTypes } = useTypes(selectedSpace);
 
@@ -30,6 +32,7 @@ export default function CreateObject() {
       selectedSpace={selectedSpace}
       setSelectedSpace={setSelectedSpace}
       isLoading={isLoadingSpaces || isLoadingTypes}
+      draftValues={draftValues as CreateObjectFormValues}
     />
   );
 }

@@ -1,21 +1,27 @@
-import { ActionPanel, Action, Form, Icon, showToast, Toast, Image, popToRoot } from "@raycast/api";
-import { useState } from "react";
-import { useForm, FormValidation } from "@raycast/utils";
+import { Action, ActionPanel, Form, Icon, Image, LaunchProps, popToRoot, showToast, Toast } from "@raycast/api";
+import { useForm } from "@raycast/utils";
+import { useEffect, useState } from "react";
 import { createObject } from "../api/createObject";
 import { Space, Type } from "../utils/schemas";
 
-type CreateObjectFormProps = {
+export interface CreateObjectFormValues {
+  space: string;
+  type: string;
+  name?: string;
+  icon?: string;
+  description?: string;
+  body?: string;
+  source?: string;
+}
+
+interface CreateObjectFormProps extends Partial<LaunchProps<{ draftValues: CreateObjectFormValues }>> {
   spaces: Space[];
   objectTypes: Type[];
   selectedSpace: string;
   setSelectedSpace: (spaceId: string) => void;
   isLoading: boolean;
-};
-
-type CreateObjectFormValues = {
-  name: string;
-  icon: string;
-};
+  draftValues: CreateObjectFormValues;
+}
 
 export default function CreateObjectForm({
   spaces,
@@ -23,39 +29,66 @@ export default function CreateObjectForm({
   selectedSpace,
   setSelectedSpace,
   isLoading,
+  draftValues,
 }: CreateObjectFormProps) {
   const [loading, setLoading] = useState(false);
-  const [selectedType, setSelectedType] = useState<string>("");
+  const [selectedType, setSelectedType] = useState(draftValues?.type || "");
+  const [filteredTypes, setFilteredTypes] = useState<Type[]>([]);
 
-  const { handleSubmit, itemProps } = useForm<CreateObjectFormValues>({
+  useEffect(() => {
+    const disallowed = [
+      "ot-audio",
+      "ot-image",
+      "ot-video",
+      "ot-file",
+      "ot-template",
+      "ot-participant",
+      "ot-objectType",
+    ];
+    setFilteredTypes(objectTypes.filter((type) => !disallowed.includes(type.unique_key)));
+  }, [objectTypes]);
+
+  const { handleSubmit } = useForm<CreateObjectFormValues>({
+    initialValues: draftValues,
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        await showToast({
-          style: Toast.Style.Animated,
-          title: "Creating object...",
-        });
-        // TODO use template_id
+        await showToast({ style: Toast.Style.Animated, title: "Creating object..." });
+
         await createObject(selectedSpace, {
-          icon: values.icon,
-          name: values.name,
+          icon: values.icon || "",
+          name: values.name || "",
+          description: values.description || "",
+          body: values.body || "",
+          source: values.source || "",
           template_id: "",
           object_type_unique_key: selectedType,
         });
 
         await showToast(Toast.Style.Success, "Object created successfully");
-        popToRoot();
+        popToRoot(); // Once submitted, drafts are dropped by Raycast
       } catch (error) {
-        await showToast(Toast.Style.Failure, "Failed to create object", (error as Error).message);
+        await showToast(Toast.Style.Failure, "Failed to create object", String(error));
       } finally {
         setLoading(false);
       }
     },
     validation: {
-      name: FormValidation.Required,
+      name: (value) => {
+        // If it's not a bookmark or note, name is required
+        if (!["ot-bookmark", "ot-note"].includes(selectedType) && !value) {
+          return "Name is required";
+        }
+      },
       icon: (value) => {
         if (value && value.length > 2) {
           return "Icon must be a single character";
+        }
+      },
+      source: (value) => {
+        // Bookmarks specifically require a Source
+        if (selectedType === "ot-bookmark" && !value) {
+          return "Source is required for Bookmarks";
         }
       },
     },
@@ -64,8 +97,9 @@ export default function CreateObjectForm({
   return (
     <Form
       isLoading={loading || isLoading}
+      enableDrafts
       actions={
-        <ActionPanel title="Create New Object">
+        <ActionPanel>
           <Action.SubmitForm title="Create Object" icon={Icon.Plus} onSubmit={handleSubmit} />
         </ActionPanel>
       }
@@ -76,20 +110,53 @@ export default function CreateObjectForm({
             key={space.id}
             value={space.id}
             title={space.name}
-            icon={{
-              source: space.icon,
-              mask: Image.Mask.RoundedRectangle,
-            }}
+            icon={{ source: space.icon, mask: Image.Mask.RoundedRectangle }}
           />
         ))}
       </Form.Dropdown>
+
       <Form.Dropdown id="type" title="Type" value={selectedType} onChange={setSelectedType}>
-        {objectTypes?.map((type) => (
+        {filteredTypes.map((type) => (
           <Form.Dropdown.Item key={type.unique_key} value={type.unique_key} title={type.name} icon={type.icon} />
         ))}
       </Form.Dropdown>
-      <Form.TextField title="Name" placeholder="Enter name of the object ..." {...itemProps.name} />
-      <Form.TextField title="Icon" placeholder="Enter single emoji as icon ..." {...itemProps.icon} />
+
+      {selectedType === "ot-bookmark" ? (
+        <Form.TextField
+          id="source"
+          title="Source"
+          placeholder="Enter a Source ..."
+          defaultValue={draftValues?.source}
+        />
+      ) : (
+        <>
+          {!["ot-note"].includes(selectedType) && (
+            <Form.TextField
+              id="name"
+              title="Name"
+              placeholder="Enter an Object Name ..."
+              defaultValue={draftValues?.name}
+            />
+          )}
+          {!["ot-task", "ot-note"].includes(selectedType) && (
+            <Form.TextField
+              id="icon"
+              title="Icon"
+              placeholder="Enter a single Icon ..."
+              defaultValue={draftValues?.icon}
+            />
+          )}
+          <Form.TextField
+            id="description"
+            title="Description"
+            placeholder="Enter a Description ..."
+            defaultValue={draftValues?.description}
+          />
+          {!["ot-set", "ot-collection"].includes(selectedType) && (
+            <Form.TextArea id="body" title="Body" placeholder="Enter a Body ..." defaultValue={draftValues?.body} />
+          )}
+        </>
+      )}
     </Form>
   );
 }
