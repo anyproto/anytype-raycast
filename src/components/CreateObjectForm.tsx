@@ -83,7 +83,7 @@ export default function CreateObjectForm({
           />
         ))}
       </Form.Dropdown>
-      <Form.Dropdown id="objectType" title="Object Type" value={selectedType} onChange={setSelectedType}>
+      <Form.Dropdown id="type" title="Type" value={selectedType} onChange={setSelectedType}>
         {objectTypes?.map((type) => (
           <Form.Dropdown.Item key={type.unique_key} value={type.unique_key} title={type.name} icon={type.icon} />
         ))}

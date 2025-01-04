@@ -28,9 +28,9 @@ export default function BrowseSpaces() {
               data[id] = response.pagination.total;
             } catch (error) {
               if (error instanceof Error) {
-                showToast(Toast.Style.Failure, "Failed to fetch members", error.message);
+                showToast(Toast.Style.Failure, "Failed to fetch Members", error.message);
               } else {
-                showToast(Toast.Style.Failure, "Failed to fetch members", "An unknown error occurred.");
+                showToast(Toast.Style.Failure, "Failed to fetch Members", "An unknown error occurred.");
               }
             }
           }),
@@ -50,7 +50,7 @@ export default function BrowseSpaces() {
   const filteredSpaces = spaces?.filter((space) => space.name.toLowerCase().includes(searchText.toLowerCase()));
 
   if (spacesError) {
-    showToast(Toast.Style.Failure, "Failed to fetch spaces", spacesError.message);
+    showToast(Toast.Style.Failure, "Failed to fetch Spaces", spacesError.message);
   }
 
   return (

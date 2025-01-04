@@ -1,6 +1,6 @@
 import { Icon } from "@raycast/api";
 import fetch from "node-fetch";
-import { SPACE_ICON, SPACE_MEMBER_ICON, SPACE_OBJECT_ICON, TYPE_ICON, LIST_ICON, BOOKMARK_ICON } from "./constants";
+import { SPACE_ICON, MEMBER_ICON, SPACE_OBJECT_ICON, TYPE_ICON, LIST_ICON, BOOKMARK_ICON } from "./constants";
 import { Space, SpaceObject, Member, Type } from "./schemas";
 
 export async function transformSpace(spaces: Space[]): Promise<Space[]> {
@@ -19,7 +19,7 @@ export async function transformSpace(spaces: Space[]): Promise<Space[]> {
 export async function transformMembers(members: Member[]): Promise<Member[]> {
   return Promise.all(
     members.map(async (member) => {
-      const icon = (await fetchAndTransformIcon(member.icon)) || SPACE_MEMBER_ICON;
+      const icon = (await fetchAndTransformIcon(member.icon)) || MEMBER_ICON;
       return {
         ...member,
         icon: icon,
@@ -66,12 +66,12 @@ export async function getIconForObject(object: SpaceObject): Promise<{ source: s
     }
   }
 
-  switch (object.type) {
+  switch (object.layout) {
     case "set":
     case "collection":
       return LIST_ICON;
     case "participant":
-      return SPACE_MEMBER_ICON;
+      return MEMBER_ICON;
     case "bookmark":
       return BOOKMARK_ICON;
     default:
@@ -105,6 +105,7 @@ export async function transformObjects(objects: SpaceObject[]): Promise<SpaceObj
       const created = object.details?.find((d) => d.id === "createdDate")?.details.createdDate as string;
       const createdDate = created ? new Date(parseInt(created) * 1000) : new Date(0);
       const icon = await getIconForObject(object);
+
       return {
         ...object,
         icon: typeof icon === "string" ? icon : icon.source,

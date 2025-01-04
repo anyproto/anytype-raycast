@@ -6,7 +6,7 @@ import { useMembers } from "../hooks/useMembers";
 import { useObjects } from "../hooks/useObjects";
 import { useTypes } from "../hooks/useTypes";
 import EmptyView from "./EmptyView";
-import { TYPE_ICON, SPACE_OBJECT_ICON, SPACE_MEMBER_ICON } from "../utils/constants";
+import { TYPE_ICON, SPACE_OBJECT_ICON, MEMBER_ICON } from "../utils/constants";
 
 type ObjectListProps = {
   spaceId: string;
@@ -35,11 +35,11 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   }
 
   if (typesError) {
-    showToast(Toast.Style.Failure, "Failed to fetch types", typesError.message);
+    showToast(Toast.Style.Failure, "Failed to fetch Types", typesError.message);
   }
 
   if (membersError) {
-    showToast(Toast.Style.Failure, "Failed to fetch members", membersError.message);
+    showToast(Toast.Style.Failure, "Failed to fetch Members", membersError.message);
   }
 
   const filterItems = <T extends { name: string }>(items: T[], searchText: string): T[] => {
@@ -57,14 +57,14 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             icon={{
               source: object.icon,
               mask:
-                (object.type === "participant" || object.type === "profile") && object.icon != SPACE_OBJECT_ICON
+                (object.layout === "participant" || object.layout === "profile") && object.icon != SPACE_OBJECT_ICON
                   ? Image.Mask.Circle
                   : Image.Mask.RoundedRectangle,
             }}
             title={object.name}
             subtitle={{
               value: object.object_type,
-              tooltip: `Object Type: ${object.type}`,
+              tooltip: `Object Type: ${object.layout}`,
             }}
             accessories={[
               {
@@ -126,7 +126,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
         >
           <List.Dropdown.Item title="Objects" value="objects" icon={SPACE_OBJECT_ICON} />
           <List.Dropdown.Item title="Types" value="types" icon={TYPE_ICON} />
-          <List.Dropdown.Item title="Members" value="members" icon={SPACE_MEMBER_ICON} />
+          <List.Dropdown.Item title="Members" value="members" icon={MEMBER_ICON} />
         </List.Dropdown>
       }
       pagination={pagination}

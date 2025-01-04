@@ -1,7 +1,7 @@
 import { Action, ActionPanel, List, Image } from "@raycast/api";
 import ObjectList from "./ObjectList";
 import { Space } from "../utils/schemas";
-import { SPACE_MEMBER_ICON } from "../utils/constants";
+import { MEMBER_ICON } from "../utils/constants";
 
 type SpaceListItemProps = {
   space: Space;
@@ -16,7 +16,7 @@ export default function SpaceListItem({ space, icon, memberCount }: SpaceListIte
       title={space.name}
       accessories={[
         {
-          icon: SPACE_MEMBER_ICON,
+          icon: MEMBER_ICON,
           text: memberCount.toString(),
           tooltip: `Members: ${memberCount}`,
         },

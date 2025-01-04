@@ -11,7 +11,7 @@ export const LIST_ICON = Icon.List;
 export const TYPE_ICON = Icon.Lowercase;
 export const TEMPLATE_ICON = Icon.FountainTip;
 export const BOOKMARK_ICON = Icon.Bookmark;
-export const SPACE_MEMBER_ICON = Icon.PersonCircle;
+export const MEMBER_ICON = Icon.PersonCircle;
 
 export const SEARCH_ICON = Icon.MagnifyingGlass;
 export const CALENDAR_ICON = Icon.Calendar;

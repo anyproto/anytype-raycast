@@ -16,11 +16,11 @@ export default function CreateObject() {
   }, [spaces]);
 
   if (spacesError) {
-    showToast(Toast.Style.Failure, "Failed to fetch spaces", spacesError.message);
+    showToast(Toast.Style.Failure, "Failed to fetch Spaces", spacesError.message);
   }
 
   if (typesError) {
-    showToast(Toast.Style.Failure, "Failed to fetch types", typesError.message);
+    showToast(Toast.Style.Failure, "Failed to fetch Types", typesError.message);
   }
 
   return (
