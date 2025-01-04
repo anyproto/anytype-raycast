@@ -104,7 +104,13 @@ export default function CreateObjectForm({
         </ActionPanel>
       }
     >
-      <Form.Dropdown id="space" title="Space" value={selectedSpace} onChange={setSelectedSpace}>
+      <Form.Dropdown
+        id="space"
+        title="Space"
+        value={selectedSpace}
+        onChange={setSelectedSpace}
+        info="Select the space where the object will be created"
+      >
         {spaces?.map((space) => (
           <Form.Dropdown.Item
             key={space.id}
@@ -115,7 +121,13 @@ export default function CreateObjectForm({
         ))}
       </Form.Dropdown>
 
-      <Form.Dropdown id="type" title="Type" value={selectedType} onChange={setSelectedType}>
+      <Form.Dropdown
+        id="type"
+        title="Type"
+        value={selectedType}
+        onChange={setSelectedType}
+        info="Select the type of object to create"
+      >
         {filteredTypes.map((type) => (
           <Form.Dropdown.Item key={type.unique_key} value={type.unique_key} title={type.name} icon={type.icon} />
         ))}
@@ -127,6 +139,7 @@ export default function CreateObjectForm({
           title="Source"
           placeholder="Enter a Source ..."
           defaultValue={draftValues?.source}
+          info="Provide the source URL for the bookmark"
         />
       ) : (
         <>
@@ -136,14 +149,16 @@ export default function CreateObjectForm({
               title="Name"
               placeholder="Enter an Object Name ..."
               defaultValue={draftValues?.name}
+              info="Enter the name of the object"
             />
           )}
           {!["ot-task", "ot-note"].includes(selectedType) && (
             <Form.TextField
               id="icon"
               title="Icon"
-              placeholder="Enter a single Icon ..."
+              placeholder="Enter an Icon ..."
               defaultValue={draftValues?.icon}
+              info="Enter a single emoji character to represent the object"
             />
           )}
           <Form.TextField
@@ -151,9 +166,16 @@ export default function CreateObjectForm({
             title="Description"
             placeholder="Enter a Description ..."
             defaultValue={draftValues?.description}
+            info="Provide a brief description of the object"
           />
           {!["ot-set", "ot-collection"].includes(selectedType) && (
-            <Form.TextArea id="body" title="Body" placeholder="Enter a Body ..." defaultValue={draftValues?.body} />
+            <Form.TextArea
+              id="body"
+              title="Body"
+              placeholder="Enter a Body ..."
+              defaultValue={draftValues?.body}
+              info="Enter the main content or body of the object"
+            />
           )}
         </>
       )}
