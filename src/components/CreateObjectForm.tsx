@@ -35,6 +35,8 @@ export default function CreateObjectForm({
   const [selectedType, setSelectedType] = useState(draftValues?.type || "");
   const [filteredTypes, setFilteredTypes] = useState<Type[]>([]);
 
+  const hasSelectedSpaceAndType = selectedSpace && selectedType;
+
   useEffect(() => {
     const disallowed = [
       "ot-audio",
@@ -131,60 +133,64 @@ export default function CreateObjectForm({
         ))}
       </Form.Dropdown>
 
-      {selectedType === "ot-bookmark" ? (
-        <Form.TextField
-          {...itemProps.source}
-          id="source"
-          title="Source"
-          placeholder="Add link"
-          defaultValue={draftValues?.source}
-          info="Provide the source URL for the bookmark"
-        />
-      ) : (
+      {hasSelectedSpaceAndType && (
         <>
-          {!["ot-note"].includes(selectedType) && (
+          {selectedType === "ot-bookmark" ? (
             <Form.TextField
-              {...itemProps.name}
-              id="name"
-              title="Name"
-              placeholder="Add a name"
-              defaultValue={draftValues?.name}
-              info="Enter the name of the object"
+              {...itemProps.source}
+              id="source"
+              title="Source"
+              placeholder="Add link"
+              defaultValue={draftValues?.source}
+              info="Provide the source URL for the bookmark"
             />
-          )}
-          {!["ot-task", "ot-note", "ot-profile"].includes(selectedType) && (
-            <Form.TextField
-              {...itemProps.icon}
-              id="icon"
-              title="Icon"
-              placeholder="Add an emoji"
-              defaultValue={draftValues?.icon}
-              info="Enter a single emoji character to represent the object"
-            />
-          )}
-          <Form.TextField
-            {...itemProps.description}
-            id="description"
-            title="Description"
-            placeholder="Add a description"
-            defaultValue={draftValues?.description}
-            info="Provide a brief description of the object"
-          />
-          {!["ot-set", "ot-collection"].includes(selectedType) && (
-            <Form.TextArea
-              {...itemProps.body}
-              id="body"
-              title="Body"
-              placeholder="Add text in markdown"
-              defaultValue={draftValues?.body}
-              info="Parses markdown to Anytype Blocks.
+          ) : (
+            <>
+              {!["ot-note"].includes(selectedType) && (
+                <Form.TextField
+                  {...itemProps.name}
+                  id="name"
+                  title="Name"
+                  placeholder="Add a name"
+                  defaultValue={draftValues?.name}
+                  info="Enter the name of the object"
+                />
+              )}
+              {!["ot-task", "ot-note", "ot-profile"].includes(selectedType) && (
+                <Form.TextField
+                  {...itemProps.icon}
+                  id="icon"
+                  title="Icon"
+                  placeholder="Add an emoji"
+                  defaultValue={draftValues?.icon}
+                  info="Enter a single emoji character to represent the object"
+                />
+              )}
+              <Form.TextField
+                {...itemProps.description}
+                id="description"
+                title="Description"
+                placeholder="Add a description"
+                defaultValue={draftValues?.description}
+                info="Provide a brief description of the object"
+              />
+              {!["ot-set", "ot-collection"].includes(selectedType) && (
+                <Form.TextArea
+                  {...itemProps.body}
+                  id="body"
+                  title="Body"
+                  placeholder="Add text in markdown"
+                  defaultValue={draftValues?.body}
+                  info="Parses markdown to Anytype Blocks.
 
 It supports:
 - Headings, subheadings, and paragraphs
 - Number, bullet, and checkbox lists
 - Code blocks, blockquotes, and tables
 - Text formatting: bold, italics, strikethrough, inline code, hyperlinks"
-            />
+                />
+              )}
+            </>
           )}
         </>
       )}
