@@ -17,13 +17,17 @@ export default function CreateObject({ draftValues }: CreateObjectProps) {
     }
   }, [spaces]);
 
-  if (spacesError) {
-    showToast(Toast.Style.Failure, "Failed to fetch Spaces", spacesError.message);
-  }
+  useEffect(() => {
+    if (spacesError) {
+      showToast(Toast.Style.Failure, "Failed to fetch Spaces", spacesError.message);
+    }
+  }, [spacesError]);
 
-  if (typesError) {
-    showToast(Toast.Style.Failure, "Failed to fetch Types", typesError.message);
-  }
+  useEffect(() => {
+    if (typesError) {
+      showToast(Toast.Style.Failure, "Failed to fetch Types", typesError.message);
+    }
+  }, [typesError]);
 
   return (
     <CreateObjectForm

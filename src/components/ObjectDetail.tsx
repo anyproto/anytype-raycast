@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Action, ActionPanel, Detail, showToast, Toast } from "@raycast/api";
 import { format } from "date-fns";
 import type { Detail as ObjectDetail, Tag } from "../utils/schemas";
@@ -16,9 +17,11 @@ export default function ObjectDetail({ spaceId, objectId, details }: ObjectDetai
   const lastModifiedDate = details[0].details.lastModifiedDate as Date;
   const tags = details.flatMap((detail) => detail.details.tags || []) as Tag[];
 
-  if (objectExportError) {
-    showToast(Toast.Style.Failure, "Failed to fetch object as markdown", objectExportError.message);
-  }
+  useEffect(() => {
+    if (objectExportError) {
+      showToast(Toast.Style.Failure, "Failed to fetch object as markdown", objectExportError.message);
+    }
+  }, [objectExportError]);
 
   return (
     <Detail

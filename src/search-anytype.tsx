@@ -55,9 +55,11 @@ export default function Search() {
     setObjectTypes(objectTypeMap[filterType] || []);
   }, [filterType]);
 
-  if (objectsError || spacesError) {
-    showToast(Toast.Style.Failure, "Failed to fetch latest data", (objectsError || spacesError)?.message);
-  }
+  useEffect(() => {
+    if (objectsError || spacesError) {
+      showToast(Toast.Style.Failure, "Failed to fetch latest data", (objectsError || spacesError)?.message);
+    }
+  }, [objectsError, spacesError]);
 
   return (
     <List

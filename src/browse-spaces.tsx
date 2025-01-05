@@ -49,9 +49,11 @@ export default function BrowseSpaces() {
 
   const filteredSpaces = spaces?.filter((space) => space.name.toLowerCase().includes(searchText.toLowerCase()));
 
-  if (spacesError) {
-    showToast(Toast.Style.Failure, "Failed to fetch Spaces", spacesError.message);
-  }
+  useEffect(() => {
+    if (spacesError) {
+      showToast(Toast.Style.Failure, "Failed to fetch Spaces", spacesError.message);
+    }
+  }, [spacesError]);
 
   return (
     <List

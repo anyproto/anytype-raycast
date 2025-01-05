@@ -30,17 +30,23 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
     setPagination(newPagination);
   }, [currentView, objects, types, members]);
 
-  if (objectsError) {
-    showToast(Toast.Style.Failure, "Failed to fetch objects", objectsError.message);
-  }
+  useEffect(() => {
+    if (objectsError) {
+      showToast(Toast.Style.Failure, "Failed to fetch objects", objectsError.message);
+    }
+  }, [objectsError]);
 
-  if (typesError) {
-    showToast(Toast.Style.Failure, "Failed to fetch Types", typesError.message);
-  }
+  useEffect(() => {
+    if (typesError) {
+      showToast(Toast.Style.Failure, "Failed to fetch Types", typesError.message);
+    }
+  }, [typesError]);
 
-  if (membersError) {
-    showToast(Toast.Style.Failure, "Failed to fetch Members", membersError.message);
-  }
+  useEffect(() => {
+    if (membersError) {
+      showToast(Toast.Style.Failure, "Failed to fetch Members", membersError.message);
+    }
+  }, [membersError]);
 
   const filterItems = <T extends { name: string }>(items: T[], searchText: string): T[] => {
     return items?.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
