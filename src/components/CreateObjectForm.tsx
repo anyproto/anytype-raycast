@@ -152,7 +152,7 @@ export default function CreateObjectForm({
               info="Enter the name of the object"
             />
           )}
-          {!["ot-task", "ot-note"].includes(selectedType) && (
+          {!["ot-task", "ot-note", "ot-profile"].includes(selectedType) && (
             <Form.TextField
               {...itemProps.icon}
               id="icon"
