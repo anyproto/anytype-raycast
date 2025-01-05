@@ -136,7 +136,7 @@ export default function CreateObjectForm({
           {...itemProps.source}
           id="source"
           title="Source"
-          placeholder="Enter a Source ..."
+          placeholder="Add link"
           defaultValue={draftValues?.source}
           info="Provide the source URL for the bookmark"
         />
@@ -147,7 +147,7 @@ export default function CreateObjectForm({
               {...itemProps.name}
               id="name"
               title="Name"
-              placeholder="Enter an Object Name ..."
+              placeholder="Add a name"
               defaultValue={draftValues?.name}
               info="Enter the name of the object"
             />
@@ -157,7 +157,7 @@ export default function CreateObjectForm({
               {...itemProps.icon}
               id="icon"
               title="Icon"
-              placeholder="Enter an Icon ..."
+              placeholder="Add an emoji"
               defaultValue={draftValues?.icon}
               info="Enter a single emoji character to represent the object"
             />
@@ -166,7 +166,7 @@ export default function CreateObjectForm({
             {...itemProps.description}
             id="description"
             title="Description"
-            placeholder="Enter a Description ..."
+            placeholder="Add a description"
             defaultValue={draftValues?.description}
             info="Provide a brief description of the object"
           />
@@ -175,9 +175,15 @@ export default function CreateObjectForm({
               {...itemProps.body}
               id="body"
               title="Body"
-              placeholder="Enter a Body ..."
+              placeholder="Add text in markdown"
               defaultValue={draftValues?.body}
-              info="Enter the main content or body of the object"
+              info="Parses markdown to Anytype Blocks.
+
+It supports:
+- Headings, subheadings, and paragraphs
+- Number, bullet, and checkbox lists
+- Code blocks, blockquotes, and tables
+- Text formatting: bold, italics, strikethrough, inline code, hyperlinks"
             />
           )}
         </>
