@@ -3,6 +3,7 @@ import { Icon } from "@raycast/api";
 // Strings
 export const API_URL = "http://localhost:31009/v1";
 export const ANYTYPE_NETWORK = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU";
+export const API_LIMIT = 50;
 
 // Icons
 export const SPACE_ICON = Icon.BullsEye;

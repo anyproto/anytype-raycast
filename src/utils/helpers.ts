@@ -1,7 +1,8 @@
 import { Icon } from "@raycast/api";
 import fetch from "node-fetch";
-import { SPACE_ICON, MEMBER_ICON, OBJECT_ICON, TYPE_ICON, LIST_ICON, BOOKMARK_ICON } from "./constants";
+import { getTypes } from "../api/getTypes";
 import { Space, SpaceObject, Member, Type } from "./schemas";
+import { API_LIMIT, SPACE_ICON, MEMBER_ICON, OBJECT_ICON, TYPE_ICON, LIST_ICON, BOOKMARK_ICON } from "./constants";
 
 export async function transformSpace(spaces: Space[]): Promise<Space[]> {
   return Promise.all(
@@ -150,4 +151,24 @@ export function encodeQueryParams(params: Record<string, number | string | strin
     }
   }
   return queryParams.length > 0 ? `?${queryParams.join("&")}` : "";
+}
+
+export async function fetchAllTypesForSpace(spaceId: string): Promise<Type[]> {
+  let allTypes: Type[] = [];
+  let hasMore = true;
+  let offset = 0;
+
+  while (hasMore) {
+    try {
+      const response = await getTypes(spaceId, { offset, limit: API_LIMIT });
+      allTypes = [...allTypes, ...response.types];
+      hasMore = response.pagination.has_more;
+      offset += API_LIMIT;
+    } catch (err) {
+      console.error(`Error fetching types for space ${spaceId} at offset ${offset}:`, err);
+      break;
+    }
+  }
+
+  return allTypes;
 }

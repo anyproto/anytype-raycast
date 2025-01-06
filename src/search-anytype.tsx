@@ -4,10 +4,26 @@ import { format } from "date-fns";
 import { pluralize } from "./utils/helpers";
 import { useSpaces } from "./hooks/useSpaces";
 import { useSearch } from "./hooks/useSearch";
-import { SpaceObject } from "./utils/schemas";
+import { fetchAllTypesForSpace } from "./utils/helpers";
+import { SpaceObject, Type } from "./utils/schemas";
 import ObjectListItem from "./components/ObjectListItem";
 import EmptyView from "./components/EmptyView";
 import { SEARCH_ICON, OBJECT_ICON, LIST_ICON, BOOKMARK_ICON, MEMBER_ICON } from "./utils/constants";
+
+const EXCLUDED_KEYS_FOR_PAGES = new Set([
+  "ot-set",
+  "ot-collection",
+  "ot-bookmark",
+  "ot-participant",
+  "ot-audio",
+  "ot-video",
+  "ot-file",
+  "ot-image",
+  "ot-template",
+  "ot-objectType",
+  "ot-chat",
+  "ot-tag",
+]);
 
 export default function Search() {
   const [searchText, setSearchText] = useState("");
@@ -15,6 +31,7 @@ export default function Search() {
   const [filteredItems, setFilteredItems] = useState<SpaceObject[]>([]);
   const [spaceIcons, setSpaceIcons] = useState<{ [key: string]: string }>({});
   const [filterType, setFilterType] = useState("all");
+  const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
 
   const { objects, objectsError, isLoadingObjects, objectsPagination } = useSearch(searchText, objectTypes);
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
@@ -33,6 +50,28 @@ export default function Search() {
   }, [spaces]);
 
   useEffect(() => {
+    const fetchTypesAcrossAllSpaces = async () => {
+      if (spaces) {
+        const allTypes: Type[] = [];
+        for (const space of spaces) {
+          try {
+            const types = await fetchAllTypesForSpace(space.id);
+            allTypes.push(...types);
+          } catch (err) {
+            console.error(`Error fetching types for space ${space.id}:`, err);
+          }
+        }
+        const uniqueKeysSet = new Set(
+          allTypes.map((type) => type.unique_key).filter((key) => !EXCLUDED_KEYS_FOR_PAGES.has(key)),
+        );
+        setUniqueKeysForPages(Array.from(uniqueKeysSet));
+      }
+    };
+
+    fetchTypesAcrossAllSpaces();
+  }, [spaces]);
+
+  useEffect(() => {
     if (objects) {
       const filteredObjects = objects.filter(
         (object) =>
@@ -46,7 +85,7 @@ export default function Search() {
   useEffect(() => {
     const objectTypeMap: { [key: string]: string[] } = {
       all: [],
-      pages: ["ot-note", "ot-page", "ot-task", "ot-profile"],
+      pages: uniqueKeysForPages,
       lists: ["ot-set", "ot-collection"],
       bookmarks: ["ot-bookmark"],
       members: ["ot-participant"],
