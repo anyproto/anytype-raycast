@@ -7,7 +7,7 @@ import { pluralize } from "./utils/helpers";
 import EmptyView from "./components/EmptyView";
 
 export default function BrowseSpaces() {
-  const { spaces, spacesError, isLoadingSpaces } = useSpaces();
+  const { spaces, spacesError, mutateSpaces, isLoadingSpaces, spacesPagination } = useSpaces();
   const [searchText, setSearchText] = useState("");
   const membersDataRef = useRef<{ [key: string]: number }>({});
 
@@ -58,8 +58,9 @@ export default function BrowseSpaces() {
   return (
     <List
       isLoading={isLoadingSpaces || isLoadingMembers}
-      searchBarPlaceholder="Search spaces..."
       onSearchTextChange={setSearchText}
+      searchBarPlaceholder="Search spaces..."
+      pagination={spacesPagination}
     >
       {filteredSpaces?.length > 0 ? (
         <List.Section
@@ -79,6 +80,7 @@ export default function BrowseSpaces() {
                   mask: Image.Mask.RoundedRectangle,
                 }}
                 memberCount={memberCount}
+                mutate={mutateSpaces}
               />
             );
           })}

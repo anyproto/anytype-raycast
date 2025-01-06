@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { API_LIMIT } from "../utils/constants";
 
 export function useSpaces() {
-  const { data, error, isLoading, pagination } = useCachedPromise(
+  const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     () => async (options: { page: number }) => {
       const offset = options.page * API_LIMIT;
       const response = await getSpaces({ offset, limit: API_LIMIT });
@@ -27,6 +27,7 @@ export function useSpaces() {
     spaces: filteredData,
     spacesError: error,
     isLoadingSpaces: isLoading,
+    mutateSpaces: mutate,
     spacesPagination: pagination,
   };
 }

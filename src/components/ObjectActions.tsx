@@ -9,7 +9,7 @@ type ObjectActionsProps = {
   objectId: string;
   title: string;
   details?: Detail[];
-  mutate?: MutatePromise<SpaceObject[] | Type[] | Member[]>;
+  mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>;
 };
 
 export default function ObjectActions({ spaceId, objectId, title, details, mutate }: ObjectActionsProps) {
