@@ -71,11 +71,13 @@ export default function ObjectActions({ spaceId, objectId, title, details, mutat
   return (
     <ActionPanel title={title}>
       <ActionPanel.Section>
-        <Action.Push
-          icon={{ source: Icon.Sidebar }}
-          title="Show Details"
-          target={<ObjectDetail spaceId={spaceId} objectId={objectId} details={details || []} />}
-        />
+        {details && details.length > 0 && (
+          <Action.Push
+            icon={{ source: Icon.Sidebar }}
+            title="Show Details"
+            target={<ObjectDetail spaceId={spaceId} objectId={objectId} details={details || []} />}
+          />
+        )}
         <Action.OpenInBrowser icon={{ source: "../assets/anytype-icon.png" }} title="Open in Anytype" url={objectUrl} />
       </ActionPanel.Section>
 
