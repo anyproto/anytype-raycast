@@ -40,12 +40,14 @@ export default function CreateObjectForm({
   useEffect(() => {
     const disallowed = [
       "ot-audio",
-      "ot-image",
-      "ot-video",
+      "ot-chat",
       "ot-file",
-      "ot-template",
-      "ot-participant",
+      "ot-image",
       "ot-objectType",
+      "ot-tag",
+      "ot-template",
+      "ot-video",
+      "ot-participant",
     ];
     setFilteredTypes(objectTypes.filter((type) => !disallowed.includes(type.unique_key)));
   }, [objectTypes]);

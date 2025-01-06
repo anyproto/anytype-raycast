@@ -11,18 +11,21 @@ import EmptyView from "./components/EmptyView";
 import { SEARCH_ICON, OBJECT_ICON, LIST_ICON, BOOKMARK_ICON, MEMBER_ICON } from "./utils/constants";
 
 const EXCLUDED_KEYS_FOR_PAGES = new Set([
+  // not shown anywhere
+  "ot-audio",
+  "ot-chat",
+  "ot-file",
+  "ot-image",
+  "ot-objectType",
+  "ot-tag",
+  "ot-template",
+  "ot-video",
+
+  // shown in other views
   "ot-set",
   "ot-collection",
   "ot-bookmark",
   "ot-participant",
-  "ot-audio",
-  "ot-video",
-  "ot-file",
-  "ot-image",
-  "ot-template",
-  "ot-objectType",
-  "ot-chat",
-  "ot-tag",
 ]);
 
 export default function Search() {
