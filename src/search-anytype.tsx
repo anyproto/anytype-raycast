@@ -46,10 +46,10 @@ export default function Search() {
   useEffect(() => {
     const objectTypeMap: { [key: string]: string[] } = {
       all: [],
-      pages: ["ot-note", "ot-page"],
+      pages: ["ot-note", "ot-page", "ot-task", "ot-profile"],
       lists: ["ot-set", "ot-collection"],
       bookmarks: ["ot-bookmark"],
-      members: ["ot-profile"],
+      members: ["ot-participant"],
     };
 
     setObjectTypes(objectTypeMap[filterType] || []);
