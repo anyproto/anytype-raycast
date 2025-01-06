@@ -16,9 +16,9 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   const [currentView, setCurrentView] = useState<"objects" | "types" | "members">("objects");
   const [searchText, setSearchText] = useState("");
 
-  const { objects, objectsError, isLoadingObjects, objectsPagination } = useObjects(spaceId);
-  const { types, typesError, isLoadingTypes, typesPagination } = useTypes(spaceId);
-  const { members, membersError, isLoadingMembers, membersPagination } = useMembers(spaceId);
+  const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useObjects(spaceId);
+  const { types, typesError, isLoadingTypes, mutateTypes, typesPagination } = useTypes(spaceId);
+  const { members, membersError, isLoadingMembers, mutateMembers, membersPagination } = useMembers(spaceId);
   const [pagination, setPagination] = useState(objectsPagination);
 
   useEffect(() => {
@@ -79,11 +79,19 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
               },
             ]}
             details={object.details}
+            mutate={mutateObjects}
           />
         ));
       case "types":
         return filterItems(types, searchText)?.map((type) => (
-          <ObjectListItem key={type.id} spaceId={spaceId} objectId={type.id} icon={type.icon} title={type.name} />
+          <ObjectListItem
+            key={type.id}
+            spaceId={spaceId}
+            objectId={type.id}
+            icon={type.icon}
+            title={type.name}
+            mutate={mutateTypes}
+          />
         ));
       case "members":
         return filterItems(members, searchText)?.map((member) => (
@@ -111,6 +119,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
                 tooltip: `Role: ${member.role}`,
               },
             ]}
+            mutate={mutateMembers}
           />
         ));
       default:

@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { API_LIMIT } from "../utils/constants";
 
 export function useTypes(spaceId: string) {
-  const { data, error, isLoading, pagination } = useCachedPromise(
+  const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     (spaceId: string) => async (options: { page: number }) => {
       if (!spaceId) {
         return { data: [], hasMore: false };
@@ -30,6 +30,7 @@ export function useTypes(spaceId: string) {
     types: filteredData,
     typesError: error,
     isLoadingTypes: isLoading && !!spaceId,
+    mutateTypes: mutate,
     typesPagination: pagination,
   };
 }

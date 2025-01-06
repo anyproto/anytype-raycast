@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { API_LIMIT } from "../utils/constants";
 
 export function useSearch(searchText: string, type: string[]) {
-  const { data, error, isLoading, pagination } = useCachedPromise(
+  const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     (searchText: string, type: string[]) => async (options: { page: number }) => {
       const offset = options.page * API_LIMIT;
       const response = await search(searchText, type, { offset, limit: API_LIMIT });
@@ -27,6 +27,7 @@ export function useSearch(searchText: string, type: string[]) {
     objects: filteredData,
     objectsError: error,
     isLoadingObjects: isLoading,
+    mutateObjects: mutate,
     objectsPagination: pagination,
   };
 }

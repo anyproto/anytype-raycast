@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { API_LIMIT } from "../utils/constants";
 
 export function useMembers(spaceId: string) {
-  const { data, error, isLoading, pagination } = useCachedPromise(
+  const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     (spaceId: string) => async (options: { page: number }) => {
       const offset = options.page * API_LIMIT;
       const response = await getMembers(spaceId, { offset, limit: API_LIMIT });
@@ -27,6 +27,7 @@ export function useMembers(spaceId: string) {
     members: filteredData,
     membersError: error,
     isLoadingMembers: isLoading,
+    mutateMembers: mutate,
     membersPagination: pagination,
   };
 }

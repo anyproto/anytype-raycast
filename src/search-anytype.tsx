@@ -36,7 +36,10 @@ export default function Search() {
   const [filterType, setFilterType] = useState("all");
   const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
 
-  const { objects, objectsError, isLoadingObjects, objectsPagination } = useSearch(searchText, objectTypes);
+  const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
+    searchText,
+    objectTypes,
+  );
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
 
   useEffect(() => {
@@ -162,6 +165,7 @@ export default function Search() {
                 },
               ]}
               details={object.details}
+              mutate={mutateObjects}
             />
           ))}
         </List.Section>
