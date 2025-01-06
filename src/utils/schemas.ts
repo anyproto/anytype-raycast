@@ -43,6 +43,10 @@ export interface ObjectExport {
   path: string;
 }
 
+export interface Export {
+  markdown: string;
+}
+
 export interface SpaceObject {
   type: string;
   id: string;

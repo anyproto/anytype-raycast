@@ -1,18 +1,16 @@
-import { ActionPanel, Action, Icon, Clipboard, showToast, Toast, Keyboard, confirmAlert, Color } from "@raycast/api";
+import { Action, ActionPanel, Clipboard, confirmAlert, Icon, Keyboard, showToast, Toast, Color } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import ObjectDetail from "./ObjectDetail";
-import { SpaceObject, Type, Member } from "../utils/schemas";
-import { Detail } from "../utils/schemas";
+import { Export } from "../utils/schemas";
 
-type ObjectActionsProps = {
+type ObjectDetailActionsProps = {
   spaceId: string;
   objectId: string;
   title: string;
-  details?: Detail[];
-  mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>;
+  objectExport: Export | undefined;
+  mutate: MutatePromise<Export | undefined>;
 };
 
-export default function ObjectActions({ spaceId, objectId, title, details, mutate }: ObjectActionsProps) {
+export default function ObjectActions({ spaceId, objectId, title, objectExport, mutate }: ObjectDetailActionsProps) {
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
 
   async function handleCopyLink() {
@@ -71,16 +69,16 @@ export default function ObjectActions({ spaceId, objectId, title, details, mutat
   return (
     <ActionPanel title={title}>
       <ActionPanel.Section>
-        {details && details.length > 0 && (
-          <Action.Push
-            icon={{ source: Icon.Sidebar }}
-            title="Show Details"
-            target={<ObjectDetail spaceId={spaceId} objectId={objectId} title={title} details={details || []} />}
-          />
-        )}
         <Action.OpenInBrowser icon={{ source: "../assets/anytype-icon.png" }} title="Open in Anytype" url={objectUrl} />
       </ActionPanel.Section>
 
+      {objectExport && (
+        <Action.CopyToClipboard
+          title="Copy Object"
+          shortcut={{ modifiers: ["cmd"], key: "c" }}
+          content={objectExport?.markdown || ""}
+        />
+      )}
       <Action
         icon={Icon.Link}
         title="Copy Link"

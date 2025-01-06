@@ -3,15 +3,9 @@ import * as fs from "fs";
 import * as path from "path";
 import { apiFetch } from "../utils/api";
 import { API_URL } from "../utils/constants";
-import { ObjectExport } from "../utils/schemas";
+import { ObjectExport, Export } from "../utils/schemas";
 
-export async function getExport(
-  spaceId: string,
-  objectId: string,
-  format: string,
-): Promise<{
-  markdown: string;
-}> {
+export async function getExport(spaceId: string, objectId: string, format: string): Promise<Export> {
   const tmpdir = os.tmpdir();
   const url = `${API_URL}/spaces/${spaceId}/objects/${objectId}/export/${format}`;
 
@@ -30,7 +24,5 @@ export async function getExport(
   const re = /\(files\/([^)]+)\)/g;
   const result = markdown.replace(re, `(file://${path.join(outputPath, "files", "$1")})`);
 
-  return {
-    markdown: result,
-  };
+  return { markdown: result };
 }

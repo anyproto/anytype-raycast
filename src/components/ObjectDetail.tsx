@@ -1,17 +1,23 @@
 import { useEffect } from "react";
-import { Action, ActionPanel, Detail, showToast, Toast } from "@raycast/api";
 import { format } from "date-fns";
-import type { Detail as ObjectDetail, Tag } from "../utils/schemas";
+import { Detail, showToast, Toast } from "@raycast/api";
 import { useExport } from "../hooks/useExport";
+import ObjectDetailActions from "./ObjectDetailActions";
+import type { Detail as ObjectDetail, Tag } from "../utils/schemas";
 
 type ObjectDetailProps = {
   spaceId: string;
   objectId: string;
+  title: string;
   details: ObjectDetail[];
 };
 
-export default function ObjectDetail({ spaceId, objectId, details }: ObjectDetailProps) {
-  const { objectExport, objectExportError, isLoadingObjectExport } = useExport(spaceId, objectId, "markdown");
+export default function ObjectDetail({ spaceId, objectId, title, details }: ObjectDetailProps) {
+  const { objectExport, objectExportError, isLoadingObjectExport, mutateObjectExport } = useExport(
+    spaceId,
+    objectId,
+    "markdown",
+  );
 
   const createdDate = details[0].details.createdDate as Date;
   const lastModifiedDate = details[0].details.lastModifiedDate as Date;
@@ -48,13 +54,13 @@ export default function ObjectDetail({ spaceId, objectId, details }: ObjectDetai
         </Detail.Metadata>
       }
       actions={
-        <ActionPanel>
-          <Action.OpenInBrowser
-            icon={{ source: "../assets/anytype-icon.png" }}
-            title="Open in Anytype"
-            url={`anytype://object?objectId=${objectId}&spaceId=${spaceId}`}
-          />
-        </ActionPanel>
+        <ObjectDetailActions
+          spaceId={spaceId}
+          objectId={objectId}
+          title={title}
+          objectExport={objectExport}
+          mutate={mutateObjectExport}
+        />
       }
     />
   );
