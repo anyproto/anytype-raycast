@@ -114,11 +114,7 @@ export default function Search() {
       pagination={objectsPagination}
       throttle={true}
       searchBarAccessory={
-        <List.Dropdown
-          tooltip="Filter by kind or space"
-          storeValue={true}
-          onChange={(newValue) => setFilterType(newValue)}
-        >
+        <List.Dropdown tooltip="Filter by kind or space" onChange={(newValue) => setFilterType(newValue)}>
           <List.Dropdown.Item title="All" value="all" icon={SEARCH_ICON} />
           <List.Dropdown.Item title="Pages" value="pages" icon={OBJECT_ICON} />
           <List.Dropdown.Item title="Lists" value="lists" icon={LIST_ICON} />
