@@ -15,6 +15,10 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces`,
     method: "POST",
   },
+  deleteObject: (spaceId: string, objectId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
+    method: "DELETE",
+  }),
   getExport: (spaceId: string, objectId: string, format: string) => ({
     url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}/export/${format}`,
     method: "POST",

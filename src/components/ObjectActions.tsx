@@ -3,6 +3,7 @@ import { MutatePromise } from "@raycast/utils";
 import ObjectDetail from "./ObjectDetail";
 import { SpaceObject, Type, Member } from "../utils/schemas";
 import { Detail } from "../utils/schemas";
+import { deleteObject } from "../api/deleteObject";
 
 type ObjectActionsProps = {
   spaceId: string;
@@ -34,9 +35,7 @@ export default function ObjectActions({ spaceId, objectId, title, details, mutat
     if (confirm) {
       try {
         await showToast({ style: Toast.Style.Animated, title: "Deleting object" });
-
-        // TODO: Implement the deletion logic here
-
+        deleteObject(spaceId, objectId);
         await showToast({
           style: Toast.Style.Success,
           title: "Object deleted",

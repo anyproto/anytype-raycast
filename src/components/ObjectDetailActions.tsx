@@ -1,5 +1,6 @@
 import { Action, ActionPanel, Clipboard, confirmAlert, Icon, Keyboard, showToast, Toast, Color } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
+import { deleteObject } from "../api/deleteObject";
 import { Export } from "../utils/schemas";
 
 type ObjectDetailActionsProps = {
@@ -32,9 +33,7 @@ export default function ObjectActions({ spaceId, objectId, title, objectExport, 
     if (confirm) {
       try {
         await showToast({ style: Toast.Style.Animated, title: "Deleting object" });
-
-        // TODO: Implement the deletion logic here
-
+        deleteObject(spaceId, objectId);
         await showToast({
           style: Toast.Style.Success,
           title: "Object deleted",
