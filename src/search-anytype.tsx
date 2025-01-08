@@ -8,7 +8,6 @@ import { fetchAllTypesForSpace } from "./utils/helpers";
 import { SpaceObject, Type } from "./utils/schemas";
 import ObjectListItem from "./components/ObjectListItem";
 import EmptyView from "./components/EmptyView";
-import { SEARCH_ICON, OBJECT_ICON, LIST_ICON, BOOKMARK_ICON, MEMBER_ICON } from "./utils/constants";
 
 const EXCLUDED_KEYS_FOR_PAGES = new Set([
   // not shown anywhere
@@ -115,11 +114,11 @@ export default function Search() {
       throttle={true}
       searchBarAccessory={
         <List.Dropdown tooltip="Filter by kind or space" onChange={(newValue) => setFilterType(newValue)}>
-          <List.Dropdown.Item title="All" value="all" icon={SEARCH_ICON} />
-          <List.Dropdown.Item title="Pages" value="pages" icon={OBJECT_ICON} />
-          <List.Dropdown.Item title="Lists" value="lists" icon={LIST_ICON} />
-          <List.Dropdown.Item title="Bookmarks" value="bookmarks" icon={BOOKMARK_ICON} />
-          <List.Dropdown.Item title="Members" value="members" icon={MEMBER_ICON} />
+          <List.Dropdown.Item title="All" value="all" icon={Icon.MagnifyingGlass} />
+          <List.Dropdown.Item title="Pages" value="pages" icon={Icon.Document} />
+          <List.Dropdown.Item title="Lists" value="lists" icon={Icon.List} />
+          <List.Dropdown.Item title="Bookmarks" value="bookmarks" icon={Icon.Bookmark} />
+          <List.Dropdown.Item title="Members" value="members" icon={Icon.PersonCircle} />
         </List.Dropdown>
       }
     >
@@ -138,7 +137,7 @@ export default function Search() {
               icon={{
                 source: object.icon,
                 mask:
-                  (object.layout === "participant" || object.layout === "profile") && object.icon != OBJECT_ICON
+                  (object.layout === "participant" || object.layout === "profile") && object.icon != Icon.Document
                     ? Image.Mask.Circle
                     : Image.Mask.RoundedRectangle,
               }}

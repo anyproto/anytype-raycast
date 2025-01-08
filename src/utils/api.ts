@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 import { getPreferenceValues } from "@raycast/api";
 
 interface FetchOptions {
-  method?: "GET" | "POST" | "PUT" | "DELETE";
+  method: string;
   headers?: Record<string, string>;
   body?: string;
 }
@@ -12,7 +12,7 @@ export async function apiFetch<T>(url: string, options: FetchOptions): Promise<T
 
   try {
     const response = await fetch(url, {
-      method: options.method || "GET",
+      method: options.method,
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${preferences.bearerToken}`,

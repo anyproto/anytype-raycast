@@ -1,16 +1,46 @@
-import { Icon } from "@raycast/api";
+import { encodeQueryParams } from "./helpers";
 
 // Strings
-export const API_URL = "http://localhost:31009/v1";
-export const ANYTYPE_NETWORK = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU";
-export const API_LIMIT = 50;
+export const apiUrl = "http://localhost:31009/v1";
+export const anytypeNetwork = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU";
+export const apiLimit = 50;
 
-// Icons
-export const SPACE_ICON = Icon.BullsEye;
-export const OBJECT_ICON = Icon.Document;
-export const LIST_ICON = Icon.List;
-export const TYPE_ICON = Icon.Lowercase;
-export const TEMPLATE_ICON = Icon.FountainTip;
-export const BOOKMARK_ICON = Icon.Bookmark;
-export const MEMBER_ICON = Icon.PersonCircle;
-export const SEARCH_ICON = Icon.MagnifyingGlass;
+// API Endponts
+export const apiEndpoints = {
+  createObject: (spaceId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects`,
+    method: "POST",
+  }),
+  createSpace: {
+    url: `${apiUrl}/spaces`,
+    method: "POST",
+  },
+  getExport: (spaceId: string, objectId: string, format: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}/export/${format}`,
+    method: "POST",
+  }),
+  getMembers: (spaceId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/members${encodeQueryParams(options)}`,
+    method: "GET",
+  }),
+  getObjects: (spaceId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects${encodeQueryParams(options)}`,
+    method: "GET",
+  }),
+  getSpaces: (options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces${encodeQueryParams(options)}`,
+    method: "GET",
+  }),
+  getTemplates: (spaceId: string, typeId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/object_types/${typeId}/templates${encodeQueryParams(options)}`,
+    method: "GET",
+  }),
+  getTypes: (spaceId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/object_types${encodeQueryParams(options)}`,
+    method: "GET",
+  }),
+  search: (query: string, types: string[], options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/search${encodeQueryParams({ query, object_types: types, ...options })}`,
+    method: "GET",
+  }),
+};

@@ -1,5 +1,5 @@
 import { apiFetch } from "../utils/api";
-import { API_URL } from "../utils/constants";
+import { apiEndpoints } from "../utils/constants";
 
 export async function createObject(
   spaceId: string,
@@ -13,10 +13,10 @@ export async function createObject(
     object_type_unique_key: string;
   },
 ): Promise<void> {
-  const url = `${API_URL}/spaces/${spaceId}/objects`;
+  const { url, method } = apiEndpoints.createObject(spaceId);
 
   await apiFetch(url, {
-    method: "POST",
+    method: method,
     body: JSON.stringify(objectData),
   });
 }

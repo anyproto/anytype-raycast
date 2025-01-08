@@ -1,7 +1,6 @@
-import { List, Image } from "@raycast/api";
+import { List, Image, Icon } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { Space } from "../utils/schemas";
-import { MEMBER_ICON } from "../utils/constants";
 import SpaceActions from "./SpaceActions";
 
 type SpaceListItemProps = {
@@ -18,7 +17,7 @@ export default function SpaceListItem({ space, icon, memberCount, mutate }: Spac
       title={space.name}
       accessories={[
         {
-          icon: MEMBER_ICON,
+          icon: Icon.PersonCircle,
           text: memberCount.toString(),
           tooltip: `Members: ${memberCount}`,
         },

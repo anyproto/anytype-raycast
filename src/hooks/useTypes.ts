@@ -1,7 +1,7 @@
 import { useCachedPromise } from "@raycast/utils";
 import { getTypes } from "../api/getTypes";
 import { useMemo } from "react";
-import { API_LIMIT } from "../utils/constants";
+import { apiLimit } from "../utils/constants";
 
 export function useTypes(spaceId: string) {
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(
@@ -9,8 +9,8 @@ export function useTypes(spaceId: string) {
       if (!spaceId) {
         return { data: [], hasMore: false };
       }
-      const offset = options.page * API_LIMIT;
-      const response = await getTypes(spaceId, { offset, limit: API_LIMIT });
+      const offset = options.page * apiLimit;
+      const response = await getTypes(spaceId, { offset, limit: apiLimit });
 
       return {
         data: response.types,

@@ -2,12 +2,12 @@ import { Icon } from "@raycast/api";
 import fetch from "node-fetch";
 import { getTypes } from "../api/getTypes";
 import { Space, SpaceObject, Member, Type } from "./schemas";
-import { API_LIMIT, SPACE_ICON, MEMBER_ICON, OBJECT_ICON, TYPE_ICON, LIST_ICON, BOOKMARK_ICON } from "./constants";
+import { apiLimit } from "./constants";
 
 export async function transformSpace(spaces: Space[]): Promise<Space[]> {
   return Promise.all(
     spaces.map(async (space) => {
-      const icon = (await fetchAndTransformIcon(space.icon)) || SPACE_ICON;
+      const icon = (await fetchAndTransformIcon(space.icon)) || Icon.BullsEye;
       return {
         ...space,
         name: space.name || "Untitled",
@@ -20,7 +20,7 @@ export async function transformSpace(spaces: Space[]): Promise<Space[]> {
 export async function transformMembers(members: Member[]): Promise<Member[]> {
   return Promise.all(
     members.map(async (member) => {
-      const icon = (await fetchAndTransformIcon(member.icon)) || MEMBER_ICON;
+      const icon = (await fetchAndTransformIcon(member.icon)) || Icon.PersonCircle;
       return {
         ...member,
         icon: icon,
@@ -34,7 +34,7 @@ export async function transformTypes(types: Type[]): Promise<Type[]> {
     types.map(async (objectType) => {
       return {
         ...objectType,
-        icon: objectType.icon || TYPE_ICON,
+        icon: objectType.icon || Icon.Lowercase,
       };
     }),
   );
@@ -70,13 +70,13 @@ export async function getIconForObject(object: SpaceObject): Promise<{ source: s
   switch (object.layout) {
     case "set":
     case "collection":
-      return LIST_ICON;
+      return Icon.List;
     case "participant":
-      return MEMBER_ICON;
+      return Icon.PersonCircle;
     case "bookmark":
-      return BOOKMARK_ICON;
+      return Icon.Bookmark;
     default:
-      return OBJECT_ICON;
+      return Icon.Document;
   }
 }
 
@@ -160,10 +160,10 @@ export async function fetchAllTypesForSpace(spaceId: string): Promise<Type[]> {
 
   while (hasMore) {
     try {
-      const response = await getTypes(spaceId, { offset, limit: API_LIMIT });
+      const response = await getTypes(spaceId, { offset, limit: apiLimit });
       allTypes = [...allTypes, ...response.types];
       hasMore = response.pagination.has_more;
-      offset += API_LIMIT;
+      offset += apiLimit;
     } catch (err) {
       console.error(`Error fetching types for space ${spaceId} at offset ${offset}:`, err);
       break;

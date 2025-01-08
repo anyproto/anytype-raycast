@@ -1,13 +1,13 @@
 import { useCachedPromise } from "@raycast/utils";
 import { search } from "../api/search";
 import { useMemo } from "react";
-import { API_LIMIT } from "../utils/constants";
+import { apiLimit } from "../utils/constants";
 
 export function useSearch(searchText: string, type: string[]) {
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     (searchText: string, type: string[]) => async (options: { page: number }) => {
-      const offset = options.page * API_LIMIT;
-      const response = await search(searchText, type, { offset, limit: API_LIMIT });
+      const offset = options.page * apiLimit;
+      const response = await search(searchText, type, { offset, limit: apiLimit });
 
       return {
         data: response.data,

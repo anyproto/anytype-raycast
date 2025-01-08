@@ -2,15 +2,15 @@ import * as os from "os";
 import * as fs from "fs";
 import * as path from "path";
 import { apiFetch } from "../utils/api";
-import { API_URL } from "../utils/constants";
+import { apiEndpoints } from "../utils/constants";
 import { ObjectExport, Export } from "../utils/schemas";
 
 export async function getExport(spaceId: string, objectId: string, format: string): Promise<Export> {
   const tmpdir = os.tmpdir();
-  const url = `${API_URL}/spaces/${spaceId}/objects/${objectId}/export/${format}`;
+  const { url, method } = apiEndpoints.getExport(spaceId, objectId, format);
 
   const response = await apiFetch<ObjectExport>(url, {
-    method: "POST",
+    method: method,
     body: JSON.stringify({ path: tmpdir }),
   });
 
