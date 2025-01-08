@@ -8,8 +8,10 @@ import { fetchAllTypesForSpace } from "./utils/helpers";
 import { SpaceObject, Type } from "./utils/schemas";
 import ObjectListItem from "./components/ObjectListItem";
 import EmptyView from "./components/EmptyView";
+import EnsureAuthenticated from "./components/EnsureAuthenticated";
 
-const EXCLUDED_KEYS_FOR_PAGES = new Set([
+const searchBarPlaceholder = "Globally search objects across spaces...";
+const exlucedKeysForPages = new Set([
   // not shown anywhere
   "ot-audio",
   "ot-chat",
@@ -27,7 +29,15 @@ const EXCLUDED_KEYS_FOR_PAGES = new Set([
   "ot-participant",
 ]);
 
-export default function Search() {
+export default function Command() {
+  return (
+    <EnsureAuthenticated placeholder={searchBarPlaceholder} viewType="list">
+      <Search />
+    </EnsureAuthenticated>
+  );
+}
+
+function Search() {
   const [searchText, setSearchText] = useState("");
   const [objectTypes, setObjectTypes] = useState<string[]>([]);
   const [filteredItems, setFilteredItems] = useState<SpaceObject[]>([]);
@@ -67,7 +77,7 @@ export default function Search() {
           }
         }
         const uniqueKeysSet = new Set(
-          allTypes.map((type) => type.unique_key).filter((key) => !EXCLUDED_KEYS_FOR_PAGES.has(key)),
+          allTypes.map((type) => type.unique_key).filter((key) => !exlucedKeysForPages.has(key)),
         );
         setUniqueKeysForPages(Array.from(uniqueKeysSet));
       }
@@ -109,7 +119,7 @@ export default function Search() {
     <List
       isLoading={isLoadingSpaces || isLoadingObjects}
       onSearchTextChange={setSearchText}
-      searchBarPlaceholder="Globally search objects across spaces..."
+      searchBarPlaceholder={searchBarPlaceholder}
       pagination={objectsPagination}
       throttle={true}
       searchBarAccessory={
