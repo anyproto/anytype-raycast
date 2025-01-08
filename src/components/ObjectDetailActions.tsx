@@ -76,13 +76,13 @@ export default function ObjectActions({ spaceId, objectId, title, objectExport, 
         <Action.CopyToClipboard
           title="Copy Object"
           shortcut={{ modifiers: ["cmd"], key: "c" }}
-          content={objectExport?.markdown || ""}
+          content={objectExport.markdown}
         />
       )}
       <Action
         icon={Icon.Link}
         title="Copy Link"
-        shortcut={{ modifiers: ["cmd", "shift"], key: "c" }}
+        shortcut={Keyboard.Shortcut.Common.CopyDeeplink}
         onAction={handleCopyLink}
       />
       <Action
@@ -97,7 +97,7 @@ export default function ObjectActions({ spaceId, objectId, title, objectExport, 
         <Action
           icon={Icon.RotateClockwise}
           title="Refresh Object"
-          shortcut={{ modifiers: ["cmd", "shift"], key: "r" }}
+          shortcut={Keyboard.Shortcut.Common.Refresh}
           onAction={handleRefresh}
         />
       </ActionPanel.Section>

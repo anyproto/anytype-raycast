@@ -10,6 +10,7 @@ type SpaceActionsProps = {
 
 export default function SpaceActions({ space, mutate }: SpaceActionsProps) {
   const spaceUrl = `anytype://main/object/_blank_/spaceId/${space.id}`;
+  const chatUrl = `anytype://main/chat/_blank_/spaceId/${space.id}`;
 
   async function handleCopyLink() {
     await Clipboard.copy(spaceUrl);
@@ -44,6 +45,12 @@ export default function SpaceActions({ space, mutate }: SpaceActionsProps) {
           icon={{ source: "../assets/anytype-icon.png" }}
           title="Open Space in Anytype"
           url={spaceUrl}
+        />
+        <Action.OpenInBrowser
+          icon={Icon.Bubble}
+          title="Open Chat in Anytype"
+          url={chatUrl}
+          shortcut={{ modifiers: ["cmd"], key: "o" }}
         />
       </ActionPanel.Section>
 
