@@ -16,7 +16,7 @@ type ObjectListItemProps = {
     tooltip?: string;
   }[];
   details?: Detail[];
-  mutate?: MutatePromise<SpaceObject[] | Type[] | Member[]>;
+  mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>;
 };
 
 export default function ObjectListItem({
