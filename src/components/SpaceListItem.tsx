@@ -51,12 +51,11 @@ export default function SpaceListItem({ space, icon, memberCount, mutate }: Spac
               onAction={handleRefresh}
             />
           </ActionPanel.Section>
-          {/* <Action.OpenInBrowser
+          <Action.OpenInBrowser
             icon={{ source: "../assets/anytype-icon.png" }}
             title="Open Space in Anytype"
-            // TODO: how to open home object?
-            url={`anytype://object?objectId=${space.home_object_id}&spaceId=${space.id}`}
-          /> */}
+            url={`anytype://main/object/_blank_/spaceId/${space.id}`}
+          />
         </ActionPanel>
       }
     />
