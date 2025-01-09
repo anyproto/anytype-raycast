@@ -109,6 +109,7 @@ export interface Type {
   unique_key: string;
   name: string;
   icon: string;
+  recommended_layout: string;
 }
 
 export interface Template {

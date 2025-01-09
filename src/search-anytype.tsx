@@ -4,28 +4,10 @@ import { format } from "date-fns";
 import { pluralize } from "./utils/helpers";
 import { useSpaces } from "./hooks/useSpaces";
 import { useSearch } from "./hooks/useSearch";
-import { fetchAllTypesForSpace } from "./utils/helpers";
-import { SpaceObject, Type } from "./utils/schemas";
+import { getAllTypesFromSpaces } from "./utils/helpers";
+import { SpaceObject } from "./utils/schemas";
 import ObjectListItem from "./components/ObjectListItem";
 import EmptyView from "./components/EmptyView";
-
-const EXCLUDED_KEYS_FOR_PAGES = new Set([
-  // not shown anywhere
-  "ot-audio",
-  "ot-chat",
-  "ot-file",
-  "ot-image",
-  "ot-objectType",
-  "ot-tag",
-  "ot-template",
-  "ot-video",
-
-  // shown in other views
-  "ot-set",
-  "ot-collection",
-  "ot-bookmark",
-  "ot-participant",
-]);
 
 export default function Search() {
   const [searchText, setSearchText] = useState("");
@@ -34,7 +16,26 @@ export default function Search() {
   const [spaceIcons, setSpaceIcons] = useState<{ [key: string]: string }>({});
   const [filterType, setFilterType] = useState("all");
   const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
+  const [uniqueKeysForTasks, setUniqueKeysForTasks] = useState<string[]>([]);
 
+  const excludedKeysForPages = new Set([
+    // not shown anywhere
+    "ot-audio",
+    "ot-chat",
+    "ot-file",
+    "ot-image",
+    "ot-objectType",
+    "ot-tag",
+    "ot-template",
+    "ot-video",
+
+    // shown in other views
+    "ot-set",
+    "ot-collection",
+    "ot-bookmark",
+    "ot-participant",
+    ...uniqueKeysForTasks,
+  ]);
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
     searchText,
     objectTypes,
@@ -54,26 +55,33 @@ export default function Search() {
     }
   }, [spaces]);
 
+  // Fetch unique keys for pages view
   useEffect(() => {
     const fetchTypesAcrossAllSpaces = async () => {
       if (spaces) {
-        const allTypes: Type[] = [];
-        for (const space of spaces) {
-          try {
-            const types = await fetchAllTypesForSpace(space.id);
-            allTypes.push(...types);
-          } catch (err) {
-            console.error(`Error fetching types for space ${space.id}:`, err);
-          }
-        }
+        const allTypes = await getAllTypesFromSpaces(spaces);
         const uniqueKeysSet = new Set(
-          allTypes.map((type) => type.unique_key).filter((key) => !EXCLUDED_KEYS_FOR_PAGES.has(key)),
+          allTypes.map((type) => type.unique_key).filter((key) => !excludedKeysForPages.has(key)),
         );
         setUniqueKeysForPages(Array.from(uniqueKeysSet));
       }
     };
 
     fetchTypesAcrossAllSpaces();
+  }, [spaces]);
+
+  // Fetch unique keys for tasks view
+  useEffect(() => {
+    const fetchTypesForTasks = async () => {
+      if (spaces) {
+        const tasksTypes = await getAllTypesFromSpaces(spaces);
+        const uniqueKeysSet = new Set(
+          tasksTypes.filter((type) => type.recommended_layout === "todo").map((type) => type.unique_key),
+        );
+        setUniqueKeysForTasks(Array.from(uniqueKeysSet));
+      }
+    };
+    fetchTypesForTasks();
   }, [spaces]);
 
   useEffect(() => {
@@ -91,6 +99,7 @@ export default function Search() {
     const objectTypeMap: { [key: string]: string[] } = {
       all: [],
       pages: uniqueKeysForPages,
+      tasks: uniqueKeysForTasks,
       lists: ["ot-set", "ot-collection"],
       bookmarks: ["ot-bookmark"],
       members: ["ot-participant"],
@@ -116,6 +125,7 @@ export default function Search() {
         <List.Dropdown tooltip="Filter by kind or space" onChange={(newValue) => setFilterType(newValue)}>
           <List.Dropdown.Item title="All" value="all" icon={Icon.MagnifyingGlass} />
           <List.Dropdown.Item title="Pages" value="pages" icon={Icon.Document} />
+          <List.Dropdown.Item title="Tasks" value="tasks" icon={Icon.CheckCircle} />
           <List.Dropdown.Item title="Lists" value="lists" icon={Icon.List} />
           <List.Dropdown.Item title="Bookmarks" value="bookmarks" icon={Icon.Bookmark} />
           <List.Dropdown.Item title="Members" value="members" icon={Icon.PersonCircle} />

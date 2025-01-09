@@ -68,6 +68,8 @@ export async function getIconForObject(object: SpaceObject): Promise<{ source: s
   }
 
   switch (object.layout) {
+    case "todo":
+      return Icon.CheckCircle;
     case "set":
     case "collection":
       return Icon.List;
@@ -170,5 +172,18 @@ export async function fetchAllTypesForSpace(spaceId: string): Promise<Type[]> {
     }
   }
 
+  return allTypes;
+}
+
+export async function getAllTypesFromSpaces(spaces: Space[]): Promise<Type[]> {
+  const allTypes: Type[] = [];
+  for (const space of spaces) {
+    try {
+      const types = await fetchAllTypesForSpace(space.id);
+      allTypes.push(...types);
+    } catch (err) {
+      console.error(`Error fetching types for space ${space.id}:`, err);
+    }
+  }
   return allTypes;
 }
