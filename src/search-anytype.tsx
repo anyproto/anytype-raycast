@@ -18,6 +18,11 @@ export default function Search() {
   const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
   const [uniqueKeysForTasks, setUniqueKeysForTasks] = useState<string[]>([]);
 
+  const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
+    searchText,
+    objectTypes,
+  );
+  const { spaces, spacesError, isLoadingSpaces } = useSpaces();
   const excludedKeysForPages = new Set([
     // not shown anywhere
     "ot-audio",
@@ -36,11 +41,6 @@ export default function Search() {
     "ot-participant",
     ...uniqueKeysForTasks,
   ]);
-  const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
-    searchText,
-    objectTypes,
-  );
-  const { spaces, spacesError, isLoadingSpaces } = useSpaces();
 
   useEffect(() => {
     if (spaces) {
@@ -57,7 +57,7 @@ export default function Search() {
 
   // Fetch unique keys for pages view
   useEffect(() => {
-    const fetchTypesAcrossAllSpaces = async () => {
+    const fetchTypesForPages = async () => {
       if (spaces) {
         const allTypes = await getAllTypesFromSpaces(spaces);
         const uniqueKeysSet = new Set(
@@ -67,7 +67,7 @@ export default function Search() {
       }
     };
 
-    fetchTypesAcrossAllSpaces();
+    fetchTypesForPages();
   }, [spaces]);
 
   // Fetch unique keys for tasks view

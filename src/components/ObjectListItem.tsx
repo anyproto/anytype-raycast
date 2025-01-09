@@ -8,7 +8,7 @@ type ObjectListItemProps = {
   objectId: string;
   icon: string | { source: string; mask: Image.Mask };
   title: string;
-  subtitle?: { value: string; tooltip?: string };
+  subtitle?: { value: string; tooltip: string };
   accessories?: {
     icon?: Icon | { source: string; mask: Image.Mask };
     date?: Date;
