@@ -135,6 +135,8 @@ export default function CreateObjectForm({
         ))}
       </Form.Dropdown>
 
+      <Form.Separator />
+
       {hasSelectedSpaceAndType && (
         <>
           {selectedType === "ot-bookmark" ? (

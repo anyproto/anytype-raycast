@@ -11,16 +11,6 @@
     "Productivity"
   ],
   "license": "MIT",
-  "preferences": [
-    {
-      "name": "bearerToken",
-      "type": "password",
-      "title": "API Key",
-      "description": "Your personal API key to access the Anytype API. This key can be generated within the application settings or via the authentication endpoints.",
-      "placeholder": "API Key",
-      "required": true
-    }
-  ],
   "commands": [
     {
       "name": "search-anytype",

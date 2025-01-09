@@ -5,8 +5,19 @@ import { useSpaces } from "./hooks/useSpaces";
 import { getMembers } from "./api/getMembers";
 import { pluralize } from "./utils/helpers";
 import EmptyView from "./components/EmptyView";
+import EnsureAuthenticated from "./components/EnsureAuthenticated";
 
-export default function BrowseSpaces() {
+const searchPlaceholder = "Search spaces...";
+
+export default function Command() {
+  return (
+    <EnsureAuthenticated placeholder={searchPlaceholder} viewType="list">
+      <BrowseSpaces />
+    </EnsureAuthenticated>
+  );
+}
+
+function BrowseSpaces() {
   const { spaces, spacesError, mutateSpaces, isLoadingSpaces, spacesPagination } = useSpaces();
   const [searchText, setSearchText] = useState("");
   const membersDataRef = useRef<{ [key: string]: number }>({});
@@ -59,7 +70,7 @@ export default function BrowseSpaces() {
     <List
       isLoading={isLoadingSpaces || isLoadingMembers}
       onSearchTextChange={setSearchText}
-      searchBarPlaceholder="Search spaces..."
+      searchBarPlaceholder={searchPlaceholder}
       pagination={spacesPagination}
     >
       {filteredSpaces?.length > 0 ? (

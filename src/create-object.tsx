@@ -3,10 +3,19 @@ import { useEffect, useState } from "react";
 import { useSpaces } from "./hooks/useSpaces";
 import { useTypes } from "./hooks/useTypes";
 import CreateObjectForm, { CreateObjectFormValues } from "./components/CreateObjectForm";
+import EnsureAuthenticated from "./components/EnsureAuthenticated";
 
 interface CreateObjectProps extends LaunchProps<{ draftValues: CreateObjectFormValues }> {}
 
-export default function CreateObject({ draftValues }: CreateObjectProps) {
+export default function Command(props: CreateObjectProps) {
+  return (
+    <EnsureAuthenticated viewType="form">
+      <CreateObject {...props} />
+    </EnsureAuthenticated>
+  );
+}
+
+function CreateObject({ draftValues }: CreateObjectProps) {
   const [selectedSpace, setSelectedSpace] = useState(draftValues?.space || "");
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
   const { types, typesError, isLoadingTypes } = useTypes(selectedSpace);

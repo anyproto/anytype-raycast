@@ -8,8 +8,19 @@ import { getAllTypesFromSpaces } from "./utils/helpers";
 import { SpaceObject } from "./utils/schemas";
 import ObjectListItem from "./components/ObjectListItem";
 import EmptyView from "./components/EmptyView";
+import EnsureAuthenticated from "./components/EnsureAuthenticated";
 
-export default function Search() {
+const searchBarPlaceholder = "Globally search objects across spaces...";
+
+export default function Command() {
+  return (
+    <EnsureAuthenticated placeholder={searchBarPlaceholder} viewType="list">
+      <Search />
+    </EnsureAuthenticated>
+  );
+}
+
+function Search() {
   const [searchText, setSearchText] = useState("");
   const [objectTypes, setObjectTypes] = useState<string[]>([]);
   const [filteredItems, setFilteredItems] = useState<SpaceObject[]>([]);
@@ -118,7 +129,7 @@ export default function Search() {
     <List
       isLoading={isLoadingSpaces || isLoadingObjects}
       onSearchTextChange={setSearchText}
-      searchBarPlaceholder="Globally search objects across spaces..."
+      searchBarPlaceholder={searchBarPlaceholder}
       pagination={objectsPagination}
       throttle={true}
       searchBarAccessory={

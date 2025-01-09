@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { getPreferenceValues } from "@raycast/api";
+import { LocalStorage } from "@raycast/api";
 
 interface FetchOptions {
   method: string;
@@ -8,14 +8,12 @@ interface FetchOptions {
 }
 
 export async function apiFetch<T>(url: string, options: FetchOptions): Promise<T> {
-  const preferences = getPreferenceValues<Preferences>();
-
   try {
     const response = await fetch(url, {
       method: options.method,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${preferences.bearerToken}`,
+        Authorization: `Bearer ${await LocalStorage.getItem("app_key")}`,
         ...options.headers,
       },
       body: options.body,
