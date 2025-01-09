@@ -10,6 +10,15 @@ export interface PaginatedResponse<T> {
   pagination: Pagination;
 }
 
+export interface DisplayCodeResponse {
+  challenge_id: string;
+}
+
+export interface TokenResponse {
+  session_token: string;
+  app_key: string;
+}
+
 export interface Space {
   type: string;
   id: string;

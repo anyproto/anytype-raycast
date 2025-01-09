@@ -19,6 +19,10 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
     method: "DELETE",
   }),
+  displayCode: {
+    url: `${apiUrl}/auth/display_code`,
+    method: "POST",
+  },
   getExport: (spaceId: string, objectId: string, format: string) => ({
     url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}/export/${format}`,
     method: "POST",
@@ -38,6 +42,10 @@ export const apiEndpoints = {
   getTemplates: (spaceId: string, typeId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/object_types/${typeId}/templates${encodeQueryParams(options)}`,
     method: "GET",
+  }),
+  getToken: (challengeId: string, code: string) => ({
+    url: `${apiUrl}/auth/token?challenge_id=${challengeId}&code=${code}`,
+    method: "POST",
   }),
   getTypes: (spaceId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/object_types${encodeQueryParams(options)}`,
