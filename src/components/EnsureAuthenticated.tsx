@@ -1,6 +1,8 @@
-import fetch from "node-fetch";
 import { useEffect, useState } from "react";
 import { LocalStorage, showToast, Toast, List, ActionPanel, Action, Form, Icon } from "@raycast/api";
+import { useForm } from "@raycast/utils";
+import { displayCode } from "../api/displayCode";
+import { getToken } from "../api/getToken";
 
 type EnsureAuthenticatedProps = {
   placeholder?: string;
@@ -11,15 +13,64 @@ type EnsureAuthenticatedProps = {
 export default function EnsureAuthenticated({ placeholder, viewType, children }: EnsureAuthenticatedProps) {
   const [hasToken, setHasToken] = useState<boolean | null>(null);
   const [challengeId, setChallengeId] = useState("");
-  const [userCode, setUserCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const { handleSubmit, itemProps } = useForm<{ userCode: string }>({
+    onSubmit: async (values) => {
+      if (!challengeId) {
+        showToast({
+          style: Toast.Style.Failure,
+          title: "Challenge not started",
+          message: "Start the challenge before submitting the code.",
+        });
+        return;
+      }
+
+      try {
+        setIsLoading(true);
+        const { app_key } = await getToken(challengeId, values.userCode);
+        await LocalStorage.setItem("app_key", app_key);
+        showToast({ style: Toast.Style.Success, title: "Successfully authenticated" });
+        setHasToken(true);
+      } catch (error) {
+        showToast({
+          style: Toast.Style.Failure,
+          title: "Failed to solve challenge",
+          message: String(error),
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    validation: {
+      userCode: (value) => {
+        if (!value) {
+          return "The code is required.";
+        } else if (!/^\d{4}$/.test(value)) {
+          return "Code must be exactly 4 digits.";
+        }
+      },
+    },
+  });
   useEffect(() => {
-    (async () => {
-      const token = await LocalStorage.getItem<string>("auth_token");
+    const retrieveToken = async () => {
+      const token = await LocalStorage.getItem<string>("app_key");
       setHasToken(!!token);
-    })();
+    };
+    retrieveToken();
   }, []);
+
+  async function startChallenge() {
+    try {
+      setIsLoading(true);
+      const { challenge_id } = await displayCode();
+      setChallengeId(challenge_id);
+    } catch (error) {
+      showToast({ style: Toast.Style.Failure, title: "Failed to start challenge", message: String(error) });
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   if (hasToken === null) {
     if (viewType === "form") {
@@ -33,76 +84,21 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
     return <>{children}</>;
   }
 
-  async function startChallenge() {
-    try {
-      setIsLoading(true);
-      const response = await fetch("http://127.0.0.1:31009/v1/auth/display_code", { method: "POST" });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const data = (await response.json()) as { challenge_id: string };
-      if (!data.challenge_id) {
-        throw new Error("No challenge_id returned by /auth/display_code");
-      }
-      setChallengeId(data.challenge_id);
-    } catch (error) {
-      showToast({ style: Toast.Style.Failure, title: "Failed to start challenge", message: String(error) });
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function solveChallenge() {
-    if (!challengeId || !userCode) {
-      showToast({
-        style: Toast.Style.Failure,
-        title: "Challenge or code missing",
-        message: "Please start the challenge and enter the code.",
-      });
-      return;
-    }
-
-    try {
-      setIsLoading(true);
-      const url = `http://127.0.0.1:31009/v1/auth/token?challenge_id=${challengeId}&code=${userCode}`;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status} because ${await response.text()}`);
-      }
-      const data = (await response.json()) as { session_token: string; app_key: string };
-      if (!data.app_key) {
-        throw new Error("No app_key returned by /auth/token");
-      }
-
-      await LocalStorage.setItem("auth_token", data.app_key);
-      showToast({ style: Toast.Style.Success, title: "Authenticated", message: "Token stored securely." });
-      setHasToken(true);
-    } catch (error) {
-      showToast({ style: Toast.Style.Failure, title: "Failed to solve challenge", message: String(error) });
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   return challengeId ? (
     <Form
       isLoading={isLoading}
       navigationTitle="Enter Code to Authenticate"
       actions={
         <ActionPanel>
-          <Action title="Submit Code" onAction={solveChallenge} />
+          <Action.SubmitForm title="Submit Code" onSubmit={handleSubmit} {...itemProps} />
         </ActionPanel>
       }
     >
       <Form.TextField
+        {...itemProps.userCode}
         id="userCode"
         title="Verification Code"
         placeholder="Enter the 4-digit code from the app"
-        value={userCode}
-        onChange={setUserCode}
       />
     </Form>
   ) : (
