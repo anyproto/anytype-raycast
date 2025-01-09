@@ -45,11 +45,6 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
         throw new Error("No challenge_id returned by /auth/display_code");
       }
       setChallengeId(data.challenge_id);
-      showToast({
-        style: Toast.Style.Success,
-        title: "Challenge started",
-        message: "Enter the code from the desktop app.",
-      });
     } catch (error) {
       showToast({ style: Toast.Style.Failure, title: "Failed to start challenge", message: String(error) });
     } finally {
@@ -95,7 +90,7 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
   return challengeId ? (
     <Form
       isLoading={isLoading}
-      navigationTitle="Enter Authentication Code"
+      navigationTitle="Enter Code to Authenticate"
       actions={
         <ActionPanel>
           <Action title="Submit Code" onAction={solveChallenge} />
@@ -104,7 +99,7 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
     >
       <Form.TextField
         id="userCode"
-        title="4-Digit Code"
+        title="Verification Code"
         placeholder="Enter the 4-digit code from the app"
         value={userCode}
         onChange={setUserCode}
@@ -113,13 +108,13 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
   ) : (
     <List
       isLoading={isLoading}
-      searchBarPlaceholder="Authentication Required"
+      searchBarPlaceholder="Authentication required"
       navigationTitle="Authenticate to Continue"
     >
       <List.EmptyView
         icon={Icon.Lock}
         title="Authentication Required"
-        description="Authenticate to use the Anytype extension for Raycast. A 4-digit code will pop up in the Anytype desktop app."
+        description="You need to authenticate first. Start the challenge for a 4-digit code to pop up in the Anytype desktop app."
         actions={
           <ActionPanel>
             <Action title="Start Challenge" onAction={startChallenge} />
