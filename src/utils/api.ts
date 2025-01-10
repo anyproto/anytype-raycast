@@ -21,7 +21,14 @@ export async function apiFetch<T>(url: string, options: FetchOptions): Promise<T
 
     if (!response.ok) {
       if (response.status === 403) {
-        throw new Error("It seems you're not logged in. Please log in and try again.");
+        const responseText = await response.text();
+        if (responseText.includes("failed to get app instance")) {
+          throw new Error("It seems you're not logged in. Please log in and try again.");
+        } else if (responseText.includes("failed to delete object")) {
+          throw new Error("Object can't be deleted.");
+        } else {
+          throw new Error(`API request failed: [${response.status}] ${response.statusText} ${responseText}`);
+        }
       } else {
         throw new Error(`API request failed: [${response.status}] ${response.statusText} ${await response.text()}`);
       }
