@@ -34,8 +34,8 @@ export default function ObjectActions({ spaceId, objectId, title, details, mutat
 
     if (confirm) {
       try {
-        await showToast({ style: Toast.Style.Animated, title: "Deleting object" });
         deleteObject(spaceId, objectId);
+        await mutate();
         await showToast({
           style: Toast.Style.Success,
           title: "Object deleted",
