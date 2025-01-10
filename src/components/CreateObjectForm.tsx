@@ -36,20 +36,20 @@ export default function CreateObjectForm({
   const [filteredTypes, setFilteredTypes] = useState<Type[]>([]);
 
   const hasSelectedSpaceAndType = selectedSpace && selectedType;
+  const restrictedTypes = [
+    "ot-audio",
+    "ot-chat",
+    "ot-file",
+    "ot-image",
+    "ot-objectType",
+    "ot-tag",
+    "ot-template",
+    "ot-video",
+    "ot-participant",
+  ];
 
   useEffect(() => {
-    const disallowed = [
-      "ot-audio",
-      "ot-chat",
-      "ot-file",
-      "ot-image",
-      "ot-objectType",
-      "ot-tag",
-      "ot-template",
-      "ot-video",
-      "ot-participant",
-    ];
-    setFilteredTypes(objectTypes.filter((type) => !disallowed.includes(type.unique_key)));
+    setFilteredTypes(objectTypes.filter((type) => !restrictedTypes.includes(type.unique_key)));
   }, [objectTypes]);
 
   const { handleSubmit, itemProps } = useForm<CreateObjectFormValues>({
@@ -111,6 +111,7 @@ export default function CreateObjectForm({
         title="Space"
         value={selectedSpace}
         onChange={setSelectedSpace}
+        storeValue={true}
         info="Select the space where the object will be created"
       >
         {spaces?.map((space) => (
@@ -128,6 +129,7 @@ export default function CreateObjectForm({
         title="Type"
         value={selectedType}
         onChange={setSelectedType}
+        storeValue={true}
         info="Select the type of object to create"
       >
         {filteredTypes.map((type) => (
@@ -142,10 +144,8 @@ export default function CreateObjectForm({
           {selectedType === "ot-bookmark" ? (
             <Form.TextField
               {...itemProps.source}
-              id="source"
               title="Source"
               placeholder="Add link"
-              defaultValue={draftValues?.source}
               info="Provide the source URL for the bookmark"
             />
           ) : (
@@ -153,38 +153,30 @@ export default function CreateObjectForm({
               {!["ot-note"].includes(selectedType) && (
                 <Form.TextField
                   {...itemProps.name}
-                  id="name"
                   title="Name"
                   placeholder="Add a name"
-                  defaultValue={draftValues?.name}
                   info="Enter the name of the object"
                 />
               )}
               {!["ot-task", "ot-note", "ot-profile"].includes(selectedType) && (
                 <Form.TextField
                   {...itemProps.icon}
-                  id="icon"
                   title="Icon"
                   placeholder="Add an emoji"
-                  defaultValue={draftValues?.icon}
                   info="Enter a single emoji character to represent the object"
                 />
               )}
               <Form.TextField
                 {...itemProps.description}
-                id="description"
                 title="Description"
                 placeholder="Add a description"
-                defaultValue={draftValues?.description}
                 info="Provide a brief description of the object"
               />
               {!["ot-set", "ot-collection"].includes(selectedType) && (
                 <Form.TextArea
                   {...itemProps.body}
-                  id="body"
                   title="Body"
                   placeholder="Add text in markdown"
-                  defaultValue={draftValues?.body}
                   info="Parses markdown to Anytype Blocks.
 
 It supports:
