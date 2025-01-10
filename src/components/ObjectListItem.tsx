@@ -17,6 +17,7 @@ type ObjectListItemProps = {
   }[];
   details?: Detail[];
   mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>;
+  viewType: "object" | "type" | "member";
 };
 
 export default function ObjectListItem({
@@ -28,6 +29,7 @@ export default function ObjectListItem({
   accessories,
   details,
   mutate,
+  viewType,
 }: ObjectListItemProps) {
   return (
     <List.Item
@@ -50,7 +52,16 @@ export default function ObjectListItem({
 
         return accessoryProps;
       })}
-      actions={<ObjectActions spaceId={spaceId} objectId={objectId} title={title} details={details} mutate={mutate} />}
+      actions={
+        <ObjectActions
+          spaceId={spaceId}
+          objectId={objectId}
+          title={title}
+          details={details}
+          mutate={mutate}
+          viewType={viewType}
+        />
+      }
     />
   );
 }

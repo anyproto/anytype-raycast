@@ -79,6 +79,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             ]}
             details={object.details}
             mutate={mutateObjects}
+            viewType="object"
           />
         ));
       case "types":
@@ -90,6 +91,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             icon={type.icon}
             title={type.name}
             mutate={mutateTypes}
+            viewType="type"
           />
         ));
       case "members":
@@ -119,6 +121,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
               },
             ]}
             mutate={mutateMembers}
+            viewType="member"
           />
         ));
       default:

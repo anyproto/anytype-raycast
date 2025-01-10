@@ -182,6 +182,7 @@ function Search() {
               ]}
               details={object.details}
               mutate={mutateObjects}
+              viewType="object"
             />
           ))}
         </List.Section>

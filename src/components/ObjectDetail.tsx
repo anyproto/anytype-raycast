@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { format } from "date-fns";
 import { Detail, showToast, Toast } from "@raycast/api";
 import { useExport } from "../hooks/useExport";
-import ObjectDetailActions from "./ObjectDetailActions";
+import ObjectActions from "./ObjectActions";
 import type { Detail as ObjectDetail, Tag } from "../utils/schemas";
 
 type ObjectDetailProps = {
@@ -54,12 +54,13 @@ export default function ObjectDetail({ spaceId, objectId, title, details }: Obje
         </Detail.Metadata>
       }
       actions={
-        <ObjectDetailActions
+        <ObjectActions
           spaceId={spaceId}
           objectId={objectId}
           title={title}
+          exportMutate={mutateObjectExport}
           objectExport={objectExport}
-          mutate={mutateObjectExport}
+          viewType="object"
         />
       }
     />
