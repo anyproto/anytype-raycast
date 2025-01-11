@@ -6,9 +6,6 @@ import { apiLimit } from "../utils/constants";
 export function useTypes(spaceId: string) {
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     (spaceId: string) => async (options: { page: number }) => {
-      if (!spaceId) {
-        return { data: [], hasMore: false };
-      }
       const offset = options.page * apiLimit;
       const response = await getTypes(spaceId, { offset, limit: apiLimit });
 
@@ -19,6 +16,7 @@ export function useTypes(spaceId: string) {
     },
     [spaceId],
     {
+      execute: !!spaceId,
       keepPreviousData: true,
     },
   );
