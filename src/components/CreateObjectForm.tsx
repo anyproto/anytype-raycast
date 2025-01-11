@@ -1,24 +1,17 @@
 import { Action, ActionPanel, Form, Icon, Image, popToRoot, showToast, Toast } from "@raycast/api";
 import { useForm } from "@raycast/utils";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createObject } from "../api/createObject";
 import { Space, Type } from "../utils/schemas";
-
-export interface CreateObjectFormValues {
-  space: string;
-  type: string;
-  name?: string;
-  icon?: string;
-  description?: string;
-  body?: string;
-  source?: string;
-}
+import { CreateObjectFormValues } from "../create-object";
 
 interface CreateObjectFormProps {
   spaces: Space[];
   objectTypes: Type[];
   selectedSpace: string;
   setSelectedSpace: (spaceId: string) => void;
+  selectedType: string;
+  setSelectedType: (type: string) => void;
   isLoading: boolean;
   draftValues: CreateObjectFormValues;
 }
@@ -28,29 +21,13 @@ export default function CreateObjectForm({
   objectTypes,
   selectedSpace,
   setSelectedSpace,
+  selectedType,
+  setSelectedType,
   isLoading,
   draftValues,
 }: CreateObjectFormProps) {
   const [loading, setLoading] = useState(false);
-  const [selectedType, setSelectedType] = useState(draftValues?.type || "");
-  const [filteredTypes, setFilteredTypes] = useState<Type[]>([]);
-
   const hasSelectedSpaceAndType = selectedSpace && selectedType;
-  const restrictedTypes = [
-    "ot-audio",
-    "ot-chat",
-    "ot-file",
-    "ot-image",
-    "ot-objectType",
-    "ot-tag",
-    "ot-template",
-    "ot-video",
-    "ot-participant",
-  ];
-
-  useEffect(() => {
-    setFilteredTypes(objectTypes.filter((type) => !restrictedTypes.includes(type.unique_key)));
-  }, [objectTypes]);
 
   const { handleSubmit, itemProps } = useForm<CreateObjectFormValues>({
     initialValues: draftValues,
@@ -96,6 +73,27 @@ export default function CreateObjectForm({
     },
   });
 
+  function getQuicklink(): { name: string; link: string } {
+    const url = "raycast://extensions/any/anytype/create-object";
+
+    const launchContext = {
+      defaults: {
+        space: selectedSpace,
+        type: selectedType,
+        name: itemProps.name.value,
+        icon: itemProps.icon.value,
+        description: itemProps.description.value,
+        body: itemProps.body.value,
+        source: itemProps.source.value,
+      },
+    };
+
+    return {
+      name: `Create ${objectTypes.find((type) => type.unique_key === selectedType)?.name} in ${spaces.find((space) => space.id === selectedSpace)?.name}`,
+      link: url + "?launchContext=" + encodeURIComponent(JSON.stringify(launchContext)),
+    };
+  }
+
   return (
     <Form
       isLoading={loading || isLoading}
@@ -103,6 +101,12 @@ export default function CreateObjectForm({
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Create Object" icon={Icon.Plus} onSubmit={handleSubmit} />
+          {hasSelectedSpaceAndType && (
+            <Action.CreateQuicklink
+              title={`Create Quicklink: ${objectTypes.find((type) => type.unique_key === selectedType)?.name}`}
+              quicklink={getQuicklink()}
+            />
+          )}
         </ActionPanel>
       }
     >
@@ -129,10 +133,10 @@ export default function CreateObjectForm({
         title="Type"
         value={selectedType}
         onChange={setSelectedType}
-        storeValue={true}
+        storeValue={true} // TODO: does not work
         info="Select the type of object to create"
       >
-        {filteredTypes.map((type) => (
+        {objectTypes.map((type) => (
           <Form.Dropdown.Item key={type.unique_key} value={type.unique_key} title={type.name} icon={type.icon} />
         ))}
       </Form.Dropdown>
