@@ -1,3 +1,4 @@
+import * as fs from "fs";
 import { useEffect } from "react";
 import { format } from "date-fns";
 import { Detail, showToast, Toast } from "@raycast/api";
@@ -18,6 +19,18 @@ export default function ObjectDetail({ spaceId, objectId, title, details }: Obje
     objectId,
     "markdown",
   );
+
+  useEffect(() => {
+    return () => {
+      if (objectExport?.path) {
+        if (fs.existsSync(objectExport.path)) {
+          fs.rmSync(objectExport.path, { recursive: true });
+        } else {
+          console.warn(`Path not found: ${objectExport.path}`);
+        }
+      }
+    };
+  }, []);
 
   const createdDate = details[0].details.createdDate as Date;
   const lastModifiedDate = details[0].details.lastModifiedDate as Date;

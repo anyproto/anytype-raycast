@@ -54,6 +54,7 @@ export interface ObjectExport {
 
 export interface Export {
   markdown: string;
+  path: string;
 }
 
 export interface SpaceObject {

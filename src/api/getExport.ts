@@ -24,5 +24,5 @@ export async function getExport(spaceId: string, objectId: string, format: strin
   const re = /\(files\/([^)]+)\)/g;
   const result = markdown.replace(re, `(file://${path.join(outputPath, "files", "$1")})`);
 
-  return { markdown: result };
+  return { markdown: result, path: outputPath };
 }
