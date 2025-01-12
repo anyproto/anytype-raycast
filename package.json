@@ -2,7 +2,7 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "anytype",
   "title": "Anytype",
-  "description": "Search, create and interact with Anytype - right at your fingertips, anywhere on your Mac.",
+  "description": "Create, browse and search in Anytype - right at your fingertips, anywhere on your Mac.",
   "icon": "anytype-icon.png",
   "author": "jmetrikat",
   "owner": "any",
@@ -13,24 +13,24 @@
   "license": "MIT",
   "commands": [
     {
-      "name": "search-anytype",
-      "title": "Search Anytype",
+      "name": "create-object",
+      "title": "Create Object",
       "subtitle": "Anytype",
-      "description": "Search across all your Anytype spaces and objects.",
+      "description": "Create a new object.",
       "mode": "view"
     },
     {
       "name": "browse-spaces",
       "title": "Browse Spaces",
       "subtitle": "Anytype",
-      "description": "Browse your Anytype spaces one by one.",
+      "description": "Browse your spaces one by one.",
       "mode": "view"
     },
     {
-      "name": "create-object",
-      "title": "Create Object",
+      "name": "search-anytype",
+      "title": "Search Anytype",
       "subtitle": "Anytype",
-      "description": "Create a new Anytype object in any of your spaces.",
+      "description": "Search objects globally in all spaces.",
       "mode": "view"
     }
   ],
