@@ -1,5 +1,5 @@
-import { apiFetch } from "../utils/api";
-import { apiEndpoints } from "../utils/constants";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
 
 export async function createObject(
   spaceId: string,

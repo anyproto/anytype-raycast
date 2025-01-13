@@ -1,7 +1,7 @@
-import { apiFetch } from "../utils/api";
-import { apiEndpoints } from "../utils/constants";
-import { SpaceObject, PaginatedResponse } from "../utils/schemas";
-import { mapObjects } from "../utils/mappers/objects";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
+import { SpaceObject, PaginatedResponse } from "../helpers/schemas";
+import { mapObjects } from "../helpers/mappers/objects";
 
 export async function search(
   query: string,

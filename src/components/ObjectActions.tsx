@@ -1,10 +1,10 @@
 import { ActionPanel, Action, Icon, Clipboard, showToast, Toast, Keyboard, confirmAlert, Color } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import ObjectDetail from "./ObjectDetail";
-import { SpaceObject, Type, Member } from "../utils/schemas";
-import { Detail, Export } from "../utils/schemas";
+import { SpaceObject, Type, Member } from "../helpers/schemas";
+import { Detail, Export } from "../helpers/schemas";
 import { deleteObject } from "../api/deleteObject";
-import { pluralize } from "../utils/strings";
+import { pluralize } from "../helpers/strings";
 
 type ObjectActionsProps = {
   spaceId: string;

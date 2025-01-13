@@ -1,6 +1,6 @@
 import { List, Icon, Image } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import { Detail, Type, SpaceObject, Member } from "../utils/schemas";
+import { Detail, Type, SpaceObject, Member } from "../helpers/schemas";
 import ObjectActions from "./ObjectActions";
 
 type ObjectListItemProps = {

@@ -1,7 +1,7 @@
 import { Action, ActionPanel, Icon, showToast, Toast, Keyboard, Clipboard } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import ObjectList from "./ObjectList";
-import { Space } from "../utils/schemas";
+import { Space } from "../helpers/schemas";
 
 type SpaceActionsProps = {
   space: Space;

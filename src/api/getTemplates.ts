@@ -1,7 +1,7 @@
-import { apiFetch } from "../utils/api";
-import { apiEndpoints } from "../utils/constants";
-import { Template, PaginatedResponse } from "../utils/schemas";
-import { Pagination } from "../utils/schemas";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
+import { Template, PaginatedResponse } from "../helpers/schemas";
+import { Pagination } from "../helpers/schemas";
 
 export async function getTemplates(
   spaceId: string,

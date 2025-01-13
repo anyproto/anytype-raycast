@@ -1,9 +1,9 @@
 import * as os from "os";
 import * as fs from "fs";
 import * as path from "path";
-import { apiFetch } from "../utils/api";
-import { apiEndpoints } from "../utils/constants";
-import { ObjectExport, Export } from "../utils/schemas";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
+import { ObjectExport, Export } from "../helpers/schemas";
 
 export async function getExport(spaceId: string, objectId: string, format: string): Promise<Export> {
   const tmpdir = os.tmpdir();

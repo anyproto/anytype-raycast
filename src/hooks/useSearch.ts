@@ -1,7 +1,7 @@
 import { useCachedPromise } from "@raycast/utils";
 import { search } from "../api/search";
 import { useMemo } from "react";
-import { apiLimit } from "../utils/constants";
+import { apiLimit } from "../helpers/constants";
 
 export function useSearch(searchText: string, type: string[]) {
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(

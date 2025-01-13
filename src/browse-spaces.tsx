@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import SpaceListItem from "./components/SpaceListItem";
 import { useSpaces } from "./hooks/useSpaces";
 import { getMembers } from "./api/getMembers";
-import { pluralize } from "./utils/strings";
+import { pluralize } from "./helpers/strings";
 import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 

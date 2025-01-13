@@ -2,7 +2,7 @@ import { Toast, showToast, LaunchProps } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { useSpaces } from "./hooks/useSpaces";
 import { useTypes } from "./hooks/useTypes";
-import { Type } from "./utils/schemas";
+import { Type } from "./helpers/schemas";
 import CreateObjectForm from "./components/CreateObjectForm";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 

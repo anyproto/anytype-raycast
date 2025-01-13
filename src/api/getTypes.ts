@@ -1,8 +1,8 @@
-import { apiFetch } from "../utils/api";
-import { apiEndpoints } from "../utils/constants";
-import { Type, PaginatedResponse } from "../utils/schemas";
-import { mapTypes } from "../utils/mappers/types";
-import { Pagination } from "../utils/schemas";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
+import { Type, PaginatedResponse } from "../helpers/schemas";
+import { mapTypes } from "../helpers/mappers/types";
+import { Pagination } from "../helpers/schemas";
 
 export async function getTypes(
   spaceId: string,

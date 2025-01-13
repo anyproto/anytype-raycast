@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { Detail, showToast, Toast } from "@raycast/api";
 import { useExport } from "../hooks/useExport";
 import ObjectActions from "./ObjectActions";
-import type { Detail as ObjectDetail, Tag } from "../utils/schemas";
+import type { Detail as ObjectDetail, Tag } from "../helpers/schemas";
 
 type ObjectDetailProps = {
   spaceId: string;
