@@ -4,7 +4,7 @@ import ObjectDetail from "./ObjectDetail";
 import { SpaceObject, Type, Member } from "../utils/schemas";
 import { Detail, Export } from "../utils/schemas";
 import { deleteObject } from "../api/deleteObject";
-import { pluralize } from "../utils/helpers";
+import { pluralize } from "../utils/strings";
 
 type ObjectActionsProps = {
   spaceId: string;

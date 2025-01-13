@@ -1,7 +1,7 @@
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constants";
 import { PaginatedResponse } from "../utils/schemas";
-import { transformSpace } from "../utils/helpers";
+import { mapSpaces } from "../utils/mappers/spaces";
 import { Space, Pagination } from "../utils/schemas";
 
 export async function getSpaces(options: { offset: number; limit: number }): Promise<{
@@ -12,7 +12,7 @@ export async function getSpaces(options: { offset: number; limit: number }): Pro
   const response = await apiFetch<PaginatedResponse<Space>>(url, { method: method });
 
   return {
-    spaces: response.data ? await transformSpace(response.data) : [],
+    spaces: response.data ? await mapSpaces(response.data) : [],
     pagination: response.pagination,
   };
 }

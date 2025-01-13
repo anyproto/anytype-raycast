@@ -1,7 +1,7 @@
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constants";
 import { Type, PaginatedResponse } from "../utils/schemas";
-import { transformTypes } from "../utils/helpers";
+import { mapTypes } from "../utils/mappers/types";
 import { Pagination } from "../utils/schemas";
 
 export async function getTypes(
@@ -18,7 +18,7 @@ export async function getTypes(
   const response = await apiFetch<PaginatedResponse<Type>>(url, { method: method });
 
   return {
-    types: response.data ? await transformTypes(response.data) : [],
+    types: response.data ? await mapTypes(response.data) : [],
     pagination: response.pagination,
   };
 }

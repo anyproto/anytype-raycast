@@ -1,4 +1,4 @@
-import { encodeQueryParams } from "./helpers";
+import { encodeQueryParams } from "./query";
 
 // Strings
 export const apiUrl = "http://localhost:31009/v1";

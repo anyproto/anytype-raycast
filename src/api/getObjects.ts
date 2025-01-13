@@ -1,6 +1,6 @@
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constants";
-import { transformObjects } from "../utils/helpers";
+import { mapObjects } from "../utils/mappers/objects";
 import { PaginatedResponse, Pagination, SpaceObject } from "../utils/schemas";
 
 export async function getObjects(
@@ -14,7 +14,7 @@ export async function getObjects(
   const response = await apiFetch<PaginatedResponse<SpaceObject>>(url, { method: method });
 
   return {
-    objects: response.data ? await transformObjects(response.data) : [],
+    objects: response.data ? await mapObjects(response.data) : [],
     pagination: response.pagination,
   };
 }

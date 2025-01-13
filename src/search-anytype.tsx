@@ -1,10 +1,10 @@
 import { Icon, List, showToast, Toast, Image } from "@raycast/api";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { pluralize } from "./utils/helpers";
+import { pluralize } from "./utils/strings";
 import { useSpaces } from "./hooks/useSpaces";
 import { useSearch } from "./hooks/useSearch";
-import { getAllTypesFromSpaces } from "./utils/helpers";
+import { getAllTypesFromSpaces } from "./utils/typesHelper";
 import { SpaceObject } from "./utils/schemas";
 import ObjectListItem from "./components/ObjectListItem";
 import EmptyView from "./components/EmptyView";
