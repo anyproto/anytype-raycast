@@ -7,15 +7,11 @@ import { getIconForObject } from "../icon";
 export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]> {
   return Promise.all(
     objects.map(async (object) => {
-      // Convert internal timestamps to JS dates
+      const icon = await getIconForObject(object);
       const lastModified = object.details?.find((d) => d.id === "lastModifiedDate")?.details.lastModifiedDate as string;
       const lastModifiedDate = lastModified ? new Date(parseInt(lastModified) * 1000) : new Date(0);
       const created = object.details?.find((d) => d.id === "createdDate")?.details.createdDate as string;
       const createdDate = created ? new Date(parseInt(created) * 1000) : new Date(0);
-
-      // Fetch icon
-      const fetchedIcon = await getIconForObject(object);
-      const icon = typeof fetchedIcon === "string" ? fetchedIcon : fetchedIcon.source;
 
       return {
         ...object,
