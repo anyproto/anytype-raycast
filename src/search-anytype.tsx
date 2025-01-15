@@ -1,7 +1,6 @@
 import { Icon, List, showToast, Toast, Image } from "@raycast/api";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { pluralize } from "./helpers/strings";
 import { useSpaces } from "./hooks/useSpaces";
 import { useSearch } from "./hooks/useSearch";
 import { getAllTypesFromSpaces } from "./helpers/types";
@@ -146,9 +145,7 @@ function Search() {
       {filteredItems.length > 0 ? (
         <List.Section
           title={searchText ? "Search Results" : "Modified Recently"}
-          subtitle={pluralize(filteredItems.length, "object", {
-            withNumber: true,
-          })}
+          subtitle={`${filteredItems.length} ${filterType.replace("all", "objects")}`}
         >
           {filteredItems.map((object) => (
             <ObjectListItem
