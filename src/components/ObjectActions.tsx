@@ -30,7 +30,7 @@ export default function ObjectActions({
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
   const isDetailView = objectExport !== undefined;
 
-  function getContextLabel() {
+  function getContextLabel(isSingular = true) {
     const baseLabel = (() => {
       switch (viewType) {
         case "object":
@@ -43,7 +43,7 @@ export default function ObjectActions({
           return "Item";
       }
     })();
-    return !isDetailView ? pluralize(2, baseLabel) : baseLabel;
+    return !isDetailView && !isSingular ? pluralize(2, baseLabel) : baseLabel;
   }
 
   async function handleCopyLink() {
@@ -153,7 +153,7 @@ export default function ObjectActions({
       <ActionPanel.Section>
         <Action
           icon={Icon.RotateClockwise}
-          title={`Refresh ${getContextLabel()}`}
+          title={`Refresh ${getContextLabel(false)}`}
           shortcut={Keyboard.Shortcut.Common.Refresh}
           onAction={handleRefresh}
         />
