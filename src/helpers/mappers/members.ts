@@ -1,6 +1,6 @@
 import { Icon } from "@raycast/api";
 import { Member } from "../schemas";
-import { fetchAndTransformIcon } from "../icon";
+import { getIcon } from "../icon";
 
 /**
  * Map raw `Member` objects from the API into display-ready data (e.g., icon).
@@ -8,7 +8,7 @@ import { fetchAndTransformIcon } from "../icon";
 export async function mapMembers(members: Member[]): Promise<Member[]> {
   return Promise.all(
     members.map(async (member) => {
-      const icon = (await fetchAndTransformIcon(member.icon)) || Icon.PersonCircle;
+      const icon = (await getIcon(member.icon)) || Icon.PersonCircle;
       return {
         ...member,
         name: member.name || "Untitled",

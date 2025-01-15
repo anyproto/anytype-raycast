@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { format } from "date-fns";
-import { Detail, showToast, Toast } from "@raycast/api";
+import { Detail, showToast, Toast, Image } from "@raycast/api";
 import { useExport } from "../hooks/useExport";
 import ObjectActions from "./ObjectActions";
-import type { Detail as ObjectDetail, Tag } from "../helpers/schemas";
+import type { Detail as ObjectDetail, Member } from "../helpers/schemas";
 
 type ObjectDetailProps = {
   spaceId: string;
@@ -19,9 +19,19 @@ export default function ObjectDetail({ spaceId, objectId, title, details }: Obje
     "markdown",
   );
 
-  const createdDate = details[0].details.createdDate as Date;
-  const lastModifiedDate = details[0].details.lastModifiedDate as Date;
-  const tags = details.flatMap((detail) => detail.details.tags || []) as Tag[];
+  const createdDateDetail = details.find((detail) => detail.id === "createdDate");
+  const createdDate = createdDateDetail?.details?.createdDate;
+
+  const createdByDetail = details.find((detail) => detail.id === "createdBy");
+  const createdBy = createdByDetail?.details?.details as Member | undefined;
+
+  const lastModifiedDateDetail = details.find((detail) => detail.id === "lastModifiedDate");
+  const lastModifiedDate = lastModifiedDateDetail?.details?.lastModifiedDate;
+
+  const lastModifiedByDetail = details.find((detail) => detail.id === "lastModifiedBy");
+  const lastModifiedBy = lastModifiedByDetail?.details?.details as Member | undefined;
+
+  const tags = details.flatMap((detail) => detail.details.tags || []);
 
   useEffect(() => {
     if (objectExportError) {
@@ -35,15 +45,35 @@ export default function ObjectDetail({ spaceId, objectId, title, details }: Obje
       isLoading={isLoadingObjectExport}
       metadata={
         <Detail.Metadata>
-          {createdDate ? (
-            <Detail.Metadata.Label title="Created Date" text={format(new Date(createdDate), "MMMM d, yyyy")} />
-          ) : null}
           {lastModifiedDate ? (
             <Detail.Metadata.Label
               title="Last Modified Date"
               text={format(new Date(lastModifiedDate), "MMMM d, yyyy")}
             />
           ) : null}
+          {lastModifiedBy ? (
+            <Detail.Metadata.Label
+              title="Last Modified By"
+              text={lastModifiedBy.global_name || lastModifiedBy.name}
+              icon={{ source: lastModifiedBy.icon, mask: Image.Mask.Circle }}
+            />
+          ) : null}
+
+          <Detail.Metadata.Separator />
+
+          {createdDate ? (
+            <Detail.Metadata.Label title="Created Date" text={format(new Date(createdDate), "MMMM d, yyyy")} />
+          ) : null}
+          {createdBy ? (
+            <Detail.Metadata.Label
+              title="Created By"
+              text={createdBy.global_name || createdBy.name}
+              icon={{ source: createdBy.icon, mask: Image.Mask.Circle }}
+            />
+          ) : null}
+
+          <Detail.Metadata.Separator />
+
           {tags.length > 0 ? (
             <Detail.Metadata.TagList title="Tags">
               {tags.map((tag) => (
@@ -53,6 +83,7 @@ export default function ObjectDetail({ spaceId, objectId, title, details }: Obje
           ) : (
             <Detail.Metadata.Label title="Tags" text="No Tags" />
           )}
+          {}
         </Detail.Metadata>
       }
       actions={

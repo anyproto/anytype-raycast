@@ -1,17 +1,17 @@
 import fetch from "node-fetch";
 import { Icon } from "@raycast/api";
-import { SpaceObject } from "./schemas";
+import { iconWidth } from "./constants";
 
 /**
- * Determine which icon to show for a given Object.
+ * Determine which icon to show for a given Object. Icon can be url or emoji.
  */
-export async function getIconForObject(object: SpaceObject): Promise<string | Icon> {
-  if (object.icon) {
-    return (await fetchAndTransformIcon(object.icon)) || object.icon;
+export async function getIconWithFallback(icon: string, layout: string): Promise<string | Icon> {
+  if (icon) {
+    return (await getIcon(icon)) || icon;
   }
 
   // Fallback icons by layout
-  switch (object.layout) {
+  switch (layout) {
     case "todo":
       return Icon.CheckCircle;
     case "set":
@@ -29,9 +29,9 @@ export async function getIconForObject(object: SpaceObject): Promise<string | Ic
 /**
  * Fetch an icon from local gateway and return it as a base64 data URI.
  */
-export async function fetchAndTransformIcon(iconUrl: string): Promise<string | undefined> {
+export async function getIcon(iconUrl: string): Promise<string | undefined> {
   if (iconUrl && iconUrl.startsWith("http://127.0.0.1")) {
-    const urlWithWidth = `${iconUrl}?width=100`;
+    const urlWithWidth = `${iconUrl}?width=${iconWidth}`;
     return (await fetchWithTimeout(urlWithWidth, 500)) || undefined;
   }
 

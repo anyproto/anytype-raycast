@@ -4,6 +4,7 @@ import { encodeQueryParams } from "./query";
 export const apiUrl = "http://localhost:31009/v1";
 export const anytypeNetwork = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU";
 export const apiLimit = 25;
+export const iconWidth = 100;
 
 // API Endponts
 export const apiEndpoints = {
