@@ -9,9 +9,9 @@ export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]>
     objects.map(async (object) => {
       const icon = await getIconForObject(object);
       const lastModified = object.details?.find((d) => d.id === "lastModifiedDate")?.details.lastModifiedDate as string;
-      const lastModifiedDate = lastModified ? new Date(parseInt(lastModified) * 1000) : new Date(0);
+      const lastModifiedDate = lastModified ? new Date(lastModified) : new Date(0);
       const created = object.details?.find((d) => d.id === "createdDate")?.details.createdDate as string;
-      const createdDate = created ? new Date(parseInt(created) * 1000) : new Date(0);
+      const createdDate = created ? new Date(created) : new Date(0);
 
       return {
         ...object,
