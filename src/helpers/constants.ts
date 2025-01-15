@@ -3,7 +3,7 @@ import { encodeQueryParams } from "./query";
 // Strings
 export const apiUrl = "http://localhost:31009/v1";
 export const anytypeNetwork = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU";
-export const apiLimit = 50;
+export const apiLimit = 25;
 
 // API Endponts
 export const apiEndpoints = {
