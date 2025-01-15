@@ -37,13 +37,13 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
 
   useEffect(() => {
     if (typesError) {
-      showToast(Toast.Style.Failure, "Failed to fetch Types", typesError.message);
+      showToast(Toast.Style.Failure, "Failed to fetch types", typesError.message);
     }
   }, [typesError]);
 
   useEffect(() => {
     if (membersError) {
-      showToast(Toast.Style.Failure, "Failed to fetch Members", membersError.message);
+      showToast(Toast.Style.Failure, "Failed to fetch members", membersError.message);
     }
   }, [membersError]);
 

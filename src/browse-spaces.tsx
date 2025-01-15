@@ -39,9 +39,9 @@ function BrowseSpaces() {
               data[id] = response.pagination.total;
             } catch (error) {
               if (error instanceof Error) {
-                showToast(Toast.Style.Failure, "Failed to fetch Members", error.message);
+                showToast(Toast.Style.Failure, "Failed to fetch members", error.message);
               } else {
-                showToast(Toast.Style.Failure, "Failed to fetch Members", "An unknown error occurred.");
+                showToast(Toast.Style.Failure, "Failed to fetch members", "An unknown error occurred.");
               }
             }
           }),
@@ -62,7 +62,7 @@ function BrowseSpaces() {
 
   useEffect(() => {
     if (spacesError) {
-      showToast(Toast.Style.Failure, "Failed to fetch Spaces", spacesError.message);
+      showToast(Toast.Style.Failure, "Failed to fetch spaces", spacesError.message);
     }
   }, [spacesError]);
 

@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import { LocalStorage } from "@raycast/api";
+import { LocalStorage, Toast, showToast } from "@raycast/api";
 
 interface FetchOptions {
   method: string;
@@ -20,15 +20,8 @@ export async function apiFetch<T>(url: string, options: FetchOptions): Promise<T
     });
 
     if (!response.ok) {
-      if (response.status === 403) {
-        const responseText = await response.text();
-        if (responseText.includes("failed to get app instance")) {
-          throw new Error("It seems you're not logged in. Please log in and try again.");
-        } else if (responseText.includes("failed to delete object")) {
-          throw new Error("Object can't be deleted.");
-        } else {
-          throw new Error(`API request failed: [${response.status}] ${response.statusText} ${responseText}`);
-        }
+      if (response.status === 429) {
+        await showToast(Toast.Style.Failure, "Rate Limit Exceeded", "Please try again later.");
       } else {
         throw new Error(`API request failed: [${response.status}] ${response.statusText} ${await response.text()}`);
       }
@@ -41,9 +34,8 @@ export async function apiFetch<T>(url: string, options: FetchOptions): Promise<T
     }
   } catch (error) {
     if (error instanceof Error && error.name === "FetchError") {
-      throw new Error("Please ensure Anytype is running and reachable.");
-    } else {
-      throw error;
+      throw new Error("Can't connect to API. Please ensure Anytype is running and reachable.");
     }
+    throw error;
   }
 }
