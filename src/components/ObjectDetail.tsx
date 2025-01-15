@@ -50,7 +50,9 @@ export default function ObjectDetail({ spaceId, objectId, title, details }: Obje
                 <Detail.Metadata.TagList.Item key={tag.id} text={tag.name} color={tag.color} />
               ))}
             </Detail.Metadata.TagList>
-          ) : null}
+          ) : (
+            <Detail.Metadata.Label title="Tags" text="No Tags" />
+          )}
         </Detail.Metadata>
       }
       actions={
