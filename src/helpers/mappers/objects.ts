@@ -19,7 +19,7 @@ export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]>
       const createdByDetails = getDetail("created_by")?.details as Member;
       const createdBy = {
         name: createdByDetails?.name || "Unknown",
-        icon: await getIconWithFallback(createdByDetails?.icon || "", "participant"),
+        icon: await getIconWithFallback(createdByDetails?.icon, "participant"),
         globalName: createdByDetails?.global_name || "",
       };
 
@@ -29,7 +29,7 @@ export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]>
       const lastModifiedByDetails = getDetail("last_modified_by")?.details as Member;
       const lastModifiedBy = {
         name: lastModifiedByDetails?.name || "Unknown",
-        icon: await getIconWithFallback(lastModifiedByDetails?.icon || "", "participant"),
+        icon: await getIconWithFallback(lastModifiedByDetails?.icon, "participant"),
         globalName: lastModifiedByDetails?.global_name || "",
       };
 

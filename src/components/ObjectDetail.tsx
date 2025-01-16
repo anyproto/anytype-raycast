@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { format } from "date-fns";
-import { Detail, showToast, Toast, Image } from "@raycast/api";
+import { Detail, showToast, Toast, Image, Icon } from "@raycast/api";
 import { useExport } from "../hooks/useExport";
 import ObjectActions from "./ObjectActions";
 import type { Detail as ObjectDetail, Member } from "../helpers/schemas";
@@ -55,7 +55,7 @@ export default function ObjectDetail({ spaceId, objectId, title, details }: Obje
             <Detail.Metadata.Label
               title="Last Modified By"
               text={lastModifiedBy.global_name || lastModifiedBy.name}
-              icon={{ source: lastModifiedBy.icon, mask: Image.Mask.Circle }}
+              icon={{ source: lastModifiedBy.icon || Icon.PersonCircle, mask: Image.Mask.Circle }}
             />
           ) : null}
 
@@ -68,7 +68,7 @@ export default function ObjectDetail({ spaceId, objectId, title, details }: Obje
             <Detail.Metadata.Label
               title="Created By"
               text={createdBy.global_name || createdBy.name}
-              icon={{ source: createdBy.icon, mask: Image.Mask.Circle }}
+              icon={{ source: createdBy.icon || Icon.PersonCircle, mask: Image.Mask.Circle }}
             />
           ) : null}
 
