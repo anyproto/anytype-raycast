@@ -1,6 +1,7 @@
 import { encodeQueryParams } from "./query";
 
 // Strings
+export const appName = "raycast_v1_0125";
 export const apiUrl = "http://localhost:31009/v1";
 export const anytypeNetwork = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU";
 export const apiLimit = 25;
@@ -20,10 +21,10 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
     method: "DELETE",
   }),
-  displayCode: {
-    url: `${apiUrl}/auth/display_code`,
+  displayCode: (appName: string) => ({
+    url: `${apiUrl}/auth/display_code?app_name=${appName}`,
     method: "POST",
-  },
+  }),
   getExport: (spaceId: string, objectId: string, format: string) => ({
     url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}/export/${format}`,
     method: "POST",

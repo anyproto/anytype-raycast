@@ -3,6 +3,7 @@ import { LocalStorage, showToast, Toast, List, ActionPanel, Action, Form, Icon }
 import { useForm } from "@raycast/utils";
 import { displayCode } from "../api/displayCode";
 import { getToken } from "../api/getToken";
+import { appName } from "../helpers/constants";
 
 type EnsureAuthenticatedProps = {
   placeholder?: string;
@@ -63,7 +64,7 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
   async function startChallenge() {
     try {
       setIsLoading(true);
-      const { challenge_id } = await displayCode();
+      const { challenge_id } = await displayCode(appName);
       setChallengeId(challenge_id);
     } catch (error) {
       showToast({ style: Toast.Style.Failure, title: "Failed to start challenge", message: String(error) });
