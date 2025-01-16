@@ -102,8 +102,8 @@ export interface File {
 export interface Detail {
   id: string;
   details: {
-    createdDate: string; // ISO 8601 date
-    lastModifiedDate: string; // ISO 8601 date
+    created_date: string; // ISO 8601 date
+    last_modified_date: string; // ISO 8601 date
     details: Member; // Details of a participant
     tags: Tag[]; // List of tags
     [key: string]: unknown; // Additional details

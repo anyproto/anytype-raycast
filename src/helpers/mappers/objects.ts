@@ -14,9 +14,9 @@ export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]>
       const icon = await getIconWithFallback(object.icon, object.layout);
 
       // Extract 'created' details
-      const createdDateString = getDetail("createdDate")?.createdDate as string;
+      const createdDateString = getDetail("created_date")?.created_date as string;
       const createdDate = createdDateString ? new Date(createdDateString) : new Date(0);
-      const createdByDetails = getDetail("createdBy")?.details as Member;
+      const createdByDetails = getDetail("created_by")?.details as Member;
       const createdBy = {
         name: createdByDetails?.name || "Unknown",
         icon: await getIconWithFallback(createdByDetails?.icon || "", "participant"),
@@ -24,9 +24,9 @@ export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]>
       };
 
       // Extract 'last modified' details
-      const lastModifiedDateString = getDetail("lastModifiedDate")?.lastModifiedDate as string;
+      const lastModifiedDateString = getDetail("last_modified_date")?.last_modified_date as string;
       const lastModifiedDate = lastModifiedDateString ? new Date(lastModifiedDateString) : new Date(0);
-      const lastModifiedByDetails = getDetail("lastModifiedBy")?.details as Member;
+      const lastModifiedByDetails = getDetail("last_modified_by")?.details as Member;
       const lastModifiedBy = {
         name: lastModifiedByDetails?.name || "Unknown",
         icon: await getIconWithFallback(lastModifiedByDetails?.icon || "", "participant"),
@@ -45,10 +45,10 @@ export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]>
             ...detail,
             details: {
               ...details,
-              ...(id === "createdDate" && { createdDate: createdDate.toISOString() }),
-              ...(id === "createdBy" && { createdBy }),
-              ...(id === "lastModifiedDate" && { lastModifiedDate: lastModifiedDate.toISOString() }),
-              ...(id === "lastModifiedBy" && { lastModifiedBy }),
+              ...(id === "created_date" && { created_date: createdDate.toISOString() }),
+              ...(id === "created_by" && { createdBy }),
+              ...(id === "last_modified_date" && { last_modified_date: lastModifiedDate.toISOString() }),
+              ...(id === "last_modified_by" && { lastModifiedBy }),
             },
           };
         }),

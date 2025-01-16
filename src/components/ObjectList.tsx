@@ -73,8 +73,8 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             }}
             accessories={[
               {
-                date: new Date(object.details[0]?.details.lastModifiedDate as string),
-                tooltip: `Last Modified: ${format(new Date(object.details[0]?.details.lastModifiedDate as string), "EEEE d MMMM yyyy 'at' HH:mm")}`,
+                date: new Date(object.details[0]?.details.last_modified_date as string),
+                tooltip: `Last Modified: ${format(new Date(object.details[0]?.details.last_modified_date as string), "EEEE d MMMM yyyy 'at' HH:mm")}`,
               },
             ]}
             details={object.details}

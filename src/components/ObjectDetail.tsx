@@ -19,16 +19,16 @@ export default function ObjectDetail({ spaceId, objectId, title, details }: Obje
     "markdown",
   );
 
-  const createdDateDetail = details.find((detail) => detail.id === "createdDate");
-  const createdDate = createdDateDetail?.details?.createdDate;
+  const createdDateDetail = details.find((detail) => detail.id === "created_date");
+  const createdDate = createdDateDetail?.details?.created_date;
 
-  const createdByDetail = details.find((detail) => detail.id === "createdBy");
+  const createdByDetail = details.find((detail) => detail.id === "created_by");
   const createdBy = createdByDetail?.details?.details as Member | undefined;
 
-  const lastModifiedDateDetail = details.find((detail) => detail.id === "lastModifiedDate");
-  const lastModifiedDate = lastModifiedDateDetail?.details?.lastModifiedDate;
+  const lastModifiedDateDetail = details.find((detail) => detail.id === "last_modified_date");
+  const lastModifiedDate = lastModifiedDateDetail?.details?.last_modified_date;
 
-  const lastModifiedByDetail = details.find((detail) => detail.id === "lastModifiedBy");
+  const lastModifiedByDetail = details.find((detail) => detail.id === "last_modified_by");
   const lastModifiedBy = lastModifiedByDetail?.details?.details as Member | undefined;
 
   const tags = details.flatMap((detail) => detail.details.tags || []);
