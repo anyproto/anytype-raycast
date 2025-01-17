@@ -17,7 +17,7 @@ type ObjectListItemProps = {
   }[];
   details?: Detail[];
   mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>;
-  viewType: "object" | "type" | "member";
+  viewType: string;
 };
 
 export default function ObjectListItem({

@@ -16,7 +16,7 @@ type ObjectActionsProps = {
   mutate?: MutatePromise<SpaceObject[] | Type[] | Member[]>;
   mutateTemplates?: MutatePromise<Template[]>;
   mutateExport?: MutatePromise<Export | undefined>;
-  viewType: "object" | "type" | "member" | "template";
+  viewType: string;
 };
 
 export default function ObjectActions({
@@ -36,10 +36,19 @@ export default function ObjectActions({
 
   function getContextLabel(isSingular = true) {
     const labelMap: Record<string, string> = {
+      // browse
       object: "Object",
       type: "Type",
       member: "Member",
       template: "Template",
+
+      // search
+      all: "Item",
+      pages: "Page",
+      tasks: "Task",
+      lists: "List",
+      bookmarks: "Bookmark",
+      members: "Member",
     };
     const baseLabel = labelMap[viewType] || "Item";
     return !isDetailView && !isSingular ? pluralize(2, baseLabel) : baseLabel;
