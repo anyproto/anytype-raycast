@@ -48,6 +48,7 @@ export default function ObjectDetail({ spaceId, objectId, title, details }: Obje
           {lastModifiedDate ? (
             <Detail.Metadata.Label
               title="Last Modified Date"
+              icon={Icon.Calendar}
               text={format(new Date(lastModifiedDate), "MMMM d, yyyy")}
             />
           ) : null}
@@ -62,7 +63,11 @@ export default function ObjectDetail({ spaceId, objectId, title, details }: Obje
           <Detail.Metadata.Separator />
 
           {createdDate ? (
-            <Detail.Metadata.Label title="Created Date" text={format(new Date(createdDate), "MMMM d, yyyy")} />
+            <Detail.Metadata.Label
+              title="Created Date"
+              icon={Icon.Calendar}
+              text={format(new Date(createdDate), "MMMM d, yyyy")}
+            />
           ) : null}
           {createdBy ? (
             <Detail.Metadata.Label
@@ -81,7 +86,7 @@ export default function ObjectDetail({ spaceId, objectId, title, details }: Obje
               ))}
             </Detail.Metadata.TagList>
           ) : (
-            <Detail.Metadata.Label title="Tags" text="No Tags" />
+            <Detail.Metadata.Label title="Tags" icon={Icon.Tag} text="No tags" />
           )}
           {}
         </Detail.Metadata>
@@ -91,7 +96,7 @@ export default function ObjectDetail({ spaceId, objectId, title, details }: Obje
           spaceId={spaceId}
           objectId={objectId}
           title={title}
-          exportMutate={mutateObjectExport}
+          mutateExport={mutateObjectExport}
           objectExport={objectExport}
           viewType="object"
         />
