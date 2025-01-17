@@ -87,7 +87,7 @@ export default function ObjectActions({
   }
 
   async function handleRefresh() {
-    const label = getContextLabel();
+    const label = getContextLabel(false);
     await showToast({
       style: Toast.Style.Animated,
       title: `Refreshing ${label}...`,
