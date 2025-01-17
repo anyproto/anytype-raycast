@@ -51,6 +51,10 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
     return items?.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
   };
 
+  const formatRole = (role: string) => {
+    return role.replace("Reader", "Viewer").replace("Writer", "Editor");
+  };
+
   const getCurrentItems = () => {
     switch (currentView) {
       case "objects":
@@ -108,16 +112,8 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             }}
             accessories={[
               {
-                icon:
-                  member.role === "Owner"
-                    ? Icon.Star
-                    : member.role === "Writer"
-                      ? Icon.Pencil
-                      : member.role === "Reader"
-                        ? Icon.Eye
-                        : Icon.XMarkCircle,
-                text: member.role,
-                tooltip: `Role: ${member.role}`,
+                text: formatRole(member.role),
+                tooltip: `Role: ${formatRole(member.role)}`,
               },
             ]}
             mutate={mutateMembers}
