@@ -1,7 +1,8 @@
 import { ActionPanel, Action, Icon, Clipboard, showToast, Toast, Keyboard, confirmAlert, Color } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import ObjectDetail from "./ObjectDetail";
-import { SpaceObject, Type, Member } from "../helpers/schemas";
+import TemplateList from "./TemplateList";
+import { SpaceObject, Type, Member, Template } from "../helpers/schemas";
 import { Detail, Export } from "../helpers/schemas";
 import { deleteObject } from "../api/deleteObject";
 import { pluralize } from "../helpers/strings";
@@ -13,8 +14,9 @@ type ObjectActionsProps = {
   details?: Detail[];
   objectExport?: Export;
   mutate?: MutatePromise<SpaceObject[] | Type[] | Member[]>;
-  exportMutate?: MutatePromise<Export | undefined>;
-  viewType: "object" | "type" | "member";
+  mutateTemplates?: MutatePromise<Template[]>;
+  mutateExport?: MutatePromise<Export | undefined>;
+  viewType: "object" | "type" | "member" | "template";
 };
 
 export default function ObjectActions({
@@ -23,26 +25,23 @@ export default function ObjectActions({
   title,
   details,
   mutate,
-  exportMutate,
   objectExport,
+  mutateTemplates,
+  mutateExport,
   viewType,
 }: ObjectActionsProps) {
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
   const isDetailView = objectExport !== undefined;
+  const isType = viewType === "type";
 
   function getContextLabel(isSingular = true) {
-    const baseLabel = (() => {
-      switch (viewType) {
-        case "object":
-          return "Object";
-        case "type":
-          return "Type";
-        case "member":
-          return "Member";
-        default:
-          return "Item";
-      }
-    })();
+    const labelMap: Record<string, string> = {
+      object: "Object",
+      type: "Type",
+      member: "Member",
+      template: "Template",
+    };
+    const baseLabel = labelMap[viewType] || "Item";
     return !isDetailView && !isSingular ? pluralize(2, baseLabel) : baseLabel;
   }
 
@@ -68,8 +67,11 @@ export default function ObjectActions({
         if (mutate) {
           await mutate();
         }
-        if (exportMutate) {
-          await exportMutate();
+        if (mutateTemplates) {
+          await mutateTemplates();
+        }
+        if (mutateExport) {
+          await mutateExport();
         }
         await showToast({
           style: Toast.Style.Success,
@@ -96,9 +98,13 @@ export default function ObjectActions({
       if (mutate) {
         await mutate();
       }
-      if (exportMutate) {
-        await exportMutate();
+      if (mutateTemplates) {
+        await mutateTemplates();
       }
+      if (mutateExport) {
+        await mutateExport();
+      }
+
       await showToast({
         style: Toast.Style.Success,
         title: `${label} refreshed`,
@@ -120,6 +126,13 @@ export default function ObjectActions({
             icon={{ source: Icon.Sidebar }}
             title="Show Details"
             target={<ObjectDetail spaceId={spaceId} objectId={objectId} title={title} details={details || []} />}
+          />
+        )}
+        {isType && (
+          <Action.Push
+            icon={Icon.BulletPoints}
+            title="View Templates"
+            target={<TemplateList spaceId={spaceId} typeId={objectId} />}
           />
         )}
         <Action.OpenInBrowser
