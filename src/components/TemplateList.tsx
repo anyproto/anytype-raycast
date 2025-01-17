@@ -1,6 +1,7 @@
 import { List, showToast, Toast } from "@raycast/api";
 import { useTemplates } from "../hooks/useTemplates";
 import { Template } from "../helpers/schemas";
+import { pluralize } from "../helpers/strings";
 import ObjectActions from "./ObjectActions";
 import EmptyView from "./EmptyView";
 
@@ -22,7 +23,7 @@ export default function TemplateList({ spaceId, typeId }: TemplatesListProps) {
   return (
     <List isLoading={isLoadingTemplates} searchBarPlaceholder="Search Templates..." pagination={templatesPagination}>
       {templates && templates.length > 0 ? (
-        <List.Section title="Templates">
+        <List.Section title="Templates" subtitle={`${pluralize(templates.length, "template", { withNumber: true })}`}>
           {templates.map((template: Template) => (
             <List.Item
               key={template.id}

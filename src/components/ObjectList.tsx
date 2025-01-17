@@ -5,6 +5,7 @@ import ObjectListItem from "./ObjectListItem";
 import { useMembers } from "../hooks/useMembers";
 import { useObjects } from "../hooks/useObjects";
 import { useTypes } from "../hooks/useTypes";
+import { pluralize } from "../helpers/strings";
 import EmptyView from "./EmptyView";
 
 type ObjectListProps = {
@@ -146,10 +147,8 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
     >
       {currentItems && currentItems?.length > 0 ? (
         <List.Section
-          title={searchText ? "Search Results" : `${currentView.charAt(0).toUpperCase() + currentView.slice(1)}`}
-          subtitle={
-            searchText ? `${getCurrentItems()?.length || 0} ${currentView}` : `Total: ${getCurrentItems()?.length || 0}`
-          }
+          title={searchText ? "Search Results" : `All ${currentView.charAt(0).toUpperCase() + currentView.slice(1)}`}
+          subtitle={`${pluralize(getCurrentItems()?.length || 0, currentView.slice(0, -1), { withNumber: true })}`}
         >
           {getCurrentItems()}
         </List.Section>

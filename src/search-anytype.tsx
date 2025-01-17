@@ -8,6 +8,7 @@ import { SpaceObject } from "./helpers/schemas";
 import ObjectListItem from "./components/ObjectListItem";
 import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
+import { pluralize } from "./helpers/strings";
 
 const searchBarPlaceholder = "Globally search objects across spaces...";
 
@@ -145,7 +146,7 @@ function Search() {
       {filteredItems.length > 0 ? (
         <List.Section
           title={searchText ? "Search Results" : "Modified Recently"}
-          subtitle={`${filteredItems.length} ${filterType.replace("all", "objects")}`}
+          subtitle={`${pluralize(filteredItems.length, filterType.replace("all", "object"), { withNumber: true })}`}
         >
           {filteredItems.map((object) => (
             <ObjectListItem
