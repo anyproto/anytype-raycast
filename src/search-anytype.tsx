@@ -34,6 +34,7 @@ function Search() {
     objectTypes,
   );
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
+  const viewType = filterType === "all" ? "object" : filterType.replace(/s$/, "");
   const excludedKeysForPages = new Set([
     // not shown anywhere
     "ot-audio",
@@ -146,7 +147,7 @@ function Search() {
       {filteredItems.length > 0 ? (
         <List.Section
           title={searchText ? "Search Results" : "Modified Recently"}
-          subtitle={`${pluralize(filteredItems.length, filterType.replace("all", "object"), { withNumber: true })}`}
+          subtitle={`${pluralize(filteredItems.length, viewType, { withNumber: true })}`}
         >
           {filteredItems.map((object) => (
             <ObjectListItem
@@ -180,7 +181,7 @@ function Search() {
               ]}
               details={object.details}
               mutate={mutateObjects}
-              viewType="object"
+              viewType={viewType}
             />
           ))}
         </List.Section>

@@ -44,11 +44,10 @@ export default function ObjectActions({
 
       // search
       all: "Item",
-      pages: "Page",
-      tasks: "Task",
-      lists: "List",
-      bookmarks: "Bookmark",
-      members: "Member",
+      page: "Page",
+      task: "Task",
+      list: "List",
+      bookmark: "Bookmark",
     };
     const baseLabel = labelMap[viewType] || "Item";
     return !isDetailView && !isSingular ? pluralize(2, baseLabel) : baseLabel;
