@@ -36,6 +36,7 @@ export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]>
       return {
         ...object,
         icon,
+        blocks: undefined, // remove blocks to improve performance, as they're not used in the UI
         name: object.name || "Untitled",
         object_type: object.object_type || "Unknown Type",
         details: object.details.map((detail) => {

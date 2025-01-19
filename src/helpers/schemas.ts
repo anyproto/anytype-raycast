@@ -65,7 +65,7 @@ export interface SpaceObject {
   object_type: string;
   space_id: string;
   root_id: string;
-  blocks: Block[];
+  blocks: Block[] | undefined;
   details: Detail[];
 }
 
