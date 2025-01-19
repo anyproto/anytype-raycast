@@ -42,7 +42,7 @@ export const apiEndpoints = {
     method: "GET",
   }),
   getTemplates: (spaceId: string, typeId: string, options: { offset: number; limit: number }) => ({
-    url: `${apiUrl}/spaces/${spaceId}/object_types/${typeId}/templates${encodeQueryParams(options)}`,
+    url: `${apiUrl}/spaces/${spaceId}/types/${typeId}/templates${encodeQueryParams(options)}`,
     method: "GET",
   }),
   getToken: (challengeId: string, code: string) => ({
@@ -50,11 +50,11 @@ export const apiEndpoints = {
     method: "POST",
   }),
   getTypes: (spaceId: string, options: { offset: number; limit: number }) => ({
-    url: `${apiUrl}/spaces/${spaceId}/object_types${encodeQueryParams(options)}`,
+    url: `${apiUrl}/spaces/${spaceId}/types${encodeQueryParams(options)}`,
     method: "GET",
   }),
   search: (query: string, types: string[], options: { offset: number; limit: number }) => ({
-    url: `${apiUrl}/search${encodeQueryParams({ query, object_types: types, ...options })}`,
+    url: `${apiUrl}/search${encodeQueryParams({ query, types, ...options })}`,
     method: "GET",
   }),
 };
