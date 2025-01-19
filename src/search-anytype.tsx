@@ -173,7 +173,7 @@ function Search() {
                 },
                 {
                   icon: {
-                    source: spaceIcons[object.space_id] || Icon.QuestionMark,
+                    source: spaceIcons[object.space_id],
                     mask: Image.Mask.RoundedRectangle,
                   },
                   tooltip: `Space: ${spaces?.find((space) => space.id === object.space_id)?.name}`,
