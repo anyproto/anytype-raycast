@@ -53,7 +53,7 @@ export async function fetchWithTimeout(url: string, timeout: number): Promise<st
       return `data:image/png;base64,${Buffer.from(iconData).toString("base64")}`;
     }
   } catch (error) {
-    console.error("Failed to fetch icon with timeout:", error);
+    console.log("Failed to fetch icon with timeout:", error);
   }
 
   return undefined;

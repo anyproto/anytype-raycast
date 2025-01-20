@@ -6,6 +6,7 @@
   "icon": "anytype-icon.png",
   "author": "jmetrikat",
   "owner": "any",
+  "access": "public",
   "categories": [
     "Applications",
     "Productivity"
