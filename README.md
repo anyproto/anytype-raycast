@@ -13,6 +13,8 @@ To get started, grant the extension access to your Anytype vault using the local
 5. **Enter the Code**: A popup in Anytype Desktop will display a 4-digit code. Input this code in the extension’s 'Verification Code' field.
 6. **Confirmation**: Once successfully paired, the extension is ready to use.
 
+![Authenticate](./metadata/anytype-5.png)
+
 ## Commands
 
 ### Create Object
@@ -23,6 +25,8 @@ Create new objects in your Anytype vault directly from Raycast.
 - **Input**: Fill in details like the object name, description, or body text.
 - **Save**: Press <kbd>Command</kbd> + <kbd>Enter</kbd> to save the object. It will immediately appear in your vault.
 
+![Create Object](./metadata/anytype-3.png)
+
 ### Browse Spaces
 
 Navigate through your Anytype spaces and explore their contents.
@@ -31,6 +35,9 @@ Navigate through your Anytype spaces and explore their contents.
 - **Explore**: Select a space to view its objects, types, and members.
 - **Interact**: Press <kbd>Enter</kbd> to view an object in Raycast or <kbd>Command</kbd> + <kbd>Enter</kbd> to open it in Anytype.
 
+![Browse Spaces](./metadata/anytype-1.png)
+![Browse Objects](./metadata/anytype-2.png)
+
 ### Search Anytype
 
 Perform a global search across all spaces in your Anytype vault.
@@ -38,6 +45,8 @@ Perform a global search across all spaces in your Anytype vault.
 - **Search**: Enter your search term in the search bar.
 - **Filter**: Use the dropdown menu to filter results by type.
 - **Open**: Press <kbd>Enter</kbd> to view the object in Raycast or <kbd>Command</kbd> + <kbd>Enter</kbd> to open it in Anytype.
+
+![Search](./metadata/anytype-4.png)
 
 ## Tips
 
