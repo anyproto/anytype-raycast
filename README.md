@@ -50,12 +50,13 @@ Perform a global search across all spaces in your Anytype vault.
 
 ## Tips
 
-Enhance your experience with the extension using these shortcuts:
+Enhance your experience with the extension using following tips:
 
-- Quickly delete objects with <kbd>Ctrl</kbd> + <kbd>X</kbd>.
 - Use <kbd>Command</kbd> + <kbd>Enter</kbd> to instantly open the currently selected space or object in Anytype.
 - Drafts are supported for object creation, allowing you to save objects as drafts and continue editing them later.
+- Quicklink creation is available for even faster object creation. Select the `Space` and `Type`, prefill the object fields as desired, and select the `Create Quicklink` option from the action menu. Save the Quicklink with <kbd>Command</kbd> + <kbd>Enter</kbd>. It will appear in the root search under the specified name.
 - Manually refresh the data anytime by pressing <kbd>Command</kbd> + <kbd>R</kbd>.
+- Quickly delete objects with <kbd>Ctrl</kbd> + <kbd>X</kbd>.
 
 ## Troubleshooting
 
