@@ -6,6 +6,7 @@ export const apiUrl = "http://localhost:31009/v1";
 export const anytypeNetwork = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU";
 export const apiLimit = 50;
 export const iconWidth = 32;
+export const errorConnectionMessage = "Can't connect to API. Please ensure Anytype is running and reachable.";
 
 // API Endponts
 export const apiEndpoints = {

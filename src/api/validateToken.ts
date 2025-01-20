@@ -1,6 +1,7 @@
 import { apiFetch } from "../helpers/api";
 import { apiEndpoints } from "../helpers/constants";
 import { Space, PaginatedResponse } from "../helpers/schemas";
+import { errorConnectionMessage } from "../helpers/constants";
 
 // Validate token by checking if data can be fetched without errors
 export async function validateToken(): Promise<boolean> {
@@ -9,6 +10,11 @@ export async function validateToken(): Promise<boolean> {
     await apiFetch<PaginatedResponse<Space>>(url, { method: method });
     return true;
   } catch (error) {
-    return false;
+    if (error instanceof Error) {
+      return error.message == errorConnectionMessage;
+    } else {
+      console.error("Unknown error:", error);
+      return false;
+    }
   }
 }

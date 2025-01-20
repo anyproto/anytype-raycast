@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import { LocalStorage, Toast, showToast } from "@raycast/api";
+import { errorConnectionMessage } from "./constants";
 
 interface FetchOptions {
   method: string;
@@ -34,7 +35,7 @@ export async function apiFetch<T>(url: string, options: FetchOptions): Promise<T
     }
   } catch (error) {
     if (error instanceof Error && (error as { code?: string }).code === "ECONNREFUSED") {
-      throw new Error("Can't connect to API. Please ensure Anytype is running and reachable.");
+      throw new Error(errorConnectionMessage);
     }
     throw error;
   }
