@@ -67,7 +67,11 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
       const { challenge_id } = await displayCode(appName);
       setChallengeId(challenge_id);
     } catch (error) {
-      showToast({ style: Toast.Style.Failure, title: "Failed to start challenge", message: String(error) });
+      showToast({
+        style: Toast.Style.Failure,
+        title: "Failed to start challenge",
+        message: error instanceof Error ? error.message : "An unknown error occurred",
+      });
     } finally {
       setIsLoading(false);
     }

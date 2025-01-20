@@ -33,7 +33,7 @@ export async function apiFetch<T>(url: string, options: FetchOptions): Promise<T
       throw new Error("Failed to parse JSON response");
     }
   } catch (error) {
-    if (error instanceof Error && error.name === "FetchError") {
+    if (error instanceof Error && (error as { code?: string }).code === "ECONNREFUSED") {
       throw new Error("Can't connect to API. Please ensure Anytype is running and reachable.");
     }
     throw error;
