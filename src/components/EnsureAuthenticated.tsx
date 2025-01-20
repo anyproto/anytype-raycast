@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { LocalStorage, showToast, Toast, List, ActionPanel, Action, Form, Icon } from "@raycast/api";
 import { useForm } from "@raycast/utils";
+import { validateToken } from "../api/validateToken";
 import { displayCode } from "../api/displayCode";
 import { getToken } from "../api/getToken";
 import { appName } from "../helpers/constants";
@@ -13,6 +14,7 @@ type EnsureAuthenticatedProps = {
 
 export default function EnsureAuthenticated({ placeholder, viewType, children }: EnsureAuthenticatedProps) {
   const [hasToken, setHasToken] = useState<boolean | null>(null);
+  const [tokenIsValid, setTokenIsValid] = useState<boolean>(false);
   const [challengeId, setChallengeId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,6 +35,7 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
         await LocalStorage.setItem("app_key", app_key);
         showToast({ style: Toast.Style.Success, title: "Successfully authenticated" });
         setHasToken(true);
+        setTokenIsValid(true);
       } catch (error) {
         showToast({
           style: Toast.Style.Failure,
@@ -54,11 +57,17 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
     },
   });
   useEffect(() => {
-    const retrieveToken = async () => {
+    const retrieveAndValidateToken = async () => {
       const token = await LocalStorage.getItem<string>("app_key");
-      setHasToken(!!token);
+      if (token) {
+        const isValid = await validateToken();
+        setHasToken(true);
+        setTokenIsValid(isValid);
+      } else {
+        setHasToken(false);
+      }
     };
-    retrieveToken();
+    retrieveAndValidateToken();
   }, []);
 
   async function startChallenge() {
@@ -85,7 +94,7 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
     }
   }
 
-  if (hasToken) {
+  if (hasToken && tokenIsValid) {
     return <>{children}</>;
   }
 
