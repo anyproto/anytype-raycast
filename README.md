@@ -45,6 +45,7 @@ Enhance your experience with the extension using these shortcuts:
 
 - Quickly delete objects with <kbd>Ctrl</kbd> + <kbd>X</kbd>.
 - Use <kbd>Command</kbd> + <kbd>Enter</kbd> to instantly open the currently selected space or object in Anytype.
+- Drafts are supported for object creation, allowing you to save objects as drafts and continue editing them later.
 - Manually refresh the data anytime by pressing <kbd>Command</kbd> + <kbd>R</kbd>.
 
 ## Troubleshooting
