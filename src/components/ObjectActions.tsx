@@ -135,7 +135,7 @@ export default function ObjectActions({
   return (
     <ActionPanel title={title}>
       <ActionPanel.Section>
-        {!isType && (
+        {!isType && !isDetailView && (
           <Action.Push
             icon={{ source: Icon.Sidebar }}
             title="Show Details"
