@@ -75,6 +75,13 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
       setIsLoading(true);
       const { challenge_id } = await displayCode(appName);
       setChallengeId(challenge_id);
+
+      // Prevent window from closing
+      showToast({
+        style: Toast.Style.Animated,
+        title: "Challenge started",
+        message: "Check the app for the 4-digit code.",
+      });
     } catch (error) {
       showToast({
         style: Toast.Style.Failure,
