@@ -10,7 +10,7 @@ type SpaceActionsProps = {
 
 export default function SpaceActions({ space, mutate }: SpaceActionsProps) {
   const spaceUrl = `anytype://main/object/_blank_/spaceId/${space.id}`;
-  const chatUrl = `anytype://main/chat/_blank_/spaceId/${space.id}`;
+  const chatUrl = `anytype://main/chat/${space.workspace_object_id}/spaceId/${space.id}`;
 
   async function handleCopyLink() {
     await Clipboard.copy(spaceUrl);
