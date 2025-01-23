@@ -4,7 +4,6 @@ import { format } from "date-fns";
 import { useSpaces } from "./hooks/useSpaces";
 import { useSearch } from "./hooks/useSearch";
 import { getAllTypesFromSpaces } from "./helpers/types";
-import { SpaceObject } from "./helpers/schemas";
 import ObjectListItem from "./components/ObjectListItem";
 import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
@@ -23,7 +22,6 @@ export default function Command() {
 function Search() {
   const [searchText, setSearchText] = useState("");
   const [objectTypes, setObjectTypes] = useState<string[]>([]);
-  const [filteredItems, setFilteredItems] = useState<SpaceObject[]>([]);
   const [spaceIcons, setSpaceIcons] = useState<{ [key: string]: string }>({});
   const [filterType, setFilterType] = useState("all");
   const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
@@ -97,17 +95,6 @@ function Search() {
   }, [spaces]);
 
   useEffect(() => {
-    if (objects) {
-      const filteredObjects = objects.filter(
-        (object) =>
-          object.name.toLowerCase().includes(searchText.toLowerCase()) ||
-          object.object_type.toLowerCase().includes(searchText.toLowerCase()),
-      );
-      setFilteredItems(filteredObjects);
-    }
-  }, [objects, searchText]);
-
-  useEffect(() => {
     const objectTypeMap: { [key: string]: string[] } = {
       all: [],
       pages: uniqueKeysForPages,
@@ -144,12 +131,12 @@ function Search() {
         </List.Dropdown>
       }
     >
-      {filteredItems.length > 0 ? (
+      {objects.length > 0 ? (
         <List.Section
           title={searchText ? "Search Results" : "Modified Recently"}
-          subtitle={`${pluralize(filteredItems.length, viewType, { withNumber: true })}`}
+          subtitle={`${pluralize(objects.length, viewType, { withNumber: true })}`}
         >
-          {filteredItems.map((object) => (
+          {objects.map((object) => (
             <ObjectListItem
               key={object.id}
               spaceId={object.space_id}
