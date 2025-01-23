@@ -113,6 +113,50 @@ function Search() {
     }
   }, [objectsError, spacesError]);
 
+  const processedObjects = objects.map((object) => {
+    const spaceIcon = spaceIcons[object.space_id];
+    const lastModifiedDate = object.details[0]?.details.last_modified_date;
+
+    return {
+      key: object.id,
+      spaceId: object.space_id,
+      objectId: object.id,
+      icon: {
+        source: object.icon,
+        mask:
+          (object.layout === "participant" || object.layout === "profile") && object.icon != Icon.Document
+            ? Image.Mask.Circle
+            : Image.Mask.RoundedRectangle,
+      },
+      title: object.name,
+      subtitle: {
+        value: object.object_type,
+        tooltip: `Object Type: ${object.object_type}`,
+      },
+      accessories: [
+        ...(lastModifiedDate
+          ? [
+              {
+                date: new Date(lastModifiedDate),
+                tooltip: `Last Modified: ${format(new Date(lastModifiedDate), "EEEE d MMMM yyyy 'at' HH:mm")}`,
+              },
+            ]
+          : []),
+        ...(spaceIcon
+          ? [
+              {
+                icon: {
+                  source: spaceIcon,
+                  mask: Image.Mask.RoundedRectangle,
+                },
+                tooltip: `Space: ${spaces?.find((space) => space.id === object.space_id)?.name}`,
+              },
+            ]
+          : []),
+      ],
+    };
+  });
+
   return (
     <List
       isLoading={isLoadingSpaces || isLoadingObjects}
@@ -131,43 +175,22 @@ function Search() {
         </List.Dropdown>
       }
     >
-      {objects.length > 0 ? (
+      {processedObjects.length > 0 ? (
         <List.Section
           title={searchText ? "Search Results" : "Modified Recently"}
-          subtitle={`${pluralize(objects.length, viewType, { withNumber: true })}`}
+          subtitle={`${pluralize(processedObjects.length, viewType, { withNumber: true })}`}
         >
-          {objects.map((object) => (
+          {processedObjects.map((object) => (
             <ObjectListItem
-              key={object.id}
-              spaceId={object.space_id}
-              objectId={object.id}
-              icon={{
-                source: object.icon,
-                mask:
-                  (object.layout === "participant" || object.layout === "profile") && object.icon != Icon.Document
-                    ? Image.Mask.Circle
-                    : Image.Mask.RoundedRectangle,
-              }}
-              title={object.name}
-              subtitle={{
-                value: object.object_type,
-                tooltip: `Object Type: ${object.object_type}`,
-              }}
-              accessories={[
-                {
-                  date: new Date(object.details[0]?.details.last_modified_date as string),
-                  tooltip: `Last Modified: ${format(new Date(object.details[0]?.details.last_modified_date as string), "EEEE d MMMM yyyy 'at' HH:mm")}`,
-                },
-                {
-                  icon: {
-                    source: spaceIcons[object.space_id],
-                    mask: Image.Mask.RoundedRectangle,
-                  },
-                  tooltip: `Space: ${spaces?.find((space) => space.id === object.space_id)?.name}`,
-                },
-              ]}
+              key={object.key}
+              spaceId={object.spaceId}
+              objectId={object.objectId}
+              icon={object.icon}
+              title={object.title}
+              subtitle={object.subtitle}
+              accessories={object.accessories}
               mutate={mutateObjects}
-              viewType={viewType}
+              viewType={filterType}
             />
           ))}
         </List.Section>
