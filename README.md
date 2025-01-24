@@ -4,12 +4,12 @@ Create, browse and search in Anytype - right at your fingertips, anywhere on you
 
 ## Setup
 
-To get started, grant the extension access to your Anytype vault using the local pairing process. Follow these steps:
+To get started, grant the extension access to your account using the local pairing process. Follow these steps:
 
 1. **Install the Extension**: Add the Anytype extension via the Raycast Store.
 2. **Open Anytype Desktop**: Ensure the app is running and you are logged in.
 3. **Run a Command**: Trigger any extension command.
-4. **Authenticate**: When prompted, press <kbd>Enter</kbd> to start the local pairing process.
+4. **Authenticate**: When prompted, press <kbd>Enter</kbd> to start the pairing process.
 5. **Enter the Code**: A popup in Anytype Desktop will display a 4-digit code. Input this code in the extension’s `Verification Code` field. Press <kbd>Command</kbd> + <kbd>Enter</kbd> to confirm.
 6. **Confirmation**: Once successfully paired, the extension is ready to use.
 
