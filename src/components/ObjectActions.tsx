@@ -43,7 +43,7 @@ export default function ObjectActions({
       template: "Template",
 
       // search
-      all: "Item",
+      all: "Object",
       page: "Page",
       task: "Task",
       list: "List",
