@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { LocalStorage, showToast, Toast, List, ActionPanel, Action, Form, Icon } from "@raycast/api";
+import { LocalStorage, showToast, Toast, List, ActionPanel, Action, Form, Icon, Keyboard, open } from "@raycast/api";
 import { useForm } from "@raycast/utils";
 import { validateToken } from "../api/validateToken";
 import { displayCode } from "../api/displayCode";
 import { getToken } from "../api/getToken";
-import { apiAppName } from "../helpers/constants";
-import { isAnytypeInstalled, isAnytypeRunning, openAppInBackground, waitForAnytypeOpen } from "../helpers/system";
+import { apiAppName, downloadUrl } from "../helpers/constants";
+import { isAnytypeRunning, openAppInBackground } from "../helpers/system";
 
 type EnsureAuthenticatedProps = {
   placeholder?: string;
@@ -57,6 +57,7 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
       },
     },
   });
+
   useEffect(() => {
     const retrieveAndValidateToken = async () => {
       const token = await LocalStorage.getItem<string>("app_key");
@@ -74,29 +75,48 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
   async function startChallenge() {
     try {
       setIsLoading(true);
-      const { installed, appName } = await isAnytypeInstalled();
-      if (!installed) {
-        showToast({
-          style: Toast.Style.Failure,
-          title: "Anytype not installed",
-          message: "Please install Anytype and try again.",
-        });
-        return;
-      }
+      await checkRunningState();
+    } catch (error) {
+      showToast({
+        style: Toast.Style.Failure,
+        title: "Failed to start pairing",
+        message: error instanceof Error ? error.message : "An unknown error occurred.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
-      const running = await isAnytypeRunning();
-      if (!running) {
-        await openAppInBackground(appName!);
+  async function checkRunningState(appName?: string) {
+    const running = await isAnytypeRunning();
+    if (!running) {
+      await showToast({
+        style: Toast.Style.Failure,
+        title: "Anytype not running",
+        message: "Please open Anytype to continue.",
+        primaryAction: {
+          title: "Open Anytype",
+          shortcut: Keyboard.Shortcut.Common.Open,
+          onAction: async () => {
+            await openAppInBackground(appName!);
+          },
+        },
+        secondaryAction: {
+          title: "Download Anytype",
+          shortcut: Keyboard.Shortcut.Common.OpenWith,
+          onAction: async () => {
+            await open(downloadUrl);
+          },
+        },
+      });
+      return;
+    }
 
-        showToast({
-          style: Toast.Style.Animated,
-          title: "Opening Anytype",
-          message: "Waiting for Anytype to open...",
-        });
+    await initiatePairing(); // Proceed if Anytype is running
+  }
 
-        await waitForAnytypeOpen();
-      }
-
+  async function initiatePairing() {
+    try {
       const { challenge_id } = await displayCode(apiAppName);
       setChallengeId(challenge_id);
 
@@ -112,8 +132,6 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
         title: "Failed to start pairing",
         message: error instanceof Error ? error.message : "An unknown error occurred.",
       });
-    } finally {
-      setIsLoading(false);
     }
   }
 

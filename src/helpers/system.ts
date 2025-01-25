@@ -1,21 +1,5 @@
-import { Application, getApplications } from "@raycast/api";
 import { exec as execCallback } from "child_process";
 import { promisify } from "util";
-import { bundleId } from "./constants";
-
-export async function isAnytypeInstalled(): Promise<{ installed: boolean; appName?: string }> {
-  try {
-    const anytypeApp = await findApplication(bundleId);
-    return { installed: anytypeApp !== undefined, appName: anytypeApp?.name };
-  } catch {
-    return { installed: false };
-  }
-}
-
-async function findApplication(bundleId: string): Promise<Application | undefined> {
-  const installedApplications = await getApplications();
-  return installedApplications.find((app) => app.bundleId === bundleId);
-}
 
 export async function isAnytypeRunning(): Promise<boolean> {
   const exec = promisify(execCallback);
@@ -27,7 +11,7 @@ export async function isAnytypeRunning(): Promise<boolean> {
   }
 }
 
-export async function openAppInBackground(name: string) {
+export async function openAppInBackground(name: string = "Anytype") {
   const exec = promisify(execCallback);
   try {
     await exec(`osascript -e 'tell application "${name}" to launch'`);
