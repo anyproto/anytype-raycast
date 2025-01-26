@@ -1,11 +1,22 @@
 import { useEffect, useState } from "react";
-import { LocalStorage, showToast, Toast, List, ActionPanel, Action, Form, Icon, Keyboard, open } from "@raycast/api";
+import {
+  LocalStorage,
+  showToast,
+  Toast,
+  List,
+  ActionPanel,
+  Action,
+  Form,
+  Icon,
+  Keyboard,
+  open,
+  getPreferenceValues,
+} from "@raycast/api";
 import { useForm } from "@raycast/utils";
 import { validateToken } from "../api/validateToken";
 import { displayCode } from "../api/displayCode";
 import { getToken } from "../api/getToken";
 import { apiAppName, downloadUrl } from "../helpers/constants";
-import { isAnytypeRunning, openAppInBackground } from "../helpers/system";
 
 type EnsureAuthenticatedProps = {
   placeholder?: string;
@@ -75,48 +86,6 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
   async function startChallenge() {
     try {
       setIsLoading(true);
-      await checkRunningState();
-    } catch (error) {
-      showToast({
-        style: Toast.Style.Failure,
-        title: "Failed to start pairing",
-        message: error instanceof Error ? error.message : "An unknown error occurred.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function checkRunningState(appName?: string) {
-    const running = await isAnytypeRunning();
-    if (!running) {
-      await showToast({
-        style: Toast.Style.Failure,
-        title: "Anytype not running",
-        message: "Please open Anytype to continue.",
-        primaryAction: {
-          title: "Open Anytype",
-          shortcut: Keyboard.Shortcut.Common.Open,
-          onAction: async () => {
-            await openAppInBackground(appName!);
-          },
-        },
-        secondaryAction: {
-          title: "Download Anytype",
-          shortcut: Keyboard.Shortcut.Common.OpenWith,
-          onAction: async () => {
-            await open(downloadUrl);
-          },
-        },
-      });
-      return;
-    }
-
-    await initiatePairing(); // Proceed if Anytype is running
-  }
-
-  async function initiatePairing() {
-    try {
       const { challenge_id } = await displayCode(apiAppName);
       setChallengeId(challenge_id);
 
@@ -131,7 +100,23 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
         style: Toast.Style.Failure,
         title: "Failed to start pairing",
         message: error instanceof Error ? error.message : "An unknown error occurred.",
+        primaryAction: {
+          title: "Open Anytype",
+          shortcut: Keyboard.Shortcut.Common.Open,
+          onAction: async () => {
+            await open(getPreferenceValues().anytypeApp.path);
+          },
+        },
+        secondaryAction: {
+          title: "Download Anytype",
+          shortcut: Keyboard.Shortcut.Common.OpenWith,
+          onAction: async () => {
+            await open(downloadUrl);
+          },
+        },
       });
+    } finally {
+      setIsLoading(false);
     }
   }
 
