@@ -1,5 +1,5 @@
-import { SpaceObject, Detail, Member } from "../schemas";
-import { getIconWithFallback } from "../icon";
+import { SpaceObject, Detail, Member } from "../helpers/schemas";
+import { getIconWithFallback } from "../helpers/icon";
 
 /**
  * Map raw `SpaceObject` item into display-ready data, including details, icons, etc.

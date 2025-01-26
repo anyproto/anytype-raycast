@@ -1,5 +1,5 @@
 import { Icon } from "@raycast/api";
-import { Type } from "../schemas";
+import { Type } from "../helpers/schemas";
 
 /**
  * Map raw `Type` objects from the API into display-ready data (e.g., icon).
