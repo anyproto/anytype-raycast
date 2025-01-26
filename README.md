@@ -70,9 +70,10 @@ Make the most of the Anytype extension with the following tips:
 - Ensure the Anytype Desktop app is running.
 - Confirm you are logged into your vault.
 
-### Objects Not Displaying Completely
+### Objects, Types or Spaces Not Displaying Completely
 
-For performance reasons, the extension only fetches the first **50 items**.
+For performance reasons, the extension only fetches a limited amount of items at a time.
 
 - Pagination is supported in lists to access additional items when scrolling down.
 - For dropdowns in `Create Object` command the limitation remains.
+- The limit can be adjusted in the extension settings - default is 50 items.
