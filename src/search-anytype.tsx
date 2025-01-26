@@ -1,4 +1,4 @@
-import { Icon, List, showToast, Toast, Image } from "@raycast/api";
+import { Icon, List, showToast, Toast, Image, getPreferenceValues } from "@raycast/api";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { useSpaces } from "./hooks/useSpaces";
@@ -7,7 +7,7 @@ import { getAllTypesFromSpaces } from "./helpers/types";
 import ObjectListItem from "./components/ObjectListItem";
 import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
-import { pluralize } from "./helpers/strings";
+import { getDateLabel, pluralize } from "./helpers/strings";
 
 const searchBarPlaceholder = "Globally search objects across spaces...";
 
@@ -115,7 +115,8 @@ function Search() {
 
   const processedObjects = objects.map((object) => {
     const spaceIcon = spaceIcons[object.space_id];
-    const lastModifiedDate = object.details[0]?.details.last_modified_date;
+    const dateToSortAfter = getPreferenceValues().sort;
+    const date = object.details.find((detail) => detail.id === dateToSortAfter)?.details[dateToSortAfter] as string;
 
     return {
       key: object.id,
@@ -134,11 +135,11 @@ function Search() {
         tooltip: `Object Type: ${object.object_type}`,
       },
       accessories: [
-        ...(lastModifiedDate
+        ...(date
           ? [
               {
-                date: new Date(lastModifiedDate),
-                tooltip: `Last Modified: ${format(new Date(lastModifiedDate), "EEEE d MMMM yyyy 'at' HH:mm")}`,
+                date: new Date(date),
+                tooltip: `${getDateLabel()}: ${format(new Date(date), "EEEE d MMMM yyyy 'at' HH:mm")}`,
               },
             ]
           : []),

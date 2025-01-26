@@ -45,6 +45,28 @@
       "required": false
     },
     {
+      "name": "sort",
+      "title": "Sort Order",
+      "description": "The sort order of objects when displayed as a list.",
+      "type": "dropdown",
+      "data": [
+        {
+          "title": "Created Date",
+          "value": "created_date"
+        },
+        {
+          "title": "Last Modified Date",
+          "value": "last_modified_date"
+        },
+        {
+          "title": "Last Opened Date",
+          "value": "last_opened_date"
+        }
+      ],
+      "default": "last_modified_date",
+      "required": false
+    },
+    {
       "name": "limit",
       "title": "API Limit",
       "description": "The maximum number of objects to fetch from the Anytype API at once. Be careful when changing this, as a large number can cause performance issues.",

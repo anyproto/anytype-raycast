@@ -1,5 +1,6 @@
 import { SpaceObject, Detail, Member } from "../helpers/schemas";
 import { getIconWithFallback } from "../helpers/icon";
+import { getPreferenceValues } from "@raycast/api";
 
 /**
  * Map raw `SpaceObject` item into display-ready data, including details, icons, etc.
@@ -66,7 +67,7 @@ export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]>
         icon: await getIconWithFallback(object.icon, object.layout),
         name: object.name || object.snippet || "Untitled",
         object_type: object.object_type || "Unknown Type",
-        details: object.details?.filter((detail) => detail.id === "last_modified_date"),
+        details: object.details?.filter((detail) => detail.id === getPreferenceValues().sort) || [],
       };
     }),
   );

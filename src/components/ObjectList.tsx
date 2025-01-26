@@ -1,11 +1,11 @@
-import { Icon, List, Image, showToast, Toast } from "@raycast/api";
+import { Icon, List, Image, showToast, Toast, getPreferenceValues } from "@raycast/api";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import ObjectListItem from "./ObjectListItem";
 import { useMembers } from "../hooks/useMembers";
 import { useObjects } from "../hooks/useObjects";
 import { useTypes } from "../hooks/useTypes";
-import { pluralize } from "../helpers/strings";
+import { getDateLabel, pluralize } from "../helpers/strings";
 import EmptyView from "./EmptyView";
 
 type ObjectListProps = {
@@ -55,6 +55,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   const formatRole = (role: string) => {
     return role.replace("Reader", "Viewer").replace("Writer", "Editor");
   };
+  const dateToSortAfter = getPreferenceValues().sort;
 
   const getCurrentItems = () => {
     switch (currentView) {
@@ -77,16 +78,24 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
               tooltip: `Object Type: ${object.layout}`,
             }}
             accessories={[
-              {
-                date: new Date(object.details[0]?.details.last_modified_date as string),
-                tooltip: `Last Modified: ${format(new Date(object.details[0]?.details.last_modified_date as string), "EEEE d MMMM yyyy 'at' HH:mm")}`,
-              },
+              ...(object.details.find((detail) => detail.id === dateToSortAfter)
+                ? [
+                    {
+                      date: new Date(
+                        object.details.find((detail) => detail.id === dateToSortAfter)?.details[
+                          dateToSortAfter
+                        ] as string,
+                      ),
+                      tooltip: `${getDateLabel()}: ${format(new Date(object.details.find((detail) => detail.id === dateToSortAfter)?.details[dateToSortAfter] as string), "EEEE d MMMM yyyy 'at' HH:mm")}`,
+                    },
+                  ]
+                : []),
             ]}
             mutate={mutateObjects}
             viewType="object"
           />
         ));
-      case "types":
+      case "types": {
         return filterItems(types, searchText)?.map((type) => (
           <ObjectListItem
             key={type.id}
@@ -98,7 +107,8 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             viewType="type"
           />
         ));
-      case "members":
+      }
+      case "members": {
         return filterItems(members, searchText)?.map((member) => (
           <ObjectListItem
             key={member.identity}
@@ -120,6 +130,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             viewType="member"
           />
         ));
+      }
       default:
         return null;
     }
