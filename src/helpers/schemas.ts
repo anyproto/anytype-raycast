@@ -64,6 +64,7 @@ export interface SpaceObject {
   id: string;
   name: string;
   icon: string;
+  snippet: string;
   layout: string;
   object_type: string;
   space_id: string;
