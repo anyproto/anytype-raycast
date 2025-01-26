@@ -9,6 +9,7 @@ export async function mapTypes(types: Type[]): Promise<Type[]> {
     types.map(async (type) => {
       return {
         ...type,
+        name: type.name.trim() || "Untitled", // empty string comes as \n
         icon: type.icon || Icon.Lowercase,
       };
     }),
