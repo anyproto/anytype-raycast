@@ -135,3 +135,24 @@ export interface Template {
   name: string;
   icon: string;
 }
+
+export interface CreateObjectRequest {
+  icon: string;
+  name: string;
+  description: string;
+  body: string;
+  source: string;
+  template_id: string;
+  object_type_unique_key: string;
+}
+
+export interface SearchRequest {
+  query: string;
+  types: string[];
+  sort: SortOptions;
+}
+
+export interface SortOptions {
+  direction: string; // "asc" or "desc"
+  timestamp: string; // "created_date" or "last_modified_date" or "last_opened_date"
+}

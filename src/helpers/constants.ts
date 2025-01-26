@@ -60,8 +60,8 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces/${spaceId}/types${encodeQueryParams(options)}`,
     method: "GET",
   }),
-  search: (query: string, types: string[], options: { offset: number; limit: number }) => ({
-    url: `${apiUrl}/search${encodeQueryParams({ query, types, ...options })}`,
-    method: "GET",
+  search: (options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/search${encodeQueryParams(options)}`,
+    method: "POST",
   }),
 };
