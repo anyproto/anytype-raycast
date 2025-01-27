@@ -157,7 +157,7 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
       <List.EmptyView
         icon={Icon.Lock}
         title="Authentication required"
-        description="Start pairing for a 4-digit code to pop up in the app."
+        description="Start pairing for a 4-digit code to pop up in the Anytype app."
         actions={
           <ActionPanel>
             <Action title="Start Pairing" onAction={startChallenge} />
