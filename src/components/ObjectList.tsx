@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import ObjectListItem from "./ObjectListItem";
 import { useMembers } from "../hooks/useMembers";
-import { useObjects } from "../hooks/useObjects";
+import { useSearch } from "../hooks/useSearch";
 import { useTypes } from "../hooks/useTypes";
 import { getDateLabel, pluralize } from "../helpers/strings";
 import EmptyView from "./EmptyView";
@@ -16,7 +16,11 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   const [currentView, setCurrentView] = useState<"objects" | "types" | "members">("objects");
   const [searchText, setSearchText] = useState("");
 
-  const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useObjects(spaceId);
+  const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
+    spaceId,
+    searchText,
+    [],
+  );
   const { types, typesError, isLoadingTypes, mutateTypes, typesPagination } = useTypes(spaceId);
   const { members, membersError, isLoadingMembers, mutateMembers, membersPagination } = useMembers(spaceId);
   const [pagination, setPagination] = useState(objectsPagination);
@@ -154,6 +158,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
         </List.Dropdown>
       }
       pagination={pagination}
+      throttle={true}
     >
       {currentItems && currentItems?.length > 0 ? (
         <List.Section

@@ -2,7 +2,7 @@ import { Icon, List, showToast, Toast, Image, getPreferenceValues } from "@rayca
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { useSpaces } from "./hooks/useSpaces";
-import { useSearch } from "./hooks/useSearch";
+import { useGlobalSearch } from "./hooks/useGlobalSearch";
 import { getAllTypesFromSpaces } from "./helpers/types";
 import ObjectListItem from "./components/ObjectListItem";
 import EmptyView from "./components/EmptyView";
@@ -27,7 +27,7 @@ function Search() {
   const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
   const [uniqueKeysForTasks, setUniqueKeysForTasks] = useState<string[]>([]);
 
-  const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
+  const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useGlobalSearch(
     searchText,
     objectTypes,
   );
