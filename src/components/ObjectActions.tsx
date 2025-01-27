@@ -56,8 +56,8 @@ export default function ObjectActions({
   async function handleCopyLink() {
     await Clipboard.copy(objectUrl);
     await showToast({
-      title: "Link Copied",
-      message: `The ${getContextLabel()} link has been copied to your clipboard.`,
+      title: "Link copied",
+      message: `The ${getContextLabel().toLowerCase()} link has been copied to your clipboard.`,
       style: Toast.Style.Success,
     });
   }

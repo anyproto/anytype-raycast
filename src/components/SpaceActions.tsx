@@ -15,7 +15,7 @@ export default function SpaceActions({ space, mutate }: SpaceActionsProps) {
   async function handleCopyLink() {
     await Clipboard.copy(spaceUrl);
     await showToast({
-      title: "Link Copied",
+      title: "Link copied",
       message: "The space link has been copied to your clipboard",
       style: Toast.Style.Success,
     });

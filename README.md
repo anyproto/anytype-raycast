@@ -74,6 +74,6 @@ Make the most of the Anytype extension with the following tips:
 
 For performance reasons, the extension only fetches a limited amount of items at a time.
 
-- Pagination is supported in lists to access additional items when scrolling down.
+- Pagination is supported in lists to access additional items when scrolling down. However, the extension might refuse to paginate further if the available memory is exhausted.
 - For dropdowns in `Create Object` command the limitation remains.
-- The limit can be adjusted in the extension settings - default is 50 items.
+- The API limit can be adjusted in the extension settings - default is 50 items.
