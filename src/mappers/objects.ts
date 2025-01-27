@@ -37,7 +37,7 @@ export async function mapObject(object: SpaceObject): Promise<SpaceObject> {
     icon,
     blocks: undefined, // remove blocks to improve performance, as they're not used in the UI
     name: object.name || object.snippet || "Untitled",
-    object_type: object.object_type || "Unknown Type",
+    type: object.type || "Unknown Type",
     details: object.details.map((detail) => {
       const { id, details } = detail;
 
@@ -66,7 +66,7 @@ export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]>
         ...object,
         icon: await getIconWithFallback(object.icon, object.layout),
         name: object.name || object.snippet || "Untitled",
-        object_type: object.object_type || "Unknown Type",
+        type: object.type || "Unknown Type",
         details: object.details?.filter((detail) => detail.id === getPreferenceValues().sort) || [],
       };
     }),

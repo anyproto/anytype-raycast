@@ -78,8 +78,8 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             }}
             title={object.name}
             subtitle={{
-              value: object.object_type,
-              tooltip: `Type: ${object.layout}`,
+              value: object.type,
+              tooltip: `Type: ${object.type}`,
             }}
             accessories={[
               ...(object.details.find((detail) => detail.id === dateToSortAfter)

@@ -131,8 +131,8 @@ function Search() {
       },
       title: object.name,
       subtitle: {
-        value: object.object_type,
-        tooltip: `Type: ${object.object_type}`,
+        value: object.type,
+        tooltip: `Type: ${object.type}`,
       },
       accessories: [
         ...(date
