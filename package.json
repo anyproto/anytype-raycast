@@ -87,6 +87,14 @@
       ],
       "default": "50",
       "required": false
+    },
+    {
+      "name": "port",
+      "title": "Port",
+      "description": "The port number the Anytype API is running on.",
+      "type": "textfield",
+      "default": "31009",
+      "required": false
     }
   ],
   "dependencies": {
