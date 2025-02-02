@@ -1,7 +1,7 @@
-import { apiFetch } from "../utils/api";
-import { apiEndpoints } from "../utils/constants";
-import { Template, PaginatedResponse } from "../utils/schemas";
-import { Pagination } from "../utils/schemas";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
+import { PaginatedResponse, Pagination, Template } from "../helpers/schemas";
+import { mapTemplates } from "../mappers/templates";
 
 export async function getTemplates(
   spaceId: string,
@@ -18,7 +18,7 @@ export async function getTemplates(
   const response = await apiFetch<PaginatedResponse<Template>>(url, { method: method });
 
   return {
-    templates: response.data ? response.data : [],
+    templates: response.data ? await mapTemplates(response.data) : [],
     pagination: response.pagination,
   };
 }

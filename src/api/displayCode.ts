@@ -1,8 +1,8 @@
-import { apiFetch } from "../utils/api";
-import { apiEndpoints } from "../utils/constants";
-import { DisplayCodeResponse } from "../utils/schemas";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
+import { DisplayCodeResponse } from "../helpers/schemas";
 
-export async function displayCode(): Promise<DisplayCodeResponse> {
-  const { url, method } = apiEndpoints.displayCode;
+export async function displayCode(appName: string): Promise<DisplayCodeResponse> {
+  const { url, method } = apiEndpoints.displayCode(appName);
   return await apiFetch<DisplayCodeResponse>(url, { method: method });
 }

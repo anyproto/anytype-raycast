@@ -1,6 +1,6 @@
-import { List, Icon, Image } from "@raycast/api";
+import { Icon, Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import { Detail, Type, SpaceObject, Member } from "../utils/schemas";
+import { Member, SpaceObject, Type } from "../helpers/schemas";
 import ObjectActions from "./ObjectActions";
 
 type ObjectListItemProps = {
@@ -15,9 +15,8 @@ type ObjectListItemProps = {
     text?: string;
     tooltip?: string;
   }[];
-  details?: Detail[];
   mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>;
-  viewType: "object" | "type" | "member";
+  viewType: string;
 };
 
 export default function ObjectListItem({
@@ -27,7 +26,6 @@ export default function ObjectListItem({
   title,
   subtitle,
   accessories,
-  details,
   mutate,
   viewType,
 }: ObjectListItemProps) {
@@ -53,14 +51,7 @@ export default function ObjectListItem({
         return accessoryProps;
       })}
       actions={
-        <ObjectActions
-          spaceId={spaceId}
-          objectId={objectId}
-          title={title}
-          details={details}
-          mutate={mutate}
-          viewType={viewType}
-        />
+        <ObjectActions spaceId={spaceId} objectId={objectId} title={title} mutate={mutate} viewType={viewType} />
       }
     />
   );

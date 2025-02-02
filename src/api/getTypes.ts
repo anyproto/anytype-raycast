@@ -1,8 +1,7 @@
-import { apiFetch } from "../utils/api";
-import { apiEndpoints } from "../utils/constants";
-import { Type, PaginatedResponse } from "../utils/schemas";
-import { transformTypes } from "../utils/helpers";
-import { Pagination } from "../utils/schemas";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
+import { PaginatedResponse, Pagination, Type } from "../helpers/schemas";
+import { mapTypes } from "../mappers/types";
 
 export async function getTypes(
   spaceId: string,
@@ -18,7 +17,7 @@ export async function getTypes(
   const response = await apiFetch<PaginatedResponse<Type>>(url, { method: method });
 
   return {
-    types: response.data ? await transformTypes(response.data) : [],
+    types: response.data ? await mapTypes(response.data) : [],
     pagination: response.pagination,
   };
 }

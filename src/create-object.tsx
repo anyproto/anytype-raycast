@@ -1,10 +1,10 @@
-import { Toast, showToast, LaunchProps } from "@raycast/api";
+import { LaunchProps, Toast, showToast } from "@raycast/api";
 import { useEffect, useState } from "react";
-import { useSpaces } from "./hooks/useSpaces";
-import { useTypes } from "./hooks/useTypes";
-import { Type } from "./utils/schemas";
 import CreateObjectForm from "./components/CreateObjectForm";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
+import { Type } from "./helpers/schemas";
+import { useSpaces } from "./hooks/useSpaces";
+import { useTypes } from "./hooks/useTypes";
 
 export interface CreateObjectFormValues {
   space: string;
@@ -84,13 +84,13 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
 
   useEffect(() => {
     if (spacesError) {
-      showToast(Toast.Style.Failure, "Failed to fetch Spaces", spacesError.message);
+      showToast(Toast.Style.Failure, "Failed to fetch spaces", spacesError.message);
     }
   }, [spacesError]);
 
   useEffect(() => {
     if (typesError) {
-      showToast(Toast.Style.Failure, "Failed to fetch Types", typesError.message);
+      showToast(Toast.Style.Failure, "Failed to fetch types", typesError.message);
     }
   }, [typesError]);
 

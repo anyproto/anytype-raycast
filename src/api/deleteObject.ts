@@ -1,6 +1,6 @@
-import { apiFetch } from "../utils/api";
-import { apiEndpoints } from "../utils/constants";
-import { SpaceObject } from "../utils/schemas";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
+import { SpaceObject } from "../helpers/schemas";
 
 export async function deleteObject(spaceId: string, objectId: string): Promise<void> {
   const { url, method } = apiEndpoints.deleteObject(spaceId, objectId);

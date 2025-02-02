@@ -28,14 +28,17 @@ export interface Space {
   archive_object_id: string;
   profile_object_id: string;
   marketplace_workspace_id: string;
+  workspace_object_id: string;
   device_id: string;
   account_space_id: string;
   widgets_id: string;
   space_view_id: string;
   tech_space_id: string;
+  gateway_url: string;
+  local_storage_path: string;
   timezone: string;
+  analytics_id: string;
   network_id: string;
-  members: Member[];
 }
 
 export interface Member {
@@ -62,11 +65,11 @@ export interface SpaceObject {
   id: string;
   name: string;
   icon: string;
+  snippet: string;
   layout: string;
-  object_type: string;
   space_id: string;
   root_id: string;
-  blocks: Block[];
+  blocks: Block[] | undefined;
   details: Detail[];
 }
 
@@ -103,7 +106,12 @@ export interface File {
 export interface Detail {
   id: string;
   details: {
-    [key: string]: unknown;
+    created_date: string; // ISO 8601 date
+    last_modified_date: string; // ISO 8601 date
+    last_opened_date: string; // ISO 8601 date
+    details: Member; // Details of a participant
+    tags: Tag[]; // List of tags
+    [key: string]: unknown; // Additional details
   };
 }
 
@@ -127,4 +135,25 @@ export interface Template {
   id: string;
   name: string;
   icon: string;
+}
+
+export interface CreateObjectRequest {
+  icon: string;
+  name: string;
+  description: string;
+  body: string;
+  source: string;
+  template_id: string;
+  object_type_unique_key: string;
+}
+
+export interface SearchRequest {
+  query: string;
+  types: string[];
+  sort: SortOptions;
+}
+
+export interface SortOptions {
+  direction: string; // "asc" or "desc"
+  timestamp: string; // "created_date" or "last_modified_date" or "last_opened_date"
 }

@@ -1,56 +1,62 @@
-import { ActionPanel, Action, Icon, Clipboard, showToast, Toast, Keyboard, confirmAlert, Color } from "@raycast/api";
+import { Action, ActionPanel, Clipboard, Color, confirmAlert, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import ObjectDetail from "./ObjectDetail";
-import { SpaceObject, Type, Member } from "../utils/schemas";
-import { Detail, Export } from "../utils/schemas";
 import { deleteObject } from "../api/deleteObject";
-import { pluralize } from "../utils/helpers";
+import { Export, Member, SpaceObject, Template, Type } from "../helpers/schemas";
+import { pluralize } from "../helpers/strings";
+import ObjectDetail from "./ObjectDetail";
+import TemplateList from "./TemplateList";
 
 type ObjectActionsProps = {
   spaceId: string;
   objectId: string;
   title: string;
-  details?: Detail[];
   objectExport?: Export;
   mutate?: MutatePromise<SpaceObject[] | Type[] | Member[]>;
-  exportMutate?: MutatePromise<Export | undefined>;
-  viewType: "object" | "type" | "member";
+  mutateTemplates?: MutatePromise<Template[]>;
+  mutateObject?: MutatePromise<SpaceObject | null | undefined>;
+  mutateExport?: MutatePromise<Export | undefined>;
+  viewType: string;
 };
 
 export default function ObjectActions({
   spaceId,
   objectId,
   title,
-  details,
   mutate,
-  exportMutate,
   objectExport,
+  mutateTemplates,
+  mutateObject,
+  mutateExport,
   viewType,
 }: ObjectActionsProps) {
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
   const isDetailView = objectExport !== undefined;
+  const isType = viewType === "type";
 
-  function getContextLabel() {
-    const baseLabel = (() => {
-      switch (viewType) {
-        case "object":
-          return "Object";
-        case "type":
-          return "Type";
-        case "member":
-          return "Member";
-        default:
-          return "Item";
-      }
-    })();
-    return !isDetailView ? pluralize(2, baseLabel) : baseLabel;
+  function getContextLabel(isSingular = true) {
+    const labelMap: Record<string, string> = {
+      // browse
+      object: "Object",
+      type: "Type",
+      member: "Member",
+      template: "Template",
+
+      // search
+      all: "Object",
+      page: "Page",
+      task: "Task",
+      list: "List",
+      bookmark: "Bookmark",
+    };
+    const baseLabel = labelMap[viewType] || "Item";
+    return !isDetailView && !isSingular ? pluralize(2, baseLabel) : baseLabel;
   }
 
   async function handleCopyLink() {
     await Clipboard.copy(objectUrl);
     await showToast({
-      title: "Link Copied",
-      message: `The ${getContextLabel()} link has been copied to your clipboard.`,
+      title: "Link copied",
+      message: `The ${getContextLabel().toLowerCase()} link has been copied to your clipboard.`,
       style: Toast.Style.Success,
     });
   }
@@ -68,8 +74,14 @@ export default function ObjectActions({
         if (mutate) {
           await mutate();
         }
-        if (exportMutate) {
-          await exportMutate();
+        if (mutateTemplates) {
+          await mutateTemplates();
+        }
+        if (mutateObject) {
+          await mutateObject();
+        }
+        if (mutateExport) {
+          await mutateExport();
         }
         await showToast({
           style: Toast.Style.Success,
@@ -87,7 +99,7 @@ export default function ObjectActions({
   }
 
   async function handleRefresh() {
-    const label = getContextLabel();
+    const label = getContextLabel(false);
     await showToast({
       style: Toast.Style.Animated,
       title: `Refreshing ${label}...`,
@@ -96,9 +108,16 @@ export default function ObjectActions({
       if (mutate) {
         await mutate();
       }
-      if (exportMutate) {
-        await exportMutate();
+      if (mutateTemplates) {
+        await mutateTemplates();
       }
+      if (mutateObject) {
+        await mutateObject();
+      }
+      if (mutateExport) {
+        await mutateExport();
+      }
+
       await showToast({
         style: Toast.Style.Success,
         title: `${label} refreshed`,
@@ -115,11 +134,18 @@ export default function ObjectActions({
   return (
     <ActionPanel title={title}>
       <ActionPanel.Section>
-        {details && details.length > 0 && (
+        {!isType && !isDetailView && (
           <Action.Push
             icon={{ source: Icon.Sidebar }}
             title="Show Details"
-            target={<ObjectDetail spaceId={spaceId} objectId={objectId} title={title} details={details || []} />}
+            target={<ObjectDetail spaceId={spaceId} objectId={objectId} title={title} />}
+          />
+        )}
+        {isType && (
+          <Action.Push
+            icon={Icon.BulletPoints}
+            title="View Templates"
+            target={<TemplateList spaceId={spaceId} typeId={objectId} />}
           />
         )}
         <Action.OpenInBrowser
@@ -153,7 +179,7 @@ export default function ObjectActions({
       <ActionPanel.Section>
         <Action
           icon={Icon.RotateClockwise}
-          title={`Refresh ${getContextLabel()}`}
+          title={`Refresh ${getContextLabel(false)}`}
           shortcut={Keyboard.Shortcut.Common.Refresh}
           onAction={handleRefresh}
         />

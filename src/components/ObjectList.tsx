@@ -1,11 +1,12 @@
-import { Icon, List, Image, showToast, Toast } from "@raycast/api";
-import { useState, useEffect } from "react";
+import { getPreferenceValues, Icon, Image, List, showToast, Toast } from "@raycast/api";
 import { format } from "date-fns";
-import ObjectListItem from "./ObjectListItem";
+import { useEffect, useState } from "react";
+import { getDateLabel, pluralize } from "../helpers/strings";
 import { useMembers } from "../hooks/useMembers";
-import { useObjects } from "../hooks/useObjects";
+import { useSearch } from "../hooks/useSearch";
 import { useTypes } from "../hooks/useTypes";
 import EmptyView from "./EmptyView";
+import ObjectListItem from "./ObjectListItem";
 
 type ObjectListProps = {
   spaceId: string;
@@ -15,7 +16,11 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   const [currentView, setCurrentView] = useState<"objects" | "types" | "members">("objects");
   const [searchText, setSearchText] = useState("");
 
-  const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useObjects(spaceId);
+  const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
+    spaceId,
+    searchText,
+    [],
+  );
   const { types, typesError, isLoadingTypes, mutateTypes, typesPagination } = useTypes(spaceId);
   const { members, membersError, isLoadingMembers, mutateMembers, membersPagination } = useMembers(spaceId);
   const [pagination, setPagination] = useState(objectsPagination);
@@ -37,19 +42,24 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
 
   useEffect(() => {
     if (typesError) {
-      showToast(Toast.Style.Failure, "Failed to fetch Types", typesError.message);
+      showToast(Toast.Style.Failure, "Failed to fetch types", typesError.message);
     }
   }, [typesError]);
 
   useEffect(() => {
     if (membersError) {
-      showToast(Toast.Style.Failure, "Failed to fetch Members", membersError.message);
+      showToast(Toast.Style.Failure, "Failed to fetch members", membersError.message);
     }
   }, [membersError]);
 
   const filterItems = <T extends { name: string }>(items: T[], searchText: string): T[] => {
     return items?.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
   };
+
+  const formatRole = (role: string) => {
+    return role.replace("Reader", "Viewer").replace("Writer", "Editor");
+  };
+  const dateToSortAfter = getPreferenceValues().sort;
 
   const getCurrentItems = () => {
     switch (currentView) {
@@ -68,21 +78,28 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             }}
             title={object.name}
             subtitle={{
-              value: object.object_type,
-              tooltip: `Object Type: ${object.layout}`,
+              value: object.type,
+              tooltip: `Type: ${object.type}`,
             }}
             accessories={[
-              {
-                date: new Date(object.details[0]?.details.lastModifiedDate as string),
-                tooltip: `Last Modified: ${format(new Date(object.details[0]?.details.lastModifiedDate as string), "EEEE d MMMM yyyy 'at' HH:mm")}`,
-              },
+              ...(object.details.find((detail) => detail.id === dateToSortAfter)
+                ? [
+                    {
+                      date: new Date(
+                        object.details.find((detail) => detail.id === dateToSortAfter)?.details[
+                          dateToSortAfter
+                        ] as string,
+                      ),
+                      tooltip: `${getDateLabel()}: ${format(new Date(object.details.find((detail) => detail.id === dateToSortAfter)?.details[dateToSortAfter] as string), "EEEE d MMMM yyyy 'at' HH:mm")}`,
+                    },
+                  ]
+                : []),
             ]}
-            details={object.details}
             mutate={mutateObjects}
             viewType="object"
           />
         ));
-      case "types":
+      case "types": {
         return filterItems(types, searchText)?.map((type) => (
           <ObjectListItem
             key={type.id}
@@ -94,7 +111,8 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             viewType="type"
           />
         ));
-      case "members":
+      }
+      case "members": {
         return filterItems(members, searchText)?.map((member) => (
           <ObjectListItem
             key={member.identity}
@@ -108,22 +126,15 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             }}
             accessories={[
               {
-                icon:
-                  member.role === "Owner"
-                    ? Icon.Star
-                    : member.role === "Writer"
-                      ? Icon.Pencil
-                      : member.role === "Reader"
-                        ? Icon.Eye
-                        : Icon.XMarkCircle,
-                text: member.role,
-                tooltip: `Role: ${member.role}`,
+                text: formatRole(member.role),
+                tooltip: `Role: ${formatRole(member.role)}`,
               },
             ]}
             mutate={mutateMembers}
             viewType="member"
           />
         ));
+      }
       default:
         return null;
     }
@@ -147,13 +158,12 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
         </List.Dropdown>
       }
       pagination={pagination}
+      throttle={true}
     >
       {currentItems && currentItems?.length > 0 ? (
         <List.Section
-          title={searchText ? "Search Results" : `${currentView.charAt(0).toUpperCase() + currentView.slice(1)}`}
-          subtitle={
-            searchText ? `${getCurrentItems()?.length || 0} ${currentView}` : `Total: ${getCurrentItems()?.length || 0}`
-          }
+          title={searchText ? "Search Results" : `All ${currentView.charAt(0).toUpperCase() + currentView.slice(1)}`}
+          subtitle={`${pluralize(getCurrentItems()?.length || 0, currentView.slice(0, -1), { withNumber: true })}`}
         >
           {getCurrentItems()}
         </List.Section>
