@@ -8,13 +8,14 @@ interface FetchOptions {
   body?: string;
 }
 
-export async function apiFetch<T>(url: string, options: FetchOptions): Promise<T> {
+export async function apiFetch<T>(url: string, options: FetchOptions, token?: string): Promise<T> {
   try {
+    const authToken = token || (await LocalStorage.getItem("app_key"));
     const response = await fetch(url, {
       method: options.method,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${await LocalStorage.getItem("app_key")}`,
+        Authorization: `Bearer ${authToken}`,
         ...options.headers,
       },
       body: options.body,

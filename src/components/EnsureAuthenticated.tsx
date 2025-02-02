@@ -71,14 +71,21 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
 
   useEffect(() => {
     const retrieveAndValidateToken = async () => {
-      const token = await LocalStorage.getItem<string>("app_key");
-      if (token) {
-        const isValid = await validateToken();
-        setHasToken(true);
-        setTokenIsValid(isValid);
-      } else {
-        setHasToken(false);
+      const localStorageToken = await LocalStorage.getItem<string>("app_key");
+      const apiKey = getPreferenceValues().apiKey;
+      
+      let isValid = false;
+
+      if (localStorageToken) {
+        isValid = await validateToken(localStorageToken);
       }
+
+      if (!isValid && apiKey) {
+        isValid = await validateToken(apiKey);
+      }
+
+      setHasToken(!!localStorageToken || !!apiKey);
+      setTokenIsValid(isValid);
     };
     retrieveAndValidateToken();
   }, []);
