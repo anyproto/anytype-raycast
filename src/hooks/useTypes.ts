@@ -1,14 +1,13 @@
 import { useCachedPromise } from "@raycast/utils";
-import { getTypes } from "../api/getTypes";
 import { useMemo } from "react";
+import { getTypes } from "../api/getTypes";
+import { apiLimit } from "../helpers/constants";
 
 export function useTypes(spaceId: string) {
-  const limit = 50;
-
-  const { data, error, isLoading, pagination } = useCachedPromise(
+  const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     (spaceId: string) => async (options: { page: number }) => {
-      const offset = options.page * limit;
-      const response = await getTypes(spaceId, { offset, limit });
+      const offset = options.page * apiLimit;
+      const response = await getTypes(spaceId, { offset, limit: apiLimit });
 
       return {
         data: response.types,
@@ -17,6 +16,7 @@ export function useTypes(spaceId: string) {
     },
     [spaceId],
     {
+      execute: !!spaceId,
       keepPreviousData: true,
     },
   );
@@ -27,7 +27,8 @@ export function useTypes(spaceId: string) {
   return {
     types: filteredData,
     typesError: error,
-    isLoadingTypes: isLoading,
+    isLoadingTypes: isLoading && !!spaceId,
+    mutateTypes: mutate,
     typesPagination: pagination,
   };
 }

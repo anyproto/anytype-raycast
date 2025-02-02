@@ -1,11 +1,11 @@
-import { apiFetch } from "../utils/api";
-import { API_URL } from "../utils/constants";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
 
 export async function createSpace(objectData: { name: string }): Promise<void> {
-  const url = `${API_URL}/spaces`;
+  const { url, method } = apiEndpoints.createSpace;
 
   await apiFetch(url, {
-    method: "POST",
+    method: method,
     body: JSON.stringify({ name: objectData.name }),
   });
 }

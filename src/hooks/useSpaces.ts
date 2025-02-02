@@ -1,14 +1,13 @@
 import { useCachedPromise } from "@raycast/utils";
-import { getSpaces } from "../api/getSpaces";
 import { useMemo } from "react";
+import { getSpaces } from "../api/getSpaces";
+import { apiLimit } from "../helpers/constants";
 
 export function useSpaces() {
-  const limit = 50;
-
-  const { data, error, isLoading, pagination } = useCachedPromise(
+  const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     () => async (options: { page: number }) => {
-      const offset = options.page * limit;
-      const response = await getSpaces({ offset, limit });
+      const offset = options.page * apiLimit;
+      const response = await getSpaces({ offset, limit: apiLimit });
 
       return {
         data: response.spaces,
@@ -28,6 +27,7 @@ export function useSpaces() {
     spaces: filteredData,
     spacesError: error,
     isLoadingSpaces: isLoading,
+    mutateSpaces: mutate,
     spacesPagination: pagination,
   };
 }

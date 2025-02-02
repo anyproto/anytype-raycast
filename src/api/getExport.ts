@@ -1,22 +1,16 @@
-import * as os from "os";
 import * as fs from "fs";
+import * as os from "os";
 import * as path from "path";
-import { apiFetch } from "../utils/api";
-import { API_URL } from "../utils/constants";
-import { ObjectExport } from "../utils/schemas";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
+import { Export, ObjectExport } from "../helpers/schemas";
 
-export async function getExport(
-  spaceId: string,
-  objectId: string,
-  format: string,
-): Promise<{
-  markdown: string;
-}> {
+export async function getExport(spaceId: string, objectId: string, format: string): Promise<Export> {
   const tmpdir = os.tmpdir();
-  const url = `${API_URL}/spaces/${spaceId}/objects/${objectId}/export/${format}`;
+  const { url, method } = apiEndpoints.getExport(spaceId, objectId, format);
 
   const response = await apiFetch<ObjectExport>(url, {
-    method: "POST",
+    method: method,
     body: JSON.stringify({ path: tmpdir }),
   });
 
@@ -30,7 +24,5 @@ export async function getExport(
   const re = /\(files\/([^)]+)\)/g;
   const result = markdown.replace(re, `(file://${path.join(outputPath, "files", "$1")})`);
 
-  return {
-    markdown: result,
-  };
+  return { markdown: result };
 }

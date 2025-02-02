@@ -1,12 +1,12 @@
-import { Icon, List, Image, showToast, Toast } from "@raycast/api";
-import { useState, useEffect } from "react";
+import { getPreferenceValues, Icon, Image, List, showToast, Toast } from "@raycast/api";
 import { format } from "date-fns";
-import ObjectListItem from "./ObjectListItem";
+import { useEffect, useState } from "react";
+import { getDateLabel, pluralize } from "../helpers/strings";
 import { useMembers } from "../hooks/useMembers";
-import { useObjects } from "../hooks/useObjects";
+import { useSearch } from "../hooks/useSearch";
 import { useTypes } from "../hooks/useTypes";
 import EmptyView from "./EmptyView";
-import { TYPE_ICON, SPACE_OBJECT_ICON, SPACE_MEMBER_ICON } from "../utils/constants";
+import ObjectListItem from "./ObjectListItem";
 
 type ObjectListProps = {
   spaceId: string;
@@ -16,9 +16,13 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   const [currentView, setCurrentView] = useState<"objects" | "types" | "members">("objects");
   const [searchText, setSearchText] = useState("");
 
-  const { objects, objectsError, isLoadingObjects, objectsPagination } = useObjects(spaceId);
-  const { types, typesError, isLoadingTypes, typesPagination } = useTypes(spaceId);
-  const { members, membersError, isLoadingMembers, membersPagination } = useMembers(spaceId);
+  const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
+    spaceId,
+    searchText,
+    [],
+  );
+  const { types, typesError, isLoadingTypes, mutateTypes, typesPagination } = useTypes(spaceId);
+  const { members, membersError, isLoadingMembers, mutateMembers, membersPagination } = useMembers(spaceId);
   const [pagination, setPagination] = useState(objectsPagination);
 
   useEffect(() => {
@@ -30,21 +34,32 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
     setPagination(newPagination);
   }, [currentView, objects, types, members]);
 
-  if (objectsError) {
-    showToast(Toast.Style.Failure, "Failed to fetch objects", objectsError.message);
-  }
+  useEffect(() => {
+    if (objectsError) {
+      showToast(Toast.Style.Failure, "Failed to fetch objects", objectsError.message);
+    }
+  }, [objectsError]);
 
-  if (typesError) {
-    showToast(Toast.Style.Failure, "Failed to fetch types", typesError.message);
-  }
+  useEffect(() => {
+    if (typesError) {
+      showToast(Toast.Style.Failure, "Failed to fetch types", typesError.message);
+    }
+  }, [typesError]);
 
-  if (membersError) {
-    showToast(Toast.Style.Failure, "Failed to fetch members", membersError.message);
-  }
+  useEffect(() => {
+    if (membersError) {
+      showToast(Toast.Style.Failure, "Failed to fetch members", membersError.message);
+    }
+  }, [membersError]);
 
   const filterItems = <T extends { name: string }>(items: T[], searchText: string): T[] => {
     return items?.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
   };
+
+  const formatRole = (role: string) => {
+    return role.replace("Reader", "Viewer").replace("Writer", "Editor");
+  };
+  const dateToSortAfter = getPreferenceValues().sort;
 
   const getCurrentItems = () => {
     switch (currentView) {
@@ -57,29 +72,47 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             icon={{
               source: object.icon,
               mask:
-                (object.type === "participant" || object.type === "profile") && object.icon != SPACE_OBJECT_ICON
+                (object.layout === "participant" || object.layout === "profile") && object.icon != Icon.Document
                   ? Image.Mask.Circle
                   : Image.Mask.RoundedRectangle,
             }}
             title={object.name}
             subtitle={{
-              value: object.object_type,
-              tooltip: `Object Type: ${object.type}`,
+              value: object.type,
+              tooltip: `Type: ${object.type}`,
             }}
             accessories={[
-              {
-                date: new Date(object.details[0]?.details.lastModifiedDate as string),
-                tooltip: `Last Modified: ${format(new Date(object.details[0]?.details.lastModifiedDate as string), "EEEE d MMMM yyyy 'at' HH:mm")}`,
-              },
+              ...(object.details.find((detail) => detail.id === dateToSortAfter)
+                ? [
+                    {
+                      date: new Date(
+                        object.details.find((detail) => detail.id === dateToSortAfter)?.details[
+                          dateToSortAfter
+                        ] as string,
+                      ),
+                      tooltip: `${getDateLabel()}: ${format(new Date(object.details.find((detail) => detail.id === dateToSortAfter)?.details[dateToSortAfter] as string), "EEEE d MMMM yyyy 'at' HH:mm")}`,
+                    },
+                  ]
+                : []),
             ]}
-            details={object.details}
+            mutate={mutateObjects}
+            viewType="object"
           />
         ));
-      case "types":
+      case "types": {
         return filterItems(types, searchText)?.map((type) => (
-          <ObjectListItem key={type.id} spaceId={spaceId} objectId={type.id} icon={type.icon} title={type.name} />
+          <ObjectListItem
+            key={type.id}
+            spaceId={spaceId}
+            objectId={type.id}
+            icon={type.icon}
+            title={type.name}
+            mutate={mutateTypes}
+            viewType="type"
+          />
         ));
-      case "members":
+      }
+      case "members": {
         return filterItems(members, searchText)?.map((member) => (
           <ObjectListItem
             key={member.identity}
@@ -93,20 +126,15 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             }}
             accessories={[
               {
-                icon:
-                  member.role === "Owner"
-                    ? Icon.Star
-                    : member.role === "Writer"
-                      ? Icon.Pencil
-                      : member.role === "Reader"
-                        ? Icon.Eye
-                        : Icon.XMarkCircle,
-                text: member.role,
-                tooltip: `Role: ${member.role}`,
+                text: formatRole(member.role),
+                tooltip: `Role: ${formatRole(member.role)}`,
               },
             ]}
+            mutate={mutateMembers}
+            viewType="member"
           />
         ));
+      }
       default:
         return null;
     }
@@ -124,19 +152,18 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
           tooltip="Choose View"
           onChange={(value) => setCurrentView(value as "objects" | "types" | "members")}
         >
-          <List.Dropdown.Item title="Objects" value="objects" icon={SPACE_OBJECT_ICON} />
-          <List.Dropdown.Item title="Types" value="types" icon={TYPE_ICON} />
-          <List.Dropdown.Item title="Members" value="members" icon={SPACE_MEMBER_ICON} />
+          <List.Dropdown.Item title="Objects" value="objects" icon={Icon.Document} />
+          <List.Dropdown.Item title="Types" value="types" icon={Icon.Lowercase} />
+          <List.Dropdown.Item title="Members" value="members" icon={Icon.PersonCircle} />
         </List.Dropdown>
       }
       pagination={pagination}
+      throttle={true}
     >
       {currentItems && currentItems?.length > 0 ? (
         <List.Section
-          title={searchText ? "Search Results" : `${currentView.charAt(0).toUpperCase() + currentView.slice(1)}`}
-          subtitle={
-            searchText ? `${getCurrentItems()?.length || 0} ${currentView}` : `Total: ${getCurrentItems()?.length || 0}`
-          }
+          title={searchText ? "Search Results" : `All ${currentView.charAt(0).toUpperCase() + currentView.slice(1)}`}
+          subtitle={`${pluralize(getCurrentItems()?.length || 0, currentView.slice(0, -1), { withNumber: true })}`}
         >
           {getCurrentItems()}
         </List.Section>

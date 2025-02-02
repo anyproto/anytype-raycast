@@ -1,14 +1,13 @@
 import { useCachedPromise } from "@raycast/utils";
-import { getTemplates } from "../api/getTemplates";
 import { useMemo } from "react";
+import { getTemplates } from "../api/getTemplates";
+import { apiLimit } from "../helpers/constants";
 
 export function useTemplates(spaceId: string, typeId: string) {
-  const limit = 50;
-
-  const { data, error, isLoading, pagination } = useCachedPromise(
+  const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     (spaceId: string, typeId: string) => async (options: { page: number }) => {
-      const offset = options.page * limit;
-      const response = await getTemplates(spaceId, typeId, { offset, limit });
+      const offset = options.page * apiLimit;
+      const response = await getTemplates(spaceId, typeId, { offset, limit: apiLimit });
 
       return {
         data: response.templates,
@@ -28,6 +27,7 @@ export function useTemplates(spaceId: string, typeId: string) {
     templates: filteredData,
     templatesError: error,
     isLoadingTemplates: isLoading,
+    mutateTemplates: mutate,
     templatesPagination: pagination,
   };
 }

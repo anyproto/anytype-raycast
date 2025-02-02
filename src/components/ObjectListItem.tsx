@@ -1,21 +1,22 @@
-import { List, Icon, Image, ActionPanel, Action } from "@raycast/api";
-import { Detail, Block } from "../utils/schemas";
-import ObjectDetail from "./ObjectDetail";
+import { Icon, Image, List } from "@raycast/api";
+import { MutatePromise } from "@raycast/utils";
+import { Member, SpaceObject, Type } from "../helpers/schemas";
+import ObjectActions from "./ObjectActions";
 
 type ObjectListItemProps = {
   spaceId: string;
   objectId: string;
   icon: string | { source: string; mask: Image.Mask };
   title: string;
-  subtitle?: { value: string; tooltip?: string };
+  subtitle?: { value: string; tooltip: string };
   accessories?: {
     icon?: Icon | { source: string; mask: Image.Mask };
     date?: Date;
     text?: string;
     tooltip?: string;
   }[];
-  details?: Detail[];
-  blocks?: Block[];
+  mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>;
+  viewType: string;
 };
 
 export default function ObjectListItem({
@@ -25,7 +26,8 @@ export default function ObjectListItem({
   title,
   subtitle,
   accessories,
-  details,
+  mutate,
+  viewType,
 }: ObjectListItemProps) {
   return (
     <List.Item
@@ -49,18 +51,7 @@ export default function ObjectListItem({
         return accessoryProps;
       })}
       actions={
-        <ActionPanel title={title}>
-          <Action.Push
-            icon={{ source: Icon.Sidebar }}
-            title="Show Details"
-            target={<ObjectDetail spaceId={spaceId} objectId={objectId} details={details || []} />}
-          />
-          <Action.OpenInBrowser
-            icon={{ source: "../assets/anytype-icon.png" }}
-            title="Open in Anytype"
-            url={`anytype://object?objectId=${objectId}&spaceId=${spaceId}`}
-          />
-        </ActionPanel>
+        <ObjectActions spaceId={spaceId} objectId={objectId} title={title} mutate={mutate} viewType={viewType} />
       }
     />
   );

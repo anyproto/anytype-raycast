@@ -1,35 +1,109 @@
-import { Toast, showToast } from "@raycast/api";
+import { LaunchProps, Toast, showToast } from "@raycast/api";
+import { useEffect, useState } from "react";
 import CreateObjectForm from "./components/CreateObjectForm";
-import { useState, useEffect } from "react";
+import EnsureAuthenticated from "./components/EnsureAuthenticated";
+import { Type } from "./helpers/schemas";
 import { useSpaces } from "./hooks/useSpaces";
 import { useTypes } from "./hooks/useTypes";
 
-export default function CreateObject() {
-  const [selectedSpace, setSelectedSpace] = useState<string>("");
+export interface CreateObjectFormValues {
+  space: string;
+  type: string;
+  name?: string;
+  icon?: string;
+  description?: string;
+  body?: string;
+  source?: string;
+}
+
+interface LaunchContext {
+  defaults?: {
+    space?: string;
+    type?: string;
+    name?: string;
+    icon?: string;
+    description?: string;
+    body?: string;
+    source?: string;
+  };
+}
+
+interface CreateObjectProps
+  extends LaunchProps<{ draftValues?: CreateObjectFormValues; launchContext?: LaunchContext }> {}
+
+export default function Command(props: CreateObjectProps) {
+  return (
+    <EnsureAuthenticated viewType="form">
+      <CreateObject {...props} />
+    </EnsureAuthenticated>
+  );
+}
+
+function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
+  const mergedValues = {
+    ...launchContext?.defaults,
+    ...draftValues, // `draftValues` takes precedence
+  };
+
+  const [selectedSpace, setSelectedSpace] = useState(mergedValues?.space || "");
+  const [selectedType, setSelectedType] = useState(mergedValues?.type || "");
+  const [filteredTypes, setFilteredTypes] = useState<Type[]>([]);
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
   const { types, typesError, isLoadingTypes } = useTypes(selectedSpace);
 
+  const restrictedTypes = [
+    "ot-audio",
+    "ot-chat",
+    "ot-file",
+    "ot-image",
+    "ot-objectType",
+    "ot-tag",
+    "ot-template",
+    "ot-video",
+    "ot-participant",
+  ];
+
   useEffect(() => {
-    if (Array.isArray(spaces) && spaces.length > 0 && !selectedSpace) {
+    if (spaces.length > 0 && !selectedSpace) {
       setSelectedSpace(spaces[0].id);
     }
   }, [spaces]);
 
-  if (spacesError) {
-    showToast(Toast.Style.Failure, "Failed to fetch spaces", spacesError.message);
-  }
+  useEffect(() => {
+    if (types.length > 0) {
+      const validTypes = types.filter((type) => !restrictedTypes.includes(type.unique_key));
+      setFilteredTypes(validTypes);
+    }
+  }, [types]);
 
-  if (typesError) {
-    showToast(Toast.Style.Failure, "Failed to fetch types", typesError.message);
-  }
+  useEffect(() => {
+    if (filteredTypes.length > 0 && !selectedType) {
+      setSelectedType(filteredTypes[0].unique_key);
+    }
+  }, [filteredTypes]);
+
+  useEffect(() => {
+    if (spacesError) {
+      showToast(Toast.Style.Failure, "Failed to fetch spaces", spacesError.message);
+    }
+  }, [spacesError]);
+
+  useEffect(() => {
+    if (typesError) {
+      showToast(Toast.Style.Failure, "Failed to fetch types", typesError.message);
+    }
+  }, [typesError]);
 
   return (
     <CreateObjectForm
       spaces={spaces || []}
-      objectTypes={types || []}
+      objectTypes={filteredTypes}
       selectedSpace={selectedSpace}
       setSelectedSpace={setSelectedSpace}
+      selectedType={selectedType}
+      setSelectedType={setSelectedType}
       isLoading={isLoadingSpaces || isLoadingTypes}
+      draftValues={mergedValues as CreateObjectFormValues}
     />
   );
 }

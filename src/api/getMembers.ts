@@ -1,9 +1,7 @@
-import { apiFetch } from "../utils/api";
-import { API_URL } from "../utils/constants";
-import { PaginatedResponse } from "../utils/schemas";
-import { transformMembers } from "../utils/helpers";
-import { Member, Pagination } from "../utils/schemas";
-import { encodeQueryParams } from "../utils/helpers";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
+import { Member, PaginatedResponse, Pagination } from "../helpers/schemas";
+import { mapMembers } from "../mappers/members";
 
 export async function getMembers(
   spaceId: string,
@@ -12,13 +10,11 @@ export async function getMembers(
   members: Member[];
   pagination: Pagination;
 }> {
-  const queryString = encodeQueryParams(options);
-  const url = `${API_URL}/spaces/${spaceId}/members${queryString}`;
-
-  const response = await apiFetch<PaginatedResponse<Member>>(url, { method: "GET" });
+  const { url, method } = apiEndpoints.getMembers(spaceId, options);
+  const response = await apiFetch<PaginatedResponse<Member>>(url, { method: method });
 
   return {
-    members: response.data ? await transformMembers(response.data) : [],
+    members: response.data ? await mapMembers(response.data) : [],
     pagination: response.pagination,
   };
 }

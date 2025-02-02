@@ -2,45 +2,36 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "anytype",
   "title": "Anytype",
-  "description": "Search, create and interact with Anytype - right at your fingertips, anywhere on your Mac.",
+  "description": "Create, browse and search in Anytype - right at your fingertips, anywhere on your Mac.",
   "icon": "anytype-icon.png",
   "author": "jmetrikat",
   "owner": "any",
+  "access": "public",
   "categories": [
     "Applications",
     "Productivity"
   ],
   "license": "MIT",
-  "preferences": [
-    {
-      "name": "bearerToken",
-      "type": "password",
-      "title": "API Key",
-      "description": "Your personal API key to access the Anytype API. This key can be generated within the application settings or via the authentication endpoints.",
-      "placeholder": "API Key",
-      "required": true
-    }
-  ],
   "commands": [
     {
-      "name": "search-anytype",
-      "title": "Search Anytype",
+      "name": "create-object",
+      "title": "Create Object",
       "subtitle": "Anytype",
-      "description": "Search across all your Anytype spaces and objects.",
+      "description": "Create a new object.",
       "mode": "view"
     },
     {
       "name": "browse-spaces",
       "title": "Browse Spaces",
       "subtitle": "Anytype",
-      "description": "Browse your Anytype spaces one by one.",
+      "description": "Browse your spaces one by one.",
       "mode": "view"
     },
     {
-      "name": "create-object",
-      "title": "Create Object",
+      "name": "search-anytype",
+      "title": "Search Anytype",
       "subtitle": "Anytype",
-      "description": "Create a new Anytype object in any of your spaces.",
+      "description": "Search objects globally in all spaces.",
       "mode": "view"
     },
     {
@@ -75,6 +66,60 @@
       ]
     }
   ],
+  "preferences": [
+    {
+      "name": "anytypeApp",
+      "title": "Anytype App",
+      "description": "The Anytype app on your Mac.",
+      "type": "appPicker",
+      "default": "com.anytype.anytype",
+      "required": false
+    },
+    {
+      "name": "sort",
+      "title": "Sort Order",
+      "description": "The sort order of objects when displayed as a list.",
+      "type": "dropdown",
+      "data": [
+        {
+          "title": "Created Date",
+          "value": "created_date"
+        },
+        {
+          "title": "Last Modified Date",
+          "value": "last_modified_date"
+        },
+        {
+          "title": "Last Opened Date",
+          "value": "last_opened_date"
+        }
+      ],
+      "default": "last_modified_date",
+      "required": false
+    },
+    {
+      "name": "limit",
+      "title": "API Limit",
+      "description": "The maximum number of objects to fetch from the Anytype API at once. Be careful when changing this, as a large number can cause performance issues.",
+      "type": "dropdown",
+      "data": [
+        {
+          "title": "25",
+          "value": "25"
+        },
+        {
+          "title": "50",
+          "value": "50"
+        },
+        {
+          "title": "100",
+          "value": "100"
+        }
+      ],
+      "default": "50",
+      "required": false
+    }
+  ],
   "dependencies": {
     "@raycast/api": "^1.86.0",
     "@raycast/utils": "^1.17.0",
@@ -87,6 +132,7 @@
     "@types/react": "18.3.3",
     "eslint": "^8.57.0",
     "prettier": "^3.3.3",
+    "react-devtools": "^5.2.0",
     "typescript": "^5.4.5"
   },
   "scripts": {

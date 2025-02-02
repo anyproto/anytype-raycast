@@ -1,8 +1,7 @@
-import { apiFetch } from "../utils/api";
-import { API_URL } from "../utils/constants";
-import { Template, PaginatedResponse } from "../utils/schemas";
-import { Pagination } from "../utils/schemas";
-import { encodeQueryParams } from "../utils/helpers";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
+import { PaginatedResponse, Pagination, Template } from "../helpers/schemas";
+import { mapTemplates } from "../mappers/templates";
 
 export async function getTemplates(
   spaceId: string,
@@ -15,13 +14,11 @@ export async function getTemplates(
   templates: Template[];
   pagination: Pagination;
 }> {
-  const queryString = encodeQueryParams(options);
-  const url = `${API_URL}/spaces/${spaceId}/objectTypes/${typeId}/templates${queryString}`;
-
-  const response = await apiFetch<PaginatedResponse<Template>>(url, { method: "GET" });
+  const { url, method } = apiEndpoints.getTemplates(spaceId, typeId, options);
+  const response = await apiFetch<PaginatedResponse<Template>>(url, { method: method });
 
   return {
-    templates: response.data ? response.data : [],
+    templates: response.data ? await mapTemplates(response.data) : [],
     pagination: response.pagination,
   };
 }

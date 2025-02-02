@@ -1,14 +1,13 @@
 import { useCachedPromise } from "@raycast/utils";
-import { getMembers } from "../api/getMembers";
 import { useMemo } from "react";
+import { getMembers } from "../api/getMembers";
+import { apiLimit } from "../helpers/constants";
 
 export function useMembers(spaceId: string) {
-  const limit = 50;
-
-  const { data, error, isLoading, pagination } = useCachedPromise(
+  const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     (spaceId: string) => async (options: { page: number }) => {
-      const offset = options.page * limit;
-      const response = await getMembers(spaceId, { offset, limit });
+      const offset = options.page * apiLimit;
+      const response = await getMembers(spaceId, { offset, limit: apiLimit });
 
       return {
         data: response.members,
@@ -28,6 +27,7 @@ export function useMembers(spaceId: string) {
     members: filteredData,
     membersError: error,
     isLoadingMembers: isLoading,
+    mutateMembers: mutate,
     membersPagination: pagination,
   };
 }

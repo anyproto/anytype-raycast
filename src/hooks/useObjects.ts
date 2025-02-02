@@ -1,14 +1,13 @@
 import { useCachedPromise } from "@raycast/utils";
-import { getObjects } from "../api/getObjects";
 import { useMemo } from "react";
+import { getObjects } from "../api/getObjects";
+import { apiLimit } from "../helpers/constants";
 
 export function useObjects(spaceId: string) {
-  const limit = 50;
-
-  const { data, error, isLoading, pagination } = useCachedPromise(
+  const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     (spaceId: string) => async (options: { page: number }) => {
-      const offset = options.page * limit;
-      const response = await getObjects(spaceId, { offset, limit });
+      const offset = options.page * apiLimit;
+      const response = await getObjects(spaceId, { offset, limit: apiLimit });
 
       return {
         data: response.objects,
@@ -28,6 +27,7 @@ export function useObjects(spaceId: string) {
     objects: filteredData,
     objectsError: error,
     isLoadingObjects: isLoading,
+    mutateObjects: mutate,
     objectsPagination: pagination,
   };
 }

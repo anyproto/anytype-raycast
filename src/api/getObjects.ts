@@ -1,8 +1,7 @@
-import { apiFetch } from "../utils/api";
-import { API_URL } from "../utils/constants";
-import { transformObjects } from "../utils/helpers";
-import { PaginatedResponse, Pagination, SpaceObject } from "../utils/schemas";
-import { encodeQueryParams } from "../utils/helpers";
+import { apiFetch } from "../helpers/api";
+import { apiEndpoints } from "../helpers/constants";
+import { PaginatedResponse, Pagination, SpaceObject } from "../helpers/schemas";
+import { mapObjects } from "../mappers/objects";
 
 export async function getObjects(
   spaceId: string,
@@ -11,13 +10,11 @@ export async function getObjects(
   objects: SpaceObject[];
   pagination: Pagination;
 }> {
-  const queryString = encodeQueryParams(options);
-  const url = `${API_URL}/spaces/${spaceId}/objects${queryString}`;
-
-  const response = await apiFetch<PaginatedResponse<SpaceObject>>(url, { method: "GET" });
+  const { url, method } = apiEndpoints.getObjects(spaceId, options);
+  const response = await apiFetch<PaginatedResponse<SpaceObject>>(url, { method: method });
 
   return {
-    objects: response.data ? await transformObjects(response.data) : [],
+    objects: response.data ? await mapObjects(response.data) : [],
     pagination: response.pagination,
   };
 }
