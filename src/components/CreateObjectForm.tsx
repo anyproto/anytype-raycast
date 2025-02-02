@@ -2,8 +2,8 @@ import { Action, ActionPanel, Form, Icon, Image, popToRoot, showToast, Toast } f
 import { useForm } from "@raycast/utils";
 import { useState } from "react";
 import { createObject } from "../api/createObject";
-import { Space, Type } from "../helpers/schemas";
 import { CreateObjectFormValues } from "../create-object";
+import { Space, Type } from "../helpers/schemas";
 
 interface CreateObjectFormProps {
   spaces: Space[];

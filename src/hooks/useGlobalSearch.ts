@@ -1,7 +1,7 @@
 import { getPreferenceValues } from "@raycast/api";
 import { useCachedPromise } from "@raycast/utils";
-import { globalSearch } from "../api/globalSearch";
 import { useMemo } from "react";
+import { globalSearch } from "../api/globalSearch";
 import { apiLimit } from "../helpers/constants";
 
 export function useGlobalSearch(query: string, types: string[]) {

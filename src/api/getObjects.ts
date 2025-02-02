@@ -1,7 +1,7 @@
 import { apiFetch } from "../helpers/api";
 import { apiEndpoints } from "../helpers/constants";
-import { mapObjects } from "../mappers/objects";
 import { PaginatedResponse, Pagination, SpaceObject } from "../helpers/schemas";
+import { mapObjects } from "../mappers/objects";
 
 export async function getObjects(
   spaceId: string,

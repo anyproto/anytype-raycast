@@ -1,4 +1,4 @@
-import { List, Image, Icon } from "@raycast/api";
+import { Icon, Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { Space } from "../helpers/schemas";
 import SpaceActions from "./SpaceActions";

@@ -1,21 +1,21 @@
-import { useEffect, useState } from "react";
 import {
-  LocalStorage,
-  showToast,
-  Toast,
-  List,
-  ActionPanel,
   Action,
+  ActionPanel,
   Form,
+  getPreferenceValues,
   Icon,
   Keyboard,
+  List,
+  LocalStorage,
   open,
-  getPreferenceValues,
+  showToast,
+  Toast,
 } from "@raycast/api";
 import { useForm } from "@raycast/utils";
-import { validateToken } from "../api/validateToken";
+import { useEffect, useState } from "react";
 import { displayCode } from "../api/displayCode";
 import { getToken } from "../api/getToken";
+import { validateToken } from "../api/validateToken";
 import { apiAppName, downloadUrl } from "../helpers/constants";
 
 type EnsureAuthenticatedProps = {

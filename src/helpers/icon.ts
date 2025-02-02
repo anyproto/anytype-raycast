@@ -1,5 +1,5 @@
-import fetch from "node-fetch";
 import { Icon } from "@raycast/api";
+import fetch from "node-fetch";
 import { iconWidth } from "./constants";
 
 /**

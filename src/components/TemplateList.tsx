@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { List, showToast, Toast } from "@raycast/api";
-import { useTemplates } from "../hooks/useTemplates";
+import { useState } from "react";
 import { Template } from "../helpers/schemas";
 import { pluralize } from "../helpers/strings";
-import ObjectActions from "./ObjectActions";
+import { useTemplates } from "../hooks/useTemplates";
 import EmptyView from "./EmptyView";
+import ObjectActions from "./ObjectActions";
 
 type TemplatesListProps = {
   spaceId: string;

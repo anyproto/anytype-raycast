@@ -1,10 +1,10 @@
-import { useEffect } from "react";
+import { Detail, Icon, Image, showToast, Toast } from "@raycast/api";
 import { format } from "date-fns";
-import { Detail, showToast, Toast, Image, Icon } from "@raycast/api";
-import { useObject } from "../hooks/useObject";
+import { useEffect } from "react";
+import type { Member } from "../helpers/schemas";
 import { useExport } from "../hooks/useExport";
+import { useObject } from "../hooks/useObject";
 import ObjectActions from "./ObjectActions";
-import type { Detail as ObjectDetail, Member } from "../helpers/schemas";
 
 type ObjectDetailProps = {
   spaceId: string;

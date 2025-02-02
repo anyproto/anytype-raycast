@@ -1,6 +1,6 @@
-import { Type, Space } from "./schemas";
-import { apiLimit } from "./constants";
 import { getTypes } from "../api/getTypes";
+import { apiLimit } from "./constants";
+import { Space, Type } from "./schemas";
 
 /**
  * Fetches all `Type`s from a single space, doing pagination if necessary.

@@ -1,13 +1,13 @@
-import { Icon, List, showToast, Toast, Image, getPreferenceValues } from "@raycast/api";
-import { useState, useEffect } from "react";
+import { getPreferenceValues, Icon, Image, List, showToast, Toast } from "@raycast/api";
 import { format } from "date-fns";
-import { useSpaces } from "./hooks/useSpaces";
-import { useGlobalSearch } from "./hooks/useGlobalSearch";
-import { getAllTypesFromSpaces } from "./helpers/types";
-import ObjectListItem from "./components/ObjectListItem";
+import { useEffect, useState } from "react";
 import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
+import ObjectListItem from "./components/ObjectListItem";
 import { getDateLabel, pluralize } from "./helpers/strings";
+import { getAllTypesFromSpaces } from "./helpers/types";
+import { useGlobalSearch } from "./hooks/useGlobalSearch";
+import { useSpaces } from "./hooks/useSpaces";
 
 const searchBarPlaceholder = "Globally search objects across spaces...";
 

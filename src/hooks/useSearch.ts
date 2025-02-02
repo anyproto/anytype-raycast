@@ -1,7 +1,7 @@
 import { getPreferenceValues } from "@raycast/api";
 import { useCachedPromise } from "@raycast/utils";
-import { search } from "../api/search";
 import { useMemo } from "react";
+import { search } from "../api/search";
 import { apiLimit } from "../helpers/constants";
 
 export function useSearch(spaceId: string, query: string, types: string[]) {

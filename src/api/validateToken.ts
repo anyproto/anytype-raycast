@@ -1,7 +1,6 @@
 import { apiFetch } from "../helpers/api";
-import { apiEndpoints } from "../helpers/constants";
-import { Space, PaginatedResponse } from "../helpers/schemas";
-import { errorConnectionMessage } from "../helpers/constants";
+import { apiEndpoints, errorConnectionMessage } from "../helpers/constants";
+import { PaginatedResponse, Space } from "../helpers/schemas";
 
 // Validate token by checking if data can be fetched without errors
 export async function validateToken(): Promise<boolean> {

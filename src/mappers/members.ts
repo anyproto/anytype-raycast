@@ -1,6 +1,6 @@
 import { Icon } from "@raycast/api";
-import { Member } from "../helpers/schemas";
 import { getIcon } from "../helpers/icon";
+import { Member } from "../helpers/schemas";
 
 /**
  * Map raw `Member` objects from the API into display-ready data (e.g., icon).

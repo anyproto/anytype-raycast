@@ -1,10 +1,10 @@
-import { Toast, showToast, LaunchProps } from "@raycast/api";
+import { LaunchProps, Toast, showToast } from "@raycast/api";
 import { useEffect, useState } from "react";
-import { useSpaces } from "./hooks/useSpaces";
-import { useTypes } from "./hooks/useTypes";
-import { Type } from "./helpers/schemas";
 import CreateObjectForm from "./components/CreateObjectForm";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
+import { Type } from "./helpers/schemas";
+import { useSpaces } from "./hooks/useSpaces";
+import { useTypes } from "./hooks/useTypes";
 
 export interface CreateObjectFormValues {
   space: string;

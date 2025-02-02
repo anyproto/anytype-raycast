@@ -1,6 +1,6 @@
-import { SpaceObject, Detail, Member } from "../helpers/schemas";
-import { getIconWithFallback } from "../helpers/icon";
 import { getPreferenceValues } from "@raycast/api";
+import { getIconWithFallback } from "../helpers/icon";
+import { Detail, Member, SpaceObject } from "../helpers/schemas";
 
 /**
  * Map raw `SpaceObject` item into display-ready data, including details, icons, etc.

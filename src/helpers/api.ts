@@ -1,5 +1,5 @@
-import fetch from "node-fetch";
 import { LocalStorage, Toast, showToast } from "@raycast/api";
+import fetch from "node-fetch";
 import { errorConnectionMessage } from "./constants";
 
 interface FetchOptions {
