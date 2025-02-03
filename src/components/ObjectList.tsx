@@ -1,7 +1,7 @@
 import { getPreferenceValues, Icon, Image, List, showToast, Toast } from "@raycast/api";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { getDateLabel, pluralize } from "../helpers/strings";
+import { getDateLabel, getShortDateLabel, pluralize } from "../helpers/strings";
 import { useMembers } from "../hooks/useMembers";
 import { useSearch } from "../hooks/useSearch";
 import { useTypes } from "../hooks/useTypes";
@@ -63,42 +63,46 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
 
   const getCurrentItems = () => {
     switch (currentView) {
-      case "objects":
-        return filterItems(objects, searchText)?.map((object) => (
-          <ObjectListItem
-            key={object.id}
-            spaceId={spaceId}
-            objectId={object.id}
-            icon={{
-              source: object.icon,
-              mask:
-                (object.layout === "participant" || object.layout === "profile") && object.icon != Icon.Document
-                  ? Image.Mask.Circle
-                  : Image.Mask.RoundedRectangle,
-            }}
-            title={object.name}
-            subtitle={{
-              value: object.type,
-              tooltip: `Type: ${object.type}`,
-            }}
-            accessories={[
-              ...(object.details.find((detail) => detail.id === dateToSortAfter)
-                ? [
-                    {
-                      date: new Date(
-                        object.details.find((detail) => detail.id === dateToSortAfter)?.details[
-                          dateToSortAfter
-                        ] as string,
-                      ),
-                      tooltip: `${getDateLabel()}: ${format(new Date(object.details.find((detail) => detail.id === dateToSortAfter)?.details[dateToSortAfter] as string), "EEEE d MMMM yyyy 'at' HH:mm")}`,
-                    },
-                  ]
-                : []),
-            ]}
-            mutate={mutateObjects}
-            viewType="object"
-          />
-        ));
+      case "objects": {
+        return filterItems(objects, searchText)?.map((object) => {
+          const date = object.details.find((detail) => detail.id === dateToSortAfter)?.details[
+            dateToSortAfter
+          ] as string;
+          const hasValidDate = date && new Date(date).getTime() !== 0;
+
+          return (
+            <ObjectListItem
+              key={object.id}
+              spaceId={spaceId}
+              objectId={object.id}
+              icon={{
+                source: object.icon,
+                mask:
+                  (object.layout === "participant" || object.layout === "profile") && object.icon != Icon.Document
+                    ? Image.Mask.Circle
+                    : Image.Mask.RoundedRectangle,
+              }}
+              title={object.name}
+              subtitle={{
+                value: object.type,
+                tooltip: `Type: ${object.type}`,
+              }}
+              accessories={[
+                {
+                  date: hasValidDate ? new Date(date) : undefined,
+                  tooltip: hasValidDate
+                    ? `${getDateLabel()}: ${format(new Date(date), "EEEE d MMMM yyyy 'at' HH:mm")}`
+                    : `Never ${getShortDateLabel()}`,
+                  text: hasValidDate ? undefined : "—",
+                },
+              ]}
+              mutate={mutateObjects}
+              viewType="object"
+            />
+          );
+        });
+      }
+
       case "types": {
         return filterItems(types, searchText)?.map((type) => (
           <ObjectListItem
@@ -112,6 +116,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
           />
         ));
       }
+
       case "members": {
         return filterItems(members, searchText)?.map((member) => (
           <ObjectListItem
@@ -135,6 +140,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
           />
         ));
       }
+
       default:
         return null;
     }

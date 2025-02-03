@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import ObjectListItem from "./components/ObjectListItem";
-import { getDateLabel, pluralize } from "./helpers/strings";
+import { getDateLabel, getShortDateLabel, pluralize } from "./helpers/strings";
 import { getAllTypesFromSpaces } from "./helpers/types";
 import { useGlobalSearch } from "./hooks/useGlobalSearch";
 import { useSpaces } from "./hooks/useSpaces";
@@ -117,6 +117,7 @@ function Search() {
     const spaceIcon = spaceIcons[object.space_id];
     const dateToSortAfter = getPreferenceValues().sort;
     const date = object.details.find((detail) => detail.id === dateToSortAfter)?.details[dateToSortAfter] as string;
+    const hasValidDate = date && new Date(date).getTime() !== 0;
 
     return {
       key: object.id,
@@ -135,14 +136,13 @@ function Search() {
         tooltip: `Type: ${object.type}`,
       },
       accessories: [
-        ...(date
-          ? [
-              {
-                date: new Date(date),
-                tooltip: `${getDateLabel()}: ${format(new Date(date), "EEEE d MMMM yyyy 'at' HH:mm")}`,
-              },
-            ]
-          : []),
+        {
+          date: hasValidDate ? new Date(date) : undefined,
+          tooltip: hasValidDate
+            ? `${getDateLabel()}: ${format(new Date(date), "EEEE d MMMM yyyy 'at' HH:mm")}`
+            : `Never ${getShortDateLabel()}`,
+          text: hasValidDate ? undefined : "—",
+        },
         ...(spaceIcon
           ? [
               {

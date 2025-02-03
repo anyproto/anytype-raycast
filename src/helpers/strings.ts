@@ -28,3 +28,20 @@ export function getDateLabel(): string | undefined {
       return undefined;
   }
 }
+
+/**
+ * Get the short date label based on the sort preference.
+ */
+export function getShortDateLabel(): string {
+  const sort = getPreferenceValues().sort;
+  switch (sort) {
+    case "created_date":
+      return "Created";
+    case "last_modified_date":
+      return "Modified";
+    case "last_opened_date":
+      return "Opened";
+    default:
+      return "Date";
+  }
+}
