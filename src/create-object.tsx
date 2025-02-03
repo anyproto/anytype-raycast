@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import CreateObjectForm from "./components/CreateObjectForm";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import { Type } from "./helpers/schemas";
+import { fetchAllTypesForSpace } from "./helpers/types";
 import { useSpaces } from "./hooks/useSpaces";
-import { useTypes } from "./hooks/useTypes";
 
 export interface CreateObjectFormValues {
   space: string;
@@ -48,8 +48,8 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
   const [selectedSpace, setSelectedSpace] = useState(mergedValues?.space || "");
   const [selectedType, setSelectedType] = useState(mergedValues?.type || "");
   const [filteredTypes, setFilteredTypes] = useState<Type[]>([]);
+  const [isLoadingTypes, setIsLoadingTypes] = useState(false);
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
-  const { types, typesError, isLoadingTypes } = useTypes(selectedSpace);
 
   const restrictedTypes = [
     "ot-audio",
@@ -70,11 +70,27 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
   }, [spaces]);
 
   useEffect(() => {
-    if (types.length > 0) {
-      const validTypes = types.filter((type) => !restrictedTypes.includes(type.unique_key));
-      setFilteredTypes(validTypes);
-    }
-  }, [types]);
+    const fetchAllTypes = async () => {
+      if (selectedSpace) {
+        setIsLoadingTypes(true);
+        try {
+          const allTypes = await fetchAllTypesForSpace(selectedSpace);
+          const validTypes = allTypes.filter((type) => !restrictedTypes.includes(type.unique_key));
+          setFilteredTypes(validTypes);
+        } catch (error) {
+          if (error instanceof Error) {
+            showToast(Toast.Style.Failure, "Failed to fetch types", error.message);
+          } else {
+            showToast(Toast.Style.Failure, "Failed to fetch types", "An unknown error occurred.");
+          }
+        } finally {
+          setIsLoadingTypes(false);
+        }
+      }
+    };
+
+    fetchAllTypes();
+  }, [selectedSpace]);
 
   useEffect(() => {
     if (filteredTypes.length > 0 && !selectedType) {
@@ -87,12 +103,6 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
       showToast(Toast.Style.Failure, "Failed to fetch spaces", spacesError.message);
     }
   }, [spacesError]);
-
-  useEffect(() => {
-    if (typesError) {
-      showToast(Toast.Style.Failure, "Failed to fetch types", typesError.message);
-    }
-  }, [typesError]);
 
   return (
     <CreateObjectForm

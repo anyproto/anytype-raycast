@@ -1,5 +1,5 @@
 import { getTypes } from "../api/getTypes";
-import { apiLimit } from "./constants";
+import { apiLimitMax } from "./constants";
 import { Space, Type } from "./schemas";
 
 /**
@@ -11,15 +11,10 @@ export async function fetchAllTypesForSpace(spaceId: string): Promise<Type[]> {
   let offset = 0;
 
   while (hasMore) {
-    try {
-      const response = await getTypes(spaceId, { offset, limit: apiLimit });
-      allTypes = [...allTypes, ...response.types];
-      hasMore = response.pagination.has_more;
-      offset += apiLimit;
-    } catch (err) {
-      console.log(`Error fetching types for space ${spaceId} at offset ${offset}:`, err);
-      break;
-    }
+    const response = await getTypes(spaceId, { offset, limit: apiLimitMax });
+    allTypes = [...allTypes, ...response.types];
+    hasMore = response.pagination.has_more;
+    offset += apiLimitMax;
   }
 
   return allTypes;
