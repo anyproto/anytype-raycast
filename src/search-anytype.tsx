@@ -22,7 +22,7 @@ export default function Command() {
 function Search() {
   const [searchText, setSearchText] = useState("");
   const [objectTypes, setObjectTypes] = useState<string[]>([]);
-  const [spaceIcons, setSpaceIcons] = useState<{ [key: string]: string }>({});
+  const [spaceIcons, setSpaceIcons] = useState<Map<string, string>>(new Map());
   const [filterType, setFilterType] = useState("all");
   const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
   const [uniqueKeysForTasks, setUniqueKeysForTasks] = useState<string[]>([]);
@@ -54,13 +54,7 @@ function Search() {
 
   useEffect(() => {
     if (spaces) {
-      const spaceIconMap = spaces.reduce(
-        (acc, space) => {
-          acc[space.id] = space.icon;
-          return acc;
-        },
-        {} as { [key: string]: string },
-      );
+      const spaceIconMap = new Map(spaces.map((space) => [space.id, space.icon]));
       setSpaceIcons(spaceIconMap);
     }
   }, [spaces]);
@@ -114,7 +108,7 @@ function Search() {
   }, [objectsError, spacesError]);
 
   const processedObjects = objects.map((object) => {
-    const spaceIcon = spaceIcons[object.space_id];
+    const spaceIcon = spaceIcons.get(object.space_id);
     const dateToSortAfter = getPreferenceValues().sort;
     const date = object.details.find((detail) => detail.id === dateToSortAfter)?.details[dateToSortAfter] as string;
     const hasValidDate = date && new Date(date).getTime() !== 0;
