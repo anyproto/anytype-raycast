@@ -174,6 +174,17 @@ function Search() {
     };
   };
 
+  // Filter pinned objects by search term
+  const filterObjectsBySearchTerm = (objects: SpaceObject[], searchTerm: string) => {
+    return objects.filter((object) => {
+      const lowerCaseSearchTerm = searchTerm.toLowerCase();
+      return (
+        object.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+        object.snippet.toLowerCase().includes(lowerCaseSearchTerm)
+      );
+    });
+  };
+
   const processedPinnedObjects = pinnedObjects
     .filter((object) => objectTypes.length === 0 || objectTypes.includes(object.type))
     .map((object) => processObject(object, true));
