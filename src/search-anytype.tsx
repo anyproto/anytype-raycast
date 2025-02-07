@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import ObjectListItem from "./components/ObjectListItem";
-import { addPinnedObject, removePinnedObject } from "./helpers/localStorageHelper";
 import { Member, SpaceObject, Type } from "./helpers/schemas";
 import { getDateLabel, getShortDateLabel, pluralize } from "./helpers/strings";
 import { getAllTypesFromSpaces } from "./helpers/types";
@@ -119,15 +118,6 @@ function Search() {
     }
   }, [fetchedPinnedObjects]);
 
-  const togglePin = async (spaceId: string, objectId: string) => {
-    if (pinnedObjects.some((obj) => obj.space_id === spaceId && obj.id === objectId)) {
-      await removePinnedObject(spaceId, objectId);
-    } else {
-      await addPinnedObject(spaceId, objectId);
-    }
-    mutatePinnedObjects();
-  };
-
   const processObject = (object: SpaceObject, isPinned: boolean) => {
     const spaceIcon = spaceIcons.get(object.space_id);
     const dateToSortAfter = getPreferenceValues().sort;
@@ -230,7 +220,6 @@ function Search() {
               mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
               viewType={filterType}
               isPinned={object.isPinned}
-              togglePin={togglePin}
             />
           ))}
         </List.Section>
@@ -252,7 +241,6 @@ function Search() {
               mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
               viewType={filterType}
               isPinned={object.isPinned}
-              togglePin={togglePin}
             />
           ))}
         </List.Section>

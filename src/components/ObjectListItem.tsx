@@ -18,7 +18,6 @@ type ObjectListItemProps = {
   mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
   viewType: string;
   isPinned: boolean;
-  togglePin: (spaceId: string, objectId: string) => void;
 };
 
 export default function ObjectListItem({
@@ -31,7 +30,6 @@ export default function ObjectListItem({
   mutate,
   viewType,
   isPinned,
-  togglePin,
 }: ObjectListItemProps) {
   return (
     <List.Item
@@ -72,7 +70,6 @@ export default function ObjectListItem({
           mutate={mutate}
           viewType={viewType}
           isPinned={isPinned}
-          togglePin={togglePin}
         />
       }
     />

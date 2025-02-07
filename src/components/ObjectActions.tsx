@@ -18,7 +18,6 @@ type ObjectActionsProps = {
   mutateExport?: MutatePromise<Export | undefined>;
   viewType: string;
   isPinned: boolean;
-  togglePin: (spaceId: string, objectId: string) => void;
 };
 
 export default function ObjectActions({
@@ -32,7 +31,6 @@ export default function ObjectActions({
   mutateExport,
   viewType,
   isPinned,
-  togglePin,
 }: ObjectActionsProps) {
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
   const isDetailView = objectExport !== undefined;
@@ -146,7 +144,11 @@ export default function ObjectActions({
     } else {
       await addPinnedObject(spaceId, objectId);
     }
-    togglePin(spaceId, objectId);
+    if (mutate) {
+      for (const m of mutate) {
+        await m();
+      }
+    }
   }
 
   return (
