@@ -1,12 +1,15 @@
 import { getPreferenceValues, Icon, Image, List, showToast, Toast } from "@raycast/api";
+import { MutatePromise } from "@raycast/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import ObjectListItem from "./components/ObjectListItem";
+import { Member, SpaceObject, Type } from "./helpers/schemas";
 import { getDateLabel, getShortDateLabel, pluralize } from "./helpers/strings";
 import { getAllTypesFromSpaces } from "./helpers/types";
 import { useGlobalSearch } from "./hooks/useGlobalSearch";
+import { usePinnedObjects } from "./hooks/usePinnedObjects";
 import { useSpaces } from "./hooks/useSpaces";
 
 const searchBarPlaceholder = "Globally search objects across spaces...";
@@ -32,6 +35,8 @@ function Search() {
     objectTypes,
   );
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
+  const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects();
+
   const viewType = filterType === "all" ? "object" : filterType.replace(/s$/, "");
   const excludedKeysForPages = new Set([
     // not shown anywhere
@@ -70,7 +75,6 @@ function Search() {
         setUniqueKeysForPages(Array.from(uniqueKeysSet));
       }
     };
-
     fetchTypesForPages();
   }, [spaces]);
 
@@ -88,8 +92,9 @@ function Search() {
     fetchTypesForTasks();
   }, [spaces]);
 
+  // Set object types based on the selected filter
   useEffect(() => {
-    const objectTypeMap: { [key: string]: string[] } = {
+    const objectTypeMap: Record<string, string[]> = {
       all: [],
       pages: uniqueKeysForPages,
       tasks: uniqueKeysForTasks,
@@ -97,17 +102,20 @@ function Search() {
       bookmarks: ["ot-bookmark"],
       members: ["ot-participant"],
     };
-
     setObjectTypes(objectTypeMap[filterType] || []);
-  }, [filterType]);
+  }, [filterType, uniqueKeysForPages, uniqueKeysForTasks]);
 
   useEffect(() => {
-    if (objectsError || spacesError) {
-      showToast(Toast.Style.Failure, "Failed to fetch latest data", (objectsError || spacesError)?.message);
+    if (objectsError || spacesError || pinnedObjectsError) {
+      showToast(
+        Toast.Style.Failure,
+        "Failed to fetch latest data",
+        objectsError?.message || spacesError?.message || pinnedObjectsError?.message,
+      );
     }
-  }, [objectsError, spacesError]);
+  }, [objectsError, spacesError, pinnedObjectsError]);
 
-  const processedObjects = objects.map((object) => {
+  const processObject = (object: SpaceObject, isPinned: boolean) => {
     const spaceIcon = spaceIcons.get(object.space_id);
     const dateToSortAfter = getPreferenceValues().sort;
     const date = object.details.find((detail) => detail.id === dateToSortAfter)?.details[dateToSortAfter] as string;
@@ -149,12 +157,39 @@ function Search() {
             ]
           : []),
       ],
+      isPinned,
     };
-  });
+  };
+
+  // Helper to filter objects by the search term
+  const filterObjectsBySearchTerm = (objects: SpaceObject[], searchTerm: string) => {
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    return objects.filter(
+      (object) =>
+        object.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+        object.snippet.toLowerCase().includes(lowerCaseSearchTerm),
+    );
+  };
+
+  // Process pinned objects and filter by search term
+  const processedPinnedObjects = pinnedObjects?.length
+    ? pinnedObjects
+        // TODO: requires API change to return unique_key for object type
+        // .filter((object) => objectTypes.length === 0 || objectTypes.includes(object.type))
+        .filter((object) => filterObjectsBySearchTerm([object], searchText).length > 0)
+        .map((object) => processObject(object, true))
+    : [];
+
+  // Process non-pinned objects
+  const processedRegularObjects = objects
+    .filter(
+      (object) => !pinnedObjects?.some((pinned) => pinned.id === object.id && pinned.space_id === object.space_id),
+    )
+    .map((object) => processObject(object, false));
 
   return (
     <List
-      isLoading={isLoadingSpaces || isLoadingObjects}
+      isLoading={isLoadingSpaces || isLoadingPinnedObjects || isLoadingObjects}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder={searchBarPlaceholder}
       pagination={objectsPagination}
@@ -170,12 +205,12 @@ function Search() {
         </List.Dropdown>
       }
     >
-      {processedObjects.length > 0 ? (
+      {processedPinnedObjects.length > 0 && (
         <List.Section
-          title={searchText ? "Search Results" : `${getShortDateLabel()} Recently`}
-          subtitle={`${pluralize(processedObjects.length, viewType, { withNumber: true })}`}
+          title="Pinned"
+          subtitle={`${pluralize(processedPinnedObjects.length, viewType, { withNumber: true })}`}
         >
-          {processedObjects.map((object) => (
+          {processedPinnedObjects.map((object) => (
             <ObjectListItem
               key={object.key}
               spaceId={object.spaceId}
@@ -184,8 +219,30 @@ function Search() {
               title={object.title}
               subtitle={object.subtitle}
               accessories={object.accessories}
-              mutate={mutateObjects}
+              mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
               viewType={filterType}
+              isPinned={object.isPinned}
+            />
+          ))}
+        </List.Section>
+      )}
+      {processedRegularObjects.length > 0 ? (
+        <List.Section
+          title={searchText ? "Search Results" : `${getShortDateLabel()} Recently`}
+          subtitle={`${pluralize(processedRegularObjects.length, viewType, { withNumber: true })}`}
+        >
+          {processedRegularObjects.map((object) => (
+            <ObjectListItem
+              key={object.key}
+              spaceId={object.spaceId}
+              objectId={object.objectId}
+              icon={object.icon}
+              title={object.title}
+              subtitle={object.subtitle}
+              accessories={object.accessories}
+              mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
+              viewType={filterType}
+              isPinned={object.isPinned}
             />
           ))}
         </List.Section>

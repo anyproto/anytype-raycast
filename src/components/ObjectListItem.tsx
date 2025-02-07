@@ -15,8 +15,9 @@ type ObjectListItemProps = {
     text?: string;
     tooltip?: string;
   }[];
-  mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>;
+  mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
   viewType: string;
+  isPinned: boolean;
 };
 
 export default function ObjectListItem({
@@ -28,30 +29,48 @@ export default function ObjectListItem({
   accessories,
   mutate,
   viewType,
+  isPinned,
 }: ObjectListItemProps) {
   return (
     <List.Item
       title={title}
       subtitle={subtitle ? { value: subtitle.value, tooltip: subtitle.tooltip } : undefined}
       icon={typeof icon === "string" ? { source: icon } : icon}
-      accessories={accessories?.map((accessory) => {
-        const { icon, date, text, tooltip } = accessory;
-        const accessoryProps: {
-          icon?: Icon | { source: string; mask: Image.Mask };
-          date?: Date;
-          text?: string;
-          tooltip?: string;
-        } = {};
+      accessories={[
+        ...(isPinned
+          ? [
+              {
+                icon: Icon.Pin,
+                tooltip: "Pinned",
+              },
+            ]
+          : []),
+        ...(accessories?.map((accessory) => {
+          const { icon, date, text, tooltip } = accessory;
+          const accessoryProps: {
+            icon?: Icon | { source: string; mask: Image.Mask };
+            date?: Date;
+            text?: string;
+            tooltip?: string;
+          } = {};
 
-        if (icon) accessoryProps.icon = icon;
-        if (date) accessoryProps.date = date;
-        if (text) accessoryProps.text = text;
-        if (tooltip) accessoryProps.tooltip = tooltip;
+          if (icon) accessoryProps.icon = icon;
+          if (date) accessoryProps.date = date;
+          if (text) accessoryProps.text = text;
+          if (tooltip) accessoryProps.tooltip = tooltip;
 
-        return accessoryProps;
-      })}
+          return accessoryProps;
+        }) || []),
+      ]}
       actions={
-        <ObjectActions spaceId={spaceId} objectId={objectId} title={title} mutate={mutate} viewType={viewType} />
+        <ObjectActions
+          spaceId={spaceId}
+          objectId={objectId}
+          title={title}
+          mutate={mutate}
+          viewType={viewType}
+          isPinned={isPinned}
+        />
       }
     />
   );

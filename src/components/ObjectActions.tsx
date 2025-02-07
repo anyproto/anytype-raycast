@@ -1,6 +1,7 @@
 import { Action, ActionPanel, Clipboard, Color, confirmAlert, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { deleteObject } from "../api/deleteObject";
+import { addPinnedObject, removePinnedObject } from "../helpers/localStorageHelper";
 import { Export, Member, SpaceObject, Template, Type } from "../helpers/schemas";
 import { pluralize } from "../helpers/strings";
 import ObjectDetail from "./ObjectDetail";
@@ -11,11 +12,12 @@ type ObjectActionsProps = {
   objectId: string;
   title: string;
   objectExport?: Export;
-  mutate?: MutatePromise<SpaceObject[] | Type[] | Member[]>;
+  mutate?: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
   mutateTemplates?: MutatePromise<Template[]>;
   mutateObject?: MutatePromise<SpaceObject | null | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;
   viewType: string;
+  isPinned: boolean;
 };
 
 export default function ObjectActions({
@@ -28,6 +30,7 @@ export default function ObjectActions({
   mutateObject,
   mutateExport,
   viewType,
+  isPinned,
 }: ObjectActionsProps) {
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
   const isDetailView = objectExport !== undefined;
@@ -72,7 +75,9 @@ export default function ObjectActions({
       try {
         await deleteObject(spaceId, objectId);
         if (mutate) {
-          await mutate();
+          for (const m of mutate) {
+            await m();
+          }
         }
         if (mutateTemplates) {
           await mutateTemplates();
@@ -106,7 +111,9 @@ export default function ObjectActions({
     });
     try {
       if (mutate) {
-        await mutate();
+        for (const m of mutate) {
+          await m();
+        }
       }
       if (mutateTemplates) {
         await mutateTemplates();
@@ -128,6 +135,19 @@ export default function ObjectActions({
         title: `Failed to refresh ${label}`,
         message: error instanceof Error ? error.message : "An unknown error occurred.",
       });
+    }
+  }
+
+  async function handlePin() {
+    if (isPinned) {
+      await removePinnedObject(spaceId, objectId);
+    } else {
+      await addPinnedObject(spaceId, objectId);
+    }
+    if (mutate) {
+      for (const m of mutate) {
+        await m();
+      }
     }
   }
 
@@ -167,6 +187,12 @@ export default function ObjectActions({
         title="Copy Link"
         shortcut={Keyboard.Shortcut.Common.CopyDeeplink}
         onAction={handleCopyLink}
+      />
+      <Action
+        icon={isPinned ? Icon.PinDisabled : Icon.Pin}
+        title={isPinned ? "Unpin Object" : "Pin Object"}
+        shortcut={{ modifiers: ["cmd", "shift"], key: "p" }}
+        onAction={handlePin}
       />
       <Action
         icon={Icon.Trash}
