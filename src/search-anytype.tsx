@@ -1,11 +1,12 @@
 import { getPreferenceValues, Icon, Image, List, showToast, Toast } from "@raycast/api";
+import { MutatePromise } from "@raycast/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import ObjectListItem from "./components/ObjectListItem";
 import { addPinnedObject, removePinnedObject } from "./helpers/localStorageHelper";
-import { SpaceObject } from "./helpers/schemas";
+import { Member, SpaceObject, Type } from "./helpers/schemas";
 import { getDateLabel, getShortDateLabel, pluralize } from "./helpers/strings";
 import { getAllTypesFromSpaces } from "./helpers/types";
 import { useGlobalSearch } from "./hooks/useGlobalSearch";
@@ -213,7 +214,7 @@ function Search() {
               title={object.title}
               subtitle={object.subtitle}
               accessories={object.accessories}
-              mutate={mutateObjects}
+              mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
               viewType={filterType}
               isPinned={object.isPinned}
               togglePin={togglePin}
@@ -235,7 +236,7 @@ function Search() {
               title={object.title}
               subtitle={object.subtitle}
               accessories={object.accessories}
-              mutate={mutateObjects}
+              mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
               viewType={filterType}
               isPinned={object.isPinned}
               togglePin={togglePin}

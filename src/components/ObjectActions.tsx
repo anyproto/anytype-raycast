@@ -12,7 +12,7 @@ type ObjectActionsProps = {
   objectId: string;
   title: string;
   objectExport?: Export;
-  mutate?: MutatePromise<SpaceObject[] | Type[] | Member[]>;
+  mutate?: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
   mutateTemplates?: MutatePromise<Template[]>;
   mutateObject?: MutatePromise<SpaceObject | null | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;
@@ -77,7 +77,9 @@ export default function ObjectActions({
       try {
         await deleteObject(spaceId, objectId);
         if (mutate) {
-          await mutate();
+          for (const m of mutate) {
+            await m();
+          }
         }
         if (mutateTemplates) {
           await mutateTemplates();
@@ -111,7 +113,9 @@ export default function ObjectActions({
     });
     try {
       if (mutate) {
-        await mutate();
+        for (const m of mutate) {
+          await m();
+        }
       }
       if (mutateTemplates) {
         await mutateTemplates();

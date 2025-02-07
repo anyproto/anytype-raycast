@@ -15,7 +15,7 @@ type ObjectListItemProps = {
     text?: string;
     tooltip?: string;
   }[];
-  mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>;
+  mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
   viewType: string;
   isPinned: boolean;
   togglePin: (spaceId: string, objectId: string) => void;
