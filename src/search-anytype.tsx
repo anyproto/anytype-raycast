@@ -186,7 +186,9 @@ function Search() {
   };
 
   const processedPinnedObjects = pinnedObjects
-    .filter((object) => objectTypes.length === 0 || objectTypes.includes(object.type))
+    // TODO: requires API change to return unique_key for object type
+    // .filter((object) => objectTypes.length === 0 || objectTypes.includes(object.type))
+    .filter((object) => filterObjectsBySearchTerm([object], searchText).length > 0)
     .map((object) => processObject(object, true));
 
   const processedRegularObjects = objects
