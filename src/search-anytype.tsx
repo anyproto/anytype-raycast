@@ -29,14 +29,14 @@ function Search() {
   const [filterType, setFilterType] = useState("all");
   const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
   const [uniqueKeysForTasks, setUniqueKeysForTasks] = useState<string[]>([]);
-  const [pinnedObjects, setPinnedObjects] = useState<SpaceObject[]>([]);
 
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useGlobalSearch(
     searchText,
     objectTypes,
   );
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
-  const { pinnedObjects: fetchedPinnedObjects, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects();
+  const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects();
+
   const viewType = filterType === "all" ? "object" : filterType.replace(/s$/, "");
   const excludedKeysForPages = new Set([
     // not shown anywhere
@@ -75,7 +75,6 @@ function Search() {
         setUniqueKeysForPages(Array.from(uniqueKeysSet));
       }
     };
-
     fetchTypesForPages();
   }, [spaces]);
 
@@ -93,6 +92,7 @@ function Search() {
     fetchTypesForTasks();
   }, [spaces]);
 
+  // Set object types based on the selected filter
   useEffect(() => {
     const objectTypeMap: Record<string, string[]> = {
       all: [],
@@ -102,21 +102,18 @@ function Search() {
       bookmarks: ["ot-bookmark"],
       members: ["ot-participant"],
     };
-
     setObjectTypes(objectTypeMap[filterType] || []);
-  }, [filterType]);
+  }, [filterType, uniqueKeysForPages, uniqueKeysForTasks]);
 
   useEffect(() => {
-    if (objectsError || spacesError) {
-      showToast(Toast.Style.Failure, "Failed to fetch latest data", (objectsError || spacesError)?.message);
+    if (objectsError || spacesError || pinnedObjectsError) {
+      showToast(
+        Toast.Style.Failure,
+        "Failed to fetch latest data",
+        objectsError?.message || spacesError?.message || pinnedObjectsError?.message,
+      );
     }
-  }, [objectsError, spacesError]);
-
-  useEffect(() => {
-    if (fetchedPinnedObjects) {
-      setPinnedObjects(fetchedPinnedObjects);
-    }
-  }, [fetchedPinnedObjects]);
+  }, [objectsError, spacesError, pinnedObjectsError]);
 
   const processObject = (object: SpaceObject, isPinned: boolean) => {
     const spaceIcon = spaceIcons.get(object.space_id);
@@ -164,25 +161,28 @@ function Search() {
     };
   };
 
-  // Filter pinned objects by search term
+  // Helper to filter objects by the search term
   const filterObjectsBySearchTerm = (objects: SpaceObject[], searchTerm: string) => {
-    return objects.filter((object) => {
-      const lowerCaseSearchTerm = searchTerm.toLowerCase();
-      return (
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    return objects.filter(
+      (object) =>
         object.name.toLowerCase().includes(lowerCaseSearchTerm) ||
-        object.snippet.toLowerCase().includes(lowerCaseSearchTerm)
-      );
-    });
+        object.snippet.toLowerCase().includes(lowerCaseSearchTerm),
+    );
   };
 
-  const processedPinnedObjects = pinnedObjects
-    // TODO: requires API change to return unique_key for object type
-    // .filter((object) => objectTypes.length === 0 || objectTypes.includes(object.type))
-    .filter((object) => filterObjectsBySearchTerm([object], searchText).length > 0)
-    .map((object) => processObject(object, true));
+  // Process pinned objects and filter by search term
+  const processedPinnedObjects = pinnedObjects?.length
+    ? pinnedObjects
+        .filter((object) => filterObjectsBySearchTerm([object], searchText).length > 0)
+        .map((object) => processObject(object, true))
+    : [];
 
+  // Process non-pinned objects
   const processedRegularObjects = objects
-    .filter((object) => !pinnedObjects.some((pinned) => pinned.id === object.id && pinned.space_id === object.space_id))
+    .filter(
+      (object) => !pinnedObjects?.some((pinned) => pinned.id === object.id && pinned.space_id === object.space_id),
+    )
     .map((object) => processObject(object, false));
 
   return (
