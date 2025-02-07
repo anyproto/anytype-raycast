@@ -10,9 +10,17 @@ export async function getObject(
   object: SpaceObject | null;
 }> {
   const { url, method } = apiEndpoints.getObject(spaceId, object_id);
-  const response = await apiFetch<{ object: SpaceObject }>(url, { method: method });
-
-  return {
-    object: response ? await mapObject(response.object) : null,
-  };
+  try {
+    const response = await apiFetch<{ object: SpaceObject }>(url, { method: method });
+    return {
+      object: response ? await mapObject(response.object) : null,
+    };
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("404")) {
+      return {
+        object: null,
+      };
+    }
+    throw error;
+  }
 }

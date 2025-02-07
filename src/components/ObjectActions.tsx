@@ -1,6 +1,7 @@
 import { Action, ActionPanel, Clipboard, Color, confirmAlert, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { deleteObject } from "../api/deleteObject";
+import { addPinnedObject, removePinnedObject } from "../helpers/localStorageHelper";
 import { Export, Member, SpaceObject, Template, Type } from "../helpers/schemas";
 import { pluralize } from "../helpers/strings";
 import ObjectDetail from "./ObjectDetail";
@@ -16,6 +17,8 @@ type ObjectActionsProps = {
   mutateObject?: MutatePromise<SpaceObject | null | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;
   viewType: string;
+  isPinned: boolean;
+  togglePin: (spaceId: string, objectId: string) => void;
 };
 
 export default function ObjectActions({
@@ -28,6 +31,8 @@ export default function ObjectActions({
   mutateObject,
   mutateExport,
   viewType,
+  isPinned,
+  togglePin,
 }: ObjectActionsProps) {
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
   const isDetailView = objectExport !== undefined;
@@ -131,6 +136,15 @@ export default function ObjectActions({
     }
   }
 
+  async function handlePin() {
+    if (isPinned) {
+      await removePinnedObject(spaceId, objectId);
+    } else {
+      await addPinnedObject(spaceId, objectId);
+    }
+    togglePin(spaceId, objectId);
+  }
+
   return (
     <ActionPanel title={title}>
       <ActionPanel.Section>
@@ -167,6 +181,12 @@ export default function ObjectActions({
         title="Copy Link"
         shortcut={Keyboard.Shortcut.Common.CopyDeeplink}
         onAction={handleCopyLink}
+      />
+      <Action
+        icon={isPinned ? Icon.PinDisabled : Icon.Pin}
+        title={isPinned ? "Unpin Object" : "Pin Object"}
+        shortcut={{ modifiers: ["cmd", "shift"], key: "p" }}
+        onAction={handlePin}
       />
       <Action
         icon={Icon.Trash}
