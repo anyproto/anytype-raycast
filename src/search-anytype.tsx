@@ -116,7 +116,7 @@ function Search() {
   }, [objectsError, spacesError, pinnedObjectsError]);
 
   const processObject = (object: SpaceObject, isPinned: boolean) => {
-    const spaceIcon = spaceIcons.get(object.space_id);
+    const spaceIcon = spaceIcons.get(object.space_id) || Icon.BullsEye;
     const dateToSortAfter = getPreferenceValues().sort;
     const date = object.details.find((detail) => detail.id === dateToSortAfter)?.details[dateToSortAfter] as string;
     const hasValidDate = date && new Date(date).getTime() !== 0;
@@ -145,17 +145,13 @@ function Search() {
             : `Never ${getShortDateLabel()}`,
           text: hasValidDate ? undefined : "—",
         },
-        ...(spaceIcon
-          ? [
-              {
-                icon: {
-                  source: spaceIcon,
-                  mask: Image.Mask.RoundedRectangle,
-                },
-                tooltip: `Space: ${spaces?.find((space) => space.id === object.space_id)?.name}`,
-              },
-            ]
-          : []),
+        {
+          icon: {
+            source: spaceIcon,
+            mask: Image.Mask.RoundedRectangle,
+          },
+          tooltip: `Space: ${spaces?.find((space) => space.id === object.space_id)?.name}`,
+        },
       ],
       isPinned,
     };
