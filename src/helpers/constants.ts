@@ -57,6 +57,10 @@ export const apiEndpoints = {
     url: `${apiUrl}/auth/token?challenge_id=${challengeId}&code=${code}`,
     method: "POST",
   }),
+  getType: (spaceId: string, typeId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/types/${typeId}`,
+    method: "GET",
+  }),
   getTypes: (spaceId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/types${encodeQueryParams(options)}`,
     method: "GET",

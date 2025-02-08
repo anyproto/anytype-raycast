@@ -7,11 +7,18 @@ import { Type } from "../helpers/schemas";
 export async function mapTypes(types: Type[]): Promise<Type[]> {
   return Promise.all(
     types.map(async (type) => {
-      return {
-        ...type,
-        name: type.name.trim() || "Untitled", // empty string comes as \n
-        icon: type.icon || Icon.Lowercase,
-      };
+      return mapType(type);
     }),
   );
+}
+
+/**
+ * Map raw `Type` object from the API into display-ready data (e.g., icon).
+ */
+export async function mapType(type: Type): Promise<Type> {
+  return {
+    ...type,
+    name: type.name.trim() || "Untitled", // empty string comes as \n
+    icon: type.icon || Icon.Lowercase,
+  };
 }

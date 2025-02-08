@@ -37,7 +37,7 @@ export default function ObjectActions({
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
   const isDetailView = objectExport !== undefined;
   const isType = viewType === "type";
-  const spaceIdForPinned = isGlobalSearch ? "all" : spaceId;
+  const spaceIdForPinned = isGlobalSearch ? "all" : `${spaceId}-${viewType}`;
 
   function getContextLabel(isSingular = true) {
     const labelMap: Record<string, string> = {

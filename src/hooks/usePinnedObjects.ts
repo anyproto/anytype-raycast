@@ -1,6 +1,8 @@
 import { useCachedPromise } from "@raycast/utils";
 import { getObject } from "../api/getObject";
+import { getType } from "../api/getType";
 import { getPinnedObjects, removePinnedObject } from "../helpers/localStorage";
+import { Member } from "../helpers/schemas";
 
 export function usePinnedObjects(spaceId: string) {
   const { data, error, isLoading, mutate } = useCachedPromise(
@@ -33,5 +35,73 @@ export function usePinnedObjects(spaceId: string) {
     pinnedObjectsError: error,
     isLoadingPinnedObjects: isLoading,
     mutatePinnedObjects: mutate,
+  };
+}
+
+export function usePinnedTypes(spaceId: string) {
+  const { data, error, isLoading, mutate } = useCachedPromise(
+    async (spaceId) => {
+      const pinnedObjects = await getPinnedObjects(spaceId);
+      const types = await Promise.all(
+        pinnedObjects.map(async ({ spaceId, objectId }) => {
+          try {
+            const response = await getType(spaceId, objectId);
+            return response.type;
+          } catch (error) {
+            const typedError = error as Error & { status?: number };
+            if (typedError.status === 404) {
+              await removePinnedObject(spaceId, objectId, spaceId);
+            }
+            return null;
+          }
+        }),
+      );
+      return types.filter((type) => type !== null);
+    },
+    [spaceId],
+    {
+      keepPreviousData: true,
+    },
+  );
+
+  return {
+    pinnedTypes: data,
+    pinnedTypesError: error,
+    isLoadingPinnedTypes: isLoading,
+    mutatePinnedTypes: mutate,
+  };
+}
+
+export function usePinnedMembers(spaceId: string) {
+  const { data, error, isLoading, mutate } = useCachedPromise(
+    async (spaceId) => {
+      const pinnedObjects = await getPinnedObjects(spaceId);
+      const members = await Promise.all(
+        pinnedObjects.map(async ({ spaceId, objectId }) => {
+          try {
+            const response = (await getObject(spaceId, objectId)) as unknown as { object: Member };
+            return response.object;
+          } catch (error) {
+            const typedError = error as Error & { status?: number };
+            if (typedError.status === 404) {
+              await removePinnedObject(spaceId, objectId, spaceId);
+            }
+            return null;
+          }
+        }),
+      );
+      return members.filter((member) => member !== null);
+    },
+    [spaceId],
+    {
+      keepPreviousData: true,
+    },
+  );
+
+  return {
+    pinnedMembers: data,
+    pinnedMembersError: error,
+    isLoadingPinnedMembers: isLoading,
+    mutatePinnedMembers: mutate,
   };
 }
