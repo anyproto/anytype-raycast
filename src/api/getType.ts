@@ -5,11 +5,11 @@ import { mapType } from "../mappers/types";
 
 export async function getType(
   spaceId: string,
-  type_id: string,
+  typeId: string,
 ): Promise<{
   type: Type | null;
 }> {
-  const { url, method } = apiEndpoints.getType(spaceId, type_id);
+  const { url, method } = apiEndpoints.getType(spaceId, typeId);
   try {
     const response = await apiFetch<{ type: Type }>(url, { method: method });
     return {

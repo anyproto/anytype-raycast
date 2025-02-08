@@ -102,6 +102,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
         tooltip: `Type: ${object.type}`,
       },
       accessories: [
+        ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
         {
           date: hasValidDate ? new Date(date) : undefined,
           tooltip: hasValidDate
@@ -109,7 +110,6 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             : `Never ${getShortDateLabel()}`,
           text: hasValidDate ? undefined : "—",
         },
-        ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
       ],
       mutate: [mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>],
       isPinned,
@@ -135,7 +135,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
       key: member.id,
       spaceId: spaceId,
       objectId: member.id,
-      icon: member.icon,
+      icon: { source: member.icon, mask: Image.Mask.Circle },
       title: member.name,
       subtitle: { value: member.global_name, tooltip: `Global Name: ${member.global_name}` },
       accessories: [

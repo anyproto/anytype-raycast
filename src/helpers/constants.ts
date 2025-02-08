@@ -33,6 +33,11 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}/export/${format}`,
     method: "POST",
   }),
+  // TODO: waiting for API to be implemented
+  getMember: (spaceId: string, objectId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/members/${objectId}`,
+    method: "GET",
+  }),
   getMembers: (spaceId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/members${encodeQueryParams(options)}`,
     method: "GET",

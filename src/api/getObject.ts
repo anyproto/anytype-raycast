@@ -5,11 +5,11 @@ import { mapObject } from "../mappers/objects";
 
 export async function getObject(
   spaceId: string,
-  object_id: string,
+  objectId: string,
 ): Promise<{
   object: SpaceObject | null;
 }> {
-  const { url, method } = apiEndpoints.getObject(spaceId, object_id);
+  const { url, method } = apiEndpoints.getObject(spaceId, objectId);
   try {
     const response = await apiFetch<{ object: SpaceObject }>(url, { method: method });
     return {

@@ -1,8 +1,8 @@
 import { useCachedPromise } from "@raycast/utils";
+import { getMember } from "../api/getMember";
 import { getObject } from "../api/getObject";
 import { getType } from "../api/getType";
 import { getPinnedObjects, removePinnedObject } from "../helpers/localStorage";
-import { Member } from "../helpers/schemas";
 
 export function usePinnedObjects(spaceId: string) {
   const { data, error, isLoading, mutate } = useCachedPromise(
@@ -79,8 +79,8 @@ export function usePinnedMembers(spaceId: string) {
       const members = await Promise.all(
         pinnedObjects.map(async ({ spaceId, objectId }) => {
           try {
-            const response = (await getObject(spaceId, objectId)) as unknown as { object: Member };
-            return response.object;
+            const response = await getMember(spaceId, objectId);
+            return response.member;
           } catch (error) {
             const typedError = error as Error & { status?: number };
             if (typedError.status === 404) {
