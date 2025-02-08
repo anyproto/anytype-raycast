@@ -145,6 +145,7 @@ function Search() {
             : `Never ${getShortDateLabel()}`,
           text: hasValidDate ? undefined : "—",
         },
+        ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
         {
           icon: {
             source: spaceIcon,

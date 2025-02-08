@@ -37,14 +37,6 @@ export default function ObjectListItem({
       subtitle={subtitle ? { value: subtitle.value, tooltip: subtitle.tooltip } : undefined}
       icon={typeof icon === "string" ? { source: icon } : icon}
       accessories={[
-        ...(isPinned
-          ? [
-              {
-                icon: Icon.Pin,
-                tooltip: "Pinned",
-              },
-            ]
-          : []),
         ...(accessories?.map((accessory) => {
           const { icon, date, text, tooltip } = accessory;
           const accessoryProps: {

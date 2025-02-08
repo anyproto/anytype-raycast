@@ -96,7 +96,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
                   text: hasValidDate ? undefined : "—",
                 },
               ]}
-              mutate={mutateObjects}
+              mutate={[mutateObjects]}
               viewType="object"
             />
           );
@@ -111,7 +111,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             objectId={type.id}
             icon={type.icon}
             title={type.name}
-            mutate={mutateTypes}
+            mutate={[mutateTypes]}
             viewType="type"
           />
         ));
@@ -135,7 +135,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
                 tooltip: `Role: ${formatRole(member.role)}`,
               },
             ]}
-            mutate={mutateMembers}
+            mutate={[mutateMembers]}
             viewType="member"
           />
         ));

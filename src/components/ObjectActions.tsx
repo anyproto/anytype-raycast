@@ -1,7 +1,7 @@
 import { Action, ActionPanel, Clipboard, Color, confirmAlert, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { deleteObject } from "../api/deleteObject";
-import { addPinnedObject, removePinnedObject } from "../helpers/localStorageHelper";
+import { addPinnedObject, moveDownInPinned, moveUpInPinned, removePinnedObject } from "../helpers/localStorage";
 import { Export, Member, SpaceObject, Template, Type } from "../helpers/schemas";
 import { pluralize } from "../helpers/strings";
 import ObjectDetail from "./ObjectDetail";
@@ -138,6 +138,33 @@ export default function ObjectActions({
     }
   }
 
+  async function handleMoveUpInFavorites() {
+    await moveUpInPinned(spaceId, objectId);
+    if (mutate) {
+      for (const m of mutate) {
+        await m();
+      }
+    }
+    await showToast({
+      style: Toast.Style.Success,
+      title: "Move Up in Pinned",
+    });
+  }
+
+  async function handleMoveDownInFavorites() {
+    await moveDownInPinned(spaceId, objectId);
+    if (mutate) {
+      for (const m of mutate) {
+        await m();
+      }
+    }
+
+    await showToast({
+      style: Toast.Style.Success,
+      title: "Move Down in Pinned",
+    });
+  }
+
   async function handlePin() {
     if (isPinned) {
       await removePinnedObject(spaceId, objectId);
@@ -189,18 +216,37 @@ export default function ObjectActions({
         onAction={handleCopyLink}
       />
       <Action
-        icon={isPinned ? Icon.PinDisabled : Icon.Pin}
-        title={isPinned ? "Unpin Object" : "Pin Object"}
-        shortcut={{ modifiers: ["cmd", "shift"], key: "p" }}
-        onAction={handlePin}
-      />
-      <Action
         icon={Icon.Trash}
         title={`Delete ${getContextLabel()}`}
         style={Action.Style.Destructive}
         shortcut={Keyboard.Shortcut.Common.Remove}
         onAction={handleDeleteObject}
       />
+
+      <ActionPanel.Section>
+        {isPinned && (
+          <Action
+            icon={Icon.ArrowUp}
+            title="Move Up in Pinned"
+            shortcut={{ modifiers: ["opt", "cmd"], key: "arrowUp" }}
+            onAction={handleMoveUpInFavorites}
+          />
+        )}
+        {isPinned && (
+          <Action
+            icon={Icon.ArrowDown}
+            title="Move Down in Pinned"
+            shortcut={{ modifiers: ["opt", "cmd"], key: "arrowDown" }}
+            onAction={handleMoveDownInFavorites}
+          />
+        )}
+        <Action
+          icon={isPinned ? Icon.StarDisabled : Icon.Star}
+          title={isPinned ? "Unpin Object" : "Pin Object"}
+          shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
+          onAction={handlePin}
+        />
+      </ActionPanel.Section>
 
       <ActionPanel.Section>
         <Action
