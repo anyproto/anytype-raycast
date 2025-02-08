@@ -1,8 +1,11 @@
 import { getPreferenceValues, Icon, Image, List, showToast, Toast } from "@raycast/api";
+import { MutatePromise } from "@raycast/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import { Member, SpaceObject, Type } from "../helpers/schemas";
 import { getDateLabel, getShortDateLabel, pluralize } from "../helpers/strings";
 import { useMembers } from "../hooks/useMembers";
+import { usePinnedObjects } from "../hooks/usePinnedObjects";
 import { useSearch } from "../hooks/useSearch";
 import { useTypes } from "../hooks/useTypes";
 import EmptyView from "./EmptyView";
@@ -23,6 +26,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   );
   const { types, typesError, isLoadingTypes, mutateTypes, typesPagination } = useTypes(spaceId);
   const { members, membersError, isLoadingMembers, mutateMembers, membersPagination } = useMembers(spaceId);
+  const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects(spaceId);
   const [pagination, setPagination] = useState(objectsPagination);
 
   useEffect(() => {
@@ -51,6 +55,12 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
       showToast(Toast.Style.Failure, "Failed to fetch members", membersError.message);
     }
   }, [membersError]);
+
+  useEffect(() => {
+    if (pinnedObjectsError) {
+      showToast(Toast.Style.Failure, "Failed to fetch pinned objects", pinnedObjectsError.message);
+    }
+  }, [pinnedObjectsError]);
 
   const filterItems = <T extends { name: string }>(items: T[], searchText: string): T[] => {
     return items?.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
@@ -95,9 +105,14 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
                     : `Never ${getShortDateLabel()}`,
                   text: hasValidDate ? undefined : "—",
                 },
+                ...(pinnedObjects?.some((pinned) => pinned.id === object.id)
+                  ? [{ icon: Icon.Star, tooltip: "Pinned" }]
+                  : []),
               ]}
-              mutate={[mutateObjects]}
+              mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
               viewType="object"
+              isGlobalSearch={false}
+              isPinned={pinnedObjects?.some((pinned) => pinned.id === object.id) || false}
             />
           );
         });
@@ -113,6 +128,8 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             title={type.name}
             mutate={[mutateTypes]}
             viewType="type"
+            isGlobalSearch={false}
+            isPinned={pinnedObjects?.some((pinned) => pinned.id === type.id) || false}
           />
         ));
       }
@@ -137,6 +154,8 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             ]}
             mutate={[mutateMembers]}
             viewType="member"
+            isGlobalSearch={false}
+            isPinned={pinnedObjects?.some((pinned) => pinned.id === member.id) || false}
           />
         ));
       }
@@ -150,7 +169,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
 
   return (
     <List
-      isLoading={isLoadingMembers || isLoadingObjects || isLoadingTypes}
+      isLoading={isLoadingMembers || isLoadingObjects || isLoadingTypes || isLoadingPinnedObjects}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder={`Search ${currentView}...`}
       searchBarAccessory={

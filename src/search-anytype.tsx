@@ -35,7 +35,7 @@ function Search() {
     objectTypes,
   );
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
-  const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects();
+  const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects("all");
 
   const viewType = filterType === "all" ? "object" : filterType.replace(/s$/, "");
   const excludedKeysForPages = new Set([
@@ -218,6 +218,7 @@ function Search() {
               accessories={object.accessories}
               mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
               viewType={filterType}
+              isGlobalSearch={true}
               isPinned={object.isPinned}
             />
           ))}
@@ -239,6 +240,7 @@ function Search() {
               accessories={object.accessories}
               mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
               viewType={filterType}
+              isGlobalSearch={true}
               isPinned={object.isPinned}
             />
           ))}

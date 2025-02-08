@@ -17,6 +17,7 @@ type ObjectActionsProps = {
   mutateObject?: MutatePromise<SpaceObject | null | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;
   viewType: string;
+  isGlobalSearch: boolean;
   isPinned: boolean;
 };
 
@@ -30,11 +31,13 @@ export default function ObjectActions({
   mutateObject,
   mutateExport,
   viewType,
+  isGlobalSearch,
   isPinned,
 }: ObjectActionsProps) {
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
   const isDetailView = objectExport !== undefined;
   const isType = viewType === "type";
+  const spaceIdForPinned = isGlobalSearch ? "all" : spaceId;
 
   function getContextLabel(isSingular = true) {
     const labelMap: Record<string, string> = {
@@ -139,7 +142,7 @@ export default function ObjectActions({
   }
 
   async function handleMoveUpInFavorites() {
-    await moveUpInPinned(spaceId, objectId);
+    await moveUpInPinned(spaceId, objectId, spaceIdForPinned);
     if (mutate) {
       for (const m of mutate) {
         await m();
@@ -152,7 +155,7 @@ export default function ObjectActions({
   }
 
   async function handleMoveDownInFavorites() {
-    await moveDownInPinned(spaceId, objectId);
+    await moveDownInPinned(spaceId, objectId, spaceIdForPinned);
     if (mutate) {
       for (const m of mutate) {
         await m();
@@ -167,9 +170,9 @@ export default function ObjectActions({
 
   async function handlePin() {
     if (isPinned) {
-      await removePinnedObject(spaceId, objectId);
+      await removePinnedObject(spaceId, objectId, spaceIdForPinned);
     } else {
-      await addPinnedObject(spaceId, objectId);
+      await addPinnedObject(spaceId, objectId, spaceIdForPinned);
     }
     if (mutate) {
       for (const m of mutate) {

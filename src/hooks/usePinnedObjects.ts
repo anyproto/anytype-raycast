@@ -2,10 +2,10 @@ import { useCachedPromise } from "@raycast/utils";
 import { getObject } from "../api/getObject";
 import { getPinnedObjects, removePinnedObject } from "../helpers/localStorage";
 
-export function usePinnedObjects() {
+export function usePinnedObjects(spaceId: string) {
   const { data, error, isLoading, mutate } = useCachedPromise(
-    async () => {
-      const pinnedObjects = await getPinnedObjects();
+    async (spaceId) => {
+      const pinnedObjects = await getPinnedObjects(spaceId);
       const objects = await Promise.all(
         pinnedObjects.map(async ({ spaceId, objectId }) => {
           try {
@@ -14,7 +14,7 @@ export function usePinnedObjects() {
           } catch (error) {
             const typedError = error as Error & { status?: number };
             if (typedError.status === 404) {
-              await removePinnedObject(spaceId, objectId);
+              await removePinnedObject(spaceId, objectId, spaceId);
             }
             return null;
           }
@@ -22,7 +22,7 @@ export function usePinnedObjects() {
       );
       return objects.filter((object) => object !== null);
     },
-    [],
+    [spaceId],
     {
       keepPreviousData: true,
     },
