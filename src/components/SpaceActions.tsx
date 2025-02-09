@@ -1,6 +1,6 @@
 import { Action, ActionPanel, Clipboard, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import { anytypeChatDeeplink, anytypeSpaceDeeplink } from "../helpers/constants";
+import { anytypeChatDeeplink, anytypeSpaceDeeplink, localStorageKeys } from "../helpers/constants";
 import { Space } from "../helpers/schemas";
 import { addPinned, moveDownInPinned, moveUpInPinned, removePinned } from "../helpers/storage";
 import ObjectList from "./ObjectList";
@@ -14,7 +14,7 @@ type SpaceActionsProps = {
 export default function SpaceActions({ space, mutate, isPinned }: SpaceActionsProps) {
   const spaceDeeplink = anytypeSpaceDeeplink(space.id);
   const chatDeepLink = anytypeChatDeeplink(space.id, space.workspace_object_id);
-  const pinSuffix = "spaces";
+  const pinSuffix = localStorageKeys.suffixForSpaces;
 
   async function handleCopyLink() {
     await Clipboard.copy(spaceDeeplink);

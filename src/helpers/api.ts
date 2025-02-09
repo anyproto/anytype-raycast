@@ -1,6 +1,6 @@
 import { LocalStorage, Toast, showToast } from "@raycast/api";
 import fetch from "node-fetch";
-import { errorConnectionMessage } from "./constants";
+import { errorConnectionMessage, localStorageKeys } from "./constants";
 
 interface FetchOptions {
   method: string;
@@ -14,7 +14,7 @@ export async function apiFetch<T>(url: string, options: FetchOptions): Promise<T
       method: options.method,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${await LocalStorage.getItem("app_key")}`,
+        Authorization: `Bearer ${await LocalStorage.getItem(localStorageKeys.appKey)}`,
         ...options.headers,
       },
       body: options.body,

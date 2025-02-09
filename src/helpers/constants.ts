@@ -22,6 +22,11 @@ export const maxPinnedObjects = 5;
 // Local Storage Keys
 export const localStorageKeys = {
   appKey: "app_key",
+  suffixForSpaces: "spaces",
+  suffixForGlobalSearch: "global_search",
+  suffixForViewsPerSpace(spaceId: string, viewType: string): string {
+    return `${spaceId}_${viewType}`;
+  },
   pinnedObjectsWith(suffix: string): string {
     return `pinned_objects_${suffix}`;
   },

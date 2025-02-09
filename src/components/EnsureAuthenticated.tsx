@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { displayCode } from "../api/displayCode";
 import { getToken } from "../api/getToken";
 import { validateToken } from "../api/validateToken";
-import { apiAppName, downloadUrl } from "../helpers/constants";
+import { apiAppName, downloadUrl, localStorageKeys } from "../helpers/constants";
 
 type EnsureAuthenticatedProps = {
   placeholder?: string;
@@ -44,7 +44,7 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
       try {
         setIsLoading(true);
         const { app_key } = await getToken(challengeId, values.userCode);
-        await LocalStorage.setItem("app_key", app_key);
+        await LocalStorage.setItem(localStorageKeys.appKey, app_key);
         showToast({ style: Toast.Style.Success, title: "Successfully paired" });
         setHasToken(true);
         setTokenIsValid(true);
@@ -71,7 +71,7 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
 
   useEffect(() => {
     const retrieveAndValidateToken = async () => {
-      const token = await LocalStorage.getItem<string>("app_key");
+      const token = await LocalStorage.getItem<string>(localStorageKeys.appKey);
       if (token) {
         const isValid = await validateToken();
         setHasToken(true);

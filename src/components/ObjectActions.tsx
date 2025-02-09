@@ -1,6 +1,7 @@
 import { Action, ActionPanel, Clipboard, Color, confirmAlert, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { deleteObject } from "../api/deleteObject";
+import { localStorageKeys } from "../helpers/constants";
 import { Export, Member, SpaceObject, Template, Type } from "../helpers/schemas";
 import { addPinned, moveDownInPinned, moveUpInPinned, removePinned } from "../helpers/storage";
 import { pluralize } from "../helpers/strings";
@@ -35,7 +36,9 @@ export default function ObjectActions({
   isPinned,
 }: ObjectActionsProps) {
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
-  const pinSuffixForView = isGlobalSearch ? "all" : `${spaceId}_${viewType}`;
+  const pinSuffixForView = isGlobalSearch
+    ? localStorageKeys.suffixForGlobalSearch
+    : localStorageKeys.suffixForViewsPerSpace(spaceId, viewType);
   const isDetailView = objectExport !== undefined;
   const isType = viewType === "type";
 

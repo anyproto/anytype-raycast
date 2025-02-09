@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import ObjectListItem from "./components/ObjectListItem";
+import { localStorageKeys } from "./helpers/constants";
 import { Member, SpaceObject, Type } from "./helpers/schemas";
 import { getDateLabel, getShortDateLabel, pluralize } from "./helpers/strings";
 import { getAllTypesFromSpaces } from "./helpers/types";
@@ -35,7 +36,9 @@ function Search() {
     objectTypes,
   );
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
-  const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects("all");
+  const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects(
+    localStorageKeys.suffixForGlobalSearch,
+  );
 
   const viewType = filterType === "all" ? "object" : filterType.replace(/s$/, "");
   const excludedKeysForPages = new Set([

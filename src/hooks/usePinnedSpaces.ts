@@ -1,11 +1,12 @@
 import { useCachedPromise } from "@raycast/utils";
 import { getSpace } from "../api/getSpace";
+import { localStorageKeys } from "../helpers/constants";
 import { getPinned, removePinned } from "../helpers/storage";
 
 export function usePinnedSpaces() {
   const { data, error, isLoading, mutate } = useCachedPromise(
     async () => {
-      const pinnedSpaces = await getPinned("spaces");
+      const pinnedSpaces = await getPinned(localStorageKeys.suffixForSpaces);
       const spaces = await Promise.all(
         pinnedSpaces.map(async ({ spaceId, objectId }) => {
           try {

@@ -2,6 +2,7 @@ import { getPreferenceValues, Icon, Image, List, showToast, Toast } from "@rayca
 import { MutatePromise } from "@raycast/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import { localStorageKeys } from "../helpers/constants";
 import { Member, SpaceObject, Type } from "../helpers/schemas";
 import { getDateLabel, getShortDateLabel, pluralize } from "../helpers/strings";
 import { useMembers } from "../hooks/useMembers";
@@ -33,13 +34,14 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   const { types, typesError, isLoadingTypes, mutateTypes, typesPagination } = useTypes(spaceId);
   const { members, membersError, isLoadingMembers, mutateMembers, membersPagination } = useMembers(spaceId);
   const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects(
-    `${spaceId}-${CurrentView.objects}`,
+    localStorageKeys.suffixForViewsPerSpace(spaceId, CurrentView.objects),
   );
+  console.log(pinnedObjects);
   const { pinnedTypes, pinnedTypesError, isLoadingPinnedTypes, mutatePinnedTypes } = usePinnedTypes(
-    `${spaceId}-${CurrentView.types}`,
+    localStorageKeys.suffixForViewsPerSpace(spaceId, CurrentView.types),
   );
   const { pinnedMembers, pinnedMembersError, isLoadingPinnedMembers, mutatePinnedMembers } = usePinnedMembers(
-    `${spaceId}-${CurrentView.members}`,
+    localStorageKeys.suffixForViewsPerSpace(spaceId, CurrentView.members),
   );
   const [pagination, setPagination] = useState(objectsPagination);
 
