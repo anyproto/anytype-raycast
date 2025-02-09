@@ -4,6 +4,7 @@ import { getMembers } from "./api/getMembers";
 import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import SpaceListItem from "./components/SpaceListItem";
+import { Space } from "./helpers/schemas";
 import { pluralize } from "./helpers/strings";
 import { usePinnedSpaces } from "./hooks/usePinnedSpaces";
 import { useSpaces } from "./hooks/useSpaces";
@@ -69,9 +70,11 @@ function BrowseSpaces() {
     }
   }, [pinnedSpacesError]);
 
-  const filteredSpaces = spaces?.filter((space) => space.name.toLowerCase().includes(searchText.toLowerCase())) || [];
-  const pinnedFiltered = filteredSpaces.filter((space) => pinnedSpaces?.some((pin) => pin.id === space.id));
-  const regularFiltered = filteredSpaces.filter((space) => !pinnedSpaces?.some((pin) => pin.id === space.id));
+  const filteredSpaces = spaces?.filter((space) => space.name.toLowerCase().includes(searchText.toLowerCase()));
+  const pinnedFiltered = pinnedSpaces
+    ?.map((pin) => filteredSpaces.find((space) => space.id === pin.id))
+    .filter(Boolean) as Space[];
+  const regularFiltered = filteredSpaces?.filter((space) => !pinnedFiltered?.includes(space));
 
   return (
     <List
