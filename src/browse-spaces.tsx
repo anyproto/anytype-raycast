@@ -1,11 +1,11 @@
-import { Image, List, Toast, showToast } from "@raycast/api";
+import { Icon, Image, List, Toast, showToast } from "@raycast/api";
 import { useEffect, useMemo, useState } from "react";
 import { getMembers } from "./api/getMembers";
 import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import SpaceListItem from "./components/SpaceListItem";
 import { pluralize } from "./helpers/strings";
-import { usePinnedSpaces } from "./hooks/usePinnedSpaces"; // new import
+import { usePinnedSpaces } from "./hooks/usePinnedSpaces";
 import { useSpaces } from "./hooks/useSpaces";
 
 const searchPlaceholder = "Search spaces...";
@@ -89,7 +89,14 @@ function BrowseSpaces() {
                 key={space.id}
                 space={space}
                 icon={{ source: space.icon, mask: Image.Mask.RoundedRectangle }}
-                memberCount={memberCount}
+                accessories={[
+                  { icon: Icon.Star, tooltip: "Pinned" },
+                  {
+                    icon: Icon.PersonCircle,
+                    text: memberCount.toString(),
+                    tooltip: `Members: ${memberCount}`,
+                  },
+                ]}
                 mutate={[mutateSpaces, mutatePinnedSpaces]}
                 isPinned={true}
               />
@@ -109,7 +116,13 @@ function BrowseSpaces() {
                 key={space.id}
                 space={space}
                 icon={{ source: space.icon, mask: Image.Mask.RoundedRectangle }}
-                memberCount={memberCount}
+                accessories={[
+                  {
+                    icon: Icon.PersonCircle,
+                    text: memberCount.toString(),
+                    tooltip: `Members: ${memberCount}`,
+                  },
+                ]}
                 mutate={[mutateSpaces, mutatePinnedSpaces]}
                 isPinned={false}
               />

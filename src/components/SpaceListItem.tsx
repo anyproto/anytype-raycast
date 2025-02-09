@@ -6,22 +6,38 @@ import SpaceActions from "./SpaceActions";
 type SpaceListItemProps = {
   space: Space;
   icon: Image;
-  memberCount: number;
+  accessories?: {
+    icon?: Icon | { source: string; mask: Image.Mask };
+    date?: Date;
+    text?: string;
+    tooltip?: string;
+  }[];
   mutate: MutatePromise<Space[]>[];
   isPinned: boolean;
 };
 
-export default function SpaceListItem({ space, icon, memberCount, mutate, isPinned }: SpaceListItemProps) {
+export default function SpaceListItem({ space, icon, accessories, mutate, isPinned }: SpaceListItemProps) {
   return (
     <List.Item
       key={space.id}
       title={space.name}
       accessories={[
-        {
-          icon: Icon.PersonCircle,
-          text: memberCount.toString(),
-          tooltip: `Members: ${memberCount}`,
-        },
+        ...(accessories?.map((accessory) => {
+          const { icon, date, text, tooltip } = accessory;
+          const accessoryProps: {
+            icon?: Icon | { source: string; mask: Image.Mask };
+            date?: Date;
+            text?: string;
+            tooltip?: string;
+          } = {};
+
+          if (icon) accessoryProps.icon = icon;
+          if (date) accessoryProps.date = date;
+          if (text) accessoryProps.text = text;
+          if (tooltip) accessoryProps.tooltip = tooltip;
+
+          return accessoryProps;
+        }) || []),
       ]}
       icon={icon}
       actions={<SpaceActions space={space} mutate={mutate} isPinned={isPinned} />}

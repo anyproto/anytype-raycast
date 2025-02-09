@@ -25,6 +25,7 @@ export function usePinnedSpaces() {
     [],
     {
       keepPreviousData: true,
+      initialData: [],
     },
   );
 
