@@ -1,10 +1,8 @@
 import { LocalStorage, showToast, Toast } from "@raycast/api";
-
-const maxPinnedObjects = 5;
-const PINNED_OBJECTS_KEY = "pinned_objects";
+import { maxPinnedObjects, pinnedObjectsKey } from "./constants";
 
 export async function getPinnedObjects(spaceIdForPinned: string): Promise<{ spaceId: string; objectId: string }[]> {
-  const pinnedObjects = await LocalStorage.getItem<string>(`${spaceIdForPinned}_${PINNED_OBJECTS_KEY}`);
+  const pinnedObjects = await LocalStorage.getItem<string>(`${spaceIdForPinned}_${pinnedObjectsKey}`);
   return pinnedObjects ? JSON.parse(pinnedObjects) : [];
 }
 
@@ -12,6 +10,7 @@ export async function addPinnedObject(
   spaceId: string,
   objectId: string,
   spaceIdForPinned: string,
+  title: string,
   contextLabel: string,
 ): Promise<void> {
   const pinnedObjects = await getPinnedObjects(spaceIdForPinned);
@@ -34,20 +33,42 @@ export async function addPinnedObject(
   }
 
   pinnedObjects.push({ spaceId, objectId });
-  await LocalStorage.setItem(`${spaceIdForPinned}_${PINNED_OBJECTS_KEY}`, JSON.stringify(pinnedObjects));
+  await LocalStorage.setItem(`${spaceIdForPinned}_${pinnedObjectsKey}`, JSON.stringify(pinnedObjects));
 
   await showToast({
     style: Toast.Style.Success,
-    title: ` ${contextLabel} pinned successfully`,
+    title: `${contextLabel} pinned`,
+    message: title,
   });
 }
 
-export async function removePinnedObject(spaceId: string, objectId: string, spaceIdForPinned: string): Promise<void> {
+export async function removePinnedObject(
+  spaceId: string,
+  objectId: string,
+  spaceIdForPinned: string,
+  title: string,
+  contextLabel: string,
+): Promise<void> {
   const pinnedObjects = await getPinnedObjects(spaceIdForPinned);
   const updatedPinnedObjects = pinnedObjects.filter(
     (pinned) => pinned.spaceId !== spaceId || pinned.objectId !== objectId,
   );
-  await LocalStorage.setItem(`${spaceIdForPinned}_${PINNED_OBJECTS_KEY}`, JSON.stringify(updatedPinnedObjects));
+
+  if (updatedPinnedObjects.length === pinnedObjects.length) {
+    await showToast({
+      style: Toast.Style.Failure,
+      title: `${contextLabel} is not pinned`,
+    });
+    return;
+  }
+
+  await LocalStorage.setItem(`${spaceIdForPinned}_${pinnedObjectsKey}`, JSON.stringify(updatedPinnedObjects));
+
+  await showToast({
+    style: Toast.Style.Success,
+    title: `${contextLabel} unpinned`,
+    message: title,
+  });
 }
 
 async function movePinnedItem(
@@ -64,7 +85,7 @@ async function movePinnedItem(
   }
   // Swap the two items using destructuring assignment
   [pinnedObjects[index], pinnedObjects[targetIndex]] = [pinnedObjects[targetIndex], pinnedObjects[index]];
-  await LocalStorage.setItem(`${spaceIdForPinned}_${PINNED_OBJECTS_KEY}`, JSON.stringify(pinnedObjects));
+  await LocalStorage.setItem(`${spaceIdForPinned}_${pinnedObjectsKey}`, JSON.stringify(pinnedObjects));
 }
 
 export async function moveUpInPinned(spaceId: string, objectId: string, spaceIdForPinned: string): Promise<void> {

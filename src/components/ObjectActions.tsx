@@ -170,9 +170,9 @@ export default function ObjectActions({
 
   async function handlePin() {
     if (isPinned) {
-      await removePinnedObject(spaceId, objectId, spaceIdForPinned);
+      await removePinnedObject(spaceId, objectId, spaceIdForPinned, title, getContextLabel());
     } else {
-      await addPinnedObject(spaceId, objectId, spaceIdForPinned, getContextLabel());
+      await addPinnedObject(spaceId, objectId, spaceIdForPinned, title, getContextLabel());
     }
     if (mutate) {
       for (const m of mutate) {

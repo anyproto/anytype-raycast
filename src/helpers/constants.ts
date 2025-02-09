@@ -6,12 +6,18 @@ export const apiAppName = "raycast_v1_0125";
 export const apiUrl = "http://localhost:31009/v1";
 export const anytypeNetwork = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU";
 export const downloadUrl = "https://download.anytype.io/";
+export const errorConnectionMessage = "Can't connect to API. Please ensure Anytype is running and reachable.";
+
+// Numbers
 export const apiLimit = getPreferenceValues().limit;
 export const apiLimitMax = 1000;
 export const iconWidth = 64;
-export const errorConnectionMessage = "Can't connect to API. Please ensure Anytype is running and reachable.";
+export const maxPinnedObjects = 5;
 
-// API Endponts
+// Local Storage Keys
+export const pinnedObjectsKey = "pinned_objects";
+
+// API Endpoints
 export const apiEndpoints = {
   createObject: (spaceId: string) => ({
     url: `${apiUrl}/spaces/${spaceId}/objects`,
