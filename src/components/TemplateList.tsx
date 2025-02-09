@@ -9,9 +9,11 @@ import ObjectActions from "./ObjectActions";
 type TemplatesListProps = {
   spaceId: string;
   typeId: string;
+  isGlobalSearch: boolean;
+  isPinned: boolean;
 };
 
-export default function TemplateList({ spaceId, typeId }: TemplatesListProps) {
+export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned }: TemplatesListProps) {
   const [searchText, setSearchText] = useState("");
   const { templates, templatesError, isLoadingTemplates, mutateTemplates, templatesPagination } = useTemplates(
     spaceId,
@@ -50,6 +52,8 @@ export default function TemplateList({ spaceId, typeId }: TemplatesListProps) {
                   title={template.name}
                   mutateTemplates={mutateTemplates}
                   viewType="template"
+                  isGlobalSearch={isGlobalSearch}
+                  isPinned={isPinned}
                 />
               }
             />

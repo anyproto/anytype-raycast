@@ -217,7 +217,7 @@ function Search() {
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
-              viewType={filterType}
+              viewType={viewType}
               isGlobalSearch={true}
               isPinned={object.isPinned}
             />
@@ -239,7 +239,7 @@ function Search() {
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
-              viewType={filterType}
+              viewType={viewType}
               isGlobalSearch={true}
               isPinned={object.isPinned}
             />

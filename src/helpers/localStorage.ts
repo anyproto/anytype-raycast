@@ -8,16 +8,38 @@ export async function getPinnedObjects(spaceIdForPinned: string): Promise<{ spac
   return pinnedObjects ? JSON.parse(pinnedObjects) : [];
 }
 
-export async function addPinnedObject(spaceId: string, objectId: string, spaceIdForPinned: string): Promise<void> {
+export async function addPinnedObject(
+  spaceId: string,
+  objectId: string,
+  spaceIdForPinned: string,
+  contextLabel: string,
+): Promise<void> {
   const pinnedObjects = await getPinnedObjects(spaceIdForPinned);
-  if (!pinnedObjects.some((obj) => obj.spaceId === spaceId && obj.objectId === objectId)) {
-    if (pinnedObjects.length >= maxPinnedObjects) {
-      await showToast(Toast.Style.Failure, `Can't pin more than ${maxPinnedObjects} objects`);
-      return;
-    }
-    pinnedObjects.push({ spaceId, objectId });
-    await LocalStorage.setItem(`${spaceIdForPinned}_${PINNED_OBJECTS_KEY}`, JSON.stringify(pinnedObjects));
+  const isAlreadyPinned = pinnedObjects.some((obj) => obj.spaceId === spaceId && obj.objectId === objectId);
+
+  if (isAlreadyPinned) {
+    await showToast({
+      style: Toast.Style.Failure,
+      title: `${contextLabel} is already pinned`,
+    });
+    return;
   }
+
+  if (pinnedObjects.length >= maxPinnedObjects) {
+    await showToast({
+      style: Toast.Style.Failure,
+      title: `Can't pin more than ${maxPinnedObjects} items`,
+    });
+    return;
+  }
+
+  pinnedObjects.push({ spaceId, objectId });
+  await LocalStorage.setItem(`${spaceIdForPinned}_${PINNED_OBJECTS_KEY}`, JSON.stringify(pinnedObjects));
+
+  await showToast({
+    style: Toast.Style.Success,
+    title: ` ${contextLabel} pinned successfully`,
+  });
 }
 
 export async function removePinnedObject(spaceId: string, objectId: string, spaceIdForPinned: string): Promise<void> {

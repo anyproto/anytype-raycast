@@ -35,9 +35,9 @@ export default function ObjectActions({
   isPinned,
 }: ObjectActionsProps) {
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
+  const spaceIdForPinned = isGlobalSearch ? "all" : `${spaceId}-${viewType}`;
   const isDetailView = objectExport !== undefined;
   const isType = viewType === "type";
-  const spaceIdForPinned = isGlobalSearch ? "all" : `${spaceId}-${viewType}`;
 
   function getContextLabel(isSingular = true) {
     const labelMap: Record<string, string> = {
@@ -172,7 +172,7 @@ export default function ObjectActions({
     if (isPinned) {
       await removePinnedObject(spaceId, objectId, spaceIdForPinned);
     } else {
-      await addPinnedObject(spaceId, objectId, spaceIdForPinned);
+      await addPinnedObject(spaceId, objectId, spaceIdForPinned, getContextLabel());
     }
     if (mutate) {
       for (const m of mutate) {
@@ -188,14 +188,24 @@ export default function ObjectActions({
           <Action.Push
             icon={{ source: Icon.Sidebar }}
             title="Show Details"
-            target={<ObjectDetail spaceId={spaceId} objectId={objectId} title={title} />}
+            target={
+              <ObjectDetail
+                spaceId={spaceId}
+                objectId={objectId}
+                title={title}
+                isGlobalSearch={isGlobalSearch}
+                isPinned={isPinned}
+              />
+            }
           />
         )}
         {isType && (
           <Action.Push
             icon={Icon.BulletPoints}
             title="View Templates"
-            target={<TemplateList spaceId={spaceId} typeId={objectId} />}
+            target={
+              <TemplateList spaceId={spaceId} typeId={objectId} isGlobalSearch={isGlobalSearch} isPinned={isPinned} />
+            }
           />
         )}
         <Action.OpenInBrowser
@@ -226,30 +236,32 @@ export default function ObjectActions({
         onAction={handleDeleteObject}
       />
 
-      <ActionPanel.Section>
-        {isPinned && (
+      {!isDetailView && (
+        <ActionPanel.Section>
+          {isPinned && (
+            <Action
+              icon={Icon.ArrowUp}
+              title="Move Up in Pinned"
+              shortcut={{ modifiers: ["opt", "cmd"], key: "arrowUp" }}
+              onAction={handleMoveUpInFavorites}
+            />
+          )}
+          {isPinned && (
+            <Action
+              icon={Icon.ArrowDown}
+              title="Move Down in Pinned"
+              shortcut={{ modifiers: ["opt", "cmd"], key: "arrowDown" }}
+              onAction={handleMoveDownInFavorites}
+            />
+          )}
           <Action
-            icon={Icon.ArrowUp}
-            title="Move Up in Pinned"
-            shortcut={{ modifiers: ["opt", "cmd"], key: "arrowUp" }}
-            onAction={handleMoveUpInFavorites}
+            icon={isPinned ? Icon.StarDisabled : Icon.Star}
+            title={isPinned ? "Unpin Object" : "Pin Object"}
+            shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
+            onAction={handlePin}
           />
-        )}
-        {isPinned && (
-          <Action
-            icon={Icon.ArrowDown}
-            title="Move Down in Pinned"
-            shortcut={{ modifiers: ["opt", "cmd"], key: "arrowDown" }}
-            onAction={handleMoveDownInFavorites}
-          />
-        )}
-        <Action
-          icon={isPinned ? Icon.StarDisabled : Icon.Star}
-          title={isPinned ? "Unpin Object" : "Pin Object"}
-          shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
-          onAction={handlePin}
-        />
-      </ActionPanel.Section>
+        </ActionPanel.Section>
+      )}
 
       <ActionPanel.Section>
         <Action
