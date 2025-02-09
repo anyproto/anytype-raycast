@@ -41,9 +41,9 @@ export function usePinnedObjects(spaceId: string) {
 export function usePinnedTypes(spaceId: string) {
   const { data, error, isLoading, mutate } = useCachedPromise(
     async (spaceId) => {
-      const pinnedObjects = await getPinned(spaceId);
+      const pinnedTypes = await getPinned(spaceId);
       const types = await Promise.all(
-        pinnedObjects.map(async ({ spaceId, objectId }) => {
+        pinnedTypes.map(async ({ spaceId, objectId }) => {
           try {
             const response = await getType(spaceId, objectId);
             return response.type;
@@ -75,9 +75,9 @@ export function usePinnedTypes(spaceId: string) {
 export function usePinnedMembers(spaceId: string) {
   const { data, error, isLoading, mutate } = useCachedPromise(
     async (spaceId) => {
-      const pinnedObjects = await getPinned(spaceId);
+      const pinnedMembers = await getPinned(spaceId);
       const members = await Promise.all(
-        pinnedObjects.map(async ({ spaceId, objectId }) => {
+        pinnedMembers.map(async ({ spaceId, objectId }) => {
           try {
             const response = await getMember(spaceId, objectId);
             return response.member;

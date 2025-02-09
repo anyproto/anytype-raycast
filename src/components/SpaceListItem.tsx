@@ -7,10 +7,11 @@ type SpaceListItemProps = {
   space: Space;
   icon: Image;
   memberCount: number;
-  mutate: MutatePromise<Space[]>;
+  mutate: MutatePromise<Space[]>[];
+  isPinned: boolean;
 };
 
-export default function SpaceListItem({ space, icon, memberCount, mutate }: SpaceListItemProps) {
+export default function SpaceListItem({ space, icon, memberCount, mutate, isPinned }: SpaceListItemProps) {
   return (
     <List.Item
       key={space.id}
@@ -23,7 +24,7 @@ export default function SpaceListItem({ space, icon, memberCount, mutate }: Spac
         },
       ]}
       icon={icon}
-      actions={<SpaceActions space={space} mutate={mutate} />}
+      actions={<SpaceActions space={space} mutate={mutate} isPinned={isPinned} />}
     />
   );
 }

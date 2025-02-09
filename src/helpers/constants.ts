@@ -66,6 +66,11 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces/${spaceId}/objects${encodeQueryParams(options)}`,
     method: "GET",
   }),
+  // TODO: waiting for API to be implemented
+  getSpace: (spaceId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}`,
+    method: "GET",
+  }),
   getSpaces: (options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces${encodeQueryParams(options)}`,
     method: "GET",

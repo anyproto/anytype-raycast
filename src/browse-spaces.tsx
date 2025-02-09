@@ -5,6 +5,7 @@ import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import SpaceListItem from "./components/SpaceListItem";
 import { pluralize } from "./helpers/strings";
+import { usePinnedSpaces } from "./hooks/usePinnedSpaces"; // new import
 import { useSpaces } from "./hooks/useSpaces";
 
 const searchPlaceholder = "Search spaces...";
@@ -19,6 +20,7 @@ export default function Command() {
 
 function BrowseSpaces() {
   const { spaces, spacesError, mutateSpaces, isLoadingSpaces, spacesPagination } = useSpaces();
+  const { pinnedSpaces, pinnedSpacesError, isLoadingPinnedSpaces, mutatePinnedSpaces } = usePinnedSpaces();
   const [searchText, setSearchText] = useState("");
   const [membersData, setMembersData] = useState<{ [spaceId: string]: number }>({});
 
@@ -61,30 +63,55 @@ function BrowseSpaces() {
     }
   }, [spacesError]);
 
-  const filteredSpaces = spaces?.filter((space) => space.name.toLowerCase().includes(searchText.toLowerCase()));
+  useEffect(() => {
+    if (pinnedSpacesError) {
+      showToast(Toast.Style.Failure, "Failed to fetch pinned spaces", pinnedSpacesError.message);
+    }
+  }, [pinnedSpacesError]);
+
+  const filteredSpaces = spaces?.filter((space) => space.name.toLowerCase().includes(searchText.toLowerCase())) || [];
+  const pinnedFiltered = filteredSpaces.filter((space) => pinnedSpaces?.some((pin) => pin.id === space.id));
+  const regularFiltered = filteredSpaces.filter((space) => !pinnedSpaces?.some((pin) => pin.id === space.id));
 
   return (
     <List
-      isLoading={isLoadingSpaces || isLoadingMembers}
+      isLoading={isLoadingSpaces || isLoadingMembers || isLoadingPinnedSpaces}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder={searchPlaceholder}
       pagination={spacesPagination}
     >
-      {filteredSpaces?.length ? (
-        <List.Section
-          title={searchText ? "Search Results" : "All Spaces"}
-          subtitle={pluralize(filteredSpaces.length, "space", { withNumber: true })}
-        >
-          {filteredSpaces.map((space) => {
+      {pinnedFiltered.length > 0 && (
+        <List.Section title="Pinned" subtitle={pluralize(pinnedFiltered.length, "space", { withNumber: true })}>
+          {pinnedFiltered.map((space) => {
             const memberCount = membersData[space.id] || 0;
-
             return (
               <SpaceListItem
-                space={space}
                 key={space.id}
+                space={space}
                 icon={{ source: space.icon, mask: Image.Mask.RoundedRectangle }}
                 memberCount={memberCount}
-                mutate={mutateSpaces}
+                mutate={[mutateSpaces, mutatePinnedSpaces]}
+                isPinned={true}
+              />
+            );
+          })}
+        </List.Section>
+      )}
+      {regularFiltered.length > 0 ? (
+        <List.Section
+          title={searchText ? "Search Results" : "All Spaces"}
+          subtitle={pluralize(regularFiltered.length, "space", { withNumber: true })}
+        >
+          {regularFiltered.map((space) => {
+            const memberCount = membersData[space.id] || 0;
+            return (
+              <SpaceListItem
+                key={space.id}
+                space={space}
+                icon={{ source: space.icon, mask: Image.Mask.RoundedRectangle }}
+                memberCount={memberCount}
+                mutate={[mutateSpaces, mutatePinnedSpaces]}
+                isPinned={false}
               />
             );
           })}

@@ -7,7 +7,7 @@ import ObjectList from "./ObjectList";
 
 type SpaceActionsProps = {
   space: Space;
-  mutate: MutatePromise<Space[]>;
+  mutate: MutatePromise<Space[]>[];
   isPinned: boolean;
 };
 
@@ -27,7 +27,7 @@ export default function SpaceActions({ space, mutate, isPinned }: SpaceActionsPr
 
   async function handleMoveUpInFavorites() {
     await moveUpInPinned(space.id, space.id, pinSuffix);
-    await mutate();
+    await Promise.all(mutate.map((mutateFunc) => mutateFunc()));
     await showToast({
       style: Toast.Style.Success,
       title: "Moved Up in Pinned",
@@ -36,7 +36,7 @@ export default function SpaceActions({ space, mutate, isPinned }: SpaceActionsPr
 
   async function handleMoveDownInFavorites() {
     await moveDownInPinned(space.id, space.id, pinSuffix);
-    await mutate();
+    await Promise.all(mutate.map((mutateFunc) => mutateFunc()));
     await showToast({
       style: Toast.Style.Success,
       title: "Moved Down in Pinned",
@@ -49,14 +49,14 @@ export default function SpaceActions({ space, mutate, isPinned }: SpaceActionsPr
     } else {
       await addPinned(space.id, space.id, pinSuffix, space.name, "Space");
     }
-    await mutate();
+    await Promise.all(mutate.map((mutateFunc) => mutateFunc()));
   }
 
   async function handleRefresh() {
     await showToast({ style: Toast.Style.Animated, title: "Refreshing spaces" });
     if (mutate) {
       try {
-        await mutate();
+        await Promise.all(mutate.map((mutateFunc) => mutateFunc()));
         await showToast({ style: Toast.Style.Success, title: "Spaces refreshed" });
       } catch (error) {
         await showToast({
@@ -111,7 +111,7 @@ export default function SpaceActions({ space, mutate, isPinned }: SpaceActionsPr
         )}
         <Action
           icon={isPinned ? Icon.StarDisabled : Icon.Star}
-          title={isPinned ? "Unpin Object" : "Pin Object"}
+          title={isPinned ? "Unpin Space" : "Pin Space"}
           shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
           onAction={handlePin}
         />
