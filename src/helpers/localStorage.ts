@@ -46,8 +46,8 @@ export async function removePinnedObject(
   spaceId: string,
   objectId: string,
   spaceIdForPinned: string,
-  title: string,
-  contextLabel: string,
+  title?: string,
+  contextLabel?: string,
 ): Promise<void> {
   const pinnedObjects = await getPinnedObjects(spaceIdForPinned);
   const updatedPinnedObjects = pinnedObjects.filter(
