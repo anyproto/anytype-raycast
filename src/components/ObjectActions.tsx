@@ -1,8 +1,8 @@
 import { Action, ActionPanel, Clipboard, Color, confirmAlert, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { deleteObject } from "../api/deleteObject";
-import { addPinnedObject, moveDownInPinned, moveUpInPinned, removePinnedObject } from "../helpers/localStorage";
 import { Export, Member, SpaceObject, Template, Type } from "../helpers/schemas";
+import { addPinnedObject, moveDownInPinned, moveUpInPinned, removePinnedObject } from "../helpers/storage";
 import { pluralize } from "../helpers/strings";
 import ObjectDetail from "./ObjectDetail";
 import TemplateList from "./TemplateList";

@@ -2,7 +2,7 @@ import { useCachedPromise } from "@raycast/utils";
 import { getMember } from "../api/getMember";
 import { getObject } from "../api/getObject";
 import { getType } from "../api/getType";
-import { getPinnedObjects, removePinnedObject } from "../helpers/localStorage";
+import { getPinnedObjects, removePinnedObject } from "../helpers/storage";
 
 export function usePinnedObjects(spaceId: string) {
   const { data, error, isLoading, mutate } = useCachedPromise(
