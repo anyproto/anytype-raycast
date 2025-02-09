@@ -1,19 +1,19 @@
 import { LocalStorage, showToast, Toast } from "@raycast/api";
-import { maxPinnedObjects, pinnedObjectsKey } from "./constants";
+import { localStorageKeys, maxPinnedObjects } from "./constants";
 
-export async function getPinnedObjects(spaceIdForPinned: string): Promise<{ spaceId: string; objectId: string }[]> {
-  const pinnedObjects = await LocalStorage.getItem<string>(`${spaceIdForPinned}_${pinnedObjectsKey}`);
+export async function getPinnedObjects(pinSuffix: string): Promise<{ spaceId: string; objectId: string }[]> {
+  const pinnedObjects = await LocalStorage.getItem<string>(localStorageKeys.pinnedObjectsWith(pinSuffix));
   return pinnedObjects ? JSON.parse(pinnedObjects) : [];
 }
 
 export async function addPinnedObject(
   spaceId: string,
   objectId: string,
-  spaceIdForPinned: string,
+  pinSuffix: string,
   title: string,
   contextLabel: string,
 ): Promise<void> {
-  const pinnedObjects = await getPinnedObjects(spaceIdForPinned);
+  const pinnedObjects = await getPinnedObjects(pinSuffix);
   const isAlreadyPinned = pinnedObjects.some((obj) => obj.spaceId === spaceId && obj.objectId === objectId);
 
   if (isAlreadyPinned) {
@@ -33,7 +33,7 @@ export async function addPinnedObject(
   }
 
   pinnedObjects.push({ spaceId, objectId });
-  await LocalStorage.setItem(`${spaceIdForPinned}_${pinnedObjectsKey}`, JSON.stringify(pinnedObjects));
+  await LocalStorage.setItem(localStorageKeys.pinnedObjectsWith(pinSuffix), JSON.stringify(pinnedObjects));
 
   await showToast({
     style: Toast.Style.Success,
@@ -45,11 +45,11 @@ export async function addPinnedObject(
 export async function removePinnedObject(
   spaceId: string,
   objectId: string,
-  spaceIdForPinned: string,
+  pinSuffix: string,
   title?: string,
   contextLabel?: string,
 ): Promise<void> {
-  const pinnedObjects = await getPinnedObjects(spaceIdForPinned);
+  const pinnedObjects = await getPinnedObjects(pinSuffix);
   const updatedPinnedObjects = pinnedObjects.filter(
     (pinned) => pinned.spaceId !== spaceId || pinned.objectId !== objectId,
   );
@@ -62,7 +62,10 @@ export async function removePinnedObject(
     return;
   }
 
-  await LocalStorage.setItem(`${spaceIdForPinned}_${pinnedObjectsKey}`, JSON.stringify(updatedPinnedObjects));
+  await LocalStorage.setItem(
+    localStorageKeys.pinnedObjectsWith(pinSuffix),
+    JSON.stringify(updatedPinnedObjects),
+  );
 
   await showToast({
     style: Toast.Style.Success,
@@ -71,13 +74,8 @@ export async function removePinnedObject(
   });
 }
 
-async function movePinnedItem(
-  spaceId: string,
-  objectId: string,
-  spaceIdForPinned: string,
-  direction: -1 | 1,
-): Promise<void> {
-  const pinnedObjects = await getPinnedObjects(spaceIdForPinned);
+async function movePinnedItem(spaceId: string, objectId: string, pinSuffix: string, direction: -1 | 1): Promise<void> {
+  const pinnedObjects = await getPinnedObjects(pinSuffix);
   const index = pinnedObjects.findIndex((pinned) => pinned.spaceId === spaceId && pinned.objectId === objectId);
   const targetIndex = index + direction;
   if (index === -1 || targetIndex < 0 || targetIndex >= pinnedObjects.length) {
@@ -85,13 +83,13 @@ async function movePinnedItem(
   }
   // Swap the two items using destructuring assignment
   [pinnedObjects[index], pinnedObjects[targetIndex]] = [pinnedObjects[targetIndex], pinnedObjects[index]];
-  await LocalStorage.setItem(`${spaceIdForPinned}_${pinnedObjectsKey}`, JSON.stringify(pinnedObjects));
+  await LocalStorage.setItem(localStorageKeys.pinnedObjectsWith(pinSuffix), JSON.stringify(pinnedObjects));
 }
 
-export async function moveUpInPinned(spaceId: string, objectId: string, spaceIdForPinned: string): Promise<void> {
-  await movePinnedItem(spaceId, objectId, spaceIdForPinned, -1);
+export async function moveUpInPinned(spaceId: string, objectId: string, pinSuffix: string): Promise<void> {
+  await movePinnedItem(spaceId, objectId, pinSuffix, -1);
 }
 
-export async function moveDownInPinned(spaceId: string, objectId: string, spaceIdForPinned: string): Promise<void> {
-  await movePinnedItem(spaceId, objectId, spaceIdForPinned, 1);
+export async function moveDownInPinned(spaceId: string, objectId: string, pinSuffix: string): Promise<void> {
+  await movePinnedItem(spaceId, objectId, pinSuffix, 1);
 }

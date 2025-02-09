@@ -35,7 +35,7 @@ export default function ObjectActions({
   isPinned,
 }: ObjectActionsProps) {
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
-  const spaceIdForPinned = isGlobalSearch ? "all" : `${spaceId}-${viewType}`;
+  const pinSuffixForView = isGlobalSearch ? "all" : `${spaceId}_${viewType}`;
   const isDetailView = objectExport !== undefined;
   const isType = viewType === "type";
 
@@ -142,7 +142,7 @@ export default function ObjectActions({
   }
 
   async function handleMoveUpInFavorites() {
-    await moveUpInPinned(spaceId, objectId, spaceIdForPinned);
+    await moveUpInPinned(spaceId, objectId, pinSuffixForView);
     if (mutate) {
       for (const m of mutate) {
         await m();
@@ -155,7 +155,7 @@ export default function ObjectActions({
   }
 
   async function handleMoveDownInFavorites() {
-    await moveDownInPinned(spaceId, objectId, spaceIdForPinned);
+    await moveDownInPinned(spaceId, objectId, pinSuffixForView);
     if (mutate) {
       for (const m of mutate) {
         await m();
@@ -170,9 +170,9 @@ export default function ObjectActions({
 
   async function handlePin() {
     if (isPinned) {
-      await removePinnedObject(spaceId, objectId, spaceIdForPinned, title, getContextLabel());
+      await removePinnedObject(spaceId, objectId, pinSuffixForView, title, getContextLabel());
     } else {
-      await addPinnedObject(spaceId, objectId, spaceIdForPinned, title, getContextLabel());
+      await addPinnedObject(spaceId, objectId, pinSuffixForView, title, getContextLabel());
     }
     if (mutate) {
       for (const m of mutate) {

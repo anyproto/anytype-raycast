@@ -3,10 +3,12 @@ import { encodeQueryParams } from "./query";
 
 // Strings
 export const apiAppName = "raycast_v1_0125";
-export const apiUrl = "http://localhost:31009/v1";
 export const anytypeNetwork = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU";
-export const downloadUrl = "https://download.anytype.io/";
 export const errorConnectionMessage = "Can't connect to API. Please ensure Anytype is running and reachable.";
+
+// URLs
+export const apiUrl = "http://localhost:31009/v1";
+export const downloadUrl = "https://download.anytype.io/";
 
 // Numbers
 export const apiLimit = getPreferenceValues().limit;
@@ -15,7 +17,13 @@ export const iconWidth = 64;
 export const maxPinnedObjects = 5;
 
 // Local Storage Keys
-export const pinnedObjectsKey = "pinned_objects";
+export const localStorageKeys = {
+  appKey: "app_key",
+  pinnedSpaces: "pinned_spaces",
+  pinnedObjectsWith(suffix: string): string {
+    return `pinned_objects_${suffix}`;
+  },
+};
 
 // API Endpoints
 export const apiEndpoints = {
