@@ -2,12 +2,12 @@ import { useCachedPromise } from "@raycast/utils";
 import { getMember } from "../api/getMember";
 import { getObject } from "../api/getObject";
 import { getType } from "../api/getType";
-import { getPinnedObjects, removePinnedObject } from "../helpers/storage";
+import { getPinned, removePinned } from "../helpers/storage";
 
 export function usePinnedObjects(spaceId: string) {
   const { data, error, isLoading, mutate } = useCachedPromise(
     async (spaceId) => {
-      const pinnedObjects = await getPinnedObjects(spaceId);
+      const pinnedObjects = await getPinned(spaceId);
       const objects = await Promise.all(
         pinnedObjects.map(async ({ spaceId, objectId }) => {
           try {
@@ -16,7 +16,7 @@ export function usePinnedObjects(spaceId: string) {
           } catch (error) {
             const typedError = error as Error & { status?: number };
             if (typedError.status === 404) {
-              await removePinnedObject(spaceId, objectId, spaceId);
+              await removePinned(spaceId, objectId, spaceId);
             }
             return null;
           }
@@ -41,7 +41,7 @@ export function usePinnedObjects(spaceId: string) {
 export function usePinnedTypes(spaceId: string) {
   const { data, error, isLoading, mutate } = useCachedPromise(
     async (spaceId) => {
-      const pinnedObjects = await getPinnedObjects(spaceId);
+      const pinnedObjects = await getPinned(spaceId);
       const types = await Promise.all(
         pinnedObjects.map(async ({ spaceId, objectId }) => {
           try {
@@ -50,7 +50,7 @@ export function usePinnedTypes(spaceId: string) {
           } catch (error) {
             const typedError = error as Error & { status?: number };
             if (typedError.status === 404) {
-              await removePinnedObject(spaceId, objectId, spaceId);
+              await removePinned(spaceId, objectId, spaceId);
             }
             return null;
           }
@@ -75,7 +75,7 @@ export function usePinnedTypes(spaceId: string) {
 export function usePinnedMembers(spaceId: string) {
   const { data, error, isLoading, mutate } = useCachedPromise(
     async (spaceId) => {
-      const pinnedObjects = await getPinnedObjects(spaceId);
+      const pinnedObjects = await getPinned(spaceId);
       const members = await Promise.all(
         pinnedObjects.map(async ({ spaceId, objectId }) => {
           try {
@@ -84,7 +84,7 @@ export function usePinnedMembers(spaceId: string) {
           } catch (error) {
             const typedError = error as Error & { status?: number };
             if (typedError.status === 404) {
-              await removePinnedObject(spaceId, objectId, spaceId);
+              await removePinned(spaceId, objectId, spaceId);
             }
             return null;
           }

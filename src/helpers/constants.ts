@@ -9,6 +9,9 @@ export const errorConnectionMessage = "Can't connect to API. Please ensure Anyty
 // URLs
 export const apiUrl = "http://localhost:31009/v1";
 export const downloadUrl = "https://download.anytype.io/";
+export const anytypeSpaceDeeplink = (spaceId: string) => `anytype://main/object/_blank_/space.id/${spaceId}`;
+export const anytypeChatDeeplink = (spaceId: string, workspaceId: string) =>
+  `anytype://main/chat/${workspaceId}/space.id/${spaceId}`;
 
 // Numbers
 export const apiLimit = getPreferenceValues().limit;
@@ -19,7 +22,6 @@ export const maxPinnedObjects = 5;
 // Local Storage Keys
 export const localStorageKeys = {
   appKey: "app_key",
-  pinnedSpaces: "pinned_spaces",
   pinnedObjectsWith(suffix: string): string {
     return `pinned_objects_${suffix}`;
   },

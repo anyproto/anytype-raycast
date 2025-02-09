@@ -2,7 +2,7 @@ import { Action, ActionPanel, Clipboard, Color, confirmAlert, Icon, Keyboard, sh
 import { MutatePromise } from "@raycast/utils";
 import { deleteObject } from "../api/deleteObject";
 import { Export, Member, SpaceObject, Template, Type } from "../helpers/schemas";
-import { addPinnedObject, moveDownInPinned, moveUpInPinned, removePinnedObject } from "../helpers/storage";
+import { addPinned, moveDownInPinned, moveUpInPinned, removePinned } from "../helpers/storage";
 import { pluralize } from "../helpers/strings";
 import ObjectDetail from "./ObjectDetail";
 import TemplateList from "./TemplateList";
@@ -106,6 +106,46 @@ export default function ObjectActions({
     }
   }
 
+  async function handleMoveUpInFavorites() {
+    await moveUpInPinned(spaceId, objectId, pinSuffixForView);
+    if (mutate) {
+      for (const m of mutate) {
+        await m();
+      }
+    }
+    await showToast({
+      style: Toast.Style.Success,
+      title: "Moved Up in Pinned",
+    });
+  }
+
+  async function handleMoveDownInFavorites() {
+    await moveDownInPinned(spaceId, objectId, pinSuffixForView);
+    if (mutate) {
+      for (const m of mutate) {
+        await m();
+      }
+    }
+
+    await showToast({
+      style: Toast.Style.Success,
+      title: "Moved Down in Pinned",
+    });
+  }
+
+  async function handlePin() {
+    if (isPinned) {
+      await removePinned(spaceId, objectId, pinSuffixForView, title, getContextLabel());
+    } else {
+      await addPinned(spaceId, objectId, pinSuffixForView, title, getContextLabel());
+    }
+    if (mutate) {
+      for (const m of mutate) {
+        await m();
+      }
+    }
+  }
+
   async function handleRefresh() {
     const label = getContextLabel(false);
     await showToast({
@@ -138,46 +178,6 @@ export default function ObjectActions({
         title: `Failed to refresh ${label}`,
         message: error instanceof Error ? error.message : "An unknown error occurred.",
       });
-    }
-  }
-
-  async function handleMoveUpInFavorites() {
-    await moveUpInPinned(spaceId, objectId, pinSuffixForView);
-    if (mutate) {
-      for (const m of mutate) {
-        await m();
-      }
-    }
-    await showToast({
-      style: Toast.Style.Success,
-      title: "Moved Up in Pinned",
-    });
-  }
-
-  async function handleMoveDownInFavorites() {
-    await moveDownInPinned(spaceId, objectId, pinSuffixForView);
-    if (mutate) {
-      for (const m of mutate) {
-        await m();
-      }
-    }
-
-    await showToast({
-      style: Toast.Style.Success,
-      title: "Moved Down in Pinned",
-    });
-  }
-
-  async function handlePin() {
-    if (isPinned) {
-      await removePinnedObject(spaceId, objectId, pinSuffixForView, title, getContextLabel());
-    } else {
-      await addPinnedObject(spaceId, objectId, pinSuffixForView, title, getContextLabel());
-    }
-    if (mutate) {
-      for (const m of mutate) {
-        await m();
-      }
     }
   }
 

@@ -1,19 +1,19 @@
 import { LocalStorage, showToast, Toast } from "@raycast/api";
 import { localStorageKeys, maxPinnedObjects } from "./constants";
 
-export async function getPinnedObjects(pinSuffix: string): Promise<{ spaceId: string; objectId: string }[]> {
+export async function getPinned(pinSuffix: string): Promise<{ spaceId: string; objectId: string }[]> {
   const pinnedObjects = await LocalStorage.getItem<string>(localStorageKeys.pinnedObjectsWith(pinSuffix));
   return pinnedObjects ? JSON.parse(pinnedObjects) : [];
 }
 
-export async function addPinnedObject(
+export async function addPinned(
   spaceId: string,
   objectId: string,
   pinSuffix: string,
   title: string,
   contextLabel: string,
 ): Promise<void> {
-  const pinnedObjects = await getPinnedObjects(pinSuffix);
+  const pinnedObjects = await getPinned(pinSuffix);
   const isAlreadyPinned = pinnedObjects.some((obj) => obj.spaceId === spaceId && obj.objectId === objectId);
 
   if (isAlreadyPinned) {
@@ -42,14 +42,14 @@ export async function addPinnedObject(
   });
 }
 
-export async function removePinnedObject(
+export async function removePinned(
   spaceId: string,
   objectId: string,
   pinSuffix: string,
   title?: string,
   contextLabel?: string,
 ): Promise<void> {
-  const pinnedObjects = await getPinnedObjects(pinSuffix);
+  const pinnedObjects = await getPinned(pinSuffix);
   const updatedPinnedObjects = pinnedObjects.filter(
     (pinned) => pinned.spaceId !== spaceId || pinned.objectId !== objectId,
   );
@@ -72,7 +72,7 @@ export async function removePinnedObject(
 }
 
 async function movePinnedItem(spaceId: string, objectId: string, pinSuffix: string, direction: -1 | 1): Promise<void> {
-  const pinnedObjects = await getPinnedObjects(pinSuffix);
+  const pinnedObjects = await getPinned(pinSuffix);
   const index = pinnedObjects.findIndex((pinned) => pinned.spaceId === spaceId && pinned.objectId === objectId);
   const targetIndex = index + direction;
   if (index === -1 || targetIndex < 0 || targetIndex >= pinnedObjects.length) {
