@@ -62,10 +62,7 @@ export async function removePinnedObject(
     return;
   }
 
-  await LocalStorage.setItem(
-    localStorageKeys.pinnedObjectsWith(pinSuffix),
-    JSON.stringify(updatedPinnedObjects),
-  );
+  await LocalStorage.setItem(localStorageKeys.pinnedObjectsWith(pinSuffix), JSON.stringify(updatedPinnedObjects));
 
   await showToast({
     style: Toast.Style.Success,

@@ -150,7 +150,7 @@ export default function ObjectActions({
     }
     await showToast({
       style: Toast.Style.Success,
-      title: "Move Up in Pinned",
+      title: "Moved Up in Pinned",
     });
   }
 
@@ -164,7 +164,7 @@ export default function ObjectActions({
 
     await showToast({
       style: Toast.Style.Success,
-      title: "Move Down in Pinned",
+      title: "Moved Down in Pinned",
     });
   }
 
@@ -241,7 +241,7 @@ export default function ObjectActions({
           {isPinned && (
             <Action
               icon={Icon.ArrowUp}
-              title="Move Up in Pinned"
+              title="Move Up in Pinned" // eslint-disable-line @raycast/prefer-title-case
               shortcut={{ modifiers: ["opt", "cmd"], key: "arrowUp" }}
               onAction={handleMoveUpInFavorites}
             />
@@ -249,7 +249,7 @@ export default function ObjectActions({
           {isPinned && (
             <Action
               icon={Icon.ArrowDown}
-              title="Move Down in Pinned"
+              title="Move Down in Pinned" // eslint-disable-line @raycast/prefer-title-case
               shortcut={{ modifiers: ["opt", "cmd"], key: "arrowDown" }}
               onAction={handleMoveDownInFavorites}
             />
