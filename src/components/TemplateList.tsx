@@ -44,7 +44,7 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
     <List
       isLoading={isLoadingTemplates || isLoadingObjects}
       onSearchTextChange={setSearchText}
-      searchBarPlaceholder="Search Templates..."
+      searchBarPlaceholder="Search templates and objects..."
       pagination={objectsPagination || templatesPagination}
     >
       {filteredTemplates && filteredTemplates.length > 0 ? (
