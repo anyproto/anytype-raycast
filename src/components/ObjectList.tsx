@@ -176,6 +176,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
 
         const processedRegular = types
           .filter((type) => !pinnedTypes?.some((pinned) => pinned.id === type.id))
+          .filter((type) => filterItems([type], searchText).length > 0)
           .map((type) => processType(type, false));
 
         return { processedPinned, processedRegular };
