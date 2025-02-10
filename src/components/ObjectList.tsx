@@ -36,7 +36,6 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects(
     localStorageKeys.suffixForViewsPerSpace(spaceId, CurrentView.objects),
   );
-  console.log(pinnedObjects);
   const { pinnedTypes, pinnedTypesError, isLoadingPinnedTypes, mutatePinnedTypes } = usePinnedTypes(
     localStorageKeys.suffixForViewsPerSpace(spaceId, CurrentView.types),
   );
