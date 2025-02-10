@@ -1,6 +1,6 @@
 import { List, showToast, Toast } from "@raycast/api";
 import { useState } from "react";
-import { getMaskForObject } from "../helpers/icon";
+import { processObject } from "../helpers/object";
 import { Template } from "../helpers/schemas";
 import { pluralize } from "../helpers/strings";
 import { useSearch } from "../hooks/useSearch";
@@ -38,7 +38,11 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
     template.name.toLowerCase().includes(searchText.toLowerCase()),
   );
 
-  const filteredObjects = objects?.filter((object) => object.name.toLowerCase().includes(searchText.toLowerCase()));
+  const filteredObjects = objects
+    ?.filter((object) => object.name.toLowerCase().includes(searchText.toLowerCase()))
+    .map((object) => {
+      return processObject(object, false, mutateObjects, mutateObjects);
+    });
 
   return (
     <List
@@ -65,6 +69,7 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
                   mutateTemplates={mutateTemplates}
                   viewType="template"
                   isGlobalSearch={isGlobalSearch}
+                  isTemplateView={true}
                   isPinned={isPinned}
                 />
               }
@@ -81,17 +86,18 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
         >
           {filteredObjects.map((object) => (
             <ObjectListItem
-              key={object.id}
-              spaceId={object.space_id}
-              objectId={object.id}
-              icon={{ source: object.icon, mask: getMaskForObject(object.layout, object.icon) }}
-              title={object.name}
-              subtitle={{ value: object.type, tooltip: `Type: ${object.type}` }}
-              accessories={[]}
-              mutate={[mutateObjects]}
+              key={object.key}
+              spaceId={object.spaceId}
+              objectId={object.objectId}
+              icon={object.icon}
+              title={object.title}
+              subtitle={object.subtitle}
+              accessories={object.accessories}
+              mutate={object.mutate}
               viewType="object"
               isGlobalSearch={isGlobalSearch}
-              isPinned={isPinned}
+              isTemplateView={true}
+              isPinned={object.isPinned}
             />
           ))}
         </List.Section>

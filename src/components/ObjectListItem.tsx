@@ -18,6 +18,7 @@ type ObjectListItemProps = {
   mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
   viewType: string;
   isGlobalSearch: boolean;
+  isTemplateView: boolean;
   isPinned: boolean;
 };
 
@@ -31,6 +32,7 @@ export default function ObjectListItem({
   mutate,
   viewType,
   isGlobalSearch,
+  isTemplateView,
   isPinned,
 }: ObjectListItemProps) {
   return (
@@ -64,6 +66,7 @@ export default function ObjectListItem({
           mutate={mutate}
           viewType={viewType}
           isGlobalSearch={isGlobalSearch}
+          isTemplateView={isTemplateView}
           isPinned={isPinned}
         />
       }

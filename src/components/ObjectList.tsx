@@ -1,11 +1,10 @@
-import { getPreferenceValues, Icon, Image, List, showToast, Toast } from "@raycast/api";
+import { Icon, Image, List, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { localStorageKeys } from "../helpers/constants";
-import { getMaskForObject } from "../helpers/icon";
+import { processObject } from "../helpers/object";
 import { Member, SpaceObject, Type } from "../helpers/schemas";
-import { getDateLabel, getShortDateLabel, pluralize } from "../helpers/strings";
+import { pluralize } from "../helpers/strings";
 import { useMembers } from "../hooks/useMembers";
 import { usePinnedMembers, usePinnedObjects, usePinnedTypes } from "../hooks/usePinnedObjects";
 import { useSearch } from "../hooks/useSearch";
@@ -81,39 +80,6 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   const formatRole = (role: string) => {
     return role.replace("Reader", "Viewer").replace("Writer", "Editor");
   };
-  const dateToSortAfter = getPreferenceValues().sort;
-
-  const processObject = (object: SpaceObject, isPinned: boolean) => {
-    const date = object.details.find((detail) => detail.id === dateToSortAfter)?.details[dateToSortAfter] as string;
-    const hasValidDate = date && new Date(date).getTime() !== 0;
-
-    return {
-      key: object.id,
-      spaceId: object.space_id,
-      objectId: object.id,
-      icon: {
-        source: object.icon,
-        mask: getMaskForObject(object.layout, object.icon),
-      },
-      title: object.name,
-      subtitle: {
-        value: object.type,
-        tooltip: `Type: ${object.type}`,
-      },
-      accessories: [
-        ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
-        {
-          date: hasValidDate ? new Date(date) : undefined,
-          tooltip: hasValidDate
-            ? `${getDateLabel()}: ${format(new Date(date), "EEEE d MMMM yyyy 'at' HH:mm")}`
-            : `Never ${getShortDateLabel()}`,
-          text: hasValidDate ? undefined : "—",
-        },
-      ],
-      mutate: [mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>],
-      isPinned,
-    };
-  };
 
   const processType = (type: Type, isPinned: boolean) => {
     return {
@@ -154,7 +120,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
         const processedPinned = pinnedObjects?.length
           ? pinnedObjects
               .filter((object) => filterItems([object], searchText).length > 0)
-              .map((object) => processObject(object, true))
+              .map((object) => processObject(object, true, mutateObjects, mutatePinnedObjects))
           : [];
 
         const processedRegular = objects
@@ -162,7 +128,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             (object) =>
               !pinnedObjects?.some((pinned) => pinned.id === object.id && pinned.space_id === object.space_id),
           )
-          .map((object) => processObject(object, false));
+          .map((object) => processObject(object, false, mutateObjects, mutatePinnedObjects));
 
         return { processedPinned, processedRegular };
       }
@@ -249,6 +215,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
               mutate={object.mutate}
               viewType={currentView}
               isGlobalSearch={false}
+              isTemplateView={false}
               isPinned={object.isPinned}
             />
           ))}
@@ -271,6 +238,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
               mutate={object.mutate}
               viewType={currentView}
               isGlobalSearch={false}
+              isTemplateView={false}
               isPinned={object.isPinned}
             />
           ))}

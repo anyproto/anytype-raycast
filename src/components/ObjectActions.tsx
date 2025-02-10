@@ -20,6 +20,7 @@ type ObjectActionsProps = {
   mutateExport?: MutatePromise<Export | undefined>;
   viewType: string;
   isGlobalSearch: boolean;
+  isTemplateView: boolean;
   isPinned: boolean;
 };
 
@@ -34,6 +35,7 @@ export default function ObjectActions({
   mutateExport,
   viewType,
   isGlobalSearch,
+  isTemplateView,
   isPinned,
 }: ObjectActionsProps) {
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
@@ -240,7 +242,7 @@ export default function ObjectActions({
         onAction={handleDeleteObject}
       />
 
-      {!isDetailView && (
+      {!isDetailView && !isTemplateView && (
         <ActionPanel.Section>
           {isPinned && (
             <Action

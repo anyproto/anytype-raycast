@@ -220,6 +220,7 @@ function Search() {
               mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
               viewType={viewType}
               isGlobalSearch={true}
+              isTemplateView={false}
               isPinned={object.isPinned}
             />
           ))}
@@ -242,6 +243,7 @@ function Search() {
               mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
               viewType={viewType}
               isGlobalSearch={true}
+              isTemplateView={false}
               isPinned={object.isPinned}
             />
           ))}

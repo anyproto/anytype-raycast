@@ -1,10 +1,16 @@
-import { useCachedPromise } from "@raycast/utils";
+import { MutatePromise, useCachedPromise } from "@raycast/utils";
 import { getMember } from "../api/getMember";
 import { getObject } from "../api/getObject";
 import { getType } from "../api/getType";
+import { Member, SpaceObject, Type } from "../helpers/schemas";
 import { getPinned, removePinned } from "../helpers/storage";
 
-export function usePinnedObjects(spaceId: string) {
+export function usePinnedObjects(spaceId: string): {
+  pinnedObjects: SpaceObject[];
+  pinnedObjectsError: Error | undefined;
+  isLoadingPinnedObjects: boolean;
+  mutatePinnedObjects: MutatePromise<SpaceObject[] | Type[] | Member[]>;
+} {
   const { data, error, isLoading, mutate } = useCachedPromise(
     async (spaceId) => {
       const pinnedObjects = await getPinned(spaceId);
@@ -31,10 +37,10 @@ export function usePinnedObjects(spaceId: string) {
   );
 
   return {
-    pinnedObjects: data,
+    pinnedObjects: data as SpaceObject[],
     pinnedObjectsError: error,
     isLoadingPinnedObjects: isLoading,
-    mutatePinnedObjects: mutate,
+    mutatePinnedObjects: mutate as MutatePromise<SpaceObject[] | Type[] | Member[]>,
   };
 }
 
