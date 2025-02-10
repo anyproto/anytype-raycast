@@ -16,14 +16,14 @@ type ObjectListProps = {
   spaceId: string;
 };
 
-const CurrentView = {
+export const CurrentView = {
   objects: "objects",
   types: "types",
   members: "members",
 } as const;
 
 export default function ObjectList({ spaceId }: ObjectListProps) {
-  const [currentView, setCurrentView] = useState<keyof typeof CurrentView>("objects");
+  const [currentView, setCurrentView] = useState<keyof typeof CurrentView>(CurrentView.objects);
   const [searchText, setSearchText] = useState("");
 
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(

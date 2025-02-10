@@ -6,6 +6,7 @@ import { Export, Member, SpaceObject, Template, Type } from "../helpers/schemas"
 import { addPinned, moveDownInPinned, moveUpInPinned, removePinned } from "../helpers/storage";
 import { pluralize } from "../helpers/strings";
 import ObjectDetail from "./ObjectDetail";
+import { CurrentView } from "./ObjectList";
 import TemplateList from "./TemplateList";
 
 type ObjectActionsProps = {
@@ -40,7 +41,7 @@ export default function ObjectActions({
     ? localStorageKeys.suffixForGlobalSearch
     : localStorageKeys.suffixForViewsPerSpace(spaceId, viewType);
   const isDetailView = objectExport !== undefined;
-  const isType = viewType === "type";
+  const isType = viewType === CurrentView.types;
 
   function getContextLabel(isSingular = true) {
     const labelMap: Record<string, string> = {
