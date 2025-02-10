@@ -6,6 +6,7 @@ import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import ObjectListItem from "./components/ObjectListItem";
 import { localStorageKeys } from "./helpers/constants";
+import { getMaskForObject } from "./helpers/icon";
 import { Member, SpaceObject, Type } from "./helpers/schemas";
 import { getDateLabel, getShortDateLabel, pluralize } from "./helpers/strings";
 import { getAllTypesFromSpaces } from "./helpers/types";
@@ -130,10 +131,7 @@ function Search() {
       objectId: object.id,
       icon: {
         source: object.icon,
-        mask:
-          (object.layout === "participant" || object.layout === "profile") && object.icon != Icon.Document
-            ? Image.Mask.Circle
-            : Image.Mask.RoundedRectangle,
+        mask: getMaskForObject(object.layout, object.icon),
       },
       title: object.name,
       subtitle: {

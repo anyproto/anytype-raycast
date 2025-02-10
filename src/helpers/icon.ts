@@ -1,4 +1,4 @@
-import { Icon } from "@raycast/api";
+import { Icon, Image } from "@raycast/api";
 import fetch from "node-fetch";
 import { iconWidth } from "./constants";
 
@@ -57,4 +57,13 @@ export async function fetchWithTimeout(url: string, timeout: number): Promise<st
   }
 
   return undefined;
+}
+
+/**
+ * Determine which mask to use for a given Object.
+ */
+export function getMaskForObject(layout: string, icon: string): Image.Mask {
+  return (layout === "participant" || layout === "profile") && icon != Icon.Document
+    ? Image.Mask.Circle
+    : Image.Mask.RoundedRectangle;
 }

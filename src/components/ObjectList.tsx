@@ -3,6 +3,7 @@ import { MutatePromise } from "@raycast/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { localStorageKeys } from "../helpers/constants";
+import { getMaskForObject } from "../helpers/icon";
 import { Member, SpaceObject, Type } from "../helpers/schemas";
 import { getDateLabel, getShortDateLabel, pluralize } from "../helpers/strings";
 import { useMembers } from "../hooks/useMembers";
@@ -92,10 +93,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
       objectId: object.id,
       icon: {
         source: object.icon,
-        mask:
-          (object.layout === "participant" || object.layout === "profile") && object.icon != Icon.Document
-            ? Image.Mask.Circle
-            : Image.Mask.RoundedRectangle,
+        mask: getMaskForObject(object.layout, object.icon),
       },
       title: object.name,
       subtitle: {
