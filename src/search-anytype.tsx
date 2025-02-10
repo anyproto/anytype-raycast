@@ -1,14 +1,13 @@
-import { getPreferenceValues, Icon, Image, List, showToast, Toast } from "@raycast/api";
+import { Icon, Image, List, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import EmptyView from "./components/EmptyView";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import ObjectListItem from "./components/ObjectListItem";
 import { localStorageKeys } from "./helpers/constants";
-import { getMaskForObject } from "./helpers/icon";
+import { processObject } from "./helpers/object";
 import { Member, SpaceObject, Type } from "./helpers/schemas";
-import { getDateLabel, getShortDateLabel, pluralize } from "./helpers/strings";
+import { getShortDateLabel, pluralize } from "./helpers/strings";
 import { getAllTypesFromSpaces } from "./helpers/types";
 import { useGlobalSearch } from "./hooks/useGlobalSearch";
 import { usePinnedObjects } from "./hooks/usePinnedObjects";
@@ -119,34 +118,14 @@ function Search() {
     }
   }, [objectsError, spacesError, pinnedObjectsError]);
 
-  const processObject = (object: SpaceObject, isPinned: boolean) => {
+  const processObjectWithSpaceIcon = (object: SpaceObject, isPinned: boolean) => {
     const spaceIcon = spaceIcons.get(object.space_id) || Icon.BullsEye;
-    const dateToSortAfter = getPreferenceValues().sort;
-    const date = object.details.find((detail) => detail.id === dateToSortAfter)?.details[dateToSortAfter] as string;
-    const hasValidDate = date && new Date(date).getTime() !== 0;
+    const processedObject = processObject(object, isPinned, mutateObjects, mutatePinnedObjects);
 
     return {
-      key: object.id,
-      spaceId: object.space_id,
-      objectId: object.id,
-      icon: {
-        source: object.icon,
-        mask: getMaskForObject(object.layout, object.icon),
-      },
-      title: object.name,
-      subtitle: {
-        value: object.type,
-        tooltip: `Type: ${object.type}`,
-      },
+      ...processedObject,
       accessories: [
-        {
-          date: hasValidDate ? new Date(date) : undefined,
-          tooltip: hasValidDate
-            ? `${getDateLabel()}: ${format(new Date(date), "EEEE d MMMM yyyy 'at' HH:mm")}`
-            : `Never ${getShortDateLabel()}`,
-          text: hasValidDate ? undefined : "—",
-        },
-        ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
+        ...processedObject.accessories,
         {
           icon: {
             source: spaceIcon,
@@ -155,7 +134,6 @@ function Search() {
           tooltip: `Space: ${spaces?.find((space) => space.id === object.space_id)?.name}`,
         },
       ],
-      isPinned,
     };
   };
 
@@ -175,7 +153,7 @@ function Search() {
         // TODO: requires API change to return unique_key for object type
         // .filter((object) => objectTypes.length === 0 || objectTypes.includes(object.type))
         .filter((object) => filterObjectsBySearchTerm([object], searchText).length > 0)
-        .map((object) => processObject(object, true))
+        .map((object) => processObjectWithSpaceIcon(object, true))
     : [];
 
   // Process non-pinned objects
@@ -183,7 +161,7 @@ function Search() {
     .filter(
       (object) => !pinnedObjects?.some((pinned) => pinned.id === object.id && pinned.space_id === object.space_id),
     )
-    .map((object) => processObject(object, false));
+    .map((object) => processObjectWithSpaceIcon(object, false));
 
   return (
     <List
