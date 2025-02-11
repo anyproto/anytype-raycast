@@ -16,8 +16,10 @@ export async function getExport(spaceId: string, objectId: string, format: strin
 
   // Find markdown file in the output directory
   const outputPath = response.path;
-  const mdFile = fs.readdirSync(outputPath).find((file) => file.endsWith(".md"));
-  if (!mdFile) throw new Error("Markdown file not found");
+  const mdFiles = fs.readdirSync(outputPath).filter((file) => file.endsWith(".md"));
+  if (mdFiles.length === 0) throw new Error("Markdown file not found in export .");
+  if (mdFiles.length > 1) throw new Error("Multiple markdown files found in export.");
+  const mdFile = mdFiles[0];
 
   // Read markdown file and replace relative image paths with absolute paths
   const markdown = fs.readFileSync(path.join(outputPath, mdFile), "utf8");
