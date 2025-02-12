@@ -1,17 +1,21 @@
 import { Action, ActionPanel, Form, Icon, Image, popToRoot, showToast, Toast } from "@raycast/api";
 import { useForm } from "@raycast/utils";
 import { useState } from "react";
+import { addObjectsToList } from "../api/addObjectsToList";
 import { createObject } from "../api/createObject";
 import { CreateObjectFormValues } from "../create-object";
-import { Space, Type } from "../helpers/schemas";
+import { Space, SpaceObject, Type } from "../helpers/schemas";
 
 interface CreateObjectFormProps {
   spaces: Space[];
   objectTypes: Type[];
+  lists: SpaceObject[];
   selectedSpace: string;
   setSelectedSpace: (spaceId: string) => void;
   selectedType: string;
   setSelectedType: (type: string) => void;
+  selectedList: string;
+  setSelectedList: (listId: string) => void;
   isLoading: boolean;
   draftValues: CreateObjectFormValues;
 }
@@ -19,10 +23,13 @@ interface CreateObjectFormProps {
 export default function CreateObjectForm({
   spaces,
   objectTypes,
+  lists,
   selectedSpace,
   setSelectedSpace,
   selectedType,
   setSelectedType,
+  selectedList,
+  setSelectedList,
   isLoading,
   draftValues,
 }: CreateObjectFormProps) {
@@ -36,7 +43,7 @@ export default function CreateObjectForm({
       try {
         await showToast({ style: Toast.Style.Animated, title: "Creating object..." });
 
-        await createObject(selectedSpace, {
+        const response = await createObject(selectedSpace, {
           icon: values.icon || "",
           name: values.name || "",
           description: values.description || "",
@@ -46,8 +53,17 @@ export default function CreateObjectForm({
           object_type_unique_key: selectedType,
         });
 
-        await showToast(Toast.Style.Success, "Object created successfully");
-        popToRoot();
+        if (response.object?.id) {
+          if (selectedList) {
+            await addObjectsToList(selectedSpace, selectedList, [response.object.id]);
+            await showToast(Toast.Style.Success, "Object created and added to collection");
+          } else {
+            await showToast(Toast.Style.Success, "Object created successfully");
+          }
+          popToRoot();
+        } else {
+          await showToast(Toast.Style.Failure, "Failed to create object");
+        }
       } catch (error) {
         await showToast(Toast.Style.Failure, "Failed to create object", String(error));
       } finally {
@@ -138,6 +154,20 @@ export default function CreateObjectForm({
       >
         {objectTypes.map((type) => (
           <Form.Dropdown.Item key={type.unique_key} value={type.unique_key} title={type.name} icon={type.icon} />
+        ))}
+      </Form.Dropdown>
+
+      <Form.Dropdown
+        id="list"
+        title="Collection"
+        value={selectedList}
+        onChange={setSelectedList}
+        storeValue={true}
+        info="Select a collection to add the object to"
+      >
+        <Form.Dropdown.Item key="none" value="" title="No Collection" icon={Icon.Dot} />
+        {lists.map((list) => (
+          <Form.Dropdown.Item key={list.id} value={list.id} title={list.name} icon={list.icon} />
         ))}
       </Form.Dropdown>
 

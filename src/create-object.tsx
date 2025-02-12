@@ -4,11 +4,13 @@ import CreateObjectForm from "./components/CreateObjectForm";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import { Type } from "./helpers/schemas";
 import { fetchAllTypesForSpace } from "./helpers/types";
+import { useSearch } from "./hooks/useSearch";
 import { useSpaces } from "./hooks/useSpaces";
 
 export interface CreateObjectFormValues {
   space: string;
   type: string;
+  list: string;
   name?: string;
   icon?: string;
   description?: string;
@@ -20,6 +22,7 @@ interface LaunchContext {
   defaults?: {
     space?: string;
     type?: string;
+    list?: string;
     name?: string;
     icon?: string;
     description?: string;
@@ -47,9 +50,15 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
 
   const [selectedSpace, setSelectedSpace] = useState(mergedValues?.space || "");
   const [selectedType, setSelectedType] = useState(mergedValues?.type || "");
+  const [selectedList, setSelectedList] = useState(mergedValues?.list || "");
   const [filteredTypes, setFilteredTypes] = useState<Type[]>([]);
   const [isLoadingTypes, setIsLoadingTypes] = useState(false);
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
+  const {
+    objects: lists,
+    objectsError: listsError,
+    isLoadingObjects: isLoadingLists,
+  } = useSearch(selectedSpace, "", ["ot-collection"]);
 
   const restrictedTypes = [
     "ot-audio",
@@ -99,20 +108,23 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
   }, [filteredTypes]);
 
   useEffect(() => {
-    if (spacesError) {
-      showToast(Toast.Style.Failure, "Failed to fetch spaces", spacesError.message);
+    if (spacesError || listsError) {
+      showToast(Toast.Style.Failure, "Failed to fetch latest data", spacesError?.message || listsError?.message);
     }
-  }, [spacesError]);
+  }, [spacesError, listsError]);
 
   return (
     <CreateObjectForm
       spaces={spaces || []}
       objectTypes={filteredTypes}
+      lists={lists || []}
       selectedSpace={selectedSpace}
       setSelectedSpace={setSelectedSpace}
       selectedType={selectedType}
       setSelectedType={setSelectedType}
-      isLoading={isLoadingSpaces || isLoadingTypes}
+      selectedList={selectedList}
+      setSelectedList={setSelectedList}
+      isLoading={isLoadingSpaces || isLoadingTypes || isLoadingLists}
       draftValues={mergedValues as CreateObjectFormValues}
     />
   );
