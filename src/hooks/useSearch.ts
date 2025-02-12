@@ -6,7 +6,7 @@ import { apiLimit } from "../helpers/constants";
 
 export function useSearch(spaceId: string, query: string, types: string[]) {
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(
-    (query: string, types: string[]) => async (options: { page: number }) => {
+    (spaceId: string, query: string, types: string[]) => async (options: { page: number }) => {
       const offset = options.page * apiLimit;
       const response = await search(
         spaceId,
@@ -19,8 +19,9 @@ export function useSearch(spaceId: string, query: string, types: string[]) {
         hasMore: response.pagination.has_more,
       };
     },
-    [query, types],
+    [spaceId, query, types],
     {
+      execute: !!spaceId,
       keepPreviousData: true,
     },
   );
