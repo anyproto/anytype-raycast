@@ -34,34 +34,44 @@ export const localStorageKeys = {
 
 // API Endpoints
 export const apiEndpoints = {
-  createObject: (spaceId: string) => ({
-    url: `${apiUrl}/spaces/${spaceId}/objects`,
-    method: "POST",
-  }),
-  createSpace: {
-    url: `${apiUrl}/spaces`,
-    method: "POST",
-  },
-  deleteObject: (spaceId: string, objectId: string) => ({
-    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
-    method: "DELETE",
-  }),
+  // auth
   displayCode: (appName: string) => ({
     url: `${apiUrl}/auth/display_code?app_name=${appName}`,
     method: "POST",
   }),
+  getToken: (challengeId: string, code: string) => ({
+    url: `${apiUrl}/auth/token?challenge_id=${challengeId}&code=${code}`,
+    method: "POST",
+  }),
+
+  // export
   getExport: (spaceId: string, objectId: string, format: string) => ({
     url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}/export/${format}`,
     method: "POST",
   }),
-  // TODO: waiting for API to be implemented
-  getMember: (spaceId: string, objectId: string) => ({
-    url: `${apiUrl}/spaces/${spaceId}/members/${objectId}`,
+
+  // list
+  getObjectsInList: (spaceId: string, listId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/lists/${listId}/objects${encodeQueryParams(options)}`,
     method: "GET",
   }),
-  getMembers: (spaceId: string, options: { offset: number; limit: number }) => ({
-    url: `${apiUrl}/spaces/${spaceId}/members${encodeQueryParams(options)}`,
-    method: "GET",
+  addObjectsToList: (spaceId: string, listId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/lists/${listId}/objects`,
+    method: "POST",
+  }),
+  removeObjectsFromList: (spaceId: string, listId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/lists/${listId}/objects`,
+    method: "DELETE",
+  }),
+
+  // object
+  createObject: (spaceId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects`,
+    method: "POST",
+  }),
+  deleteObject: (spaceId: string, objectId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
+    method: "DELETE",
   }),
   getObject: (spaceId: string, objectId: string) => ({
     url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
@@ -69,6 +79,31 @@ export const apiEndpoints = {
   }),
   getObjects: (spaceId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/objects${encodeQueryParams(options)}`,
+    method: "GET",
+  }),
+
+  // search
+  globalSearch: (options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/search${encodeQueryParams(options)}`,
+    method: "POST",
+  }),
+  search: (spaceId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/search${encodeQueryParams(options)}`,
+    method: "POST",
+  }),
+
+  // space
+  createSpace: {
+    url: `${apiUrl}/spaces`,
+    method: "POST",
+  },
+  // TODO: waiting for API to be implemented
+  getMember: (spaceId: string, objectId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/members/${objectId}`,
+    method: "GET",
+  }),
+  getMembers: (spaceId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/members${encodeQueryParams(options)}`,
     method: "GET",
   }),
   // TODO: waiting for API to be implemented
@@ -80,13 +115,11 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces${encodeQueryParams(options)}`,
     method: "GET",
   }),
+
+  // types
   getTemplates: (spaceId: string, typeId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/types/${typeId}/templates${encodeQueryParams(options)}`,
     method: "GET",
-  }),
-  getToken: (challengeId: string, code: string) => ({
-    url: `${apiUrl}/auth/token?challenge_id=${challengeId}&code=${code}`,
-    method: "POST",
   }),
   getType: (spaceId: string, typeId: string) => ({
     url: `${apiUrl}/spaces/${spaceId}/types/${typeId}`,
@@ -95,13 +128,5 @@ export const apiEndpoints = {
   getTypes: (spaceId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/types${encodeQueryParams(options)}`,
     method: "GET",
-  }),
-  globalSearch: (options: { offset: number; limit: number }) => ({
-    url: `${apiUrl}/search${encodeQueryParams(options)}`,
-    method: "POST",
-  }),
-  search: (spaceId: string, options: { offset: number; limit: number }) => ({
-    url: `${apiUrl}/spaces/${spaceId}/search${encodeQueryParams(options)}`,
-    method: "POST",
   }),
 };
