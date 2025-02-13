@@ -16,6 +16,7 @@ type ObjectListItemProps = {
     tooltip?: string;
   }[];
   mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
+  layout: string;
   viewType: string;
   isGlobalSearch: boolean;
   isTemplateView: boolean;
@@ -30,6 +31,7 @@ export default function ObjectListItem({
   subtitle,
   accessories,
   mutate,
+  layout,
   viewType,
   isGlobalSearch,
   isTemplateView,
@@ -64,6 +66,7 @@ export default function ObjectListItem({
           objectId={objectId}
           title={title}
           mutate={mutate}
+          layout={layout}
           viewType={viewType}
           isGlobalSearch={isGlobalSearch}
           isTemplateView={isTemplateView}

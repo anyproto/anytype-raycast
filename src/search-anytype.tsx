@@ -190,12 +190,13 @@ function Search() {
             <ObjectListItem
               key={object.key}
               spaceId={object.spaceId}
-              objectId={object.objectId}
+              objectId={object.id}
               icon={object.icon}
               title={object.title}
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
+              layout={object.layout}
               viewType={viewType}
               isGlobalSearch={true}
               isTemplateView={false}
@@ -213,12 +214,13 @@ function Search() {
             <ObjectListItem
               key={object.key}
               spaceId={object.spaceId}
-              objectId={object.objectId}
+              objectId={object.id}
               icon={object.icon}
               title={object.title}
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
+              layout={object.layout}
               viewType={viewType}
               isGlobalSearch={true}
               isTemplateView={false}

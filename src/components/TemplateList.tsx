@@ -88,12 +88,13 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
             <ObjectListItem
               key={object.key}
               spaceId={object.spaceId}
-              objectId={object.objectId}
+              objectId={object.id}
               icon={object.icon}
               title={object.title}
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={object.mutate}
+              layout={object.layout}
               viewType="object"
               isGlobalSearch={isGlobalSearch}
               isTemplateView={true}

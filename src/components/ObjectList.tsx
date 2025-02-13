@@ -85,12 +85,13 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
     return {
       key: type.id,
       spaceId: spaceId,
-      objectId: type.id,
+      id: type.id,
       icon: type.icon,
       title: type.name,
       subtitle: { value: "", tooltip: "" },
       accessories: [],
       mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<SpaceObject[] | Type[] | Member[]>],
+      layout: "",
       isPinned,
     };
   };
@@ -99,7 +100,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
     return {
       key: member.id,
       spaceId: spaceId,
-      objectId: member.id,
+      id: member.id,
       icon: { source: member.icon, mask: Image.Mask.Circle },
       title: member.name,
       subtitle: { value: member.global_name, tooltip: `Global Name: ${member.global_name}` },
@@ -110,6 +111,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
         },
       ],
       mutate: [mutateMembers, mutatePinnedMembers as MutatePromise<SpaceObject[] | Type[] | Member[]>],
+      layout: "",
       isPinned,
     };
   };
@@ -207,12 +209,13 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             <ObjectListItem
               key={object.key}
               spaceId={object.spaceId}
-              objectId={object.objectId}
+              objectId={object.id}
               icon={object.icon}
               title={object.title}
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={object.mutate}
+              layout={object.layout}
               viewType={currentView}
               isGlobalSearch={false}
               isTemplateView={false}
@@ -230,12 +233,13 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
             <ObjectListItem
               key={object.key}
               spaceId={object.spaceId}
-              objectId={object.objectId}
+              objectId={object.id}
               icon={object.icon}
               title={object.title}
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={object.mutate}
+              layout={object.layout}
               viewType={currentView}
               isGlobalSearch={false}
               isTemplateView={false}

@@ -13,12 +13,13 @@ export function processObject(
 ): {
   key: string;
   spaceId: string;
-  objectId: string;
+  id: string;
   icon: { source: string; mask: Image.Mask };
   title: string;
   subtitle: { value: string; tooltip: string };
   accessories: { icon?: Icon; date?: Date; tooltip: string; text?: string }[];
   mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
+  layout: string;
   isPinned: boolean;
 } {
   const dateToSortAfter = getPreferenceValues().sort;
@@ -28,7 +29,7 @@ export function processObject(
   return {
     key: object.id,
     spaceId: object.space_id,
-    objectId: object.id,
+    id: object.id,
     icon: {
       source: object.icon,
       mask: getMaskForObject(object.layout, object.icon),
@@ -49,6 +50,7 @@ export function processObject(
       },
     ],
     mutate: [mutateObjects, mutatePinnedObjects],
+    layout: object.layout,
     isPinned,
   };
 }

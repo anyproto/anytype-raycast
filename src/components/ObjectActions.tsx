@@ -5,6 +5,7 @@ import { localStorageKeys } from "../helpers/constants";
 import { Export, Member, SpaceObject, Template, Type } from "../helpers/schemas";
 import { addPinned, moveDownInPinned, moveUpInPinned, removePinned } from "../helpers/storage";
 import { pluralize } from "../helpers/strings";
+import CollectionList from "./CollectionList";
 import ObjectDetail from "./ObjectDetail";
 import { CurrentView } from "./ObjectList";
 import TemplateList from "./TemplateList";
@@ -18,6 +19,7 @@ type ObjectActionsProps = {
   mutateTemplates?: MutatePromise<Template[]>;
   mutateObject?: MutatePromise<SpaceObject | null | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;
+  layout?: string;
   viewType: string;
   isGlobalSearch: boolean;
   isTemplateView: boolean;
@@ -33,6 +35,7 @@ export default function ObjectActions({
   mutateTemplates,
   mutateObject,
   mutateExport,
+  layout,
   viewType,
   isGlobalSearch,
   isTemplateView,
@@ -43,6 +46,7 @@ export default function ObjectActions({
     ? localStorageKeys.suffixForGlobalSearch
     : localStorageKeys.suffixForViewsPerSpace(spaceId, viewType);
   const isDetailView = objectExport !== undefined;
+  const isCollection = layout === "collection";
   const isType = viewType === CurrentView.types;
 
   function getContextLabel(isSingular = true) {
@@ -190,7 +194,7 @@ export default function ObjectActions({
   return (
     <ActionPanel title={title}>
       <ActionPanel.Section>
-        {!isType && !isDetailView && (
+        {!isType && !isCollection && !isDetailView && (
           <Action.Push
             icon={{ source: Icon.Sidebar }}
             title="Show Details"
@@ -203,6 +207,13 @@ export default function ObjectActions({
                 isPinned={isPinned}
               />
             }
+          />
+        )}
+        {isCollection && (
+          <Action.Push
+            icon={Icon.BulletPoints}
+            title="View Collection"
+            target={<CollectionList spaceId={spaceId} listId={objectId} />}
           />
         )}
         {isType && (
