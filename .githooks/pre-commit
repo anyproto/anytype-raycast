@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+echo "Running lint and type-check before commit..."
+
+npm run lint
+if [ $? -ne 0 ]; then
+  echo "Linting failed. Fix the issues before committing."
+  exit 1
+fi
+
+echo "Linting passed."
+
+npm run type-check
+if [ $? -ne 0 ]; then
+  echo "Type-checking failed. Fix the issues before committing."
+  exit 1
+fi
+
+echo "All checks passed. Proceeding with commit."
+exit 0
