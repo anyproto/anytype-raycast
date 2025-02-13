@@ -105,8 +105,9 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
       title: member.name,
       subtitle: { value: member.global_name, tooltip: `Global Name: ${member.global_name}` },
       accessories: [
+        ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
         {
-          value: formatRole(member.role),
+          text: formatRole(member.role),
           tooltip: `Role: ${formatRole(member.role)}`,
         },
       ],
@@ -174,6 +175,8 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   };
 
   const { processedPinned, processedRegular } = getCurrentItems();
+  console.log("processedPinned", processedPinned);
+  console.log("processedRegular", processedRegular);
 
   return (
     <List
@@ -205,21 +208,21 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
           title="Pinned"
           subtitle={`${pluralize(processedPinned.length, currentView.slice(0, -1), { withNumber: true })}`}
         >
-          {processedPinned.map((object) => (
+          {processedPinned.map((item) => (
             <ObjectListItem
-              key={object.key}
-              spaceId={object.spaceId}
-              objectId={object.id}
-              icon={object.icon}
-              title={object.title}
-              subtitle={object.subtitle}
-              accessories={object.accessories}
-              mutate={object.mutate}
-              layout={object.layout}
+              key={item.key}
+              spaceId={item.spaceId}
+              objectId={item.id}
+              icon={item.icon}
+              title={item.title}
+              subtitle={item.subtitle}
+              accessories={item.accessories}
+              mutate={item.mutate}
+              layout={item.layout}
               viewType={currentView}
               isGlobalSearch={false}
               isNoPinView={false}
-              isPinned={object.isPinned}
+              isPinned={item.isPinned}
             />
           ))}
         </List.Section>
@@ -229,21 +232,21 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
           title={searchText ? "Search Results" : `All ${currentView.charAt(0).toUpperCase() + currentView.slice(1)}`}
           subtitle={`${pluralize(processedRegular.length, currentView.slice(0, -1), { withNumber: true })}`}
         >
-          {processedRegular.map((object) => (
+          {processedRegular.map((item) => (
             <ObjectListItem
-              key={object.key}
-              spaceId={object.spaceId}
-              objectId={object.id}
-              icon={object.icon}
-              title={object.title}
-              subtitle={object.subtitle}
-              accessories={object.accessories}
-              mutate={object.mutate}
-              layout={object.layout}
+              key={item.key}
+              spaceId={item.spaceId}
+              objectId={item.id}
+              icon={item.icon}
+              title={item.title}
+              subtitle={item.subtitle}
+              accessories={item.accessories}
+              mutate={item.mutate}
+              layout={item.layout}
               viewType={currentView}
               isGlobalSearch={false}
               isNoPinView={false}
-              isPinned={object.isPinned}
+              isPinned={item.isPinned}
             />
           ))}
         </List.Section>
