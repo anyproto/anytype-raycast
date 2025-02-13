@@ -10,11 +10,19 @@ type ObjectDetailProps = {
   spaceId: string;
   objectId: string;
   title: string;
+  viewType: string;
   isGlobalSearch: boolean;
   isPinned: boolean;
 };
 
-export default function ObjectDetail({ spaceId, objectId, title, isGlobalSearch, isPinned }: ObjectDetailProps) {
+export default function ObjectDetail({
+  spaceId,
+  objectId,
+  title,
+  viewType,
+  isGlobalSearch,
+  isPinned,
+}: ObjectDetailProps) {
   const { object, objectError, isLoadingObject, mutateObject } = useObject(spaceId, objectId);
   const { objectExport, objectExportError, isLoadingObjectExport, mutateObjectExport } = useExport(
     spaceId,
@@ -110,7 +118,7 @@ export default function ObjectDetail({ spaceId, objectId, title, isGlobalSearch,
           mutateObject={mutateObject}
           mutateExport={mutateObjectExport}
           objectExport={objectExport}
-          viewType="object"
+          viewType={viewType}
           isGlobalSearch={isGlobalSearch}
           isNoPinView={false}
           isPinned={isPinned}

@@ -52,6 +52,7 @@ export default function ObjectActions({
   isNoPinView,
   isPinned,
 }: ObjectActionsProps) {
+  const { primaryAction } = getPreferenceValues();
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
   const pinSuffixForView = isGlobalSearch
     ? localStorageKeys.suffixForGlobalSearch
@@ -60,22 +61,20 @@ export default function ObjectActions({
   const isCollection = layout === "collection";
   const isType = viewType === CurrentView.types;
 
-  const { defaultCommand } = getPreferenceValues();
-
   function getContextLabel(isSingular = true) {
     const labelMap: Record<string, string> = {
       // browse
-      object: "Object",
-      type: "Type",
-      member: "Member",
-      template: "Template",
+      objects: "Object",
+      types: "Type",
+      members: "Member",
+      templates: "Template",
 
       // search
       all: "Object",
-      page: "Page",
-      task: "Task",
-      list: "List",
-      bookmark: "Bookmark",
+      pages: "Page",
+      tasks: "Task",
+      lists: "List",
+      bookmarks: "Bookmark",
     };
     const baseLabel = labelMap[viewType] || "Item";
     return !isDetailView && !isSingular ? pluralize(2, baseLabel) : baseLabel;
@@ -204,33 +203,39 @@ export default function ObjectActions({
     }
   }
 
+  const canShowDetails = !isType && !isCollection && !isDetailView;
+  const showDetailsAction = canShowDetails && (
+    <Action.Push
+      icon={{ source: Icon.Sidebar }}
+      title="Show Details"
+      target={
+        <ObjectDetail
+          spaceId={spaceId}
+          objectId={objectId}
+          title={title}
+          viewType={viewType}
+          isGlobalSearch={isGlobalSearch}
+          isPinned={isPinned}
+        />
+      }
+    />
+  );
+
+  const openObjectAction = (
+    <Action.OpenInBrowser
+      icon={{ source: "../assets/anytype-icon.png" }}
+      title={`Open ${getContextLabel()} in Anytype`}
+      url={objectUrl}
+    />
+  );
+
+  const firstPrimaryAction = primaryAction === "show_details" ? showDetailsAction : openObjectAction;
+  const secondPrimaryAction = primaryAction === "show_details" ? openObjectAction : showDetailsAction;
+
   return (
     <ActionPanel title={title}>
       <ActionPanel.Section>
-        {defaultCommand === "show_details" && !isType && !isCollection && !isDetailView && (
-          <Action.Push
-            icon={{ source: Icon.Sidebar }}
-            title="Show Details"
-            target={
-              <ObjectDetail
-                spaceId={spaceId}
-                objectId={objectId}
-                title={title}
-                isGlobalSearch={isGlobalSearch}
-                isPinned={isPinned}
-              />
-            }
-          />
-        )}
-
-        {defaultCommand === "open_object" && (
-          <Action.OpenInBrowser
-            icon={{ source: "../assets/anytype-icon.png" }}
-            title={`Open ${getContextLabel()} in Anytype`}
-            url={objectUrl}
-          />
-        )}
-
+        {firstPrimaryAction}
         {isCollection && (
           <Action.Push
             icon={Icon.List}
@@ -238,40 +243,22 @@ export default function ObjectActions({
             target={<CollectionList spaceId={spaceId} listId={objectId} />}
           />
         )}
-
         {isType && (
           <Action.Push
             icon={Icon.BulletPoints}
             title="View Templates"
             target={
-              <TemplateList spaceId={spaceId} typeId={objectId} isGlobalSearch={isGlobalSearch} isPinned={isPinned} />
-            }
-          />
-        )}
-
-        {defaultCommand !== "open_object" && (
-          <Action.OpenInBrowser
-            icon={{ source: "../assets/anytype-icon.png" }}
-            title={`Open ${getContextLabel()} in Anytype`}
-            url={objectUrl}
-          />
-        )}
-
-        {defaultCommand !== "show_details" && !isType && !isCollection && !isDetailView && (
-          <Action.Push
-            icon={{ source: Icon.Sidebar }}
-            title="Show Details"
-            target={
-              <ObjectDetail
+              <TemplateList
                 spaceId={spaceId}
-                objectId={objectId}
-                title={title}
+                typeId={objectId}
+                viewType={viewType}
                 isGlobalSearch={isGlobalSearch}
                 isPinned={isPinned}
               />
             }
           />
         )}
+        {secondPrimaryAction}
       </ActionPanel.Section>
       <ActionPanel.Section>
         {objectExport && (

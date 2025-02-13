@@ -12,11 +12,12 @@ import ObjectListItem from "./ObjectListItem";
 type TemplatesListProps = {
   spaceId: string;
   typeId: string;
+  viewType: string;
   isGlobalSearch: boolean;
   isPinned: boolean;
 };
 
-export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned }: TemplatesListProps) {
+export default function TemplateList({ spaceId, typeId, viewType, isGlobalSearch, isPinned }: TemplatesListProps) {
   const [searchText, setSearchText] = useState("");
   const { templates, templatesError, isLoadingTemplates, mutateTemplates, templatesPagination } = useTemplates(
     spaceId,
@@ -106,7 +107,7 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
               accessories={object.accessories}
               mutate={object.mutate}
               layout={object.layout}
-              viewType="object"
+              viewType={viewType}
               isGlobalSearch={isGlobalSearch}
               isNoPinView={true}
               isPinned={object.isPinned}
@@ -119,12 +120,7 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
           contextValues={{
             space: spaceId,
             type: typeId,
-            list: "",
             name: searchText,
-            icon: "",
-            description: "",
-            body: "",
-            source: "",
           }}
         />
       )}

@@ -40,7 +40,7 @@ function Search() {
     localStorageKeys.suffixForGlobalSearch,
   );
 
-  const viewType = filterType === "all" ? "object" : filterType.replace(/s$/, "");
+  const viewType = filterType === "all" ? "objects" : filterType;
   const excludedKeysForPages = new Set([
     // not shown anywhere
     "ot-audio",
