@@ -96,6 +96,7 @@ export default function CreateObjectForm({
       defaults: {
         space: selectedSpace,
         type: selectedType,
+        list: selectedList,
         name: itemProps.name.value,
         icon: itemProps.icon.value,
         description: itemProps.description.value,
@@ -163,7 +164,7 @@ export default function CreateObjectForm({
         value={selectedList}
         onChange={setSelectedList}
         storeValue={true}
-        info="Select a collection to add the object to"
+        info="Select the collection where the object will be added"
       >
         <Form.Dropdown.Item key="none" value="" title="No Collection" icon={Icon.Dot} />
         {lists.map((list) => (

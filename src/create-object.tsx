@@ -11,23 +11,23 @@ export interface CreateObjectFormValues {
   space: string;
   type: string;
   list: string;
-  name?: string;
-  icon?: string;
-  description?: string;
-  body?: string;
-  source?: string;
+  name: string;
+  icon: string;
+  description: string;
+  body: string;
+  source: string;
 }
 
 interface LaunchContext {
-  defaults?: {
-    space?: string;
-    type?: string;
-    list?: string;
-    name?: string;
-    icon?: string;
-    description?: string;
-    body?: string;
-    source?: string;
+  defaults: {
+    space: string;
+    type: string;
+    list: string;
+    name: string;
+    icon: string;
+    description: string;
+    body: string;
+    source: string;
   };
 }
 
