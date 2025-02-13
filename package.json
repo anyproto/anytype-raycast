@@ -45,6 +45,24 @@
       "required": false
     },
     {
+      "name": "primaryAction",
+      "title": "Primary Action",
+      "description": "Choose the primary action when an object is selected.",
+      "type": "dropdown",
+      "data": [
+        {
+          "title": "Show Details",
+          "value": "show_details"
+        },
+        {
+          "title": "Open Object in Anytype",
+          "value": "open_object"
+        }
+      ],
+      "default": "show_details",
+      "required": false
+    },
+    {
       "name": "sort",
       "title": "Sort Order",
       "description": "The sort order of objects when displayed as a list.",

@@ -1,4 +1,15 @@
-import { Action, ActionPanel, Clipboard, Color, confirmAlert, Icon, Keyboard, showToast, Toast } from "@raycast/api";
+import {
+  Action,
+  ActionPanel,
+  Clipboard,
+  Color,
+  confirmAlert,
+  getPreferenceValues,
+  Icon,
+  Keyboard,
+  showToast,
+  Toast,
+} from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { deleteObject } from "../api/deleteObject";
 import { localStorageKeys } from "../helpers/constants";
@@ -48,6 +59,8 @@ export default function ObjectActions({
   const isDetailView = objectExport !== undefined;
   const isCollection = layout === "collection";
   const isType = viewType === CurrentView.types;
+
+  const { defaultCommand } = getPreferenceValues();
 
   function getContextLabel(isSingular = true) {
     const labelMap: Record<string, string> = {
@@ -194,7 +207,7 @@ export default function ObjectActions({
   return (
     <ActionPanel title={title}>
       <ActionPanel.Section>
-        {!isType && !isCollection && !isDetailView && (
+        {defaultCommand === "show_details" && !isType && !isCollection && !isDetailView && (
           <Action.Push
             icon={{ source: Icon.Sidebar }}
             title="Show Details"
@@ -209,6 +222,15 @@ export default function ObjectActions({
             }
           />
         )}
+
+        {defaultCommand === "open_object" && (
+          <Action.OpenInBrowser
+            icon={{ source: "../assets/anytype-icon.png" }}
+            title={`Open ${getContextLabel()} in Anytype`}
+            url={objectUrl}
+          />
+        )}
+
         {isCollection && (
           <Action.Push
             icon={Icon.List}
@@ -216,6 +238,7 @@ export default function ObjectActions({
             target={<CollectionList spaceId={spaceId} listId={objectId} />}
           />
         )}
+
         {isType && (
           <Action.Push
             icon={Icon.BulletPoints}
@@ -225,34 +248,53 @@ export default function ObjectActions({
             }
           />
         )}
-        <Action.OpenInBrowser
-          icon={{ source: "../assets/anytype-icon.png" }}
-          title={`Open ${getContextLabel()} in Anytype`}
-          url={objectUrl}
+
+        {defaultCommand !== "open_object" && (
+          <Action.OpenInBrowser
+            icon={{ source: "../assets/anytype-icon.png" }}
+            title={`Open ${getContextLabel()} in Anytype`}
+            url={objectUrl}
+          />
+        )}
+
+        {defaultCommand !== "show_details" && !isType && !isCollection && !isDetailView && (
+          <Action.Push
+            icon={{ source: Icon.Sidebar }}
+            title="Show Details"
+            target={
+              <ObjectDetail
+                spaceId={spaceId}
+                objectId={objectId}
+                title={title}
+                isGlobalSearch={isGlobalSearch}
+                isPinned={isPinned}
+              />
+            }
+          />
+        )}
+      </ActionPanel.Section>
+      <ActionPanel.Section>
+        {objectExport && (
+          <Action.CopyToClipboard
+            title="Copy Object"
+            shortcut={{ modifiers: ["cmd"], key: "c" }}
+            content={objectExport.markdown}
+          />
+        )}
+        <Action
+          icon={Icon.Link}
+          title="Copy Link"
+          shortcut={Keyboard.Shortcut.Common.CopyDeeplink}
+          onAction={handleCopyLink}
+        />
+        <Action
+          icon={Icon.Trash}
+          title={`Delete ${getContextLabel()}`}
+          style={Action.Style.Destructive}
+          shortcut={Keyboard.Shortcut.Common.Remove}
+          onAction={handleDeleteObject}
         />
       </ActionPanel.Section>
-
-      {objectExport && (
-        <Action.CopyToClipboard
-          title="Copy Object"
-          shortcut={{ modifiers: ["cmd"], key: "c" }}
-          content={objectExport.markdown}
-        />
-      )}
-      <Action
-        icon={Icon.Link}
-        title="Copy Link"
-        shortcut={Keyboard.Shortcut.Common.CopyDeeplink}
-        onAction={handleCopyLink}
-      />
-      <Action
-        icon={Icon.Trash}
-        title={`Delete ${getContextLabel()}`}
-        style={Action.Style.Destructive}
-        shortcut={Keyboard.Shortcut.Common.Remove}
-        onAction={handleDeleteObject}
-      />
-
       {!isDetailView && !isNoPinView && (
         <ActionPanel.Section>
           {isPinned && (
@@ -279,7 +321,6 @@ export default function ObjectActions({
           />
         </ActionPanel.Section>
       )}
-
       <ActionPanel.Section>
         <Action
           icon={Icon.RotateClockwise}
