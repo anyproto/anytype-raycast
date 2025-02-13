@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { processObject } from "../helpers/object";
 import { pluralize } from "../helpers/strings";
 import { useObjectsInList } from "../hooks/useObjectsInList";
-import EmptyView from "./EmptyView";
+import EmptyViewObject from "./EmptyViewObject";
 import ObjectListItem from "./ObjectListItem";
 
 type CollectionListProps = {
@@ -61,7 +61,14 @@ export default function CollectionList({ spaceId, listId }: CollectionListProps)
           ))}
         </List.Section>
       ) : (
-        <EmptyView title="No objects found" />
+        <EmptyViewObject
+          title="No objects found"
+          contextValues={{
+            space: spaceId,
+            list: listId,
+            name: searchText,
+          }}
+        />
       )}
     </List>
   );

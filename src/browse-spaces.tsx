@@ -1,7 +1,7 @@
 import { Icon, Image, List, Toast, showToast } from "@raycast/api";
 import { useEffect, useMemo, useState } from "react";
 import { getMembers } from "./api/getMembers";
-import EmptyView from "./components/EmptyView";
+import EmptyViewSpace from "./components/EmptyViewSpace";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import SpaceListItem from "./components/SpaceListItem";
 import { Space } from "./helpers/schemas";
@@ -133,7 +133,7 @@ function BrowseSpaces() {
           })}
         </List.Section>
       ) : (
-        <EmptyView title="No Spaces Found" />
+        <EmptyViewSpace title="No spaces found" />
       )}
     </List>
   );

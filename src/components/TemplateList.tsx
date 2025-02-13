@@ -5,7 +5,7 @@ import { Template } from "../helpers/schemas";
 import { pluralize } from "../helpers/strings";
 import { useSearch } from "../hooks/useSearch";
 import { useTemplates } from "../hooks/useTemplates";
-import EmptyView from "./EmptyView";
+import EmptyViewObject from "./EmptyViewObject";
 import ObjectActions from "./ObjectActions";
 import ObjectListItem from "./ObjectListItem";
 
@@ -81,7 +81,14 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
           ))}
         </List.Section>
       ) : (
-        <EmptyView title="No templates found" />
+        <EmptyViewObject
+          title="No templates found"
+          contextValues={{
+            space: spaceId,
+            type: typeId,
+            name: searchText,
+          }}
+        />
       )}
       {filteredObjects && filteredObjects.length > 0 ? (
         <List.Section
@@ -107,7 +114,19 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
           ))}
         </List.Section>
       ) : (
-        <EmptyView title="No objects found" />
+        <EmptyViewObject
+          title="No objects found"
+          contextValues={{
+            space: spaceId,
+            type: typeId,
+            list: "",
+            name: searchText,
+            icon: "",
+            description: "",
+            body: "",
+            source: "",
+          }}
+        />
       )}
     </List>
   );

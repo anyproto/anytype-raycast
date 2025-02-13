@@ -8,14 +8,14 @@ import { useSearch } from "./hooks/useSearch";
 import { useSpaces } from "./hooks/useSpaces";
 
 export interface CreateObjectFormValues {
-  space: string;
-  type: string;
-  list: string;
-  name: string;
-  icon: string;
-  description: string;
-  body: string;
-  source: string;
+  space?: string;
+  type?: string;
+  list?: string;
+  name?: string;
+  icon?: string;
+  description?: string;
+  body?: string;
+  source?: string;
 }
 
 interface LaunchContext {

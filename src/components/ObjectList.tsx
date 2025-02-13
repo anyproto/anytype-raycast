@@ -9,7 +9,7 @@ import { useMembers } from "../hooks/useMembers";
 import { usePinnedMembers, usePinnedObjects, usePinnedTypes } from "../hooks/usePinnedObjects";
 import { useSearch } from "../hooks/useSearch";
 import { useTypes } from "../hooks/useTypes";
-import EmptyView from "./EmptyView";
+import EmptyViewObject from "./EmptyViewObject";
 import ObjectListItem from "./ObjectListItem";
 
 type ObjectListProps = {
@@ -175,8 +175,6 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   };
 
   const { processedPinned, processedRegular } = getCurrentItems();
-  console.log("processedPinned", processedPinned);
-  console.log("processedRegular", processedRegular);
 
   return (
     <List
@@ -251,7 +249,13 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
           ))}
         </List.Section>
       ) : (
-        <EmptyView title={`No ${currentView.charAt(0).toUpperCase() + currentView.slice(1)} Found`} />
+        <EmptyViewObject
+          title={`No ${currentView.charAt(0).toUpperCase() + currentView.slice(1)} Found`}
+          contextValues={{
+            space: spaceId,
+            name: searchText,
+          }}
+        />
       )}
     </List>
   );

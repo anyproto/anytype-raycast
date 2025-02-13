@@ -1,7 +1,7 @@
 import { Icon, Image, List, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { useEffect, useState } from "react";
-import EmptyView from "./components/EmptyView";
+import EmptyViewObject from "./components/EmptyViewObject";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import ObjectListItem from "./components/ObjectListItem";
 import { localStorageKeys } from "./helpers/constants";
@@ -229,7 +229,12 @@ function Search() {
           ))}
         </List.Section>
       ) : (
-        <EmptyView title="No Objects Found" />
+        <EmptyViewObject
+          title="No objects found"
+          contextValues={{
+            name: searchText,
+          }}
+        />
       )}
     </List>
   );
