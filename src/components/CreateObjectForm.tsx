@@ -179,7 +179,7 @@ export default function CreateObjectForm({
           {selectedType === "ot-bookmark" ? (
             <Form.TextField
               {...itemProps.source}
-              title="Source"
+              title="URL"
               placeholder="Add link"
               info="Provide the source URL for the bookmark"
             />
