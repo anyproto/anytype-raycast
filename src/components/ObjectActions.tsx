@@ -22,7 +22,7 @@ type ObjectActionsProps = {
   layout?: string;
   viewType: string;
   isGlobalSearch: boolean;
-  isTemplateView: boolean;
+  isNoPinView: boolean;
   isPinned: boolean;
 };
 
@@ -38,7 +38,7 @@ export default function ObjectActions({
   layout,
   viewType,
   isGlobalSearch,
-  isTemplateView,
+  isNoPinView,
   isPinned,
 }: ObjectActionsProps) {
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
@@ -211,7 +211,7 @@ export default function ObjectActions({
         )}
         {isCollection && (
           <Action.Push
-            icon={Icon.BulletPoints}
+            icon={Icon.List}
             title="View Collection"
             target={<CollectionList spaceId={spaceId} listId={objectId} />}
           />
@@ -253,7 +253,7 @@ export default function ObjectActions({
         onAction={handleDeleteObject}
       />
 
-      {!isDetailView && !isTemplateView && (
+      {!isDetailView && !isNoPinView && (
         <ActionPanel.Section>
           {isPinned && (
             <Action

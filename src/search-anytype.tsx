@@ -199,7 +199,7 @@ function Search() {
               layout={object.layout}
               viewType={viewType}
               isGlobalSearch={true}
-              isTemplateView={false}
+              isNoPinView={false}
               isPinned={object.isPinned}
             />
           ))}
@@ -223,7 +223,7 @@ function Search() {
               layout={object.layout}
               viewType={viewType}
               isGlobalSearch={true}
-              isTemplateView={false}
+              isNoPinView={false}
               isPinned={object.isPinned}
             />
           ))}

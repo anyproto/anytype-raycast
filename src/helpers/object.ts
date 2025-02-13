@@ -9,7 +9,7 @@ export function processObject(
   object: SpaceObject,
   isPinned: boolean,
   mutateObjects: MutatePromise<SpaceObject[] | Type[] | Member[]>,
-  mutatePinnedObjects: MutatePromise<SpaceObject[] | Type[] | Member[]>,
+  mutatePinnedObjects?: MutatePromise<SpaceObject[] | Type[] | Member[]>,
 ): {
   key: string;
   spaceId: string;
@@ -49,7 +49,7 @@ export function processObject(
         text: hasValidDate ? undefined : "—",
       },
     ],
-    mutate: [mutateObjects, mutatePinnedObjects],
+    mutate: [mutateObjects, mutatePinnedObjects].filter(Boolean) as MutatePromise<SpaceObject[] | Type[] | Member[]>[],
     layout: object.layout,
     isPinned,
   };

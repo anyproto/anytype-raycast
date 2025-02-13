@@ -1,5 +1,5 @@
 import { List, showToast, Toast } from "@raycast/api";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { processObject } from "../helpers/object";
 import { Template } from "../helpers/schemas";
 import { pluralize } from "../helpers/strings";
@@ -26,13 +26,17 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
     typeId,
   ]);
 
-  if (templatesError) {
-    showToast(Toast.Style.Failure, "Failed to fetch templates", templatesError.message);
-  }
+  useEffect(() => {
+    if (templatesError) {
+      showToast(Toast.Style.Failure, "Failed to fetch templates", templatesError.message);
+    }
+  }, [templatesError]);
 
-  if (objectsError) {
-    showToast(Toast.Style.Failure, "Failed to fetch objects", objectsError.message);
-  }
+  useEffect(() => {
+    if (objectsError) {
+      showToast(Toast.Style.Failure, "Failed to fetch objects", objectsError.message);
+    }
+  }, [objectsError]);
 
   const filteredTemplates = templates?.filter((template: Template) =>
     template.name.toLowerCase().includes(searchText.toLowerCase()),
@@ -41,7 +45,7 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
   const filteredObjects = objects
     ?.filter((object) => object.name.toLowerCase().includes(searchText.toLowerCase()))
     .map((object) => {
-      return processObject(object, false, mutateObjects, mutateObjects);
+      return processObject(object, false, mutateObjects);
     });
 
   return (
@@ -69,7 +73,7 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
                   mutateTemplates={mutateTemplates}
                   viewType="template"
                   isGlobalSearch={isGlobalSearch}
-                  isTemplateView={true}
+                  isNoPinView={true}
                   isPinned={isPinned}
                 />
               }
@@ -97,7 +101,7 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
               layout={object.layout}
               viewType="object"
               isGlobalSearch={isGlobalSearch}
-              isTemplateView={true}
+              isNoPinView={true}
               isPinned={object.isPinned}
             />
           ))}

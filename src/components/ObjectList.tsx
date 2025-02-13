@@ -218,7 +218,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
               layout={object.layout}
               viewType={currentView}
               isGlobalSearch={false}
-              isTemplateView={false}
+              isNoPinView={false}
               isPinned={object.isPinned}
             />
           ))}
@@ -242,7 +242,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
               layout={object.layout}
               viewType={currentView}
               isGlobalSearch={false}
-              isTemplateView={false}
+              isNoPinView={false}
               isPinned={object.isPinned}
             />
           ))}

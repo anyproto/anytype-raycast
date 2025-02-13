@@ -112,7 +112,7 @@ export default function ObjectDetail({ spaceId, objectId, title, isGlobalSearch,
           objectExport={objectExport}
           viewType="object"
           isGlobalSearch={isGlobalSearch}
-          isTemplateView={false}
+          isNoPinView={false}
           isPinned={isPinned}
         />
       }

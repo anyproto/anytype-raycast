@@ -19,7 +19,7 @@ type ObjectListItemProps = {
   layout: string;
   viewType: string;
   isGlobalSearch: boolean;
-  isTemplateView: boolean;
+  isNoPinView: boolean;
   isPinned: boolean;
 };
 
@@ -34,7 +34,7 @@ export default function ObjectListItem({
   layout,
   viewType,
   isGlobalSearch,
-  isTemplateView,
+  isNoPinView,
   isPinned,
 }: ObjectListItemProps) {
   return (
@@ -69,7 +69,7 @@ export default function ObjectListItem({
           layout={layout}
           viewType={viewType}
           isGlobalSearch={isGlobalSearch}
-          isTemplateView={isTemplateView}
+          isNoPinView={isNoPinView}
           isPinned={isPinned}
         />
       }
