@@ -1,5 +1,7 @@
 import { Action, ActionPanel, Icon, List } from "@raycast/api";
-import Command, { CreateObjectFormValues } from "../create-object";
+import { CreateObjectFormValues } from "../create-object";
+import { useCreateObjectData } from "../hooks/useCreateObjectData";
+import CreateObjectForm from "./CreateObjectForm";
 
 type EmptyViewObjectProps = {
   title: string;
@@ -18,13 +20,44 @@ export default function EmptyViewObject({ title, contextValues }: EmptyViewObjec
     source: contextValues.source,
   };
 
+  const {
+    spaces,
+    lists,
+    objectTypes,
+    selectedSpace,
+    setSelectedSpace,
+    selectedType,
+    setSelectedType,
+    selectedList,
+    setSelectedList,
+    isLoading,
+  } = useCreateObjectData(draftValues);
+
   return (
     <List.EmptyView
       title={title}
       description="Create a new object by pressing ⏎"
       actions={
         <ActionPanel>
-          <Action.Push title="Create Object" target={<Command draftValues={draftValues} />} icon={Icon.Plus} />
+          <Action.Push
+            title="Create Object"
+            target={
+              <CreateObjectForm
+                spaces={spaces}
+                objectTypes={objectTypes}
+                lists={lists}
+                selectedSpace={selectedSpace}
+                setSelectedSpace={setSelectedSpace}
+                selectedType={selectedType}
+                setSelectedType={setSelectedType}
+                selectedList={selectedList}
+                setSelectedList={setSelectedList}
+                isLoading={isLoading}
+                draftValues={draftValues}
+              />
+            }
+            icon={Icon.Plus}
+          />
         </ActionPanel>
       }
     />
