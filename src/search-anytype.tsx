@@ -163,6 +163,10 @@ function Search() {
     )
     .map((object) => processObjectWithSpaceIcon(object, false));
 
+  const subtitle = pluralize(processedRegularObjects.length, viewType.replace(/s$/, ""), {
+    withNumber: true,
+  });
+
   return (
     <List
       isLoading={isLoadingSpaces || isLoadingPinnedObjects || isLoadingObjects}
@@ -182,10 +186,7 @@ function Search() {
       }
     >
       {processedPinnedObjects.length > 0 && (
-        <List.Section
-          title="Pinned"
-          subtitle={`${pluralize(processedPinnedObjects.length, viewType, { withNumber: true })}`}
-        >
+        <List.Section title="Pinned" subtitle={subtitle}>
           {processedPinnedObjects.map((object) => (
             <ObjectListItem
               key={object.key}
@@ -206,10 +207,7 @@ function Search() {
         </List.Section>
       )}
       {processedRegularObjects.length > 0 ? (
-        <List.Section
-          title={searchText ? "Search Results" : `${getShortDateLabel()} Recently`}
-          subtitle={`${pluralize(processedRegularObjects.length, viewType, { withNumber: true })}`}
-        >
+        <List.Section title={searchText ? "Search Results" : `${getShortDateLabel()} Recently`} subtitle={subtitle}>
           {processedRegularObjects.map((object) => (
             <ObjectListItem
               key={object.key}
