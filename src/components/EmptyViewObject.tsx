@@ -1,4 +1,5 @@
 import { Action, ActionPanel, Icon, List } from "@raycast/api";
+import { useEffect } from "react";
 import { CreateObjectFormValues } from "../create-object";
 import { useCreateObjectData } from "../hooks/useCreateObjectData";
 import CreateObjectForm from "./CreateObjectForm";
@@ -33,6 +34,18 @@ export default function EmptyViewObject({ title, contextValues }: EmptyViewObjec
     isLoading,
   } = useCreateObjectData(draftValues);
 
+  useEffect(() => {
+    if (spaces.length > 0 && !selectedSpace) {
+      setSelectedSpace(spaces[0].id);
+    }
+  }, [spaces]);
+
+  useEffect(() => {
+    if (objectTypes.length > 0 && !selectedType) {
+      setSelectedType(objectTypes[0].id);
+    }
+  }, [objectTypes]);
+
   return (
     <List.EmptyView
       title={title}
@@ -54,6 +67,7 @@ export default function EmptyViewObject({ title, contextValues }: EmptyViewObjec
                 setSelectedList={setSelectedList}
                 isLoading={isLoading}
                 draftValues={draftValues}
+                enableDrafts={false}
               />
             }
             icon={Icon.Plus}
