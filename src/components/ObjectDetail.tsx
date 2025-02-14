@@ -33,18 +33,18 @@ export default function ObjectDetail({
   const details = object?.details || [];
 
   const createdDateDetail = details.find((detail) => detail.id === "created_date");
-  const createdDate = createdDateDetail?.details?.created_date;
+  const createdDate = createdDateDetail?.details?.date;
 
   const createdByDetail = details.find((detail) => detail.id === "created_by");
-  const createdBy = createdByDetail?.details?.details as Member | undefined;
+  const createdBy = createdByDetail?.details?.object as Member | undefined;
 
   const lastModifiedDateDetail = details.find((detail) => detail.id === "last_modified_date");
-  const lastModifiedDate = lastModifiedDateDetail?.details?.last_modified_date;
+  const lastModifiedDate = lastModifiedDateDetail?.details?.date;
 
   const lastModifiedByDetail = details.find((detail) => detail.id === "last_modified_by");
-  const lastModifiedBy = lastModifiedByDetail?.details?.details as Member | undefined;
+  const lastModifiedBy = lastModifiedByDetail?.details?.object as Member | undefined;
 
-  const tags = details.flatMap((detail) => detail.details.tags || []);
+  const tags = details.flatMap((detail) => detail.details.multi_select || []);
 
   useEffect(() => {
     if (objectError) {

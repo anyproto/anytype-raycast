@@ -106,12 +106,11 @@ export interface File {
 export interface Detail {
   id: string;
   details: {
-    created_date: string; // ISO 8601 date
-    last_modified_date: string; // ISO 8601 date
-    last_opened_date: string; // ISO 8601 date
-    details: Member; // Details of a participant
-    tags: Tag[]; // List of tags
-    [key: string]: unknown; // Additional details
+    type: string; // "date", "select", "multi_select", "object"
+    date: string; // Date in ISO 8601 format
+    select: Tag; // Selected option
+    multi_select: Tag[]; // List of selected options
+    object: Member | SpaceObject; // Details of a participant
   };
 }
 

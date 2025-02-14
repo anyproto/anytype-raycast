@@ -13,9 +13,9 @@ export async function mapObject(object: SpaceObject): Promise<SpaceObject> {
   const icon = await getIconWithFallback(object.icon, object.layout);
 
   // Extract 'created' details
-  const createdDateString = getDetail("created_date")?.created_date as string;
+  const createdDateString = getDetail("created_date")?.date as string;
   const createdDate = createdDateString ? new Date(createdDateString) : new Date(0);
-  const createdByDetails = getDetail("created_by")?.details as Member;
+  const createdByDetails = getDetail("created_by")?.object as Member;
   const createdBy = {
     name: createdByDetails?.name || "Unknown",
     icon: await getIconWithFallback(createdByDetails?.icon, "participant"),
@@ -23,9 +23,9 @@ export async function mapObject(object: SpaceObject): Promise<SpaceObject> {
   };
 
   // Extract 'last modified' details
-  const lastModifiedDateString = getDetail("last_modified_date")?.last_modified_date as string;
+  const lastModifiedDateString = getDetail("last_modified_date")?.date as string;
   const lastModifiedDate = lastModifiedDateString ? new Date(lastModifiedDateString) : new Date(0);
-  const lastModifiedByDetails = getDetail("last_modified_by")?.details as Member;
+  const lastModifiedByDetails = getDetail("last_modified_by")?.object as Member;
   const lastModifiedBy = {
     name: lastModifiedByDetails?.name || "Unknown",
     icon: await getIconWithFallback(lastModifiedByDetails?.icon, "participant"),
