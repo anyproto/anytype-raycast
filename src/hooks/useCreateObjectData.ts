@@ -1,7 +1,7 @@
 import { showToast, Toast } from "@raycast/api";
-import { useEffect, useState } from "react";
+import { useCachedPromise } from "@raycast/utils";
+import { useEffect, useMemo, useState } from "react";
 import { CreateObjectFormValues } from "../create-object";
-import { Type } from "../helpers/schemas";
 import { fetchAllTypesForSpace } from "../helpers/types";
 import { useSearch } from "./useSearch";
 import { useSpaces } from "./useSpaces";
@@ -10,8 +10,6 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
   const [selectedSpace, setSelectedSpace] = useState(initialValues?.space || "");
   const [selectedType, setSelectedType] = useState(initialValues?.type || "");
   const [selectedList, setSelectedList] = useState(initialValues?.list || "");
-  const [filteredTypes, setFilteredTypes] = useState<Type[]>([]);
-  const [isLoadingTypes, setIsLoadingTypes] = useState(false);
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
   const {
     objects: lists,
@@ -37,47 +35,39 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
     }
   }, [spaces]);
 
-  useEffect(() => {
-    const fetchAllTypes = async () => {
-      if (selectedSpace) {
-        setIsLoadingTypes(true);
-        try {
-          const allTypes = await fetchAllTypesForSpace(selectedSpace);
-          const validTypes = allTypes.filter((type) => !restrictedTypes.includes(type.unique_key));
-          setFilteredTypes(validTypes);
-        } catch (error) {
-          if (error instanceof Error) {
-            showToast(Toast.Style.Failure, "Failed to fetch types", error.message);
-          } else {
-            showToast(Toast.Style.Failure, "Failed to fetch types", "An unknown error occurred.");
-          }
-        } finally {
-          setIsLoadingTypes(false);
-        }
-      }
-    };
+  const {
+    data: allTypes,
+    error: typesError,
+    isLoading: isLoadingTypes,
+  } = useCachedPromise(fetchAllTypesForSpace, [selectedSpace], { execute: !!selectedSpace });
 
-    fetchAllTypes();
-  }, [selectedSpace]);
+  const objectTypes = useMemo(() => {
+    if (!allTypes) return [];
+    return allTypes.filter((type) => !restrictedTypes.includes(type.unique_key));
+  }, [allTypes, restrictedTypes]);
 
   useEffect(() => {
-    if (filteredTypes.length > 0 && !selectedType) {
-      setSelectedType(filteredTypes[0].unique_key);
+    if (objectTypes.length > 0 && !selectedType) {
+      setSelectedType(objectTypes[0].id);
     }
-  }, [filteredTypes]);
+  }, [objectTypes]);
 
   useEffect(() => {
-    if (spacesError || listsError) {
-      showToast(Toast.Style.Failure, "Failed to fetch latest data", spacesError?.message || listsError?.message);
+    if (spacesError || listsError || typesError) {
+      showToast(
+        Toast.Style.Failure,
+        "Failed to fetch latest data",
+        spacesError?.message || listsError?.message || typesError?.message,
+      );
     }
-  }, [spacesError, listsError]);
+  }, [spacesError, listsError, typesError]);
 
   const isLoading = isLoadingSpaces || isLoadingTypes || isLoadingLists;
 
   return {
     spaces,
     lists,
-    objectTypes: filteredTypes,
+    objectTypes,
     selectedSpace,
     setSelectedSpace,
     selectedType,

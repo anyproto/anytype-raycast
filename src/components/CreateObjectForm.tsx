@@ -35,6 +35,10 @@ export default function CreateObjectForm({
 }: CreateObjectFormProps) {
   const [loading, setLoading] = useState(false);
   const hasSelectedSpaceAndType = selectedSpace && selectedType;
+  const selectedTypeUniqueKey = objectTypes.reduce(
+    (acc, type) => (type.id === selectedType ? type.unique_key : acc),
+    "",
+  );
 
   const { handleSubmit, itemProps } = useForm<CreateObjectFormValues>({
     initialValues: draftValues,
@@ -50,7 +54,7 @@ export default function CreateObjectForm({
           body: values.body || "",
           source: values.source || "",
           template_id: "",
-          object_type_unique_key: selectedType,
+          object_type_unique_key: selectedTypeUniqueKey,
         });
 
         if (response.object?.id) {
@@ -72,7 +76,7 @@ export default function CreateObjectForm({
     },
     validation: {
       name: (value) => {
-        if (!["ot-bookmark", "ot-note"].includes(selectedType) && !value) {
+        if (!["ot-bookmark", "ot-note"].includes(selectedTypeUniqueKey) && !value) {
           return "Name is required";
         }
       },
@@ -82,7 +86,7 @@ export default function CreateObjectForm({
         }
       },
       source: (value) => {
-        if (selectedType === "ot-bookmark" && !value) {
+        if (selectedTypeUniqueKey === "ot-bookmark" && !value) {
           return "Source is required for Bookmarks";
         }
       },
@@ -106,7 +110,7 @@ export default function CreateObjectForm({
     };
 
     return {
-      name: `Create ${objectTypes.find((type) => type.unique_key === selectedType)?.name} in ${spaces.find((space) => space.id === selectedSpace)?.name}`,
+      name: `Create ${objectTypes.find((type) => type.unique_key === selectedTypeUniqueKey)?.name} in ${spaces.find((space) => space.id === selectedSpace)?.name}`,
       link: url + "?launchContext=" + encodeURIComponent(JSON.stringify(launchContext)),
     };
   }
@@ -120,7 +124,7 @@ export default function CreateObjectForm({
           <Action.SubmitForm title="Create Object" icon={Icon.Plus} onSubmit={handleSubmit} />
           {hasSelectedSpaceAndType && (
             <Action.CreateQuicklink
-              title={`Create Quicklink: ${objectTypes.find((type) => type.unique_key === selectedType)?.name}`}
+              title={`Create Quicklink: ${objectTypes.find((type) => type.unique_key === selectedTypeUniqueKey)?.name}`}
               quicklink={getQuicklink()}
             />
           )}
@@ -154,7 +158,7 @@ export default function CreateObjectForm({
         info="Select the type of object to create"
       >
         {objectTypes.map((type) => (
-          <Form.Dropdown.Item key={type.unique_key} value={type.unique_key} title={type.name} icon={type.icon} />
+          <Form.Dropdown.Item key={type.id} value={type.id} title={type.name} icon={type.icon} />
         ))}
       </Form.Dropdown>
 
@@ -176,7 +180,7 @@ export default function CreateObjectForm({
 
       {hasSelectedSpaceAndType && (
         <>
-          {selectedType === "ot-bookmark" ? (
+          {selectedTypeUniqueKey === "ot-bookmark" ? (
             <Form.TextField
               {...itemProps.source}
               title="URL"
@@ -185,7 +189,7 @@ export default function CreateObjectForm({
             />
           ) : (
             <>
-              {!["ot-note"].includes(selectedType) && (
+              {!["ot-note"].includes(selectedTypeUniqueKey) && (
                 <Form.TextField
                   {...itemProps.name}
                   title="Name"
@@ -193,7 +197,7 @@ export default function CreateObjectForm({
                   info="Enter the name of the object"
                 />
               )}
-              {!["ot-task", "ot-note", "ot-profile"].includes(selectedType) && (
+              {!["ot-task", "ot-note", "ot-profile"].includes(selectedTypeUniqueKey) && (
                 <Form.TextField
                   {...itemProps.icon}
                   title="Icon"
@@ -207,7 +211,7 @@ export default function CreateObjectForm({
                 placeholder="Add a description"
                 info="Provide a brief description of the object"
               />
-              {!["ot-set", "ot-collection"].includes(selectedType) && (
+              {!["ot-set", "ot-collection"].includes(selectedTypeUniqueKey) && (
                 <Form.TextArea
                   {...itemProps.body}
                   title="Body"
