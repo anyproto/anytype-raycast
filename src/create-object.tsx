@@ -70,6 +70,7 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
       setSelectedList={setSelectedList}
       isLoading={isLoading}
       draftValues={mergedValues}
+      enableDrafts={true}
     />
   );
 }

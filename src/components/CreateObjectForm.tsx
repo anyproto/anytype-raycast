@@ -18,6 +18,7 @@ interface CreateObjectFormProps {
   setSelectedList: (listId: string) => void;
   isLoading: boolean;
   draftValues: CreateObjectFormValues;
+  enableDrafts: boolean;
 }
 
 export default function CreateObjectForm({
@@ -32,6 +33,7 @@ export default function CreateObjectForm({
   setSelectedList,
   isLoading,
   draftValues,
+  enableDrafts,
 }: CreateObjectFormProps) {
   const [loading, setLoading] = useState(false);
   const hasSelectedSpaceAndType = selectedSpace && selectedType;
@@ -119,7 +121,7 @@ export default function CreateObjectForm({
     <Form
       navigationTitle="Create Object"
       isLoading={loading || isLoading}
-      enableDrafts
+      enableDrafts={enableDrafts}
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Create Object" icon={Icon.Plus} onSubmit={handleSubmit} />
