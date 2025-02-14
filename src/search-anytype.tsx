@@ -150,8 +150,8 @@ function Search() {
   // Process pinned objects and filter by search term
   const processedPinnedObjects = pinnedObjects?.length
     ? pinnedObjects
-        // TODO: requires API change to return unique_key for object type
-        // .filter((object) => objectTypes.length === 0 || objectTypes.includes(object.type))
+        // TODO: decide on wanted behavior for pinned objects
+        .filter((object) => objectTypes.length === 0 || objectTypes.includes(object.type.unique_key))
         .filter((object) => filterObjectsBySearchTerm([object], searchText).length > 0)
         .map((object) => processObjectWithSpaceIcon(object, true))
     : [];
