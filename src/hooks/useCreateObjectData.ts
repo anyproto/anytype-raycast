@@ -29,12 +29,6 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
     "ot-participant",
   ];
 
-  useEffect(() => {
-    if (spaces.length > 0 && !selectedSpace) {
-      setSelectedSpace(spaces[0].id);
-    }
-  }, [spaces]);
-
   const {
     data: allTypes,
     error: typesError,
@@ -45,12 +39,6 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
     if (!allTypes) return [];
     return allTypes.filter((type) => !restrictedTypes.includes(type.unique_key));
   }, [allTypes, restrictedTypes]);
-
-  useEffect(() => {
-    if (objectTypes.length > 0 && !selectedType) {
-      setSelectedType(objectTypes[0].id);
-    }
-  }, [objectTypes]);
 
   useEffect(() => {
     if (spacesError || listsError || typesError) {
