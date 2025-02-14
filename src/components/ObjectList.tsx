@@ -175,19 +175,21 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   };
 
   const { processedPinned, processedRegular } = getCurrentItems();
+  const isLoading =
+    isLoadingObjects ||
+    isLoadingTypes ||
+    isLoadingMembers ||
+    isLoadingPinnedObjects ||
+    isLoadingPinnedTypes ||
+    isLoadingPinnedMembers;
 
   return (
     <List
-      isLoading={
-        isLoadingObjects ||
-        isLoadingTypes ||
-        isLoadingMembers ||
-        isLoadingPinnedObjects ||
-        isLoadingPinnedTypes ||
-        isLoadingPinnedMembers
-      }
+      isLoading={isLoading}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder={`Search ${currentView}...`}
+      pagination={pagination}
+      throttle={true}
       searchBarAccessory={
         <List.Dropdown
           tooltip="Choose View"
@@ -198,8 +200,6 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
           <List.Dropdown.Item title="Members" value="members" icon={Icon.PersonCircle} />
         </List.Dropdown>
       }
-      pagination={pagination}
-      throttle={true}
     >
       {processedPinned && processedPinned.length > 0 && (
         <List.Section

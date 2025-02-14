@@ -55,6 +55,7 @@ export default function TemplateList({ spaceId, typeId, viewType, isGlobalSearch
       onSearchTextChange={setSearchText}
       searchBarPlaceholder="Search templates and objects..."
       pagination={objectsPagination || templatesPagination}
+      throttle={true}
     >
       {filteredTemplates && filteredTemplates.length > 0 ? (
         <List.Section

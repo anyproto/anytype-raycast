@@ -36,6 +36,7 @@ export default function CollectionList({ spaceId, listId }: CollectionListProps)
       onSearchTextChange={setSearchText}
       searchBarPlaceholder={"Search objects in list..."}
       pagination={objectsPagination}
+      throttle={true}
     >
       {filteredObjects && filteredObjects.length > 0 ? (
         <List.Section
