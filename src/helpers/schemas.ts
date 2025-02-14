@@ -20,7 +20,7 @@ export interface TokenResponse {
 }
 
 export interface Space {
-  type: string;
+  object: string;
   id: string;
   name: string;
   icon: string;
@@ -42,7 +42,7 @@ export interface Space {
 }
 
 export interface Member {
-  type: string;
+  object: string;
   id: string;
   name: string;
   icon: string;
@@ -60,10 +60,11 @@ export interface Export {
 }
 
 export interface SpaceObject {
-  type: string;
+  object: string;
   id: string;
   name: string;
   icon: string;
+  type: Type;
   snippet: string;
   layout: string;
   space_id: string;
@@ -121,7 +122,7 @@ export interface Tag {
 }
 
 export interface Type {
-  type: string;
+  object: string;
   id: string;
   unique_key: string;
   name: string;
@@ -130,7 +131,7 @@ export interface Type {
 }
 
 export interface Template {
-  type: string;
+  object: string;
   id: string;
   name: string;
   icon: string;

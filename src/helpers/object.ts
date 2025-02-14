@@ -36,8 +36,8 @@ export function processObject(
     },
     title: object.name,
     subtitle: {
-      value: object.type,
-      tooltip: `Type: ${object.type}`,
+      value: object.type.name,
+      tooltip: `Type: ${object.type.name}`,
     },
     accessories: [
       ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
