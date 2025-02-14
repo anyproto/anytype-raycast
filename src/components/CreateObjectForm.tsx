@@ -117,6 +117,7 @@ export default function CreateObjectForm({
 
   return (
     <Form
+      navigationTitle="Create Object"
       isLoading={loading || isLoading}
       enableDrafts
       actions={

@@ -25,6 +25,7 @@ export default function CreateSpaceForm() {
 
   return (
     <Form
+      navigationTitle="Create Space"
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Create Space" icon={Icon.Plus} onSubmit={handleSubmit} />
