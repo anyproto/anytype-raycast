@@ -105,13 +105,18 @@ export interface File {
 
 export interface Detail {
   id: string;
-  details: {
-    type: string; // "date", "select", "multi_select", "object"
-    date: string; // Date in ISO 8601 format
-    select: Tag; // Selected option
-    multi_select: Tag[]; // List of selected options
-    object: Member | SpaceObject; // Details of a participant
-  };
+  details: DetailData;
+}
+
+export interface DetailData {
+  name: string; // Name of the detail
+  type: string; // "text", "number", "date", "select", "multi_select", "object"
+  text: string; // Text value
+  number: number; // Number value
+  date: string; // Date in ISO 8601 format
+  select: Tag; // Selected option
+  multi_select: Tag[]; // List of selected options
+  object: Member | SpaceObject; // Details of a participant
 }
 
 export interface Tag {
