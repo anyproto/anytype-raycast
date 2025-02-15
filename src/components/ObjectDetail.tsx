@@ -1,7 +1,7 @@
 import { Detail, Icon, Image, showToast, Toast } from "@raycast/api";
 import { format } from "date-fns";
-import { useEffect } from "react";
-import type { DetailData, Member, Tag } from "../helpers/schemas";
+import { useEffect, useState } from "react";
+import type { DetailData, Tag } from "../helpers/schemas";
 import { useExport } from "../hooks/useExport";
 import { useObject } from "../hooks/useObject";
 import ObjectActions from "./ObjectActions";
@@ -30,6 +30,7 @@ export default function ObjectDetail({
     "markdown",
   );
 
+  const [showDetails, setShowDetails] = useState(true);
   const details = object?.details || [];
 
   const createdDateDetail = details.find((detail) => detail.id === "created_date");
@@ -175,6 +176,8 @@ export default function ObjectDetail({
           isGlobalSearch={isGlobalSearch}
           isNoPinView={false}
           isPinned={isPinned}
+          showDetails={showDetails}
+          onToggleDetails={() => setShowDetails((prev) => !prev)}
         />
       }
     />

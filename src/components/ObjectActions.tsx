@@ -35,6 +35,8 @@ type ObjectActionsProps = {
   isGlobalSearch: boolean;
   isNoPinView: boolean;
   isPinned: boolean;
+  showDetails: boolean;
+  onToggleDetails: () => void;
 };
 
 export default function ObjectActions({
@@ -51,6 +53,8 @@ export default function ObjectActions({
   isGlobalSearch,
   isNoPinView,
   isPinned,
+  showDetails,
+  onToggleDetails,
 }: ObjectActionsProps) {
   const { primaryAction } = getPreferenceValues();
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
@@ -308,7 +312,14 @@ export default function ObjectActions({
           />
         </ActionPanel.Section>
       )}
+
       <ActionPanel.Section>
+        <Action
+          icon={showDetails ? Icon.EyeDisabled : Icon.Eye}
+          title={showDetails ? "Hide Details" : "Show Details"}
+          shortcut={{ modifiers: ["cmd"], key: "d" }}
+          onAction={onToggleDetails}
+        />
         <Action
           icon={Icon.RotateClockwise}
           title={`Refresh ${getContextLabel(false)}`}
