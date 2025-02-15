@@ -35,8 +35,8 @@ type ObjectActionsProps = {
   isGlobalSearch: boolean;
   isNoPinView: boolean;
   isPinned: boolean;
-  showDetails: boolean;
-  onToggleDetails: () => void;
+  showDetails?: boolean;
+  onToggleDetails?: () => void;
 };
 
 export default function ObjectActions({
@@ -314,12 +314,14 @@ export default function ObjectActions({
       )}
 
       <ActionPanel.Section>
-        <Action
-          icon={showDetails ? Icon.EyeDisabled : Icon.Eye}
-          title={showDetails ? "Hide Details" : "Show Details"}
-          shortcut={{ modifiers: ["cmd"], key: "d" }}
-          onAction={onToggleDetails}
-        />
+        {isDetailView && (
+          <Action
+            icon={showDetails ? Icon.EyeDisabled : Icon.Eye}
+            title={showDetails ? "Hide Details" : "Show Details"}
+            shortcut={{ modifiers: ["cmd"], key: "d" }}
+            onAction={onToggleDetails}
+          />
+        )}
         <Action
           icon={Icon.RotateClockwise}
           title={`Refresh ${getContextLabel(false)}`}
