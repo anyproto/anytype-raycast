@@ -32,22 +32,6 @@ export default function ObjectDetail({
 
   const [showDetails, setShowDetails] = useState(true);
   const details = object?.details || [];
-
-  const createdDateDetail = details.find((detail) => detail.id === "created_date");
-  const createdDate = createdDateDetail?.details?.date;
-
-  const createdByDetail = details.find((detail) => detail.id === "created_by");
-  const createdBy = createdByDetail?.details?.object as Member | undefined;
-
-  const lastModifiedDateDetail = details.find((detail) => detail.id === "last_modified_date");
-  const lastModifiedDate = lastModifiedDateDetail?.details?.date;
-
-  const lastModifiedByDetail = details.find((detail) => detail.id === "last_modified_by");
-  const lastModifiedBy = lastModifiedByDetail?.details?.object as Member | undefined;
-
-  const tagsDetail = details.find((detail) => detail.id === "tag");
-  const tags = tagsDetail?.details?.multi_select || [];
-
   const excludedDetailIds = new Set(["added_date", "last_opened_date"]);
   const additionalDetails = details.filter((detail) => !excludedDetailIds.has(detail.id));
 
@@ -108,61 +92,16 @@ export default function ObjectDetail({
     }
     return null;
   }
-  const univeralDetails = additionalDetails.map(renderUniversalDetail).filter(Boolean);
+  const mappedDetailComponents = additionalDetails.map(renderUniversalDetail).filter(Boolean);
 
   return (
     <Detail
       markdown={objectExport?.markdown}
       isLoading={isLoadingObject || isLoadingObjectExport}
       metadata={
-        <Detail.Metadata>
-          {lastModifiedDate ? (
-            <Detail.Metadata.Label
-              title="Last Modified Date"
-              icon={Icon.Calendar}
-              text={format(new Date(lastModifiedDate), "MMMM d, yyyy")}
-            />
-          ) : null}
-          {lastModifiedBy ? (
-            <Detail.Metadata.Label
-              title="Last Modified By"
-              text={lastModifiedBy.global_name || lastModifiedBy.name}
-              icon={{ source: lastModifiedBy.icon || Icon.PersonCircle, mask: Image.Mask.Circle }}
-            />
-          ) : null}
-          <Detail.Metadata.Separator />
-          {createdDate ? (
-            <Detail.Metadata.Label
-              title="Created Date"
-              icon={Icon.Calendar}
-              text={format(new Date(createdDate), "MMMM d, yyyy")}
-            />
-          ) : null}
-          {createdBy ? (
-            <Detail.Metadata.Label
-              key={createdBy.id}
-              title="Created By"
-              text={createdBy.global_name || createdBy.name}
-              icon={{ source: createdBy.icon || Icon.PersonCircle, mask: Image.Mask.Circle }}
-            />
-          ) : null}
-          <Detail.Metadata.Separator />
-          {tags.length > 0 ? (
-            <Detail.Metadata.TagList title="Tags">
-              {tags.map((tag) => (
-                <Detail.Metadata.TagList.Item key={tag.id} text={tag.name} color={tag.color} />
-              ))}
-            </Detail.Metadata.TagList>
-          ) : (
-            <Detail.Metadata.Label title="Tags" icon={Icon.Tag} text="No tags" />
-          )}
-          {univeralDetails && univeralDetails.length > 0 && (
-            <>
-              <Detail.Metadata.Separator />
-              {univeralDetails}
-            </>
-          )}
-        </Detail.Metadata>
+        showDetails && mappedDetailComponents.length > 0 ? (
+          <Detail.Metadata>{mappedDetailComponents}</Detail.Metadata>
+        ) : undefined
       }
       actions={
         <ObjectActions
