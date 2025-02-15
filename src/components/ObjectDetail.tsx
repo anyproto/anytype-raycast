@@ -35,6 +35,21 @@ export default function ObjectDetail({
   const excludedDetailIds = new Set(["added_date", "last_opened_date"]);
   const additionalDetails = details.filter((detail) => !excludedDetailIds.has(detail.id));
 
+  const priorityOrder = ["description", "created_date", "created_by", "last_modified_date", "last_modified_by", "tag"];
+  const orderedDetails = additionalDetails.sort((a, b) => {
+    const aPriority = priorityOrder.indexOf(a.id);
+    const bPriority = priorityOrder.indexOf(b.id);
+
+    // If either detail is in the priority list, use that order.
+    if (aPriority !== -1 || bPriority !== -1) {
+      if (aPriority === -1) return 1;
+      if (bPriority === -1) return -1;
+      return aPriority - bPriority;
+    }
+    // Otherwise, sort alphabetically by the detail type.
+    return a.details.type.localeCompare(b.details.type);
+  });
+
   useEffect(() => {
     if (objectError) {
       showToast(Toast.Style.Failure, "Failed to fetch object", objectError.message);
@@ -47,44 +62,41 @@ export default function ObjectDetail({
     }
   }, [objectExportError]);
 
-  function renderUniversalDetail(detail: { id: string; details: DetailData }) {
+  function renderDetailMetadata(detail: { id: string; details: DetailData }) {
     const { id, details: detailData } = detail;
-    const title = detailData.name || "Unknown";
+    const titleText = detailData.name || id.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
     if (detailData.text) {
-      return <Detail.Metadata.Label key={id} icon={Icon.Text} title={title} text={detailData.text} />;
+      return <Detail.Metadata.Label key={id} icon={Icon.Text} title={titleText} text={detailData.text} />;
     }
     if (detailData.number !== undefined) {
-      return <Detail.Metadata.Label key={id} title={title} icon={Icon.Hashtag} text={String(detailData.number)} />;
+      return <Detail.Metadata.Label key={id} title={titleText} icon={Icon.Hashtag} text={String(detailData.number)} />;
     }
-
     if (detailData.date) {
       return (
         <Detail.Metadata.Label
           key={id}
-          title={title}
+          title={titleText}
           text={format(new Date(detailData.date), "MMMM d, yyyy")}
           icon={Icon.Calendar}
         />
       );
     }
-
     if (detailData.select || detailData.multi_select) {
       const tags = (detailData.select ? detailData.select : detailData.multi_select) as Tag[];
       return (
-        <Detail.Metadata.TagList key={id} title={title}>
+        <Detail.Metadata.TagList key={id} title={titleText}>
           {tags.map((tag) => (
             <Detail.Metadata.TagList.Item key={tag.id} text={tag.name} color={tag.color} />
           ))}
         </Detail.Metadata.TagList>
       );
     }
-
     if (detailData.object) {
       return (
         <Detail.Metadata.Label
           key={id}
-          title={title}
+          title={titleText}
           text={detailData.object.name || detailData.object.id}
           icon={{ source: detailData.object.icon || Icon.PersonCircle, mask: Image.Mask.Circle }}
         />
@@ -92,15 +104,34 @@ export default function ObjectDetail({
     }
     return null;
   }
-  const mappedDetailComponents = additionalDetails.map(renderUniversalDetail).filter(Boolean);
+
+  function getGroup(detailId: string, detailType: string): string {
+    if (detailId === "description") return "description";
+    if (["created_date", "created_by", "last_modified_date", "last_modified_by"].includes(detailId))
+      return "modification";
+    if (detailId === "tag" || ["select", "multi_select"].includes(detailType)) return "tags";
+    return "others";
+  }
+
+  const renderedDetailComponents: JSX.Element[] = [];
+  let previousGroup: string | null = null;
+  orderedDetails.forEach((detail) => {
+    const currentGroup = getGroup(detail.id, detail.details.type);
+    if (previousGroup !== null && currentGroup !== previousGroup) {
+      renderedDetailComponents.push(<Detail.Metadata.Separator key={`separator-${detail.id}`} />);
+    }
+    const rendered = renderDetailMetadata(detail);
+    if (rendered) renderedDetailComponents.push(rendered);
+    previousGroup = currentGroup;
+  });
 
   return (
     <Detail
       markdown={objectExport?.markdown}
       isLoading={isLoadingObject || isLoadingObjectExport}
       metadata={
-        showDetails && mappedDetailComponents.length > 0 ? (
-          <Detail.Metadata>{mappedDetailComponents}</Detail.Metadata>
+        showDetails && renderedDetailComponents.length > 0 ? (
+          <Detail.Metadata>{renderedDetailComponents}</Detail.Metadata>
         ) : undefined
       }
       actions={
