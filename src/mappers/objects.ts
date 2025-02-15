@@ -1,36 +1,81 @@
 import { getPreferenceValues } from "@raycast/api";
 import { getIconWithFallback } from "../helpers/icon";
-import { Detail, Member, SpaceObject } from "../helpers/schemas";
+import { Member, SpaceObject } from "../helpers/schemas";
 
 /**
  * Map raw `SpaceObject` item into display-ready data, including details, icons, etc.
  */
 export async function mapObject(object: SpaceObject): Promise<SpaceObject> {
-  const getDetail = (id: string): Detail["details"] | undefined =>
-    object.details?.find((detail) => detail.id === id)?.details;
-
-  // Resolve object icon
   const icon = await getIconWithFallback(object.icon, object.layout);
 
-  // Extract 'created' details
-  const createdDateString = getDetail("created_date")?.date as string;
-  const createdDate = createdDateString ? new Date(createdDateString) : new Date(0);
-  const createdByDetails = getDetail("created_by")?.object as Member;
-  const createdBy = {
-    name: createdByDetails?.name || "Unknown",
-    icon: await getIconWithFallback(createdByDetails?.icon, "participant"),
-    globalName: createdByDetails?.global_name || "",
-  };
+  const mappedDetails = await Promise.all(
+    object.details.map(async (detail) => {
+      const { id, details } = detail;
+      let mappedDetail = { ...details };
 
-  // Extract 'last modified' details
-  const lastModifiedDateString = getDetail("last_modified_date")?.date as string;
-  const lastModifiedDate = lastModifiedDateString ? new Date(lastModifiedDateString) : new Date(0);
-  const lastModifiedByDetails = getDetail("last_modified_by")?.object as Member;
-  const lastModifiedBy = {
-    name: lastModifiedByDetails?.name || "Unknown",
-    icon: await getIconWithFallback(lastModifiedByDetails?.icon, "participant"),
-    globalName: lastModifiedByDetails?.global_name || "",
-  };
+      if (detail.details.type === "text" && details.text) {
+        const textString = details.text as string;
+        mappedDetail = {
+          ...mappedDetail,
+          text: textString,
+        };
+      }
+
+      if (detail.details.type === "number" && details.number !== undefined && details.number !== null) {
+        const numberString = details.number;
+        mappedDetail = {
+          ...mappedDetail,
+          number: numberString,
+        };
+      }
+
+      if (detail.details.type === "date" && details.date) {
+        const dateString = details.date as string;
+        mappedDetail = {
+          ...mappedDetail,
+          date: new Date(dateString).toISOString(),
+        };
+      }
+
+      if (detail.details.type === "select" && details.select) {
+        const selectDetails = details.select;
+        mappedDetail = {
+          ...mappedDetail,
+          select: selectDetails,
+        };
+      }
+
+      if (detail.details.type === "multi_select" && details.multi_select) {
+        const multiSelectDetails = details.multi_select;
+        mappedDetail = {
+          ...mappedDetail,
+          multi_select: multiSelectDetails,
+        };
+      }
+
+      if (detail.details.type === "object" && details.object) {
+        if (id === "created_by" || id === "last_modified_by") {
+          const memberDetails = details.object as Member;
+          mappedDetail = {
+            ...mappedDetail,
+            object: {
+              name: memberDetails?.name || "Unknown",
+              icon: await getIconWithFallback(memberDetails?.icon, "participant"),
+              global_name: memberDetails?.global_name || "",
+            } as Member,
+          };
+        } else {
+          // TODO
+          console.log("Object detail type not implemented:", id);
+        }
+      }
+
+      return {
+        ...detail,
+        details: mappedDetail,
+      };
+    }),
+  );
 
   return {
     ...object,
@@ -38,20 +83,7 @@ export async function mapObject(object: SpaceObject): Promise<SpaceObject> {
     blocks: undefined, // remove blocks to improve performance, as they're not used in the UI
     name: object.name || object.snippet || "Untitled",
     type: object.type || "Unknown Type",
-    details: object.details.map((detail) => {
-      const { id, details } = detail;
-
-      return {
-        ...detail,
-        details: {
-          ...details,
-          ...(id === "created_date" && { created_date: createdDate.toISOString() }),
-          ...(id === "created_by" && { createdBy }),
-          ...(id === "last_modified_date" && { last_modified_date: lastModifiedDate.toISOString() }),
-          ...(id === "last_modified_by" && { lastModifiedBy }),
-        },
-      };
-    }),
+    details: mappedDetails,
   };
 }
 
