@@ -117,12 +117,14 @@ export default function ObjectDetail({
   let previousGroup: string | null = null;
   orderedDetails.forEach((detail) => {
     const currentGroup = getGroup(detail.id, detail.details.type);
-    if (previousGroup !== null && currentGroup !== previousGroup) {
-      renderedDetailComponents.push(<Detail.Metadata.Separator key={`separator-${detail.id}`} />);
-    }
     const rendered = renderDetailMetadata(detail);
-    if (rendered) renderedDetailComponents.push(rendered);
-    previousGroup = currentGroup;
+    if (rendered) {
+      if (previousGroup !== null && currentGroup !== previousGroup) {
+        renderedDetailComponents.push(<Detail.Metadata.Separator key={`separator-${detail.id}`} />);
+      }
+      renderedDetailComponents.push(rendered);
+      previousGroup = currentGroup;
+    }
   });
 
   return (
