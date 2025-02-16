@@ -7,17 +7,17 @@ import { useSearch } from "../hooks/useSearch";
 import { useTemplates } from "../hooks/useTemplates";
 import EmptyViewObject from "./EmptyViewObject";
 import ObjectActions from "./ObjectActions";
+import { CurrentView } from "./ObjectList";
 import ObjectListItem from "./ObjectListItem";
 
 type TemplatesListProps = {
   spaceId: string;
   typeId: string;
-  viewType: string;
   isGlobalSearch: boolean;
   isPinned: boolean;
 };
 
-export default function TemplateList({ spaceId, typeId, viewType, isGlobalSearch, isPinned }: TemplatesListProps) {
+export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned }: TemplatesListProps) {
   const [searchText, setSearchText] = useState("");
   const { templates, templatesError, isLoadingTemplates, mutateTemplates, templatesPagination } = useTemplates(
     spaceId,
@@ -108,7 +108,7 @@ export default function TemplateList({ spaceId, typeId, viewType, isGlobalSearch
               accessories={object.accessories}
               mutate={object.mutate}
               layout={object.layout}
-              viewType={viewType}
+              viewType={CurrentView.objects}
               isGlobalSearch={isGlobalSearch}
               isNoPinView={true}
               isPinned={object.isPinned}

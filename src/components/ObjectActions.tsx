@@ -252,13 +252,7 @@ export default function ObjectActions({
             icon={Icon.BulletPoints}
             title="View Templates"
             target={
-              <TemplateList
-                spaceId={spaceId}
-                typeId={objectId}
-                viewType={viewType}
-                isGlobalSearch={isGlobalSearch}
-                isPinned={isPinned}
-              />
+              <TemplateList spaceId={spaceId} typeId={objectId} isGlobalSearch={isGlobalSearch} isPinned={isPinned} />
             }
           />
         )}
