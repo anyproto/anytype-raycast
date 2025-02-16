@@ -261,7 +261,7 @@ export default function ObjectActions({
       <ActionPanel.Section>
         {objectExport && (
           <Action.CopyToClipboard
-            title="Copy Object"
+            title={`Copy Markdown`}
             shortcut={{ modifiers: ["cmd"], key: "c" }}
             content={objectExport.markdown}
           />
@@ -311,7 +311,7 @@ export default function ObjectActions({
         {isDetailView && (
           <Action
             icon={showDetails ? Icon.EyeDisabled : Icon.Eye}
-            title={showDetails ? "Hide Details" : "Show Details"}
+            title={showDetails ? "Hide Sidebar" : "Show Sidebar"}
             shortcut={{ modifiers: ["cmd"], key: "d" }}
             onAction={onToggleDetails}
           />
