@@ -84,13 +84,15 @@ export default function ObjectDetail({
     }
     if (detailData.select || detailData.multi_select) {
       const tags = (detailData.select ? detailData.select : detailData.multi_select) as Tag[];
-      return (
-        <Detail.Metadata.TagList key={id} title={titleText}>
-          {tags.map((tag) => (
-            <Detail.Metadata.TagList.Item key={tag.id} text={tag.name} color={tag.color} />
-          ))}
-        </Detail.Metadata.TagList>
-      );
+      if (tags.length > 0) {
+        return (
+          <Detail.Metadata.TagList key={id} title={titleText}>
+            {tags?.map((tag) => <Detail.Metadata.TagList.Item key={tag.id} text={tag.name} color={tag.color} />)}
+          </Detail.Metadata.TagList>
+        );
+      } else {
+        return <Detail.Metadata.Label key={id} title={titleText} icon={Icon.Tag} text="No Tag" />;
+      }
     }
     if (detailData.object) {
       return (
