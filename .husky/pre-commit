@@ -1,3 +1,3 @@
 # TODO: ray lint doesn't support passing file names to lint
 # npx run lin-staged
-npm run lint && npm run type-check
+npm run fix-lint && npm run type-check
