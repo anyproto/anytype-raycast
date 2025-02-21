@@ -1,12 +1,31 @@
+import { showToast, Toast } from "@raycast/api";
+import semver from "semver";
 import { apiFetch } from "../helpers/api";
-import { apiEndpoints, errorConnectionMessage } from "../helpers/constants";
+import { apiEndpoints, currentApiVersion, errorConnectionMessage } from "../helpers/constants";
 import { PaginatedResponse, Space } from "../helpers/schemas";
 
 // Validate token by checking if data can be fetched without errors
 export async function validateToken(): Promise<boolean> {
   try {
     const { url, method } = apiEndpoints.getSpaces({ offset: 0, limit: 1 });
-    await apiFetch<PaginatedResponse<Space>>(url, { method: method });
+    const response = await apiFetch<PaginatedResponse<Space>>(url, { method: method });
+
+    const apiVersion = response.headers.get("X-API-Version");
+    if (apiVersion) {
+      if (semver.gt(apiVersion, currentApiVersion)) {
+        showToast(
+          Toast.Style.Failure,
+          "Extension Update Required",
+          `Please update the extension to match the Anytype app's API version ${apiVersion}.`,
+        );
+      } else if (semver.lt(apiVersion, currentApiVersion)) {
+        showToast(
+          Toast.Style.Failure,
+          "App Update Required",
+          `Please update the Anytype app to match the extension's API version ${currentApiVersion}.`,
+        );
+      }
+    }
     return true;
   } catch (error) {
     if (error instanceof Error) {

@@ -10,7 +10,7 @@ export async function getSpace(spaceId: string): Promise<{
   try {
     const response = await apiFetch<{ space: Space }>(url, { method: method });
     return {
-      space: response ? await mapSpace(response.space) : null,
+      space: response ? await mapSpace(response.payload.space) : null,
     };
   } catch (error) {
     if (error instanceof Error && error.message.includes("404")) {

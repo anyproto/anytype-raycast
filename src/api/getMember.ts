@@ -13,7 +13,7 @@ export async function getMember(
   try {
     const response = await apiFetch<{ member: Member }>(url, { method: method });
     return {
-      member: response ? await mapMember(response.member) : null,
+      member: response ? await mapMember(response.payload.member) : null,
     };
   } catch (error) {
     if (error instanceof Error && error.message.includes("404")) {

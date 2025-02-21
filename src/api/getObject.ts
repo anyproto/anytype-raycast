@@ -13,7 +13,7 @@ export async function getObject(
   try {
     const response = await apiFetch<{ object: SpaceObject }>(url, { method: method });
     return {
-      object: response ? await mapObject(response.object) : null,
+      object: response ? await mapObject(response.payload.object) : null,
     };
   } catch (error) {
     if (error instanceof Error && error.message.includes("404")) {

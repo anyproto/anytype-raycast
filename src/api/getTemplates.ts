@@ -18,7 +18,7 @@ export async function getTemplates(
   const response = await apiFetch<PaginatedResponse<Template>>(url, { method: method });
 
   return {
-    templates: response.data ? await mapTemplates(response.data) : [],
-    pagination: response.pagination,
+    templates: response.payload.data ? await mapTemplates(response.payload.data) : [],
+    pagination: response.payload.pagination,
   };
 }

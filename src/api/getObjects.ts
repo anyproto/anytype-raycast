@@ -14,7 +14,7 @@ export async function getObjects(
   const response = await apiFetch<PaginatedResponse<SpaceObject>>(url, { method: method });
 
   return {
-    objects: response.data ? await mapObjects(response.data) : [],
-    pagination: response.pagination,
+    objects: response.payload.data ? await mapObjects(response.payload.data) : [],
+    pagination: response.payload.pagination,
   };
 }

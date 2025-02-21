@@ -14,7 +14,7 @@ export async function getMembers(
   const response = await apiFetch<PaginatedResponse<Member>>(url, { method: method });
 
   return {
-    members: response.data ? await mapMembers(response.data) : [],
-    pagination: response.pagination,
+    members: response.payload.data ? await mapMembers(response.payload.data) : [],
+    pagination: response.payload.pagination,
   };
 }

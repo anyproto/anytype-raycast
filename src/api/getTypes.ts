@@ -17,7 +17,7 @@ export async function getTypes(
   const response = await apiFetch<PaginatedResponse<Type>>(url, { method: method });
 
   return {
-    types: response.data ? await mapTypes(response.data) : [],
-    pagination: response.pagination,
+    types: response.payload.data ? await mapTypes(response.payload.data) : [],
+    pagination: response.payload.pagination,
   };
 }

@@ -14,6 +14,7 @@ export const anytypeChatDeeplink = (spaceId: string, workspaceId: string) =>
   `anytype://main/chat/${workspaceId}/space.id/${spaceId}`;
 
 // Numbers
+export const currentApiVersion = "0.0.2";
 export const apiLimit = getPreferenceValues().limit;
 export const apiLimitMax = 1000;
 export const iconWidth = 64;

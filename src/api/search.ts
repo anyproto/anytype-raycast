@@ -15,7 +15,7 @@ export async function search(
   });
 
   return {
-    data: response.data ? await mapObjects(response.data) : [],
-    pagination: response.pagination,
+    data: response.payload.data ? await mapObjects(response.payload.data) : [],
+    pagination: response.payload.pagination,
   };
 }

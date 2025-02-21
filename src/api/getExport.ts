@@ -15,7 +15,7 @@ export async function getExport(spaceId: string, objectId: string, format: strin
   });
 
   // Find markdown file in the output directory
-  const outputPath = response.path;
+  const outputPath = response.payload.path;
   const mdFiles = fs.readdirSync(outputPath).filter((file) => file.endsWith(".md"));
   if (mdFiles.length === 0) throw new Error("Markdown file not found in export .");
   if (mdFiles.length > 1) throw new Error("Multiple markdown files found in export.");

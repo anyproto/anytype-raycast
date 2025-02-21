@@ -4,5 +4,6 @@ import { DisplayCodeResponse } from "../helpers/schemas";
 
 export async function displayCode(appName: string): Promise<DisplayCodeResponse> {
   const { url, method } = apiEndpoints.displayCode(appName);
-  return await apiFetch<DisplayCodeResponse>(url, { method: method });
+  const response = await apiFetch<DisplayCodeResponse>(url, { method: method });
+  return response.payload;
 }

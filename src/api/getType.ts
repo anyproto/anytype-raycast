@@ -13,7 +13,7 @@ export async function getType(
   try {
     const response = await apiFetch<{ type: Type }>(url, { method: method });
     return {
-      type: response ? await mapType(response.type) : null,
+      type: response ? await mapType(response.payload.type) : null,
     };
   } catch (error) {
     if (error instanceof Error && error.message.includes("404")) {

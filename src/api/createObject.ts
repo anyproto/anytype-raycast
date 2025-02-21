@@ -15,6 +15,6 @@ export async function createObject(
   });
 
   return {
-    object: response ? await mapObject(response.object) : null,
+    object: response ? await mapObject(response.payload.object) : null,
   };
 }

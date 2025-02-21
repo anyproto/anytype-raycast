@@ -11,7 +11,7 @@ export async function getSpaces(options: { offset: number; limit: number }): Pro
   const response = await apiFetch<PaginatedResponse<Space>>(url, { method: method });
 
   return {
-    spaces: response.data ? await mapSpaces(response.data) : [],
-    pagination: response.pagination,
+    spaces: response.payload.data ? await mapSpaces(response.payload.data) : [],
+    pagination: response.payload.pagination,
   };
 }

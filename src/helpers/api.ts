@@ -1,5 +1,5 @@
 import { LocalStorage, Toast, showToast } from "@raycast/api";
-import fetch from "node-fetch";
+import fetch, { Headers as FetchHeaders } from "node-fetch";
 import { errorConnectionMessage, localStorageKeys } from "./constants";
 
 interface FetchOptions {
@@ -8,7 +8,12 @@ interface FetchOptions {
   body?: string;
 }
 
-export async function apiFetch<T>(url: string, options: FetchOptions): Promise<T> {
+export interface ApiResponse<T> {
+  headers: FetchHeaders;
+  payload: T;
+}
+
+export async function apiFetch<T>(url: string, options: FetchOptions): Promise<ApiResponse<T>> {
   try {
     const response = await fetch(url, {
       method: options.method,
@@ -31,7 +36,10 @@ export async function apiFetch<T>(url: string, options: FetchOptions): Promise<T
     }
 
     try {
-      return (await response.json()) as T;
+      return {
+        payload: (await response.json()) as T,
+        headers: response.headers,
+      };
     } catch (error) {
       throw new Error("Failed to parse JSON response");
     }
