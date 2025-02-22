@@ -22,8 +22,8 @@ export function processObject(
   layout: string;
   isPinned: boolean;
 } {
-  const dateToSortAfter = getPreferenceValues().sort;
-  const date = object.details.find((detail) => detail.id === dateToSortAfter)?.details.date as string;
+  const { sort } = getPreferenceValues();
+  const date = object.details.find((detail) => detail.id === sort)?.details.date as string;
   const hasValidDate = date && new Date(date).getTime() !== 0;
 
   return {

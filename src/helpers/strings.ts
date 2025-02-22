@@ -16,7 +16,7 @@ export function pluralize(
  * Get the label for the date field based on the sort preference.
  */
 export function getDateLabel(): string | undefined {
-  const sort = getPreferenceValues().sort;
+  const { sort } = getPreferenceValues();
   switch (sort) {
     case "created_date":
       return "Created Date";
@@ -33,7 +33,7 @@ export function getDateLabel(): string | undefined {
  * Get the short date label based on the sort preference.
  */
 export function getShortDateLabel(): string {
-  const sort = getPreferenceValues().sort;
+  const { sort } = getPreferenceValues();
   switch (sort) {
     case "created_date":
       return "Created";

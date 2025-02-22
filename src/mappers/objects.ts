@@ -3,6 +3,26 @@ import { getIconWithFallback } from "../helpers/icon";
 import { Member, SpaceObject } from "../helpers/schemas";
 
 /**
+ * Efficiently map raw `SpaceObject` items to essential display-ready data.
+ * Only includes necessary fields for list rendering for performance.
+ */
+export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]> {
+  const { sort } = getPreferenceValues();
+
+  return Promise.all(
+    objects.map(async (object) => {
+      return {
+        ...object,
+        icon: await getIconWithFallback(object.icon, object.layout),
+        name: object.name || object.snippet || "Untitled",
+        type: object.type || "Unknown Type",
+        details: object.details?.filter((detail) => detail.id === sort) || [],
+      };
+    }),
+  );
+}
+
+/**
  * Map raw `SpaceObject` item into display-ready data, including details, icons, etc.
  */
 export async function mapObject(object: SpaceObject): Promise<SpaceObject> {
@@ -85,22 +105,4 @@ export async function mapObject(object: SpaceObject): Promise<SpaceObject> {
     type: object.type || "Unknown Type",
     details: mappedDetails,
   };
-}
-
-/**
- * Efficiently map raw `SpaceObject` items to essential display-ready data.
- * Only includes necessary fields for list rendering for performance.
- */
-export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]> {
-  return Promise.all(
-    objects.map(async (object) => {
-      return {
-        ...object,
-        icon: await getIconWithFallback(object.icon, object.layout),
-        name: object.name || object.snippet || "Untitled",
-        type: object.type || "Unknown Type",
-        details: object.details?.filter((detail) => detail.id === getPreferenceValues().sort) || [],
-      };
-    }),
-  );
 }
