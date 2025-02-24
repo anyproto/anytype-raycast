@@ -15,7 +15,7 @@ import { useForm } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { displayCode } from "../api/displayCode";
 import { getToken } from "../api/getToken";
-import { validateToken } from "../api/validateToken";
+import { checkApiTokenValidity } from "../api/validateToken";
 import { apiAppName, downloadUrl, localStorageKeys } from "../helpers/constants";
 
 type EnsureAuthenticatedProps = {
@@ -73,7 +73,7 @@ export default function EnsureAuthenticated({ placeholder, viewType, children }:
     const retrieveAndValidateToken = async () => {
       const token = await LocalStorage.getItem<string>(localStorageKeys.appKey);
       if (token) {
-        const isValid = await validateToken();
+        const isValid = await checkApiTokenValidity();
         setHasToken(true);
         setTokenIsValid(isValid);
       } else {

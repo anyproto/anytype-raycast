@@ -4,8 +4,8 @@ import { apiFetch } from "../helpers/api";
 import { apiEndpoints, currentApiVersion, errorConnectionMessage } from "../helpers/constants";
 import { PaginatedResponse, Space } from "../helpers/schemas";
 
-// Validate token by checking if data can be fetched without errors
-export async function validateToken(): Promise<boolean> {
+// Validate api version and token by checking if data can be fetched without errors
+export async function checkApiTokenValidity(): Promise<boolean> {
   try {
     const { url, method } = apiEndpoints.getSpaces({ offset: 0, limit: 1 });
     const response = await apiFetch<PaginatedResponse<Space>>(url, { method: method });
