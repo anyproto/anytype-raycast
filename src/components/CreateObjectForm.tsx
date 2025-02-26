@@ -47,10 +47,7 @@ export default function CreateObjectForm({
 }: CreateObjectFormProps) {
   const [loading, setLoading] = useState(false);
   const hasSelectedSpaceAndType = selectedSpace && selectedType;
-  const selectedTypeUniqueKey = types.reduce(
-    (acc, type) => (type.id === selectedType ? type.unique_key : acc),
-    "",
-  );
+  const selectedTypeUniqueKey = types.reduce((acc, type) => (type.id === selectedType ? type.unique_key : acc), "");
 
   const { handleSubmit, itemProps } = useForm<CreateObjectFormValues>({
     initialValues: draftValues,
@@ -65,7 +62,7 @@ export default function CreateObjectForm({
           description: values.description || "",
           body: values.body || "",
           source: values.source || "",
-          template_id: "",
+          template_id: values.template || "",
           object_type_unique_key: selectedTypeUniqueKey,
         });
 
