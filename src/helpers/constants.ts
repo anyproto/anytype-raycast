@@ -51,7 +51,7 @@ export const apiEndpoints = {
     method: "POST",
   }),
 
-  // list
+  // lists
   getObjectsInList: (spaceId: string, listId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/lists/${listId}/objects${encodeQueryParams(options)}`,
     method: "GET",
@@ -65,7 +65,7 @@ export const apiEndpoints = {
     method: "DELETE",
   }),
 
-  // object
+  // objects
   createObject: (spaceId: string) => ({
     url: `${apiUrl}/spaces/${spaceId}/objects`,
     method: "POST",
@@ -93,7 +93,7 @@ export const apiEndpoints = {
     method: "POST",
   }),
 
-  // space
+  // spaces
   createSpace: {
     url: `${apiUrl}/spaces`,
     method: "POST",

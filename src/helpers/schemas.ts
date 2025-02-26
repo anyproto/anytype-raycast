@@ -154,7 +154,7 @@ export interface CreateObjectRequest {
 export interface SearchRequest {
   query: string;
   types: string[];
-  sort: SortOptions;
+  sort?: SortOptions;
 }
 
 export interface SortOptions {

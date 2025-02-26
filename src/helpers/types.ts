@@ -6,13 +6,13 @@ import { Space, Type } from "./schemas";
  * Fetches all `Type`s from a single space, doing pagination if necessary.
  */
 export async function fetchAllTypesForSpace(spaceId: string): Promise<Type[]> {
-  let allTypes: Type[] = [];
+  const allTypes: Type[] = [];
   let hasMore = true;
   let offset = 0;
 
   while (hasMore) {
     const response = await getTypes(spaceId, { offset, limit: apiLimitMax });
-    allTypes = [...allTypes, ...response.types];
+    allTypes.push(...response.types);
     hasMore = response.pagination.has_more;
     offset += apiLimitMax;
   }
