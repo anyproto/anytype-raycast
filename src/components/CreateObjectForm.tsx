@@ -4,16 +4,19 @@ import { useState } from "react";
 import { addObjectsToList } from "../api/addObjectsToList";
 import { createObject } from "../api/createObject";
 import { CreateObjectFormValues } from "../create-object";
-import { Space, SpaceObject, Type } from "../helpers/schemas";
+import { Space, SpaceObject, Template, Type } from "../helpers/schemas";
 
 interface CreateObjectFormProps {
   spaces: Space[];
-  objectTypes: Type[];
+  types: Type[];
+  templates: Template[];
   lists: SpaceObject[];
   selectedSpace: string;
   setSelectedSpace: (spaceId: string) => void;
   selectedType: string;
   setSelectedType: (type: string) => void;
+  selectedTemplate: string;
+  setSelectedTemplate: (templateId: string) => void;
   selectedList: string;
   setSelectedList: (listId: string) => void;
   listSearchText: string;
@@ -25,12 +28,15 @@ interface CreateObjectFormProps {
 
 export default function CreateObjectForm({
   spaces,
-  objectTypes,
+  types,
+  templates,
   lists,
   selectedSpace,
   setSelectedSpace,
   selectedType,
   setSelectedType,
+  selectedTemplate,
+  setSelectedTemplate,
   selectedList,
   setSelectedList,
   listSearchText,
@@ -41,7 +47,7 @@ export default function CreateObjectForm({
 }: CreateObjectFormProps) {
   const [loading, setLoading] = useState(false);
   const hasSelectedSpaceAndType = selectedSpace && selectedType;
-  const selectedTypeUniqueKey = objectTypes.reduce(
+  const selectedTypeUniqueKey = types.reduce(
     (acc, type) => (type.id === selectedType ? type.unique_key : acc),
     "",
   );
@@ -116,7 +122,7 @@ export default function CreateObjectForm({
     };
 
     return {
-      name: `Create ${objectTypes.find((type) => type.unique_key === selectedTypeUniqueKey)?.name} in ${spaces.find((space) => space.id === selectedSpace)?.name}`,
+      name: `Create ${types.find((type) => type.unique_key === selectedTypeUniqueKey)?.name} in ${spaces.find((space) => space.id === selectedSpace)?.name}`,
       link: url + "?launchContext=" + encodeURIComponent(JSON.stringify(launchContext)),
     };
   }
@@ -131,7 +137,7 @@ export default function CreateObjectForm({
           <Action.SubmitForm title="Create Object" icon={Icon.Plus} onSubmit={handleSubmit} />
           {hasSelectedSpaceAndType && (
             <Action.CreateQuicklink
-              title={`Create Quicklink: ${objectTypes.find((type) => type.unique_key === selectedTypeUniqueKey)?.name}`}
+              title={`Create Quicklink: ${types.find((type) => type.unique_key === selectedTypeUniqueKey)?.name}`}
               quicklink={getQuicklink()}
             />
           )}
@@ -164,8 +170,22 @@ export default function CreateObjectForm({
         storeValue={true} // TODO: does not work
         info="Select the type of object to create"
       >
-        {objectTypes.map((type) => (
+        {types.map((type) => (
           <Form.Dropdown.Item key={type.id} value={type.id} title={type.name} icon={type.icon} />
+        ))}
+      </Form.Dropdown>
+
+      <Form.Dropdown
+        id="template"
+        title="Template"
+        value={selectedTemplate}
+        onChange={setSelectedTemplate}
+        storeValue={true}
+        info="Select the template to use for the object"
+      >
+        <Form.Dropdown.Item key="none" value="" title="No Template" icon={Icon.Dot} />
+        {templates.map((template) => (
+          <Form.Dropdown.Item key={template.id} value={template.id} title={template.name} icon={template.icon} />
         ))}
       </Form.Dropdown>
 

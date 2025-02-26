@@ -2,13 +2,14 @@ import { showToast, Toast } from "@raycast/api";
 import { useCachedPromise } from "@raycast/utils";
 import { useEffect, useMemo, useState } from "react";
 import { CreateObjectFormValues } from "../create-object";
-import { fetchAllTypesForSpace } from "../helpers/types";
+import { fetchAllTemplatesForSpace, fetchAllTypesForSpace } from "../helpers/types";
 import { useSearch } from "./useSearch";
 import { useSpaces } from "./useSpaces";
 
 export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
   const [selectedSpace, setSelectedSpace] = useState(initialValues?.space || "");
   const [selectedType, setSelectedType] = useState(initialValues?.type || "");
+  const [selectedTemplate, setSelectedTemplate] = useState(initialValues?.template || "");
   const [selectedList, setSelectedList] = useState(initialValues?.list || "");
   const [listSearchText, setListSearchText] = useState("");
 
@@ -37,31 +38,43 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
     isLoading: isLoadingTypes,
   } = useCachedPromise(fetchAllTypesForSpace, [selectedSpace], { execute: !!selectedSpace });
 
-  const objectTypes = useMemo(() => {
+  const types = useMemo(() => {
     if (!allTypes) return [];
     return allTypes.filter((type) => !restrictedTypes.includes(type.unique_key));
   }, [allTypes, restrictedTypes]);
 
+  const {
+    data: templates,
+    error: templatesError,
+    isLoading: isLoadingTemplates,
+  } = useCachedPromise(fetchAllTemplatesForSpace, [selectedSpace, selectedType], {
+    execute: !!selectedSpace && !!selectedType,
+    initialData: [],
+  });
+
   useEffect(() => {
-    if (spacesError || listsError || typesError) {
+    if (spacesError || typesError || templatesError || listsError) {
       showToast(
         Toast.Style.Failure,
         "Failed to fetch latest data",
-        spacesError?.message || listsError?.message || typesError?.message,
+        spacesError?.message || typesError?.message || templatesError?.message || listsError?.message,
       );
     }
-  }, [spacesError, listsError, typesError]);
+  }, [spacesError, typesError, templatesError, listsError]);
 
-  const isLoading = isLoadingSpaces || isLoadingTypes || isLoadingLists;
+  const isLoading = isLoadingSpaces || isLoadingTypes || isLoadingTemplates || isLoadingLists;
 
   return {
     spaces,
+    types,
+    templates,
     lists,
-    objectTypes,
     selectedSpace,
     setSelectedSpace,
     selectedType,
     setSelectedType,
+    selectedTemplate,
+    setSelectedTemplate,
     selectedList,
     setSelectedList,
     listSearchText,

@@ -1,6 +1,7 @@
+import { getTemplates } from "../api/getTemplates";
 import { getTypes } from "../api/getTypes";
 import { apiLimitMax } from "./constants";
-import { Space, Type } from "./schemas";
+import { Space, Template, Type } from "./schemas";
 
 /**
  * Fetches all `Type`s from a single space, doing pagination if necessary.
@@ -34,4 +35,22 @@ export async function getAllTypesFromSpaces(spaces: Space[]): Promise<Type[]> {
     }
   }
   return allTypes;
+}
+
+/**
+ * Fetches all `Template`s from a single space and type, doing pagination if necessary.
+ */
+export async function fetchAllTemplatesForSpace(spaceId: string, typeId: string): Promise<Template[]> {
+  const allTemplates: Template[] = [];
+  let hasMore = true;
+  let offset = 0;
+
+  while (hasMore) {
+    const response = await getTemplates(spaceId, typeId, { offset, limit: apiLimitMax });
+    allTemplates.push(...response.templates);
+    hasMore = response.pagination.has_more;
+    offset += apiLimitMax;
+  }
+
+  return allTemplates;
 }

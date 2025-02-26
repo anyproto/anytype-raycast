@@ -6,6 +6,7 @@ import { useCreateObjectData } from "./hooks/useCreateObjectData";
 export interface CreateObjectFormValues {
   space?: string;
   type?: string;
+  template?: string;
   list?: string;
   name?: string;
   icon?: string;
@@ -18,6 +19,7 @@ interface LaunchContext {
   defaults: {
     space: string;
     type: string;
+    template: string;
     list: string;
     name: string;
     icon: string;
@@ -46,12 +48,15 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
 
   const {
     spaces,
+    types,
+    templates,
     lists,
-    objectTypes,
     selectedSpace,
     setSelectedSpace,
     selectedType,
     setSelectedType,
+    selectedTemplate,
+    setSelectedTemplate,
     selectedList,
     setSelectedList,
     listSearchText,
@@ -62,12 +67,15 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
   return (
     <CreateObjectForm
       spaces={spaces}
-      objectTypes={objectTypes}
+      types={types}
+      templates={templates}
       lists={lists}
       selectedSpace={selectedSpace}
       setSelectedSpace={setSelectedSpace}
       selectedType={selectedType}
       setSelectedType={setSelectedType}
+      selectedTemplate={selectedTemplate}
+      setSelectedTemplate={setSelectedTemplate}
       selectedList={selectedList}
       setSelectedList={setSelectedList}
       listSearchText={listSearchText}

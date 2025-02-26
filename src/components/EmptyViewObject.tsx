@@ -23,12 +23,15 @@ export default function EmptyViewObject({ title, contextValues }: EmptyViewObjec
 
   const {
     spaces,
+    types,
+    templates,
     lists,
-    objectTypes,
     selectedSpace,
     setSelectedSpace,
     selectedType,
     setSelectedType,
+    selectedTemplate,
+    setSelectedTemplate,
     selectedList,
     setSelectedList,
     listSearchText,
@@ -43,10 +46,10 @@ export default function EmptyViewObject({ title, contextValues }: EmptyViewObjec
   }, [spaces]);
 
   useEffect(() => {
-    if (objectTypes.length > 0 && !selectedType) {
-      setSelectedType(objectTypes[0].id);
+    if (types.length > 0 && !selectedType) {
+      setSelectedType(types[0].id);
     }
-  }, [objectTypes]);
+  }, [types]);
 
   return (
     <List.EmptyView
@@ -59,12 +62,15 @@ export default function EmptyViewObject({ title, contextValues }: EmptyViewObjec
             target={
               <CreateObjectForm
                 spaces={spaces}
-                objectTypes={objectTypes}
+                types={types}
+                templates={templates}
                 lists={lists}
                 selectedSpace={selectedSpace}
                 setSelectedSpace={setSelectedSpace}
                 selectedType={selectedType}
                 setSelectedType={setSelectedType}
+                selectedTemplate={selectedTemplate}
+                setSelectedTemplate={setSelectedTemplate}
                 selectedList={selectedList}
                 setSelectedList={setSelectedList}
                 listSearchText={listSearchText}
