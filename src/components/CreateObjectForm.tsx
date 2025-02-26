@@ -16,6 +16,8 @@ interface CreateObjectFormProps {
   setSelectedType: (type: string) => void;
   selectedList: string;
   setSelectedList: (listId: string) => void;
+  listSearchText: string;
+  setListSearchText: (searchText: string) => void;
   isLoading: boolean;
   draftValues: CreateObjectFormValues;
   enableDrafts: boolean;
@@ -31,6 +33,8 @@ export default function CreateObjectForm({
   setSelectedType,
   selectedList,
   setSelectedList,
+  listSearchText,
+  setListSearchText,
   isLoading,
   draftValues,
   enableDrafts,
@@ -170,10 +174,12 @@ export default function CreateObjectForm({
         title="Collection"
         value={selectedList}
         onChange={setSelectedList}
+        onSearchTextChange={setListSearchText}
+        throttle={true}
         storeValue={true}
         info="Select the collection where the object will be added"
       >
-        <Form.Dropdown.Item key="none" value="" title="No Collection" icon={Icon.Dot} />
+        {!listSearchText && <Form.Dropdown.Item key="none" value="" title="No Collection" icon={Icon.Dot} />}
         {lists.map((list) => (
           <Form.Dropdown.Item key={list.id} value={list.id} title={list.name} icon={list.icon} />
         ))}

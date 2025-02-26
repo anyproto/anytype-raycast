@@ -31,6 +31,8 @@ export default function EmptyViewObject({ title, contextValues }: EmptyViewObjec
     setSelectedType,
     selectedList,
     setSelectedList,
+    listSearchText,
+    setListSearchText,
     isLoading,
   } = useCreateObjectData(draftValues);
 
@@ -65,6 +67,8 @@ export default function EmptyViewObject({ title, contextValues }: EmptyViewObjec
                 setSelectedType={setSelectedType}
                 selectedList={selectedList}
                 setSelectedList={setSelectedList}
+                listSearchText={listSearchText}
+                setListSearchText={setListSearchText}
                 isLoading={isLoading}
                 draftValues={draftValues}
                 enableDrafts={false}

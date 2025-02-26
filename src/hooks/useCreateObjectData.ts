@@ -10,12 +10,14 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
   const [selectedSpace, setSelectedSpace] = useState(initialValues?.space || "");
   const [selectedType, setSelectedType] = useState(initialValues?.type || "");
   const [selectedList, setSelectedList] = useState(initialValues?.list || "");
+  const [listSearchText, setListSearchText] = useState("");
+
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
   const {
     objects: lists,
     objectsError: listsError,
     isLoadingObjects: isLoadingLists,
-  } = useSearch(selectedSpace, "", ["ot-collection"]);
+  } = useSearch(selectedSpace, listSearchText, ["ot-collection"]);
 
   const restrictedTypes = [
     "ot-audio",
@@ -62,6 +64,8 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
     setSelectedType,
     selectedList,
     setSelectedList,
+    listSearchText,
+    setListSearchText,
     isLoading,
   };
 }
