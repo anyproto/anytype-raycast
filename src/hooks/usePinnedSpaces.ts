@@ -8,20 +8,20 @@ export function usePinnedSpaces() {
     async () => {
       const pinnedSpaces = await getPinned(localStorageKeys.suffixForSpaces);
       const spaces = await Promise.all(
-        pinnedSpaces.map(async ({ spaceId, objectId }) => {
+        pinnedSpaces.map(async (pinned) => {
           try {
-            const response = await getSpace(spaceId);
+            const response = await getSpace(pinned.spaceId);
             return response.space;
           } catch (error) {
             const typedError = error as Error & { status?: number };
             if (typedError.status === 404) {
-              await removePinned(spaceId, objectId, spaceId);
+              await removePinned(pinned.spaceId, pinned.objectId, pinned.spaceId);
             }
             return null;
           }
         }),
       );
-      return spaces.filter((object) => object !== null);
+      return spaces.filter((space) => space !== null);
     },
     [],
     {

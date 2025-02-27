@@ -15,14 +15,14 @@ export function usePinnedObjects(spaceId: string): {
     async (spaceId) => {
       const pinnedObjects = await getPinned(spaceId);
       const objects = await Promise.all(
-        pinnedObjects.map(async ({ spaceId, objectId }) => {
+        pinnedObjects.map(async (pinned) => {
           try {
-            const response = await getObject(spaceId, objectId);
+            const response = await getObject(pinned.spaceId, pinned.objectId);
             return response.object;
           } catch (error) {
             const typedError = error as Error & { status?: number };
             if (typedError.status === 404) {
-              await removePinned(spaceId, objectId, spaceId);
+              await removePinned(pinned.spaceId, pinned.objectId, spaceId);
             }
             return null;
           }
@@ -49,14 +49,14 @@ export function usePinnedTypes(spaceId: string) {
     async (spaceId) => {
       const pinnedTypes = await getPinned(spaceId);
       const types = await Promise.all(
-        pinnedTypes.map(async ({ spaceId, objectId }) => {
+        pinnedTypes.map(async (pinned) => {
           try {
-            const response = await getType(spaceId, objectId);
+            const response = await getType(pinned.spaceId, pinned.objectId);
             return response.type;
           } catch (error) {
             const typedError = error as Error & { status?: number };
             if (typedError.status === 404) {
-              await removePinned(spaceId, objectId, spaceId);
+              await removePinned(pinned.spaceId, pinned.objectId, spaceId);
             }
             return null;
           }
@@ -83,14 +83,14 @@ export function usePinnedMembers(spaceId: string) {
     async (spaceId) => {
       const pinnedMembers = await getPinned(spaceId);
       const members = await Promise.all(
-        pinnedMembers.map(async ({ spaceId, objectId }) => {
+        pinnedMembers.map(async (pinned) => {
           try {
-            const response = await getMember(spaceId, objectId);
+            const response = await getMember(pinned.spaceId, pinned.objectId);
             return response.member;
           } catch (error) {
             const typedError = error as Error & { status?: number };
             if (typedError.status === 404) {
-              await removePinned(spaceId, objectId, spaceId);
+              await removePinned(pinned.spaceId, pinned.objectId, spaceId);
             }
             return null;
           }
