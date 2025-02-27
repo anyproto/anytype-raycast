@@ -103,7 +103,6 @@ function Search() {
       tasks: uniqueKeysForTasks,
       lists: ["ot-set", "ot-collection"],
       bookmarks: ["ot-bookmark"],
-      members: ["ot-participant"],
     };
     setObjectTypes(objectTypeMap[filterType] || []);
   }, [filterType, uniqueKeysForPages, uniqueKeysForTasks]);
@@ -177,11 +176,12 @@ function Search() {
       searchBarAccessory={
         <List.Dropdown tooltip="Filter by kind or space" onChange={(newValue) => setFilterType(newValue)}>
           <List.Dropdown.Item title="All" value="all" icon={Icon.MagnifyingGlass} />
-          <List.Dropdown.Item title="Pages" value="pages" icon={Icon.Document} />
-          <List.Dropdown.Item title="Tasks" value="tasks" icon={Icon.CheckCircle} />
-          <List.Dropdown.Item title="Lists" value="lists" icon={Icon.List} />
-          <List.Dropdown.Item title="Bookmarks" value="bookmarks" icon={Icon.Bookmark} />
-          <List.Dropdown.Item title="Members" value="members" icon={Icon.PersonCircle} />
+          <List.Dropdown.Section>
+            <List.Dropdown.Item title="Pages" value="pages" icon={Icon.Document} />
+            <List.Dropdown.Item title="Tasks" value="tasks" icon={Icon.CheckCircle} />
+            <List.Dropdown.Item title="Lists" value="lists" icon={Icon.List} />
+            <List.Dropdown.Item title="Bookmarks" value="bookmarks" icon={Icon.Bookmark} />
+          </List.Dropdown.Section>
         </List.Dropdown>
       }
     >
