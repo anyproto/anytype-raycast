@@ -1,5 +1,6 @@
 import { apiFetch } from "../helpers/api";
 import { apiEndpoints } from "../helpers/constants";
+import { ErrorWithStatus } from "../helpers/errors";
 import { Type } from "../helpers/schemas";
 import { mapType } from "../mappers/types";
 
@@ -17,9 +18,7 @@ export async function getType(
     };
   } catch (error) {
     if (error instanceof Error && error.message.includes("404")) {
-      return {
-        type: null,
-      };
+      (error as ErrorWithStatus).status = 404;
     }
     throw error;
   }

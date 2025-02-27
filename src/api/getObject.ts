@@ -1,5 +1,6 @@
 import { apiFetch } from "../helpers/api";
 import { apiEndpoints } from "../helpers/constants";
+import { ErrorWithStatus } from "../helpers/errors";
 import { SpaceObject } from "../helpers/schemas";
 import { mapObject } from "../mappers/objects";
 
@@ -17,9 +18,7 @@ export async function getObject(
     };
   } catch (error) {
     if (error instanceof Error && error.message.includes("404")) {
-      return {
-        object: null,
-      };
+      (error as ErrorWithStatus).status = 404;
     }
     throw error;
   }

@@ -1,5 +1,6 @@
 import { apiFetch } from "../helpers/api";
 import { apiEndpoints } from "../helpers/constants";
+import { ErrorWithStatus } from "../helpers/errors";
 import { Member } from "../helpers/schemas";
 import { mapMember } from "../mappers/members";
 
@@ -17,9 +18,7 @@ export async function getMember(
     };
   } catch (error) {
     if (error instanceof Error && error.message.includes("404")) {
-      return {
-        member: null,
-      };
+      (error as ErrorWithStatus).status = 404;
     }
     throw error;
   }

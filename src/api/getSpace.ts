@@ -1,5 +1,6 @@
 import { apiFetch } from "../helpers/api";
 import { apiEndpoints } from "../helpers/constants";
+import { ErrorWithStatus } from "../helpers/errors";
 import { Space } from "../helpers/schemas";
 import { mapSpace } from "../mappers/spaces";
 
@@ -14,9 +15,7 @@ export async function getSpace(spaceId: string): Promise<{
     };
   } catch (error) {
     if (error instanceof Error && error.message.includes("404")) {
-      return {
-        space: null,
-      };
+      (error as ErrorWithStatus).status = 404;
     }
     throw error;
   }
