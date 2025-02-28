@@ -57,13 +57,13 @@ export default function CreateObjectForm({
         await showToast({ style: Toast.Style.Animated, title: "Creating object..." });
 
         const response = await createObject(selectedSpace, {
+          object_type_unique_key: selectedTypeUniqueKey,
+          template_id: values.template || "",
           icon: values.icon || "",
           name: values.name || "",
           description: values.description || "",
           body: values.body || "",
           source: values.source || "",
-          template_id: values.template || "",
-          object_type_unique_key: selectedTypeUniqueKey,
         });
 
         if (response.object?.id) {

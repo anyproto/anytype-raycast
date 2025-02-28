@@ -1,12 +1,11 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "anytype",
-  "title": "Anytype",
+  "name": "anytype-beta",
+  "title": "Anytype Beta",
   "description": "Create, browse and search in Anytype - right at your fingertips, anywhere on your Mac.",
   "icon": "anytype-icon.png",
   "author": "jmetrikat",
   "owner": "any",
-  "access": "public",
   "categories": [
     "Applications",
     "Productivity"
@@ -16,23 +15,50 @@
     {
       "name": "create-object",
       "title": "Create Object",
-      "subtitle": "Anytype",
+      "subtitle": "Anytype Beta",
       "description": "Create a new object.",
       "mode": "view"
     },
     {
       "name": "browse-spaces",
       "title": "Browse Spaces",
-      "subtitle": "Anytype",
+      "subtitle": "Anytype Beta",
       "description": "Browse your spaces one by one.",
       "mode": "view"
     },
     {
       "name": "search-anytype",
       "title": "Search Anytype",
-      "subtitle": "Anytype",
+      "subtitle": "Anytype Beta",
       "description": "Search objects globally in all spaces.",
       "mode": "view"
+    }
+  ],
+  "tools": [
+    {
+      "name": "get-spaces",
+      "title": "Get Spaces",
+      "description": "Get all spaces in Anytype"
+    },
+    {
+      "name": "search-anytype",
+      "title": "Search Anytype",
+      "description": "Search for objects in Anytype"
+    },
+    {
+      "name": "get-object",
+      "title": "Get Object",
+      "description": "Get the content of an Anytype object."
+    },
+    {
+      "name": "get-types",
+      "title": "Get Types",
+      "description": "Get types in a specific Anytype space."
+    },
+    {
+      "name": "create-object",
+      "title": "Create Object",
+      "description": "Create a Anytype object of a specific type in a specific database."
     }
   ],
   "preferences": [
