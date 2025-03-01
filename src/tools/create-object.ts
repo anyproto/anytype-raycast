@@ -59,7 +59,8 @@ type Input = {
 /**
  * Create a new object in the specified space.
  * This function creates an object with the specified details in the specified space.
- * The object is created with the specified name, icon, description, body, and source (for bookmarks only).
+ * The object is created with the specified name, icon, description, body.
+ * When creating objects of type 'ot-bookmark', ensure the source URL is provided. The icon, name, and description should not be manually set, as they will be automatically populated upon fetching the URL.
  */
 export default async function tool({ spaceId, type_unique_key, name, icon, description, body, source }: Input) {
   const response = createObject(spaceId, {
