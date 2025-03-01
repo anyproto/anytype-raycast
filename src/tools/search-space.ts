@@ -15,6 +15,14 @@ type Input = {
   query: string;
 
   /**
+   * The types of objects to search for, identified by their id or unique_key.
+   * This value can be obtained from the `getTypes` tool.
+   * If no types are specified, the search will include all types of objects
+   * Default value is an empty array.
+   */
+  types?: string[];
+
+  /**
    * Optional sorting options for the search results
    * (e.g., sorting direction and field).
    */
@@ -41,8 +49,8 @@ type Input = {
  * that match the search criteria.
  * For empty search queries, objects are sorted by creation date in descending order.
  */
-export default async function tool({ spaceId, query, sort }: Input) {
-  const types: string[] = [];
+export default async function tool({ spaceId, query, types, sort }: Input) {
+  types = types ?? [];
   const sortOptions = {
     direction: sort?.direction ?? "desc",
     timestamp: sort?.timestamp ?? "last_modified_date",
