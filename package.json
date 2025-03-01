@@ -46,6 +46,11 @@
       "description": "Search for objects in Anytype"
     },
     {
+      "name": "search-space",
+      "title": "Search Space",
+      "description": "Search for objects in a specific space"
+    },
+    {
       "name": "get-object",
       "title": "Get Object",
       "description": "Get the content of an Anytype object."

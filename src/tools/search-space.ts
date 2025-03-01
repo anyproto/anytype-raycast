@@ -1,7 +1,13 @@
-import { globalSearch } from "../api/globalSearch";
+import { search } from "../api/search";
 import { apiLimit } from "../helpers/constants";
 
 type Input = {
+  /**
+   * The unique identifier of the space to search within.
+   * This value can be obtained from the `getSpaces` tool.
+   */
+  spaceId: string;
+
   /**
    * The search query for the title of the page.
    * Note: Only plain text is supported; operators are not allowed.
@@ -30,19 +36,19 @@ type Input = {
 };
 
 /**
- * Perform a global search for objects across all spaces.
- * This function queries all available spaces and returns a list of objects
+ * Perform a search for objects within a specific space.
+ * This function queries the specified space and returns a list of objects
  * that match the search criteria.
- * For empty search query, most recently modified objects are returned.
+ * For empty search queries, objects are sorted by creation date in descending order.
  */
-export default async function tool({ query, sort }: Input) {
+export default async function tool({ spaceId, query, sort }: Input) {
   const types: string[] = [];
   const sortOptions = {
     direction: sort?.direction ?? "desc",
     timestamp: sort?.timestamp ?? "last_modified_date",
   };
 
-  const response = await globalSearch({ query, types, sort: sortOptions }, { offset: 0, limit: apiLimit });
+  const response = await search(spaceId, { query, types, sort: sortOptions }, { offset: 0, limit: apiLimit });
   return response.data.map(({ object, name, id, snippet, icon }) => {
     const result = { object, name, id, snippet };
     if (icon && icon.length === 1) {
