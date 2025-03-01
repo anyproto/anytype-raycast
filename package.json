@@ -66,6 +66,160 @@
       "description": "Create a Anytype object of a specific type in a specific database."
     }
   ],
+  "ai": {
+    "evals": [
+      {
+        "input": "@anytype-beta create a new page in my personal space explaining the concept of privacy",
+        "mocks": {
+          "get-spaces": [
+            {
+              "id": "space123",
+              "name": "My Personal Space",
+              "icon": "🌌"
+            }
+          ],
+          "get-types": [
+            {
+              "id": "type123",
+              "name": "Page",
+              "icon": "📄"
+            }
+          ],
+          "create-object": [
+            {
+              "id": "object123",
+              "spaceId": "space123",
+              "name": "First Page",
+              "icon": "📄",
+              "snippet": "This is the snippet of the object."
+            }
+          ]
+        },
+        "expected": [
+          {
+            "callsTool": "get-spaces"
+          },
+          {
+            "callsTool": "get-types"
+          },
+          {
+            "callsTool": "create-object"
+          }
+        ],
+        "usedAsExample": true
+      },
+      {
+        "input": "@anytype-beta get all spaces",
+        "mocks": {
+          "get-spaces": [
+            {
+              "id": "space123",
+              "name": "My Personal Space",
+              "icon": "🌌"
+            }
+          ]
+        },
+        "expected": [
+          {
+            "callsTool": "get-spaces"
+          }
+        ],
+        "usedAsExample": true
+      },
+      {
+        "input": "@anytype-beta get all types in my personal space",
+        "mocks": {
+          "get-spaces": [
+            {
+              "id": "space123",
+              "name": "My Personal Space",
+              "icon": "🌌"
+            }
+          ],
+          "get-types": [
+            {
+              "id": "type123",
+              "name": "Page",
+              "icon": "📄"
+            }
+          ]
+        },
+        "expected": [
+          {
+            "callsTool": "get-spaces"
+          },
+          {
+            "callsTool": "get-types"
+          }
+        ],
+        "usedAsExample": true
+      },
+      {
+        "input": "@anytype-beta search for objects globally",
+        "mocks": {
+          "search-anytype": [
+            {
+              "id": "object123",
+              "spaceId": "space123",
+              "name": "First Object",
+              "icon": "📄",
+              "snippet": "This is the snippet of the object."
+            },
+            {
+              "id": "object456",
+              "spaceId": "space345",
+              "name": "Another Object",
+              "icon": "📜",
+              "snippet": "This is the snippet of another object."
+            }
+          ]
+        },
+        "expected": [
+          {
+            "callsTool": "search-anytype"
+          }
+        ],
+        "usedAsExample": true
+      },
+      {
+        "input": "@anytype-beta search for recently modified objects in my personal space",
+        "mocks": {
+          "get-spaces": [
+            {
+              "id": "space123",
+              "name": "My Personal Space",
+              "icon": "🌌"
+            }
+          ],
+          "search-space": [
+            {
+              "id": "object123",
+              "spaceId": "space123",
+              "name": "First Object",
+              "icon": "📄",
+              "snippet": "This is the snippet of the object."
+            },
+            {
+              "id": "object456",
+              "spaceId": "space123",
+              "name": "Another Object",
+              "icon": "📜",
+              "snippet": "This is the snippet of another object."
+            }
+          ]
+        },
+        "expected": [
+          {
+            "callsTool": "get-spaces"
+          },
+          {
+            "callsTool": "search-space"
+          }
+        ],
+        "usedAsExample": true
+      }
+    ]
+  },
   "preferences": [
     {
       "name": "anytypeApp",
@@ -164,7 +318,8 @@
     "type-check": "tsc --noEmit",
     "prepublishOnly": "echo \"\\n\\nIt seems like you are trying to publish the Raycast extension to npm.\\n\\nIf you did intend to publish it to npm, remove the \\`prepublishOnly\\` script and rerun \\`npm publish\\` again.\\nIf you wanted to publish it to the Raycast Store instead, use \\`npm run publish\\` instead.\\n\\n\" && exit 1",
     "publish": "npx @raycast/api@latest publish",
-    "prepare": "husky"
+    "prepare": "husky",
+    "evals": "npx ray evals"
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [
