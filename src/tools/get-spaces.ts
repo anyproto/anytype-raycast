@@ -6,11 +6,11 @@ import { apiLimit } from "../helpers/constants";
  * This function queries all available spaces and returns a list of spaces.
  */
 export default async function tool() {
-  const response = await getSpaces({ offset: 0, limit: apiLimit });
-  const spaces = response.spaces.map(({ object, name, id }) => ({ object, name, id }));
+  const { spaces, pagination } = await getSpaces({ offset: 0, limit: apiLimit });
+  const results = spaces.map(({ object, name, id }) => ({ object, name, id }));
 
   return {
-    spaces,
-    pagination: response.pagination,
+    results,
+    pagination,
   };
 }

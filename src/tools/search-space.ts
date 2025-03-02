@@ -56,8 +56,12 @@ export default async function tool({ spaceId, query, types, sort }: Input) {
     timestamp: sort?.timestamp ?? "last_modified_date",
   };
 
-  const response = await search(spaceId, { query, types, sort: sortOptions }, { offset: 0, limit: apiLimit });
-  const results = response.data.map(({ object, name, id, snippet, icon }) => {
+  const { data, pagination } = await search(
+    spaceId,
+    { query, types, sort: sortOptions },
+    { offset: 0, limit: apiLimit },
+  );
+  const results = data.map(({ object, name, id, snippet, icon }) => {
     const result = { object, name, id, snippet };
     if (icon && icon.length === 1) {
       return { ...result, icon };
@@ -67,6 +71,6 @@ export default async function tool({ spaceId, query, types, sort }: Input) {
 
   return {
     results,
-    pagination: response.pagination,
+    pagination,
   };
 }
