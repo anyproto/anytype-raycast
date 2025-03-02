@@ -57,11 +57,16 @@ export default async function tool({ spaceId, query, types, sort }: Input) {
   };
 
   const response = await search(spaceId, { query, types, sort: sortOptions }, { offset: 0, limit: apiLimit });
-  return response.data.map(({ object, name, id, snippet, icon }) => {
+  const results = response.data.map(({ object, name, id, snippet, icon }) => {
     const result = { object, name, id, snippet };
     if (icon && icon.length === 1) {
       return { ...result, icon };
     }
     return result;
   });
+
+  return {
+    results,
+    pagination: response.pagination,
+  };
 }

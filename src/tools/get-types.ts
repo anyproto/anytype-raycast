@@ -16,5 +16,10 @@ type Input = {
  */
 export default async function tool({ spaceId }: Input) {
   const response = await getTypes(spaceId, { offset: 0, limit: apiLimit });
-  return response.types.map(({ object, name, id, unique_key }) => ({ object, name, id, unique_key }));
+  const types = response.types.map(({ object, name, id, unique_key }) => ({ object, name, id, unique_key }));
+
+  return {
+    types,
+    pagination: response.pagination,
+  };
 }
