@@ -1,7 +1,7 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
-  "name": "anytype-beta",
-  "title": "Anytype Beta",
+  "name": "anytype",
+  "title": "Anytype",
   "description": "Create, browse and search in Anytype - right at your fingertips, anywhere on your Mac.",
   "icon": "anytype-icon.png",
   "author": "jmetrikat",
@@ -15,21 +15,21 @@
     {
       "name": "create-object",
       "title": "Create Object",
-      "subtitle": "Anytype Beta",
+      "subtitle": "Anytype",
       "description": "Create a new object.",
       "mode": "view"
     },
     {
       "name": "browse-spaces",
       "title": "Browse Spaces",
-      "subtitle": "Anytype Beta",
+      "subtitle": "Anytype",
       "description": "Browse your spaces one by one.",
       "mode": "view"
     },
     {
       "name": "search-anytype",
       "title": "Search Anytype",
-      "subtitle": "Anytype Beta",
+      "subtitle": "Anytype",
       "description": "Search objects globally in all spaces.",
       "mode": "view"
     }
@@ -69,7 +69,7 @@
   "ai": {
     "evals": [
       {
-        "input": "@anytype-beta create a new page in my personal space explaining the concept of privacy",
+        "input": "@anytype create a new page in my personal space explaining the concept of privacy",
         "mocks": {
           "get-spaces": [
             {
@@ -109,7 +109,7 @@
         "usedAsExample": true
       },
       {
-        "input": "@anytype-beta get all spaces",
+        "input": "@anytype get all spaces",
         "mocks": {
           "get-spaces": [
             {
@@ -127,7 +127,7 @@
         "usedAsExample": true
       },
       {
-        "input": "@anytype-beta get all types in my personal space",
+        "input": "@anytype get all types in my personal space",
         "mocks": {
           "get-spaces": [
             {
@@ -155,7 +155,7 @@
         "usedAsExample": true
       },
       {
-        "input": "@anytype-beta search for objects globally",
+        "input": "@anytype search for objects globally",
         "mocks": {
           "search-anytype": [
             {
@@ -182,7 +182,7 @@
         "usedAsExample": true
       },
       {
-        "input": "@anytype-beta search for recently modified objects in my personal space",
+        "input": "@anytype search for recently modified objects in my personal space",
         "mocks": {
           "get-spaces": [
             {
