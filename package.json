@@ -337,7 +337,7 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.86.0",
+    "@raycast/api": "^1.93.1",
     "@raycast/utils": "^1.17.0",
     "date-fns": "^4.1.0",
     "node-fetch": "^3.3.2"
