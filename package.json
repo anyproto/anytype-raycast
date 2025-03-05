@@ -37,9 +37,29 @@
   ],
   "tools": [
     {
+      "name": "create-object",
+      "title": "Create Object",
+      "description": "Create a Anytype object of a specific type in a specific database."
+    },
+    {
+      "name": "get-members",
+      "title": "Get Members",
+      "description": "Get all members of a specific space."
+    },
+    {
+      "name": "get-object",
+      "title": "Get Object",
+      "description": "Get the content of an Anytype object."
+    },
+    {
       "name": "get-spaces",
       "title": "Get Spaces",
       "description": "Get all spaces in Anytype"
+    },
+    {
+      "name": "get-types",
+      "title": "Get Types",
+      "description": "Get types in a specific Anytype space."
     },
     {
       "name": "search-anytype",
@@ -50,21 +70,6 @@
       "name": "search-space",
       "title": "Search Space",
       "description": "Search for objects in a specific space"
-    },
-    {
-      "name": "get-object",
-      "title": "Get Object",
-      "description": "Get the content of an Anytype object."
-    },
-    {
-      "name": "get-types",
-      "title": "Get Types",
-      "description": "Get types in a specific Anytype space."
-    },
-    {
-      "name": "create-object",
-      "title": "Create Object",
-      "description": "Create a Anytype object of a specific type in a specific database."
     }
   ],
   "ai": {
@@ -105,6 +110,44 @@
           },
           {
             "callsTool": "create-object"
+          }
+        ],
+        "usedAsExample": true
+      },
+      {
+        "input": "@anytype how many members are in my personal space?",
+        "mocks": {
+          "get-spaces": [
+            {
+              "id": "space123",
+              "name": "My Personal Space",
+              "icon": "🌌"
+            }
+          ],
+          "get-members": [
+            {
+              "id": "member123",
+              "name": "Alice",
+              "global_name": "alice",
+              "role": "owner"
+            },
+            {
+              "id": "member456",
+              "name": "Bob",
+              "global_name": "bob",
+              "role": "editor"
+            }
+          ]
+        },
+        "expected": [
+          {
+            "callsTool": "get-spaces"
+          },
+          {
+            "callsTool": "get-members"
+          },
+          {
+            "includes": "2"
           }
         ],
         "usedAsExample": true
