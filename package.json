@@ -75,6 +75,16 @@
       "name": "search-space",
       "title": "Search Space",
       "description": "Search for objects in a specific space"
+    },
+    {
+      "name": "solve-challenge",
+      "title": "Solve Challenge",
+      "description": "Complete the pairing process with the Anytype desktop app."
+    },
+    {
+      "name": "start-challenge",
+      "title": "Start Challenge",
+      "description": "Start the pairing process with the Anytype desktop app."
     }
   ],
   "ai": {
