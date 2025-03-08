@@ -11,8 +11,8 @@ type Input = {
 
 /**
  * Retrieve a list of all types in a space.
- * This function queries the specified space and returns a list of types
- * that are available in the space.
+ * This function queries the specified space and returns a list of types that are available in the space.
+ * Should be called when user requests objects of a specific type.
  */
 export default async function tool({ spaceId }: Input) {
   const { types, pagination } = await getTypes(spaceId, { offset: 0, limit: apiLimit });

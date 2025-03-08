@@ -45,6 +45,7 @@ type Input = {
   /**
    * The body of the object to create.
    * This value should be chosen based on the user's input and can include markdown syntax.
+   * Collections and Sets can't have a body.
    */
   body?: string;
 
@@ -63,7 +64,7 @@ type Input = {
  * When creating objects of type 'ot-bookmark', ensure the source URL is provided. The icon, name, and description should not be manually set, as they will be automatically populated upon fetching the URL.
  */
 export default async function tool({ spaceId, type_unique_key, name, icon, description, body, source }: Input) {
-  const response = createObject(spaceId, {
+  return createObject(spaceId, {
     object_type_unique_key: type_unique_key,
     template_id: "", // not supported here
     name: name || "",
@@ -72,7 +73,6 @@ export default async function tool({ spaceId, type_unique_key, name, icon, descr
     body: body || "",
     source: source || "",
   });
-  return response;
 }
 
 export const confirmation: Tool.Confirmation<Input> = async (input) => {

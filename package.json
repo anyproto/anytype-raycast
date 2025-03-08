@@ -37,6 +37,11 @@
   ],
   "tools": [
     {
+      "name": "add-to-list",
+      "title": "Add to List",
+      "description": "Add an object to a list."
+    },
+    {
       "name": "create-object",
       "title": "Create Object",
       "description": "Create a Anytype object of a specific type in a specific database."
@@ -74,6 +79,64 @@
   ],
   "ai": {
     "evals": [
+      {
+        "input": "@anytype add all objects of type 'task' to my to-do list in my personal space",
+        "mocks": {
+          "get-spaces": [
+            {
+              "id": "space123",
+              "name": "My Personal Space",
+              "icon": "🌌"
+            }
+          ],
+          "get-types": [
+            {
+              "id": "type123",
+              "name": "Task",
+              "icon": "📝"
+            }
+          ],
+          "search-space": [
+            {
+              "id": "task123",
+              "spaceId": "space123",
+              "name": "First Task",
+              "snippet": "This is the snippet of the task."
+            },
+            {
+              "id": "task456",
+              "spaceId": "space123",
+              "name": "Another Task",
+              "snippet": "This is the snippet of another task."
+            },
+            {
+              "id": "list123",
+              "spaceId": "space123",
+              "name": "To-Do List",
+              "snippet": "This is the snippet of the list."
+            }
+          ],
+          "add-to-list": []
+        },
+        "expected": [
+          {
+            "callsTool": "get-spaces"
+          },
+          {
+            "callsTool": "get-types"
+          },
+          {
+            "callsTool": "search-space"
+          },
+          {
+            "callsTool": "add-to-list"
+          },
+          {
+            "callsTool": "add-to-list"
+          }
+        ],
+        "usedAsExample": true
+      },
       {
         "input": "@anytype create a new page in my personal space explaining the concept of privacy",
         "mocks": {
@@ -153,7 +216,7 @@
         "usedAsExample": true
       },
       {
-        "input": "@anytype get all spaces",
+        "input": "@anytype show all my spaces",
         "mocks": {
           "get-spaces": [
             {
