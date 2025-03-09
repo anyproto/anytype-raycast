@@ -114,7 +114,8 @@ export async function mapObject(object: SpaceObject): Promise<SpaceObject> {
           }
           break;
         default:
-          throw new Error(`Unhandled detail type: ${detail.details.type} for detail id: ${detail.details.name}`);
+          mappedDetail = details;
+          console.warn(`Unknown detail type: ${detail.details.type}`);
       }
 
       return {
