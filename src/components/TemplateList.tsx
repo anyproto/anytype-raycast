@@ -57,7 +57,7 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
       pagination={objectsPagination || templatesPagination}
       throttle={true}
     >
-      {filteredTemplates && filteredTemplates.length > 0 ? (
+      {filteredTemplates && filteredTemplates.length > 0 && (
         <List.Section
           title={searchText ? "Search Results" : "Templates"}
           subtitle={`${pluralize(filteredTemplates.length, "template", { withNumber: true })}`}
@@ -82,17 +82,9 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
             />
           ))}
         </List.Section>
-      ) : (
-        <EmptyViewObject
-          title="No templates found"
-          contextValues={{
-            space: spaceId,
-            type: typeId,
-            name: searchText,
-          }}
-        />
       )}
-      {filteredObjects && filteredObjects.length > 0 ? (
+
+      {filteredObjects && filteredObjects.length > 0 && (
         <List.Section
           title={searchText ? "Search Results" : "Objects"}
           subtitle={`${pluralize(filteredObjects.length, "object", { withNumber: true })}`}
@@ -115,9 +107,11 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
             />
           ))}
         </List.Section>
-      ) : (
+      )}
+
+      {(!filteredTemplates || filteredTemplates.length === 0) && (!filteredObjects || filteredObjects.length === 0) && (
         <EmptyViewObject
-          title="No objects found"
+          title="No templates or objects found"
           contextValues={{
             space: spaceId,
             type: typeId,
