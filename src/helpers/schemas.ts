@@ -108,16 +108,15 @@ export interface Detail {
   details: DetailData;
 }
 
-export interface DetailData {
-  name: string; // Name of the detail
-  type: string; // "text", "number", "date", "select", "multi_select", "object"
-  text?: string; // Text value
-  number?: number; // Number value
-  date?: string; // Date in ISO 8601 format
-  select?: Tag; // Selected option
-  multi_select?: Tag[]; // List of selected options
-  object?: Member | SpaceObject; // Details of a participant
-}
+export type DetailData =
+  | { type: "text"; text: string; name: string } // text
+  | { type: "number"; number: number; name: string } // integer
+  | { type: "date"; date: string; name: string } // ISO 8601 date string
+  | { type: "checkbox"; checkbox: boolean; name: string } // boolean
+  | { type: "select"; select: Tag; name: string } // single select tag
+  | { type: "multi_select"; multi_select: Tag[]; name: string } // multi-select tags
+  | { type: "object"; object: string; name: string } // object reference
+  | { type: "object"; object: SpaceObject[]; name: string }; // full object data
 
 export interface Tag {
   id: string;

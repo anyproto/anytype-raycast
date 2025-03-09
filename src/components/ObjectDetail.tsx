@@ -1,6 +1,7 @@
-import { Detail, Icon, Image, showToast, Toast } from "@raycast/api";
+import { Detail, Icon, showToast, Toast, useNavigation } from "@raycast/api";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import { getMaskForObject } from "../helpers/icon";
 import type { DetailData, Tag } from "../helpers/schemas";
 import { useExport } from "../hooks/useExport";
 import { useObject } from "../hooks/useObject";
@@ -23,6 +24,7 @@ export default function ObjectDetail({
   isGlobalSearch,
   isPinned,
 }: ObjectDetailProps) {
+  const { push } = useNavigation();
   const { object, objectError, isLoadingObject, mutateObject } = useObject(spaceId, objectId);
   const { objectExport, objectExportError, isLoadingObjectExport, mutateObjectExport } = useExport(
     spaceId,
@@ -66,13 +68,15 @@ export default function ObjectDetail({
     const { id, details: detailData } = detail;
     const titleText = detailData.name || id.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
-    if (detailData.text) {
+    if (detailData.type === "text" && detailData.text) {
       return <Detail.Metadata.Label key={id} icon={Icon.Text} title={titleText} text={detailData.text} />;
     }
-    if (detailData.number !== undefined) {
+
+    if (detailData.type === "number" && detailData.number !== undefined) {
       return <Detail.Metadata.Label key={id} title={titleText} icon={Icon.Hashtag} text={String(detailData.number)} />;
     }
-    if (detailData.date) {
+
+    if (detailData.type === "date" && detailData.date) {
       return (
         <Detail.Metadata.Label
           key={id}
@@ -82,8 +86,23 @@ export default function ObjectDetail({
         />
       );
     }
-    if (detailData.select || detailData.multi_select) {
-      const tags = (detailData.select ? detailData.select : detailData.multi_select) as Tag[];
+
+    if (detailData.type === "checkbox") {
+      return (
+        <Detail.Metadata.Label
+          key={id}
+          title=""
+          icon={detailData.checkbox ? Icon.CheckCircle : Icon.Circle}
+          text={titleText}
+        />
+      );
+    }
+
+    if (
+      (detailData.type === "select" && detailData.select) ||
+      (detailData.type === "multi_select" && detailData.multi_select)
+    ) {
+      const tags = (detailData.type === "select" ? detailData.select : detailData.multi_select) as Tag[];
       if (tags.length > 0) {
         return (
           <Detail.Metadata.TagList key={id} title={titleText}>
@@ -94,14 +113,37 @@ export default function ObjectDetail({
         return <Detail.Metadata.Label key={id} title={titleText} icon={Icon.Tag} text="No Tag" />;
       }
     }
-    if (detailData.object) {
+
+    if (detailData.type === "object" && Array.isArray(detailData.object)) {
       return (
-        <Detail.Metadata.Label
-          key={id}
-          title={titleText}
-          text={detailData.object.name || detailData.object.id}
-          icon={{ source: detailData.object.icon || Icon.PersonCircle, mask: Image.Mask.Circle }}
-        />
+        <Detail.Metadata.TagList key={id} title={titleText}>
+          {detailData.object.map((objectItem, index) => {
+            const handleAction = () => {
+              push(
+                <ObjectDetail
+                  spaceId={spaceId}
+                  objectId={objectItem.id}
+                  title={objectItem.name}
+                  viewType={viewType}
+                  isGlobalSearch={isGlobalSearch}
+                  isPinned={isPinned}
+                />,
+              );
+            };
+
+            return (
+              <Detail.Metadata.TagList.Item
+                key={`${id}-${index}`}
+                text={objectItem.name || objectItem.id}
+                icon={{
+                  source: objectItem.icon,
+                  mask: getMaskForObject(objectItem.layout, objectItem.icon),
+                }}
+                onAction={objectItem.layout !== "participant" ? handleAction : undefined}
+              />
+            );
+          })}
+        </Detail.Metadata.TagList>
       );
     }
     return null;
@@ -111,7 +153,7 @@ export default function ObjectDetail({
     if (detailId === "description") return "description";
     if (["created_date", "created_by", "last_modified_date", "last_modified_by"].includes(detailId))
       return "modification";
-    if (detailId === "tag" || ["select", "multi_select"].includes(detailType)) return "tags";
+    if (["select", "multi_select"].includes(detailType)) return "tags";
     return "others";
   }
 

@@ -23,7 +23,8 @@ export function processObject(
   isPinned: boolean;
 } {
   const { sort } = getPreferenceValues();
-  const date = object.details.find((detail) => detail.id === sort)?.details.date as string;
+  const dateDetail = object.details.find((detail) => detail.id === sort);
+  const date = dateDetail && "date" in dateDetail.details ? (dateDetail.details.date as string) : undefined;
   const hasValidDate = date && new Date(date).getTime() !== 0;
 
   return {

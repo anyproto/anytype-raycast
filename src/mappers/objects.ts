@@ -1,6 +1,7 @@
 import { getPreferenceValues } from "@raycast/api";
+import { getRawObject } from "../api/getObject";
 import { getIconWithFallback } from "../helpers/icon";
-import { Member, SpaceObject } from "../helpers/schemas";
+import { DetailData, SpaceObject } from "../helpers/schemas";
 
 /**
  * Efficiently map raw `SpaceObject` items to essential display-ready data.
@@ -31,67 +32,93 @@ export async function mapObject(object: SpaceObject): Promise<SpaceObject> {
   const mappedDetails = await Promise.all(
     object.details.map(async (detail) => {
       const { id, details } = detail;
-      let mappedDetail = { ...details };
+      let mappedDetail: DetailData;
 
-      if (detail.details.type === "text" && details.text) {
-        const textString = details.text as string;
-        mappedDetail = {
-          ...mappedDetail,
-          text: textString,
-        };
-      }
-
-      if (detail.details.type === "number" && details.number !== undefined && details.number !== null) {
-        const numberString = details.number;
-        mappedDetail = {
-          ...mappedDetail,
-          number: numberString,
-        };
-      }
-
-      if (detail.details.type === "date" && details.date) {
-        const dateString = details.date as string;
-        mappedDetail = {
-          ...mappedDetail,
-          date: new Date(dateString).toISOString(),
-        };
-      }
-
-      if (detail.details.type === "select" && details.select) {
-        const selectDetails = details.select;
-        mappedDetail = {
-          ...mappedDetail,
-          select: selectDetails,
-        };
-      }
-
-      if (detail.details.type === "multi_select" && details.multi_select) {
-        const multiSelectDetails = details.multi_select;
-        mappedDetail = {
-          ...mappedDetail,
-          multi_select: multiSelectDetails,
-        };
-      }
-
-      if (detail.details.type === "object" && details.object) {
-        if (id === "created_by" || id === "last_modified_by") {
-          const memberDetails = details.object as Member;
+      switch (details.type) {
+        case "text":
           mappedDetail = {
-            ...mappedDetail,
-            object: {
-              name: memberDetails?.name || "Unknown",
-              icon: await getIconWithFallback(memberDetails?.icon, "participant"),
-              global_name: memberDetails?.global_name || "",
-            } as Member,
+            type: "text",
+            name: details.name,
+            text: details.text || "",
           };
-        } else {
-          // TODO
-          console.log("Object detail type not implemented:", id);
-        }
+          break;
+        case "number":
+          mappedDetail = {
+            type: "number",
+            name: details.name,
+            number: details.number !== undefined && details.number !== null ? details.number : 0,
+          };
+          break;
+        case "date":
+          mappedDetail = {
+            type: "date",
+            name: details.name,
+            date: details.date ? new Date(details.date).toISOString() : "",
+          };
+          break;
+        case "checkbox":
+          mappedDetail = {
+            type: "checkbox",
+            name: details.name,
+            checkbox: details.checkbox || false,
+          };
+          break;
+        case "select":
+          mappedDetail = {
+            type: "select",
+            name: details.name,
+            select: details.select,
+          };
+          break;
+        case "multi_select":
+          mappedDetail = {
+            type: "multi_select",
+            name: details.name,
+            multi_select: details.multi_select,
+          };
+          break;
+        case "object":
+          if (details.object) {
+            const rawItems = Array.isArray(details.object) ? details.object : [details.object];
+            const fetchedItems = await Promise.all(
+              rawItems.map(async (item) => {
+                if (typeof item === "string") {
+                  const fetched = await getRawObject(object.space_id, item);
+                  if (!fetched) {
+                    throw new Error(`getRawObject returned null for detail id: ${id} and item ${item}`);
+                  }
+                  return fetched;
+                } else {
+                  return item;
+                }
+              }),
+            );
+            const processedItems = await Promise.all(
+              fetchedItems.map(async (obj: SpaceObject) => {
+                const objectIcon = await getIconWithFallback(obj.icon, obj.layout);
+                const objectName = obj.name || "Untitled";
+                return {
+                  ...obj,
+                  name: objectName,
+                  icon: objectIcon,
+                };
+              }),
+            );
+            mappedDetail = {
+              type: "object",
+              name: details.name,
+              object: processedItems,
+            };
+          } else {
+            throw new Error(`Missing object for detail id: ${id}`);
+          }
+          break;
+        default:
+          throw new Error(`Unhandled detail type: ${detail.details.type} for detail id: ${detail.details.name}`);
       }
 
       return {
-        ...detail,
+        id,
         details: mappedDetail,
       };
     }),
@@ -100,7 +127,7 @@ export async function mapObject(object: SpaceObject): Promise<SpaceObject> {
   return {
     ...object,
     icon,
-    blocks: undefined, // remove blocks to improve performance, as they're not used in the UI
+    blocks: undefined, // remove blocks to improve performance
     name: object.name || object.snippet || "Untitled",
     type: object.type || "Unknown Type",
     details: mappedDetails,
