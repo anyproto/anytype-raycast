@@ -33,7 +33,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
   }>({
     objects: Icon.Document,
     types: Icon.Lowercase,
-    members: Icon.Document,
+    members: Icon.PersonCircle,
   });
 
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
