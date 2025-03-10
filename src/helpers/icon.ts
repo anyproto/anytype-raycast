@@ -58,17 +58,18 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
  * @param color The color of the icon.
  * @returns The base64 data URI of the icon.
  */
-export async function getCustomIcon(name: string, color: string): Promise<string> {
+export async function getCustomIcon(name: string, color?: string): Promise<string> {
   const iconDirectory = path.join(__dirname, "assets", "icons");
   const iconPath = path.join(iconDirectory, `${name}.svg`);
 
   try {
-    const fillColor = color && colorMap[color] ? colorMap[color] : colorMap.grey;
     let svgContent = fs.readFileSync(iconPath, "utf8");
-    // Remove any explicit fill attributes from all elements
     svgContent = svgContent.replace(/fill="[^"]*"/g, "");
-    // Add a global fill attribute to the root <svg> element
-    svgContent = svgContent.replace(/<svg([^>]*)>/, `<svg$1 fill="${fillColor}">`);
+
+    if (color) {
+      const fillColor = colorMap[color] ? colorMap[color] : colorMap.black;
+      svgContent = svgContent.replace(/<svg([^>]*)>/, `<svg$1 fill="${fillColor}">`);
+    }
 
     const base64Content = Buffer.from(svgContent).toString("base64");
     return `data:image/svg+xml;base64,${base64Content}`;
