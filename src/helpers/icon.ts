@@ -40,7 +40,7 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
       return await getCustomIcon("checkbox", "grey");
     case "set":
     case "collection":
-      return await getCustomIcon("layer", "grey");
+      return await getCustomIcon("layers", "grey");
     case "participant":
       return await getCustomIcon("person", "grey");
     case "bookmark":

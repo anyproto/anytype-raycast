@@ -194,7 +194,7 @@ function Search() {
             <List.Dropdown.Item
               title="Lists"
               value="lists"
-              icon={{ source: "icons/layer.svg", tintColor: { light: "black", dark: "white" } }}
+              icon={{ source: "icons/layers.svg", tintColor: { light: "black", dark: "white" } }}
             />
             <List.Dropdown.Item
               title="Bookmarks"
