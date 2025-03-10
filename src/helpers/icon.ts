@@ -15,13 +15,15 @@ import { Type } from "./schemas";
  */
 export async function getIconWithFallback(icon: ObjectIcon, layout: string, type?: Type): Promise<string | Icon> {
   if (typeof icon === "object" && "name" in icon) {
-    return getCustomIcon(icon.name, icon.color);
+    return await getCustomIcon(icon.name, icon.color);
   }
 
   if (typeof icon === "object" && "file" in icon) {
     return (
       (await getFile(icon.file)) ||
-      (typeof type?.icon === "object" && "name" in type.icon ? getCustomIcon(type.icon.name, "grey") : Icon.Document)
+      (typeof type?.icon === "object" && "name" in type.icon
+        ? await getCustomIcon(type.icon.name, "grey")
+        : Icon.Document)
     );
   }
 
@@ -30,25 +32,25 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
   }
 
   if (typeof type?.icon === "object" && "name" in type.icon) {
-    return getCustomIcon(type.icon.name, "grey");
+    return await getCustomIcon(type.icon.name, "grey");
   }
 
   switch (layout) {
     case "todo":
-      return Icon.CheckCircle;
+      return await getCustomIcon("checkbox", "grey");
     case "set":
     case "collection":
-      return Icon.List;
+      return await getCustomIcon("layer", "grey");
     case "participant":
-      return Icon.PersonCircle;
+      return await getCustomIcon("person", "grey");
     case "bookmark":
-      return Icon.Bookmark;
+      return await getCustomIcon("bookmark", "grey");
     case "type":
-      return getCustomIcon("extension-puzzle", "grey");
+      return await getCustomIcon("extension-puzzle", "grey");
     case "template":
-      return getCustomIcon("copy", "grey");
+      return await getCustomIcon("copy", "grey");
     default:
-      return Icon.Document;
+      return await getCustomIcon("document", "grey");
   }
 }
 

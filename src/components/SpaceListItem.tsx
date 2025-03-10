@@ -7,7 +7,7 @@ type SpaceListItemProps = {
   space: DisplaySpace;
   icon: Image;
   accessories?: {
-    icon?: Icon | { source: string; mask: Image.Mask };
+    icon?: Icon | { source: string; mask?: Image.Mask; tintColor?: { light: string; dark: string } };
     date?: Date;
     text?: string;
     tooltip?: string;
@@ -25,7 +25,7 @@ export default function SpaceListItem({ space, icon, accessories, mutate, isPinn
         ...(accessories?.map((accessory) => {
           const { icon, date, text, tooltip } = accessory;
           const accessoryProps: {
-            icon?: Icon | { source: string; mask: Image.Mask };
+            icon?: Icon | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
             date?: Date;
             text?: string;
             tooltip?: string;

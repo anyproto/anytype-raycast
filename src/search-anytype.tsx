@@ -5,6 +5,7 @@ import EmptyViewObject from "./components/EmptyViewObject";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import ObjectListItem from "./components/ObjectListItem";
 import { localStorageKeys } from "./helpers/constants";
+import { getCustomIcon } from "./helpers/icon";
 import { processObject } from "./helpers/object";
 import { DisplayMember, DisplayObject, DisplayType } from "./helpers/schemas";
 import { getShortDateLabel, pluralize } from "./helpers/strings";
@@ -30,6 +31,41 @@ function Search() {
   const [filterType, setFilterType] = useState("all");
   const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
   const [uniqueKeysForTasks, setUniqueKeysForTasks] = useState<string[]>([]);
+  const [dropdownIcons, setDropdownIcons] = useState<{
+    all: string | Icon;
+    pages: string | Icon;
+    tasks: string | Icon;
+    lists: string | Icon;
+    bookmarks: string | Icon;
+  }>({
+    all: Icon.MagnifyingGlass,
+    pages: Icon.Document,
+    tasks: Icon.CheckCircle,
+    lists: Icon.List,
+    bookmarks: Icon.Bookmark,
+  });
+
+  useEffect(() => {
+    async function fetchDropdownIcons() {
+      try {
+        const allIcon = await getCustomIcon("search");
+        const pagesIcon = await getCustomIcon("document");
+        const tasksIcon = await getCustomIcon("checkbox");
+        const listsIcon = await getCustomIcon("layers");
+        const bookmarksIcon = await getCustomIcon("bookmark");
+        setDropdownIcons({
+          all: allIcon,
+          pages: pagesIcon,
+          tasks: tasksIcon,
+          lists: listsIcon,
+          bookmarks: bookmarksIcon,
+        });
+      } catch (error) {
+        console.error("Error fetching custom dropdown icons", error);
+      }
+    }
+    fetchDropdownIcons();
+  }, []);
 
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useGlobalSearch(
     searchText,
@@ -175,12 +211,32 @@ function Search() {
       throttle={true}
       searchBarAccessory={
         <List.Dropdown tooltip="Filter by kind or space" onChange={(newValue) => setFilterType(newValue)}>
-          <List.Dropdown.Item title="All" value="all" icon={Icon.MagnifyingGlass} />
+          <List.Dropdown.Item
+            title="All"
+            value="all"
+            icon={{ source: dropdownIcons.all, tintColor: { light: "black", dark: "white" } }}
+          />
           <List.Dropdown.Section>
-            <List.Dropdown.Item title="Pages" value="pages" icon={Icon.Document} />
-            <List.Dropdown.Item title="Tasks" value="tasks" icon={Icon.CheckCircle} />
-            <List.Dropdown.Item title="Lists" value="lists" icon={Icon.List} />
-            <List.Dropdown.Item title="Bookmarks" value="bookmarks" icon={Icon.Bookmark} />
+            <List.Dropdown.Item
+              title="Pages"
+              value="pages"
+              icon={{ source: dropdownIcons.pages, tintColor: { light: "black", dark: "white" } }}
+            />
+            <List.Dropdown.Item
+              title="Tasks"
+              value="tasks"
+              icon={{ source: dropdownIcons.tasks, tintColor: { light: "black", dark: "white" } }}
+            />
+            <List.Dropdown.Item
+              title="Lists"
+              value="lists"
+              icon={{ source: dropdownIcons.lists, tintColor: { light: "black", dark: "white" } }}
+            />
+            <List.Dropdown.Item
+              title="Bookmarks"
+              value="bookmarks"
+              icon={{ source: dropdownIcons.bookmarks, tintColor: { light: "black", dark: "white" } }}
+            />
           </List.Dropdown.Section>
         </List.Dropdown>
       }
