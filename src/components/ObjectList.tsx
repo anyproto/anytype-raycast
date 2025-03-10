@@ -2,7 +2,6 @@ import { Icon, Image, List, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { localStorageKeys } from "../helpers/constants";
-import { getCustomIcon } from "../helpers/icon";
 import { processObject } from "../helpers/object";
 import { DisplayMember, DisplayObject, DisplayType } from "../helpers/schemas";
 import { pluralize } from "../helpers/strings";
@@ -26,15 +25,6 @@ export const CurrentView = {
 export default function ObjectList({ spaceId }: ObjectListProps) {
   const [currentView, setCurrentView] = useState<keyof typeof CurrentView>(CurrentView.objects);
   const [searchText, setSearchText] = useState("");
-  const [dropdownIcons, setDropdownIcons] = useState<{
-    objects: string | Icon;
-    types: string | Icon;
-    members: string | Icon;
-  }>({
-    objects: Icon.Document,
-    types: Icon.Lowercase,
-    members: Icon.PersonCircle,
-  });
 
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
     spaceId,
@@ -82,24 +72,6 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
       );
     }
   }, [pinnedObjectsError, pinnedTypesError, pinnedMembersError]);
-
-  useEffect(() => {
-    async function fetchDropdownIcons() {
-      try {
-        const objectsIcon = await getCustomIcon("document");
-        const typesIcon = await getCustomIcon("extension-puzzle");
-        const membersIcon = await getCustomIcon("person");
-        setDropdownIcons({
-          objects: objectsIcon,
-          types: typesIcon,
-          members: membersIcon,
-        });
-      } catch (error) {
-        console.error("Error fetching custom icons", error);
-      }
-    }
-    fetchDropdownIcons();
-  }, []);
 
   const filterItems = <T extends { name: string }>(items: T[], searchText: string): T[] => {
     return items?.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
@@ -226,17 +198,17 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
           <List.Dropdown.Item
             title="Objects"
             value="objects"
-            icon={{ source: dropdownIcons.objects, tintColor: { light: "black", dark: "white" } }}
+            icon={{ source: "icons/document.svg", tintColor: { light: "black", dark: "white" } }}
           />
           <List.Dropdown.Item
             title="Types"
             value="types"
-            icon={{ source: dropdownIcons.types, tintColor: { light: "black", dark: "white" } }}
+            icon={{ source: "icons/extension-puzzle.svg", tintColor: { light: "black", dark: "white" } }}
           />
           <List.Dropdown.Item
             title="Members"
             value="members"
-            icon={{ source: dropdownIcons.members, tintColor: { light: "black", dark: "white" } }}
+            icon={{ source: "icons/person.svg", tintColor: { light: "black", dark: "white" } }}
           />
         </List.Dropdown>
       }

@@ -4,7 +4,6 @@ import { getMembers } from "./api/getMembers";
 import EmptyViewSpace from "./components/EmptyViewSpace";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import SpaceListItem from "./components/SpaceListItem";
-import { getCustomIcon } from "./helpers/icon";
 import { DisplaySpace } from "./helpers/schemas";
 import { pluralize } from "./helpers/strings";
 import { usePinnedSpaces } from "./hooks/usePinnedSpaces";
@@ -25,19 +24,6 @@ function BrowseSpaces() {
   const { pinnedSpaces, pinnedSpacesError, isLoadingPinnedSpaces, mutatePinnedSpaces } = usePinnedSpaces();
   const [searchText, setSearchText] = useState("");
   const [membersData, setMembersData] = useState<{ [spaceId: string]: number }>({});
-  const [customPersonIcon, setCustomPersonIcon] = useState<string | Icon>(Icon.PersonCircle);
-
-  useEffect(() => {
-    async function fetchCustomPersonIcon() {
-      try {
-        const icon = await getCustomIcon("person-circle");
-        setCustomPersonIcon(icon);
-      } catch (error) {
-        console.error("Error fetching custom person icon", error);
-      }
-    }
-    fetchCustomPersonIcon();
-  }, []);
 
   useEffect(() => {
     if (!spaces) return;
@@ -109,7 +95,7 @@ function BrowseSpaces() {
                 accessories={[
                   { icon: Icon.Star, tooltip: "Pinned" },
                   {
-                    icon: { source: customPersonIcon, tintColor: { light: "black", dark: "white" } },
+                    icon: { source: "icons/person-circle.svg", tintColor: { light: "black", dark: "white" } },
                     text: memberCount.toString(),
                     tooltip: `Members: ${memberCount}`,
                   },
@@ -135,7 +121,7 @@ function BrowseSpaces() {
                 icon={{ source: space.icon, mask: Image.Mask.RoundedRectangle }}
                 accessories={[
                   {
-                    icon: { source: customPersonIcon, tintColor: { light: "black", dark: "white" } },
+                    icon: { source: "icons/person-circle.svg", tintColor: { light: "black", dark: "white" } },
                     text: memberCount.toString(),
                     tooltip: `Members: ${memberCount}`,
                   },

@@ -23,7 +23,7 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
       (await getFile(icon.file)) ||
       (typeof type?.icon === "object" && "name" in type.icon
         ? await getCustomIcon(type.icon.name, "grey")
-        : Icon.Document)
+        : await getCustomIcon("document", "grey"))
     );
   }
 
