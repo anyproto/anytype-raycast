@@ -69,11 +69,25 @@ export default function ObjectDetail({
     const titleText = detailData.name || id.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
     if (detailData.type === "text" && detailData.text) {
-      return <Detail.Metadata.Label key={id} icon={Icon.Text} title={titleText} text={detailData.text} />;
+      return (
+        <Detail.Metadata.Label
+          key={id}
+          title={titleText}
+          text={detailData.text}
+          icon={{ source: "icons/text.svg", tintColor: { light: "grey", dark: "grey" } }}
+        />
+      );
     }
 
     if (detailData.type === "number" && detailData.number !== undefined) {
-      return <Detail.Metadata.Label key={id} title={titleText} icon={Icon.Hashtag} text={String(detailData.number)} />;
+      return (
+        <Detail.Metadata.Label
+          key={id}
+          title={titleText}
+          text={String(detailData.number)}
+          icon={{ source: "icons/number.svg", tintColor: { light: "grey", dark: "grey" } }}
+        />
+      );
     }
 
     if (detailData.type === "date" && detailData.date) {
@@ -82,7 +96,7 @@ export default function ObjectDetail({
           key={id}
           title={titleText}
           text={format(new Date(detailData.date), "MMMM d, yyyy")}
-          icon={Icon.Calendar}
+          icon={{ source: "icons/calendar.svg", tintColor: { light: "grey", dark: "grey" } }}
         />
       );
     }
@@ -92,8 +106,10 @@ export default function ObjectDetail({
         <Detail.Metadata.Label
           key={id}
           title=""
-          icon={detailData.checkbox ? Icon.CheckCircle : Icon.Circle}
           text={titleText}
+          icon={{
+            source: detailData.checkbox ? "icons/task0.svg" : "icons/task1.svg",
+          }}
         />
       );
     }
@@ -137,7 +153,7 @@ export default function ObjectDetail({
                 text={objectItem.name || objectItem.id}
                 icon={{
                   source: objectItem.icon,
-                  mask: getMaskForObject(objectItem.layout, objectItem.icon),
+                  mask: getMaskForObject(objectItem.icon, objectItem.layout),
                 }}
                 onAction={objectItem.layout !== "participant" ? handleAction : undefined}
               />

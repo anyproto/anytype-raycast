@@ -4,7 +4,7 @@ import { getMembers } from "./api/getMembers";
 import EmptyViewSpace from "./components/EmptyViewSpace";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import SpaceListItem from "./components/SpaceListItem";
-import { Space } from "./helpers/schemas";
+import { DisplaySpace } from "./helpers/schemas";
 import { pluralize } from "./helpers/strings";
 import { usePinnedSpaces } from "./hooks/usePinnedSpaces";
 import { useSpaces } from "./hooks/useSpaces";
@@ -73,7 +73,7 @@ function BrowseSpaces() {
   const filteredSpaces = spaces?.filter((space) => space.name.toLowerCase().includes(searchText.toLowerCase()));
   const pinnedFiltered = pinnedSpaces
     ?.map((pin) => filteredSpaces.find((space) => space.id === pin.id))
-    .filter(Boolean) as Space[];
+    .filter(Boolean) as DisplaySpace[];
   const regularFiltered = filteredSpaces?.filter((space) => !pinnedFiltered?.includes(space));
 
   return (
@@ -95,7 +95,7 @@ function BrowseSpaces() {
                 accessories={[
                   { icon: Icon.Star, tooltip: "Pinned" },
                   {
-                    icon: Icon.PersonCircle,
+                    icon: { source: "icons/person-circle.svg", tintColor: { light: "black", dark: "white" } },
                     text: memberCount.toString(),
                     tooltip: `Members: ${memberCount}`,
                   },
@@ -121,7 +121,7 @@ function BrowseSpaces() {
                 icon={{ source: space.icon, mask: Image.Mask.RoundedRectangle }}
                 accessories={[
                   {
-                    icon: Icon.PersonCircle,
+                    icon: { source: "icons/person-circle.svg", tintColor: { light: "black", dark: "white" } },
                     text: memberCount.toString(),
                     tooltip: `Members: ${memberCount}`,
                   },

@@ -4,13 +4,13 @@ import { useState } from "react";
 import { addObjectsToList } from "../api/addObjectsToList";
 import { createObject } from "../api/createObject";
 import { CreateObjectFormValues } from "../create-object";
-import { Space, SpaceObject, Template, Type } from "../helpers/schemas";
+import { DisplayObject, DisplaySpace, DisplayTemplate, DisplayType } from "../helpers/schemas";
 
 interface CreateObjectFormProps {
-  spaces: Space[];
-  types: Type[];
-  templates: Template[];
-  lists: SpaceObject[];
+  spaces: DisplaySpace[];
+  types: DisplayType[];
+  templates: DisplayTemplate[];
+  lists: DisplayObject[];
   selectedSpace: string;
   setSelectedSpace: (spaceId: string) => void;
   selectedType: string;

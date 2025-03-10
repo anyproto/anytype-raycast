@@ -1,13 +1,13 @@
 import { apiFetch } from "../helpers/api";
 import { apiEndpoints } from "../helpers/constants";
-import { PaginatedResponse, SearchRequest, SpaceObject } from "../helpers/schemas";
+import { DisplayObject, PaginatedResponse, SearchRequest, SpaceObject } from "../helpers/schemas";
 import { mapObjects } from "../mappers/objects";
 
 export async function search(
   spaceId: string,
   SearchRequest: SearchRequest,
   options: { offset: number; limit: number },
-): Promise<PaginatedResponse<SpaceObject>> {
+): Promise<PaginatedResponse<DisplayObject>> {
   const { url, method } = apiEndpoints.search(spaceId, options);
   const response = await apiFetch<PaginatedResponse<SpaceObject>>(url, {
     method: method,

@@ -6,7 +6,7 @@ import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import ObjectListItem from "./components/ObjectListItem";
 import { localStorageKeys } from "./helpers/constants";
 import { processObject } from "./helpers/object";
-import { Member, SpaceObject, Type } from "./helpers/schemas";
+import { DisplayMember, DisplayObject, DisplayType } from "./helpers/schemas";
 import { getShortDateLabel, pluralize } from "./helpers/strings";
 import { getAllTypesFromSpaces } from "./helpers/types";
 import { useGlobalSearch } from "./hooks/useGlobalSearch";
@@ -117,7 +117,7 @@ function Search() {
     }
   }, [objectsError, spacesError, pinnedObjectsError]);
 
-  const processObjectWithSpaceIcon = (object: SpaceObject, isPinned: boolean) => {
+  const processObjectWithSpaceIcon = (object: DisplayObject, isPinned: boolean) => {
     const spaceIcon = spaceIcons.get(object.space_id) || Icon.BullsEye;
     const processedObject = processObject(object, isPinned, mutateObjects, mutatePinnedObjects);
 
@@ -137,7 +137,7 @@ function Search() {
   };
 
   // Helper to filter objects by the search term
-  const filterObjectsBySearchTerm = (objects: SpaceObject[], searchTerm: string) => {
+  const filterObjectsBySearchTerm = (objects: DisplayObject[], searchTerm: string) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     return objects.filter(
       (object) =>
@@ -175,12 +175,32 @@ function Search() {
       throttle={true}
       searchBarAccessory={
         <List.Dropdown tooltip="Filter by kind or space" onChange={(newValue) => setFilterType(newValue)}>
-          <List.Dropdown.Item title="All" value="all" icon={Icon.MagnifyingGlass} />
+          <List.Dropdown.Item
+            title="All"
+            value="all"
+            icon={{ source: "icons/search.svg", tintColor: { light: "black", dark: "white" } }}
+          />
           <List.Dropdown.Section>
-            <List.Dropdown.Item title="Pages" value="pages" icon={Icon.Document} />
-            <List.Dropdown.Item title="Tasks" value="tasks" icon={Icon.CheckCircle} />
-            <List.Dropdown.Item title="Lists" value="lists" icon={Icon.List} />
-            <List.Dropdown.Item title="Bookmarks" value="bookmarks" icon={Icon.Bookmark} />
+            <List.Dropdown.Item
+              title="Pages"
+              value="pages"
+              icon={{ source: "icons/document.svg", tintColor: { light: "black", dark: "white" } }}
+            />
+            <List.Dropdown.Item
+              title="Tasks"
+              value="tasks"
+              icon={{ source: "icons/checkbox.svg", tintColor: { light: "black", dark: "white" } }}
+            />
+            <List.Dropdown.Item
+              title="Lists"
+              value="lists"
+              icon={{ source: "icons/layers.svg", tintColor: { light: "black", dark: "white" } }}
+            />
+            <List.Dropdown.Item
+              title="Bookmarks"
+              value="bookmarks"
+              icon={{ source: "icons/bookmark.svg", tintColor: { light: "black", dark: "white" } }}
+            />
           </List.Dropdown.Section>
         </List.Dropdown>
       }
@@ -196,7 +216,10 @@ function Search() {
               title={object.title}
               subtitle={object.subtitle}
               accessories={object.accessories}
-              mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
+              mutate={[
+                mutateObjects,
+                mutatePinnedObjects as MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>,
+              ]}
               layout={object.layout}
               viewType={viewType}
               isGlobalSearch={true}
@@ -217,7 +240,10 @@ function Search() {
               title={object.title}
               subtitle={object.subtitle}
               accessories={object.accessories}
-              mutate={[mutateObjects, mutatePinnedObjects as MutatePromise<SpaceObject[] | Type[] | Member[]>]}
+              mutate={[
+                mutateObjects,
+                mutatePinnedObjects as MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>,
+              ]}
               layout={object.layout}
               viewType={viewType}
               isGlobalSearch={true}

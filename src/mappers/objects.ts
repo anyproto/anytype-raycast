@@ -1,20 +1,20 @@
 import { getPreferenceValues } from "@raycast/api";
-import { getRawObject } from "../api/getObject";
+import { getObjectWithoutMappedDetails } from "../api/getObject";
 import { getIconWithFallback } from "../helpers/icon";
-import { DetailData, SpaceObject } from "../helpers/schemas";
+import { DetailData, DisplayObject, SpaceObject } from "../helpers/schemas";
 
 /**
  * Efficiently map raw `SpaceObject` items to essential display-ready data.
  * Only includes necessary fields for list rendering for performance.
  */
-export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]> {
+export async function mapObjects(objects: SpaceObject[]): Promise<DisplayObject[]> {
   const { sort } = getPreferenceValues();
 
   return Promise.all(
     objects.map(async (object) => {
       return {
         ...object,
-        icon: await getIconWithFallback(object.icon, object.layout),
+        icon: await getIconWithFallback(object.icon, object.layout, object.type),
         name: object.name || object.snippet || "Untitled",
         type: object.type || "Unknown Type",
         details: object.details?.filter((detail) => detail.id === sort) || [],
@@ -26,8 +26,8 @@ export async function mapObjects(objects: SpaceObject[]): Promise<SpaceObject[]>
 /**
  * Map raw `SpaceObject` item into display-ready data, including details, icons, etc.
  */
-export async function mapObject(object: SpaceObject): Promise<SpaceObject> {
-  const icon = await getIconWithFallback(object.icon, object.layout);
+export async function mapObject(object: SpaceObject): Promise<DisplayObject> {
+  const icon = await getIconWithFallback(object.icon, object.layout, object.type);
 
   const mappedDetails = await Promise.all(
     object.details.map(async (detail) => {
@@ -83,7 +83,7 @@ export async function mapObject(object: SpaceObject): Promise<SpaceObject> {
             const fetchedItems = await Promise.all(
               rawItems.map(async (item) => {
                 if (typeof item === "string") {
-                  const fetched = await getRawObject(object.space_id, item);
+                  const fetched = await getObjectWithoutMappedDetails(object.space_id, item);
                   if (!fetched) {
                     throw new Error(`getRawObject returned null for detail id: ${id} and item ${item}`);
                   }
@@ -93,21 +93,10 @@ export async function mapObject(object: SpaceObject): Promise<SpaceObject> {
                 }
               }),
             );
-            const processedItems = await Promise.all(
-              fetchedItems.map(async (obj: SpaceObject) => {
-                const objectIcon = await getIconWithFallback(obj.icon, obj.layout);
-                const objectName = obj.name || "Untitled";
-                return {
-                  ...obj,
-                  name: objectName,
-                  icon: objectIcon,
-                };
-              }),
-            );
             mappedDetail = {
               type: "object",
               name: details.name,
-              object: processedItems,
+              object: fetchedItems,
             };
           } else {
             throw new Error(`Missing object for detail id: ${id}`);

@@ -1,6 +1,6 @@
 import { apiFetch } from "../helpers/api";
 import { apiEndpoints } from "../helpers/constants";
-import { PaginatedResponse, Pagination, Template } from "../helpers/schemas";
+import { DisplayTemplate, PaginatedResponse, Pagination, Template } from "../helpers/schemas";
 import { mapTemplates } from "../mappers/templates";
 
 export async function getTemplates(
@@ -11,7 +11,7 @@ export async function getTemplates(
     limit: number;
   },
 ): Promise<{
-  templates: Template[];
+  templates: DisplayTemplate[];
   pagination: Pagination;
 }> {
   const { url, method } = apiEndpoints.getTemplates(spaceId, typeId, options);

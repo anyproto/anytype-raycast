@@ -1,13 +1,13 @@
 import { getTemplates } from "../api/getTemplates";
 import { getTypes } from "../api/getTypes";
 import { apiLimitMax } from "./constants";
-import { Space, Template, Type } from "./schemas";
+import { DisplaySpace, DisplayTemplate, DisplayType } from "./schemas";
 
 /**
  * Fetches all `Type`s from a single space, doing pagination if necessary.
  */
-export async function fetchAllTypesForSpace(spaceId: string): Promise<Type[]> {
-  const allTypes: Type[] = [];
+export async function fetchAllTypesForSpace(spaceId: string): Promise<DisplayType[]> {
+  const allTypes: DisplayType[] = [];
   let hasMore = true;
   let offset = 0;
 
@@ -24,8 +24,8 @@ export async function fetchAllTypesForSpace(spaceId: string): Promise<Type[]> {
 /**
  * Aggregates all `Type`s from all given spaces.
  */
-export async function getAllTypesFromSpaces(spaces: Space[]): Promise<Type[]> {
-  const allTypes: Type[] = [];
+export async function getAllTypesFromSpaces(spaces: DisplaySpace[]): Promise<DisplayType[]> {
+  const allTypes: DisplayType[] = [];
   for (const space of spaces) {
     try {
       const types = await fetchAllTypesForSpace(space.id);
@@ -40,8 +40,8 @@ export async function getAllTypesFromSpaces(spaces: Space[]): Promise<Type[]> {
 /**
  * Fetches all `Template`s from a single space and type, doing pagination if necessary.
  */
-export async function fetchAllTemplatesForSpace(spaceId: string, typeId: string): Promise<Template[]> {
-  const allTemplates: Template[] = [];
+export async function fetchAllTemplatesForSpace(spaceId: string, typeId: string): Promise<DisplayTemplate[]> {
+  const allTemplates: DisplayTemplate[] = [];
   let hasMore = true;
   let offset = 0;
 

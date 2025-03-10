@@ -1,14 +1,14 @@
 import { apiFetch } from "../helpers/api";
 import { apiEndpoints } from "../helpers/constants";
 import { ErrorWithStatus } from "../helpers/errors";
-import { Type } from "../helpers/schemas";
+import { DisplayType, Type } from "../helpers/schemas";
 import { mapType } from "../mappers/types";
 
 export async function getType(
   spaceId: string,
   typeId: string,
 ): Promise<{
-  type: Type | null;
+  type: DisplayType | null;
 }> {
   const { url, method } = apiEndpoints.getType(spaceId, typeId);
   try {

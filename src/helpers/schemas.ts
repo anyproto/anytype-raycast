@@ -1,3 +1,5 @@
+import { Icon } from "@raycast/api";
+
 export interface Pagination {
   total: number;
   offset: number;
@@ -23,7 +25,7 @@ export interface Space {
   object: string;
   id: string;
   name: string;
-  icon: string;
+  icon: ObjectIcon | Icon;
   home_object_id: string;
   archive_object_id: string;
   profile_object_id: string;
@@ -41,14 +43,22 @@ export interface Space {
   network_id: string;
 }
 
+export interface DisplaySpace extends Omit<Space, "icon"> {
+  icon: string;
+}
+
 export interface Member {
   object: string;
   id: string;
   name: string;
-  icon: string;
+  icon: ObjectIcon;
   identity: string;
   global_name: string;
   role: string;
+}
+
+export interface DisplayMember extends Omit<Member, "icon"> {
+  icon: string;
 }
 
 export interface ObjectExport {
@@ -63,7 +73,7 @@ export interface SpaceObject {
   object: string;
   id: string;
   name: string;
-  icon: string;
+  icon: ObjectIcon;
   type: Type;
   snippet: string;
   layout: string;
@@ -72,6 +82,15 @@ export interface SpaceObject {
   blocks: Block[] | undefined;
   details: Detail[];
 }
+
+export interface DisplayObject extends Omit<SpaceObject, "icon"> {
+  icon: string;
+}
+
+export type ObjectIcon =
+  | { type: "emoji"; emoji: string }
+  | { type: "file"; file: string }
+  | { type: "name"; name: string; color: string };
 
 export interface Block {
   id: string;
@@ -88,7 +107,7 @@ export interface Text {
   style: string;
   checked: boolean;
   color: string;
-  icon: string;
+  icon: ObjectIcon;
 }
 
 export interface File {
@@ -116,7 +135,7 @@ export type DetailData =
   | { type: "select"; select: Tag; name: string } // single select tag
   | { type: "multi_select"; multi_select: Tag[]; name: string } // multi-select tags
   | { type: "object"; object: string; name: string } // object reference
-  | { type: "object"; object: SpaceObject[]; name: string }; // full object data
+  | { type: "object"; object: DisplayObject[]; name: string }; // full object data
 
 export interface Tag {
   id: string;
@@ -129,14 +148,22 @@ export interface Type {
   id: string;
   unique_key: string;
   name: string;
-  icon: string;
+  icon: ObjectIcon;
   recommended_layout: string;
+}
+
+export interface DisplayType extends Omit<Type, "icon"> {
+  icon: string;
 }
 
 export interface Template {
   object: string;
   id: string;
   name: string;
+  icon: ObjectIcon;
+}
+
+export interface DisplayTemplate extends Omit<Template, "icon"> {
   icon: string;
 }
 

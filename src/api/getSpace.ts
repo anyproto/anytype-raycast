@@ -1,11 +1,11 @@
 import { apiFetch } from "../helpers/api";
 import { apiEndpoints } from "../helpers/constants";
 import { ErrorWithStatus } from "../helpers/errors";
-import { Space } from "../helpers/schemas";
+import { DisplaySpace, Space } from "../helpers/schemas";
 import { mapSpace } from "../mappers/spaces";
 
 export async function getSpace(spaceId: string): Promise<{
-  space: Space | null;
+  space: DisplaySpace | null;
 }> {
   const { url, method } = apiEndpoints.getSpace(spaceId);
   try {
