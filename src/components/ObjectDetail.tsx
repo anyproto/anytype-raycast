@@ -137,7 +137,7 @@ export default function ObjectDetail({
                 text={objectItem.name || objectItem.id}
                 icon={{
                   source: objectItem.icon,
-                  mask: getMaskForObject(objectItem.layout, objectItem.icon),
+                  mask: getMaskForObject(objectItem.icon, objectItem.layout),
                 }}
                 onAction={objectItem.layout !== "participant" ? handleAction : undefined}
               />

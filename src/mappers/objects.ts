@@ -14,7 +14,7 @@ export async function mapObjects(objects: SpaceObject[]): Promise<DisplayObject[
     objects.map(async (object) => {
       return {
         ...object,
-        icon: await getIconWithFallback(object.icon, object.layout),
+        icon: await getIconWithFallback(object.icon, object.layout, object.type),
         name: object.name || object.snippet || "Untitled",
         type: object.type || "Unknown Type",
         details: object.details?.filter((detail) => detail.id === sort) || [],
@@ -27,7 +27,7 @@ export async function mapObjects(objects: SpaceObject[]): Promise<DisplayObject[
  * Map raw `SpaceObject` item into display-ready data, including details, icons, etc.
  */
 export async function mapObject(object: SpaceObject): Promise<DisplayObject> {
-  const icon = await getIconWithFallback(object.icon, object.layout);
+  const icon = await getIconWithFallback(object.icon, object.layout, object.type);
 
   const mappedDetails = await Promise.all(
     object.details.map(async (detail) => {

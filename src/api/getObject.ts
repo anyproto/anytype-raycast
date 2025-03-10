@@ -34,7 +34,7 @@ export async function getObjectWithoutMappedDetails(spaceId: string, objectId: s
     }
 
     const { object } = response.payload;
-    const icon = await getIconWithFallback(object.icon, object.layout);
+    const icon = await getIconWithFallback(object.icon, object.layout, object.type);
 
     return {
       ...object,

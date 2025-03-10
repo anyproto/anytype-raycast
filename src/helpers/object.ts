@@ -33,7 +33,7 @@ export function processObject(
     id: object.id,
     icon: {
       source: object.icon,
-      mask: getMaskForObject(object.layout, object.icon),
+      mask: getMaskForObject(object.icon, object.layout),
     },
     title: object.name,
     subtitle: {
