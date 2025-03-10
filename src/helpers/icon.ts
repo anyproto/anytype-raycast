@@ -1,13 +1,24 @@
 import { Icon, Image } from "@raycast/api";
+import * as fs from "fs";
 import fetch from "node-fetch";
-import { iconWidth } from "./constants";
+import * as path from "path";
+import { ObjectIcon } from "../helpers/schemas";
+import { colorMap, iconWidth } from "./constants";
 
 /**
  * Determine which icon to show for a given Object. Icon can be url or emoji.
  */
-export async function getIconWithFallback(icon: string, layout: string): Promise<string | Icon> {
-  if (icon) {
-    return (await getIcon(icon)) || icon;
+export async function getIconWithFallback(icon: ObjectIcon, layout: string): Promise<string | Icon> {
+  if (typeof icon === "object" && "name" in icon) {
+    return getCustomIcon(icon.name, icon.color);
+  }
+
+  if (typeof icon === "object" && "file" in icon) {
+    return (await getFile(icon.file)) || "";
+  }
+
+  if (typeof icon === "object" && "emoji" in icon && icon.emoji) {
+    return icon.emoji;
   }
 
   // Fallback icons by layout
@@ -21,15 +32,45 @@ export async function getIconWithFallback(icon: string, layout: string): Promise
       return Icon.PersonCircle;
     case "bookmark":
       return Icon.Bookmark;
+    case "type":
+      return getCustomIcon("extension-puzzle", "grey");
+    case "template":
+      return getCustomIcon("copy", "grey");
     default:
       return Icon.Document;
   }
 }
 
 /**
+ * Retrieve a custom icon by name from the local assets directory.
+ * @param name The name of the icon file (without extension).
+ * @param color The color of the icon.
+ * @returns The base64 data URI of the icon.
+ */
+export async function getCustomIcon(name: string, color: string): Promise<string> {
+  const iconDirectory = path.join(__dirname, "assets", "icons");
+  const iconPath = path.join(iconDirectory, `${name}.svg`);
+
+  try {
+    const fillColor = color && colorMap[color] ? colorMap[color] : colorMap.grey;
+    let svgContent = fs.readFileSync(iconPath, "utf8");
+    // Remove any explicit fill attributes from all elements
+    svgContent = svgContent.replace(/fill="[^"]*"/g, "");
+    // Add a global fill attribute to the root <svg> element
+    svgContent = svgContent.replace(/<svg([^>]*)>/, `<svg$1 fill="${fillColor}">`);
+
+    const base64Content = Buffer.from(svgContent).toString("base64");
+    return `data:image/svg+xml;base64,${base64Content}`;
+  } catch (error) {
+    console.error(`Failed to read custom SVG icon: ${error}`);
+    return "";
+  }
+}
+
+/**
  * Fetch an icon from local gateway and return it as a base64 data URI.
  */
-export async function getIcon(iconUrl: string): Promise<string | undefined> {
+export async function getFile(iconUrl: string): Promise<string | undefined> {
   if (iconUrl && iconUrl.startsWith("http://127.0.0.1")) {
     const urlWithWidth = `${iconUrl}?width=${iconWidth}`;
     return (await fetchWithTimeout(urlWithWidth, 500)) || undefined;

@@ -1,10 +1,10 @@
 import { Icon, Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import { Space } from "../helpers/schemas";
+import { DisplaySpace } from "../helpers/schemas";
 import SpaceActions from "./SpaceActions";
 
 type SpaceListItemProps = {
-  space: Space;
+  space: DisplaySpace;
   icon: Image;
   accessories?: {
     icon?: Icon | { source: string; mask: Image.Mask };
@@ -12,7 +12,7 @@ type SpaceListItemProps = {
     text?: string;
     tooltip?: string;
   }[];
-  mutate: MutatePromise<Space[]>[];
+  mutate: MutatePromise<DisplaySpace[]>[];
   isPinned: boolean;
 };
 

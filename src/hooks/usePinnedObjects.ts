@@ -2,14 +2,14 @@ import { MutatePromise, useCachedPromise } from "@raycast/utils";
 import { getMember } from "../api/getMember";
 import { getObject } from "../api/getObject";
 import { getType } from "../api/getType";
-import { Member, SpaceObject, Type } from "../helpers/schemas";
+import { DisplayMember, DisplayObject, DisplayType } from "../helpers/schemas";
 import { getPinned, removePinned } from "../helpers/storage";
 
 export function usePinnedObjects(spaceId: string): {
-  pinnedObjects: SpaceObject[];
+  pinnedObjects: DisplayObject[];
   pinnedObjectsError: Error | undefined;
   isLoadingPinnedObjects: boolean;
-  mutatePinnedObjects: MutatePromise<SpaceObject[] | Type[] | Member[]>;
+  mutatePinnedObjects: MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>;
 } {
   const { data, error, isLoading, mutate } = useCachedPromise(
     async (spaceId) => {
@@ -37,10 +37,10 @@ export function usePinnedObjects(spaceId: string): {
   );
 
   return {
-    pinnedObjects: data as SpaceObject[],
+    pinnedObjects: data as DisplayObject[],
     pinnedObjectsError: error,
     isLoadingPinnedObjects: isLoading,
-    mutatePinnedObjects: mutate as MutatePromise<SpaceObject[] | Type[] | Member[]>,
+    mutatePinnedObjects: mutate as MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>,
   };
 }
 

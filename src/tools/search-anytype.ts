@@ -53,7 +53,7 @@ export default async function tool({ query, types, sort }: Input) {
   const { data, pagination } = await globalSearch({ query, types, sort: sortOptions }, { offset: 0, limit: apiLimit });
   const results = data.map(({ object, name, id, snippet, icon }) => {
     const result = { object, name, id, snippet };
-    if (icon && icon.length === 1) {
+    if (typeof icon === "object" && "emoji" in icon) {
       return { ...result, icon };
     }
     return result;

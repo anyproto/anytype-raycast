@@ -1,6 +1,6 @@
 import { Icon, Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import { Member, SpaceObject, Type } from "../helpers/schemas";
+import { DisplayMember, DisplayObject, DisplayType } from "../helpers/schemas";
 import ObjectActions from "./ObjectActions";
 
 type ObjectListItemProps = {
@@ -15,7 +15,7 @@ type ObjectListItemProps = {
     text?: string;
     tooltip?: string;
   }[];
-  mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
+  mutate: MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>[];
   layout: string;
   viewType: string;
   isGlobalSearch: boolean;

@@ -33,6 +33,20 @@ export const localStorageKeys = {
   },
 };
 
+// Colors
+export const colorMap: { [key: string]: string } = {
+  grey: "#b6b6b6",
+  yellow: "#ecd91b",
+  orange: "#ffb522",
+  red: "#f55522",
+  pink: "#e51ca0",
+  purple: "#ab50cc",
+  blue: "#3e58eb",
+  ice: "#2aa7ee",
+  teal: "#0fc8ba",
+  lime: "#5dd400",
+};
+
 // API Endpoints
 export const apiEndpoints = {
   // auth

@@ -13,7 +13,7 @@ import {
 import { MutatePromise } from "@raycast/utils";
 import { deleteObject } from "../api/deleteObject";
 import { localStorageKeys } from "../helpers/constants";
-import { Export, Member, SpaceObject, Template, Type } from "../helpers/schemas";
+import { DisplayMember, DisplayObject, DisplayTemplate, DisplayType, Export } from "../helpers/schemas";
 import { addPinned, moveDownInPinned, moveUpInPinned, removePinned } from "../helpers/storage";
 import { pluralize } from "../helpers/strings";
 import CollectionList from "./CollectionList";
@@ -26,9 +26,9 @@ type ObjectActionsProps = {
   objectId: string;
   title: string;
   objectExport?: Export;
-  mutate?: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
-  mutateTemplates?: MutatePromise<Template[]>;
-  mutateObject?: MutatePromise<SpaceObject | null | undefined>;
+  mutate?: MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>[];
+  mutateTemplates?: MutatePromise<DisplayTemplate[]>;
+  mutateObject?: MutatePromise<DisplayObject | null | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;
   layout?: string;
   viewType: string;

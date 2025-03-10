@@ -63,7 +63,7 @@ export default async function tool({ spaceId, query, types, sort }: Input) {
   );
   const results = data.map(({ object, name, id, snippet, icon }) => {
     const result = { object, name, id, snippet };
-    if (icon && icon.length === 1) {
+    if (typeof icon === "object" && "emoji" in icon) {
       return { ...result, icon };
     }
     return result;

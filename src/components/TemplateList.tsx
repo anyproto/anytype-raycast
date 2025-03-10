@@ -1,7 +1,7 @@
 import { List, showToast, Toast } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { processObject } from "../helpers/object";
-import { Template } from "../helpers/schemas";
+import { DisplayTemplate } from "../helpers/schemas";
 import { pluralize } from "../helpers/strings";
 import { useSearch } from "../hooks/useSearch";
 import { useTemplates } from "../hooks/useTemplates";
@@ -39,7 +39,7 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
     }
   }, [objectsError]);
 
-  const filteredTemplates = templates?.filter((template: Template) =>
+  const filteredTemplates = templates?.filter((template: DisplayTemplate) =>
     template.name.toLowerCase().includes(searchText.toLowerCase()),
   );
 
@@ -62,7 +62,7 @@ export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned
           title={searchText ? "Search Results" : "Templates"}
           subtitle={`${pluralize(filteredTemplates.length, "template", { withNumber: true })}`}
         >
-          {filteredTemplates.map((template: Template) => (
+          {filteredTemplates.map((template: DisplayTemplate) => (
             <List.Item
               key={template.id}
               title={template.name}

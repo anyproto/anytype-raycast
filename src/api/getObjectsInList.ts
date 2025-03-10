@@ -1,6 +1,6 @@
 import { apiFetch } from "../helpers/api";
 import { apiEndpoints } from "../helpers/constants";
-import { PaginatedResponse, Pagination, SpaceObject } from "../helpers/schemas";
+import { DisplayObject, PaginatedResponse, Pagination, SpaceObject } from "../helpers/schemas";
 import { mapObjects } from "../mappers/objects";
 
 export async function getObjectsInList(
@@ -8,7 +8,7 @@ export async function getObjectsInList(
   listId: string,
   options: { offset: number; limit: number },
 ): Promise<{
-  objects: SpaceObject[];
+  objects: DisplayObject[];
   pagination: Pagination;
 }> {
   const { url, method } = apiEndpoints.getObjectsInList(spaceId, listId, options);

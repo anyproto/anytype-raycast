@@ -3,7 +3,7 @@ import { MutatePromise } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { localStorageKeys } from "../helpers/constants";
 import { processObject } from "../helpers/object";
-import { Member, SpaceObject, Type } from "../helpers/schemas";
+import { DisplayMember, DisplayObject, DisplayType } from "../helpers/schemas";
 import { pluralize } from "../helpers/strings";
 import { useMembers } from "../hooks/useMembers";
 import { usePinnedMembers, usePinnedObjects, usePinnedTypes } from "../hooks/usePinnedObjects";
@@ -81,7 +81,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
     return role.replace("Reader", "Viewer").replace("Writer", "Editor");
   };
 
-  const processType = (type: Type, isPinned: boolean) => {
+  const processType = (type: DisplayType, isPinned: boolean) => {
     return {
       key: type.id,
       spaceId: spaceId,
@@ -90,13 +90,13 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
       title: type.name,
       subtitle: { value: "", tooltip: "" },
       accessories: [],
-      mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<SpaceObject[] | Type[] | Member[]>],
+      mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>],
       layout: "",
       isPinned,
     };
   };
 
-  const processMember = (member: Member, isPinned: boolean) => {
+  const processMember = (member: DisplayMember, isPinned: boolean) => {
     return {
       key: member.id,
       spaceId: spaceId,
@@ -111,7 +111,7 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
           tooltip: `Role: ${formatRole(member.role)}`,
         },
       ],
-      mutate: [mutateMembers, mutatePinnedMembers as MutatePromise<SpaceObject[] | Type[] | Member[]>],
+      mutate: [mutateMembers, mutatePinnedMembers as MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>],
       layout: "",
       isPinned,
     };

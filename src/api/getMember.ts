@@ -1,14 +1,14 @@
 import { apiFetch } from "../helpers/api";
 import { apiEndpoints } from "../helpers/constants";
 import { ErrorWithStatus } from "../helpers/errors";
-import { Member } from "../helpers/schemas";
+import { DisplayMember, Member } from "../helpers/schemas";
 import { mapMember } from "../mappers/members";
 
 export async function getMember(
   spaceId: string,
   objectId: string,
 ): Promise<{
-  member: Member | null;
+  member: DisplayMember | null;
 }> {
   const { url, method } = apiEndpoints.getMember(spaceId, objectId);
   try {

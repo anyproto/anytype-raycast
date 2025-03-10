@@ -2,14 +2,14 @@ import { Icon, Image, getPreferenceValues } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { format } from "date-fns";
 import { getMaskForObject } from "./icon";
-import { Member, SpaceObject, Type } from "./schemas";
+import { DisplayMember, DisplayObject, DisplayType } from "./schemas";
 import { getDateLabel, getShortDateLabel } from "./strings";
 
 export function processObject(
-  object: SpaceObject,
+  object: DisplayObject,
   isPinned: boolean,
-  mutateObjects: MutatePromise<SpaceObject[] | Type[] | Member[]>,
-  mutatePinnedObjects?: MutatePromise<SpaceObject[] | Type[] | Member[]>,
+  mutateObjects: MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>,
+  mutatePinnedObjects?: MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>,
 ): {
   key: string;
   spaceId: string;
@@ -18,7 +18,7 @@ export function processObject(
   title: string;
   subtitle: { value: string; tooltip: string };
   accessories: { icon?: Icon; date?: Date; tooltip: string; text?: string }[];
-  mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
+  mutate: MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>[];
   layout: string;
   isPinned: boolean;
 } {
@@ -50,7 +50,9 @@ export function processObject(
         text: hasValidDate ? undefined : "—",
       },
     ],
-    mutate: [mutateObjects, mutatePinnedObjects].filter(Boolean) as MutatePromise<SpaceObject[] | Type[] | Member[]>[],
+    mutate: [mutateObjects, mutatePinnedObjects].filter(Boolean) as MutatePromise<
+      DisplayObject[] | DisplayType[] | DisplayMember[]
+    >[],
     layout: object.layout,
     isPinned,
   };

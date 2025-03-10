@@ -1,17 +1,26 @@
-import { Icon } from "@raycast/api";
-import { Template } from "../helpers/schemas";
+import { getIconWithFallback } from "../helpers/icon";
+import { DisplayTemplate, Template } from "../helpers/schemas";
 
 /**
  * Map raw `Template` objects from the API into display-ready data (e.g., icon).
  */
-export async function mapTemplates(templates: Template[]): Promise<Template[]> {
+export async function mapTemplates(templates: Template[]): Promise<DisplayTemplate[]> {
   return Promise.all(
     templates.map(async (template) => {
-      return {
-        ...template,
-        name: template.name || "Untitled",
-        icon: template.icon || Icon.BulletPoints,
-      };
+      return mapTemplate(template);
     }),
   );
+}
+
+/**
+ * Map raw `Template` object from the API into display-ready data (e.g., icon).
+ */
+export async function mapTemplate(template: Template): Promise<DisplayTemplate> {
+  const icon = await getIconWithFallback(template.icon, "template");
+
+  return {
+    ...template,
+    name: template.name || "Untitled",
+    icon: icon,
+  };
 }

@@ -1,13 +1,13 @@
 import { Action, ActionPanel, Clipboard, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { anytypeChatDeeplink, anytypeSpaceDeeplink, localStorageKeys } from "../helpers/constants";
-import { Space } from "../helpers/schemas";
+import { DisplaySpace } from "../helpers/schemas";
 import { addPinned, moveDownInPinned, moveUpInPinned, removePinned } from "../helpers/storage";
 import ObjectList from "./ObjectList";
 
 type SpaceActionsProps = {
-  space: Space;
-  mutate: MutatePromise<Space[]>[];
+  space: DisplaySpace;
+  mutate: MutatePromise<DisplaySpace[]>[];
   isPinned: boolean;
 };
 
