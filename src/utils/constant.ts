@@ -112,16 +112,6 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces`,
     method: "POST",
   },
-  // TODO: waiting for API to be implemented
-  getMember: (spaceId: string, objectId: string) => ({
-    url: `${apiUrl}/spaces/${spaceId}/members/${objectId}`,
-    method: "GET",
-  }),
-  getMembers: (spaceId: string, options: { offset: number; limit: number }) => ({
-    url: `${apiUrl}/spaces/${spaceId}/members${encodeQueryParams(options)}`,
-    method: "GET",
-  }),
-  // TODO: waiting for API to be implemented
   getSpace: (spaceId: string) => ({
     url: `${apiUrl}/spaces/${spaceId}`,
     method: "GET",
@@ -131,17 +121,33 @@ export const apiEndpoints = {
     method: "GET",
   }),
 
-  // types
-  getTemplates: (spaceId: string, typeId: string, options: { offset: number; limit: number }) => ({
-    url: `${apiUrl}/spaces/${spaceId}/types/${typeId}/templates${encodeQueryParams(options)}`,
+  // members
+  getMember: (spaceId: string, objectId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/members/${objectId}`,
     method: "GET",
   }),
+  getMembers: (spaceId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/members${encodeQueryParams(options)}`,
+    method: "GET",
+  }),
+
+  // types
   getType: (spaceId: string, typeId: string) => ({
     url: `${apiUrl}/spaces/${spaceId}/types/${typeId}`,
     method: "GET",
   }),
   getTypes: (spaceId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/types${encodeQueryParams(options)}`,
+    method: "GET",
+  }),
+
+  // templates
+  getTemplate: (spaceId: string, typeId: string, templateId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/types/${typeId}/templates/${templateId}`,
+    method: "GET",
+  }),
+  getTemplates: (spaceId: string, typeId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/types/${typeId}/templates${encodeQueryParams(options)}`,
     method: "GET",
   }),
 };
