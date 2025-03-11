@@ -1,1 +1,2 @@
+npm run build
 npx lint-staged
