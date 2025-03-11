@@ -15,15 +15,15 @@ import { Type } from "./schemas";
  */
 export async function getIconWithFallback(icon: ObjectIcon, layout: string, type?: Type): Promise<string | Icon> {
   if (typeof icon === "object" && "name" in icon) {
-    return await getCustomIcon(icon.name, icon.color);
+    return await getCustomTypeIcon(icon.name, icon.color);
   }
 
   if (typeof icon === "object" && "file" in icon) {
     return (
       (await getFile(icon.file)) ||
       (typeof type?.icon === "object" && "name" in type.icon
-        ? await getCustomIcon(type.icon.name, "grey")
-        : await getCustomIcon("document", "grey"))
+        ? await getCustomTypeIcon(type.icon.name, "grey")
+        : await getCustomTypeIcon("document", "grey"))
     );
   }
 
@@ -32,36 +32,36 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
   }
 
   if (typeof type?.icon === "object" && "name" in type.icon) {
-    return await getCustomIcon(type.icon.name, "grey");
+    return await getCustomTypeIcon(type.icon.name, "grey");
   }
 
   switch (layout) {
     case "todo":
-      return await getCustomIcon("checkbox", "grey");
+      return await getCustomTypeIcon("checkbox", "grey");
     case "set":
     case "collection":
-      return await getCustomIcon("layers", "grey");
+      return await getCustomTypeIcon("layers", "grey");
     case "participant":
-      return await getCustomIcon("person", "grey");
+      return await getCustomTypeIcon("person", "grey");
     case "bookmark":
-      return await getCustomIcon("bookmark", "grey");
+      return await getCustomTypeIcon("bookmark", "grey");
     case "type":
-      return await getCustomIcon("extension-puzzle", "grey");
+      return await getCustomTypeIcon("extension-puzzle", "grey");
     case "template":
-      return await getCustomIcon("copy", "grey");
+      return await getCustomTypeIcon("copy", "grey");
     default:
-      return await getCustomIcon("document", "grey");
+      return await getCustomTypeIcon("document", "grey");
   }
 }
 
 /**
- * Retrieve a custom icon by name from the local assets directory.
+ * Retrieve a custom type icon by name from the local assets directory.
  * @param name The name of the icon file (without extension).
  * @param color The color of the icon.
  * @returns The base64 data URI of the icon.
  */
-export async function getCustomIcon(name: string, color?: string): Promise<string> {
-  const iconDirectory = path.join(__dirname, "assets", "icons");
+export async function getCustomTypeIcon(name: string, color?: string): Promise<string> {
+  const iconDirectory = path.join(__dirname, "assets", "icons", "type");
   const iconPath = path.join(iconDirectory, `${name}.svg`);
 
   try {
