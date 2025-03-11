@@ -1,6 +1,6 @@
 import { getPreferenceValues } from "@raycast/api";
 import { getObjectWithoutMappedDetails } from "../api/getObject";
-import { DetailData, DisplayObject, SpaceObject } from "../helpers/schema";
+import { DetailData, DisplayObject, SpaceObject } from "../models";
 import { colorMap } from "../utils/constant";
 import { getIconWithFallback } from "../utils/icon";
 
@@ -135,7 +135,7 @@ export async function mapObject(object: SpaceObject): Promise<DisplayObject> {
   return {
     ...object,
     icon,
-    blocks: undefined, // remove blocks to improve performance
+    blocks: [], // remove blocks to improve performance
     name: object.name || object.snippet || "Untitled",
     type: object.type || "Unknown Type",
     details: mappedDetails,

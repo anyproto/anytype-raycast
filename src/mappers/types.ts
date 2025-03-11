@@ -1,4 +1,4 @@
-import { DisplayType, Type } from "../helpers/schema";
+import { DisplayType, Type } from "../models";
 import { getIconWithFallback } from "../utils/icon";
 
 /**

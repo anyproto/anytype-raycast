@@ -1,5 +1,5 @@
 import { displayCode } from "../api/displayCode";
-import { DisplayCodeResponse } from "../helpers/schema";
+import { DisplayCodeResponse } from "../models";
 import { apiAppName } from "../utils/constant";
 
 /**

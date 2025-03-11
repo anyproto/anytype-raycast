@@ -1,5 +1,5 @@
-import { DisplayTemplate, PaginatedResponse, Pagination, Template } from "../helpers/schema";
 import { mapTemplates } from "../mappers/templates";
+import { DisplayTemplate, PaginatedResponse, Pagination, Template } from "../models";
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constant";
 

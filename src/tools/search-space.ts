@@ -1,4 +1,5 @@
 import { search } from "../api/search";
+import { SortDirection, SortTimestamp } from "../models";
 import { apiLimit } from "../utils/constant";
 
 type Input = {
@@ -32,14 +33,14 @@ type Input = {
      * This value can be either "asc" (ascending) or "desc" (descending).
      * Default value is "desc".
      */
-    direction?: "asc" | "desc";
+    direction?: SortDirection;
 
     /**
      * The sorting field for the search results.
      * This value can be "last_modified_date", "last_opened_date", or "created_date".
      * Default value is "last_modified_date".
      */
-    timestamp?: "last_modified_date" | "last_opened_date" | "created_date";
+    timestamp?: SortTimestamp;
   };
 };
 
@@ -52,8 +53,8 @@ type Input = {
 export default async function tool({ spaceId, query, types, sort }: Input) {
   types = types ?? [];
   const sortOptions = {
-    direction: sort?.direction ?? "desc",
-    timestamp: sort?.timestamp ?? "last_modified_date",
+    direction: sort?.direction ?? SortDirection.Descending,
+    timestamp: sort?.timestamp ?? SortTimestamp.LastModifiedDate,
   };
 
   const { data, pagination } = await search(

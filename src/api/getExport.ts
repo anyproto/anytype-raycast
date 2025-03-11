@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import { Export, ObjectExport } from "../helpers/schema";
+import { Export, ObjectExport } from "../models";
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constant";
 

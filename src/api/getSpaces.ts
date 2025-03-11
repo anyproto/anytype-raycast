@@ -1,5 +1,5 @@
-import { DisplaySpace, PaginatedResponse, Pagination, Space } from "../helpers/schema";
 import { mapSpaces } from "../mappers/spaces";
+import { DisplaySpace, PaginatedResponse, Pagination, Space } from "../models";
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constant";
 

@@ -1,7 +1,7 @@
 import { getTemplates } from "../api/getTemplates";
 import { getTypes } from "../api/getTypes";
+import { DisplaySpace, DisplayTemplate, DisplayType } from "../models";
 import { apiLimitMax } from "../utils/constant";
-import { DisplaySpace, DisplayTemplate, DisplayType } from "./schema";
 
 /**
  * Fetches all `Type`s from a single space, doing pagination if necessary.

@@ -1,9 +1,9 @@
 import { Color, Detail, getPreferenceValues, showToast, Toast, useNavigation } from "@raycast/api";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import type { DetailData } from "../helpers/schema";
 import { useExport } from "../hooks/useExport";
 import { useObject } from "../hooks/useObject";
+import type { DetailData } from "../models";
 import { getMaskForObject } from "../utils/icon";
 import ObjectActions from "./ObjectActions";
 

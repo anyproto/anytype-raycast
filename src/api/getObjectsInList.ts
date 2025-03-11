@@ -1,5 +1,5 @@
-import { DisplayObject, PaginatedResponse, Pagination, SpaceObject } from "../helpers/schema";
 import { mapObjects } from "../mappers/objects";
+import { DisplayObject, PaginatedResponse, Pagination, SpaceObject } from "../models";
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constant";
 

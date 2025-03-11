@@ -1,5 +1,5 @@
-import { DisplayType, Type } from "../helpers/schema";
 import { mapType } from "../mappers/types";
+import { DisplayType, Type } from "../models";
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constant";
 import { ErrorWithStatus } from "../utils/error";

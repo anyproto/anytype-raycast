@@ -1,4 +1,4 @@
-import { DisplayMember, Member } from "../helpers/schema";
+import { DisplayMember, Member } from "../models";
 import { getCustomTypeIcon, getFile } from "../utils/icon";
 
 /**

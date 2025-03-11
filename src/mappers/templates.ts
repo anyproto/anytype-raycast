@@ -1,4 +1,4 @@
-import { DisplayTemplate, Template } from "../helpers/schema";
+import { DisplayTemplate, Template } from "../models";
 import { getIconWithFallback } from "../utils/icon";
 
 /**

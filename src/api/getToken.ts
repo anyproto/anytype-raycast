@@ -1,4 +1,4 @@
-import { TokenResponse } from "../helpers/schema";
+import { TokenResponse } from "../models";
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constant";
 

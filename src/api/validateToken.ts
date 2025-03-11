@@ -1,6 +1,6 @@
 import { showToast, Toast } from "@raycast/api";
 import semver from "semver";
-import { PaginatedResponse, Space } from "../helpers/schema";
+import { PaginatedResponse, Space } from "../models";
 import { apiFetch } from "../utils/api";
 import { apiEndpoints, currentApiVersion, errorConnectionMessage } from "../utils/constant";
 

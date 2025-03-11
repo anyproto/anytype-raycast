@@ -2,7 +2,7 @@ import { Icon, Image } from "@raycast/api";
 import * as fs from "fs";
 import fetch from "node-fetch";
 import * as path from "path";
-import { ObjectIcon, Type } from "../helpers/schema";
+import { ObjectIcon, Type } from "../models";
 import { colorMap, iconWidth } from "./constant";
 
 /**

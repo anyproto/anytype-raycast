@@ -1,5 +1,5 @@
-import { CreateObjectRequest, DisplayObject, SpaceObject } from "../helpers/schema";
 import { mapObject } from "../mappers/objects";
+import { CreateObjectRequest, DisplayObject, SpaceObject } from "../models";
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constant";
 

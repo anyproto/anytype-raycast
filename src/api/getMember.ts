@@ -1,5 +1,5 @@
-import { DisplayMember, Member } from "../helpers/schema";
 import { mapMember } from "../mappers/members";
+import { DisplayMember, Member } from "../models";
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constant";
 import { ErrorWithStatus } from "../utils/error";

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { addObjectsToList } from "../api/addObjectsToList";
 import { createObject } from "../api/createObject";
 import { CreateObjectFormValues } from "../create-object";
-import { DisplayObject, DisplaySpace, DisplayTemplate, DisplayType } from "../helpers/schema";
+import { DisplayObject, DisplaySpace, DisplayTemplate, DisplayType } from "../models";
 
 interface CreateObjectFormProps {
   spaces: DisplaySpace[];

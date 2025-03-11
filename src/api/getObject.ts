@@ -1,5 +1,5 @@
-import { DisplayObject, SpaceObject } from "../helpers/schema";
 import { mapObject } from "../mappers/objects";
+import { DisplayObject, SpaceObject } from "../models";
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constant";
 import { ErrorWithStatus } from "../utils/error";

@@ -2,6 +2,7 @@ import { getPreferenceValues } from "@raycast/api";
 import { useCachedPromise } from "@raycast/utils";
 import { useMemo } from "react";
 import { globalSearch } from "../api/globalSearch";
+import { SortDirection } from "../models";
 import { apiLimit } from "../utils/constant";
 
 export function useGlobalSearch(query: string, types: string[]) {
@@ -9,7 +10,7 @@ export function useGlobalSearch(query: string, types: string[]) {
     (query: string, types: string[]) => async (options: { page: number }) => {
       const offset = options.page * apiLimit;
       const response = await globalSearch(
-        { query, types, sort: { direction: "desc", timestamp: getPreferenceValues().sort } },
+        { query, types, sort: { direction: SortDirection.Descending, timestamp: getPreferenceValues().sort } },
         { offset, limit: apiLimit },
       );
 

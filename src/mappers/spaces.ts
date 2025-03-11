@@ -1,5 +1,5 @@
 import { Icon } from "@raycast/api";
-import { DisplaySpace, Space } from "../helpers/schema";
+import { DisplaySpace, Space } from "../models";
 import { getFile } from "../utils/icon";
 
 /**

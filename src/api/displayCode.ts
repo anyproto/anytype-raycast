@@ -1,4 +1,4 @@
-import { DisplayCodeResponse } from "../helpers/schema";
+import { DisplayCodeResponse } from "../models";
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constant";
 

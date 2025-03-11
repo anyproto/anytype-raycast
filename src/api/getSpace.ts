@@ -1,5 +1,5 @@
-import { DisplaySpace, Space } from "../helpers/schema";
 import { mapSpace } from "../mappers/spaces";
+import { DisplaySpace, Space } from "../models";
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constant";
 import { ErrorWithStatus } from "../utils/error";

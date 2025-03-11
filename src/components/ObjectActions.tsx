@@ -12,7 +12,7 @@ import {
 } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { deleteObject } from "../api/deleteObject";
-import { DisplayMember, DisplayObject, DisplayTemplate, DisplayType, Export } from "../helpers/schema";
+import { DisplayMember, DisplayObject, DisplayTemplate, DisplayType, Export } from "../models";
 import { localStorageKeys } from "../utils/constant";
 import { addPinned, moveDownInPinned, moveUpInPinned, removePinned } from "../utils/storage";
 import { pluralize } from "../utils/string";

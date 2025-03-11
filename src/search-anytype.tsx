@@ -5,11 +5,11 @@ import EmptyViewObject from "./components/EmptyViewObject";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import ObjectListItem from "./components/ObjectListItem";
 import { processObject } from "./helpers/object";
-import { DisplayMember, DisplayObject, DisplayType } from "./helpers/schema";
 import { getAllTypesFromSpaces } from "./helpers/type";
 import { useGlobalSearch } from "./hooks/useGlobalSearch";
 import { usePinnedObjects } from "./hooks/usePinnedObjects";
 import { useSpaces } from "./hooks/useSpaces";
+import { DisplayMember, DisplayObject, DisplayType } from "./models";
 import { localStorageKeys } from "./utils/constant";
 import { getShortDateLabel, pluralize } from "./utils/string";
 

@@ -1,4 +1,4 @@
-import { SpaceObject } from "../helpers/schema";
+import { SpaceObject } from "../models";
 import { apiFetch } from "../utils/api";
 import { apiEndpoints } from "../utils/constant";
 
