@@ -1,5 +1,5 @@
-import { LocalStorage, Toast, showToast } from "@raycast/api";
-import fetch, { Headers as FetchHeaders } from "node-fetch";
+import { LocalStorage } from "@raycast/api";
+import fetch, { Headers as FetchHeaders, Response } from "node-fetch";
 import { errorConnectionMessage, localStorageKeys } from "./constants";
 
 interface FetchOptions {
@@ -13,34 +13,64 @@ export interface ApiResponse<T> {
   payload: T;
 }
 
+/**
+ * Centralized function to check the HTTP response.
+ * Throws errors with clear messages for common error codes.
+ * @param response The response object to check.
+ */
+async function checkResponseError(response: Response): Promise<void> {
+  if (response.ok) return;
+
+  let errorMessage = `API request failed: [${response.status}] ${response.statusText}`;
+  try {
+    const errorText = await response.text();
+    if (errorText) {
+      errorMessage += ` ${errorText}`;
+    }
+  } catch (e) {
+    // ignore errors during error text parsing
+  }
+
+  switch (response.status) {
+    case 429:
+      throw new Error("Rate Limit Exceeded: Please try again later.");
+    case 403:
+      throw new Error("Operation not permitted.");
+    case 404:
+      throw new Error("Resource not found (404).");
+    default:
+      throw new Error(errorMessage);
+  }
+}
+
+/**
+ * A central API fetch function that applies uniform error handling.
+ * @param url The URL to fetch.
+ * @param options The fetch options.
+ * @returns The API response.
+ */
 export async function apiFetch<T>(url: string, options: FetchOptions): Promise<ApiResponse<T>> {
   try {
+    const token = await LocalStorage.getItem(localStorageKeys.appKey);
     const response = await fetch(url, {
       method: options.method,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${await LocalStorage.getItem(localStorageKeys.appKey)}`,
+        Authorization: token ? `Bearer ${token}` : "",
         ...options.headers,
       },
       body: options.body,
     });
 
-    if (!response.ok) {
-      if (response.status === 429) {
-        await showToast(Toast.Style.Failure, "Rate Limit Exceeded", "Please try again later.");
-      } else if (response.status === 403) {
-        throw new Error("Operation not permitted.");
-      } else {
-        throw new Error(`API request failed: [${response.status}] ${response.statusText} ${await response.text()}`);
-      }
-    }
+    await checkResponseError(response);
 
     try {
+      const json = (await response.json()) as T;
       return {
-        payload: (await response.json()) as T,
+        payload: json,
         headers: response.headers,
       };
-    } catch (error) {
+    } catch (jsonError) {
       throw new Error("Failed to parse JSON response");
     }
   } catch (error) {
