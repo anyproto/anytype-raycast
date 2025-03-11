@@ -1,5 +1,5 @@
 import { apiFetch } from "../helpers/api";
-import { apiEndpoints } from "../helpers/constants";
+import { apiEndpoints } from "../helpers/constant";
 
 export async function createSpace(space: { name: string }): Promise<void> {
   const { url, method } = apiEndpoints.createSpace;

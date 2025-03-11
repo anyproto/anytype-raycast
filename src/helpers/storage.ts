@@ -1,5 +1,5 @@
 import { LocalStorage, showToast, Toast } from "@raycast/api";
-import { localStorageKeys, maxPinnedObjects } from "./constants";
+import { localStorageKeys, maxPinnedObjects } from "./constant";
 
 export async function getPinned(pinSuffix: string): Promise<{ spaceId: string; objectId: string }[]> {
   const pinnedObjects = await LocalStorage.getItem<string>(localStorageKeys.pinnedObjectsWith(pinSuffix));

@@ -2,8 +2,8 @@ import { Icon, Image, getPreferenceValues } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { format } from "date-fns";
 import { getMaskForObject } from "./icon";
-import { DisplayMember, DisplayObject, DisplayType } from "./schemas";
-import { getDateLabel, getShortDateLabel } from "./strings";
+import { DisplayMember, DisplayObject, DisplayType } from "./schema";
+import { getDateLabel, getShortDateLabel } from "./string";
 
 export function processObject(
   object: DisplayObject,

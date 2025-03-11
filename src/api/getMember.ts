@@ -1,7 +1,7 @@
 import { apiFetch } from "../helpers/api";
-import { apiEndpoints } from "../helpers/constants";
-import { ErrorWithStatus } from "../helpers/errors";
-import { DisplayMember, Member } from "../helpers/schemas";
+import { apiEndpoints } from "../helpers/constant";
+import { ErrorWithStatus } from "../helpers/error";
+import { DisplayMember, Member } from "../helpers/schema";
 import { mapMember } from "../mappers/members";
 
 export async function getMember(

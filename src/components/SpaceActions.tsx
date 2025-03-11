@@ -1,7 +1,7 @@
 import { Action, ActionPanel, Clipboard, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import { anytypeChatDeeplink, anytypeSpaceDeeplink, localStorageKeys } from "../helpers/constants";
-import { DisplaySpace } from "../helpers/schemas";
+import { anytypeChatDeeplink, anytypeSpaceDeeplink, localStorageKeys } from "../helpers/constant";
+import { DisplaySpace } from "../helpers/schema";
 import { addPinned, moveDownInPinned, moveUpInPinned, removePinned } from "../helpers/storage";
 import ObjectList from "./ObjectList";
 

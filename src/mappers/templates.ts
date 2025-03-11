@@ -1,5 +1,5 @@
 import { getIconWithFallback } from "../helpers/icon";
-import { DisplayTemplate, Template } from "../helpers/schemas";
+import { DisplayTemplate, Template } from "../helpers/schema";
 
 /**
  * Map raw `Template` objects from the API into display-ready data (e.g., icon).

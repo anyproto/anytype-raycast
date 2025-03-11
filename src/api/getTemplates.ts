@@ -1,6 +1,6 @@
 import { apiFetch } from "../helpers/api";
-import { apiEndpoints } from "../helpers/constants";
-import { DisplayTemplate, PaginatedResponse, Pagination, Template } from "../helpers/schemas";
+import { apiEndpoints } from "../helpers/constant";
+import { DisplayTemplate, PaginatedResponse, Pagination, Template } from "../helpers/schema";
 import { mapTemplates } from "../mappers/templates";
 
 export async function getTemplates(

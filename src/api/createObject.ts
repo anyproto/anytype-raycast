@@ -1,6 +1,6 @@
 import { apiFetch } from "../helpers/api";
-import { apiEndpoints } from "../helpers/constants";
-import { CreateObjectRequest, DisplayObject, SpaceObject } from "../helpers/schemas";
+import { apiEndpoints } from "../helpers/constant";
+import { CreateObjectRequest, DisplayObject, SpaceObject } from "../helpers/schema";
 import { mapObject } from "../mappers/objects";
 
 export async function createObject(

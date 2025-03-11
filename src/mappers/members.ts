@@ -1,5 +1,5 @@
 import { getCustomTypeIcon, getFile } from "../helpers/icon";
-import { DisplayMember, Member } from "../helpers/schemas";
+import { DisplayMember, Member } from "../helpers/schema";
 
 /**
  * Map raw `Member` objects from the API into display-ready data (e.g., icon).

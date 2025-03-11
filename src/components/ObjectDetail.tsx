@@ -2,7 +2,7 @@ import { Color, Detail, getPreferenceValues, showToast, Toast, useNavigation } f
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { getMaskForObject } from "../helpers/icon";
-import type { DetailData } from "../helpers/schemas";
+import type { DetailData } from "../helpers/schema";
 import { useExport } from "../hooks/useExport";
 import { useObject } from "../hooks/useObject";
 import ObjectActions from "./ObjectActions";

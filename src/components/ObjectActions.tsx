@@ -12,10 +12,10 @@ import {
 } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { deleteObject } from "../api/deleteObject";
-import { localStorageKeys } from "../helpers/constants";
-import { DisplayMember, DisplayObject, DisplayTemplate, DisplayType, Export } from "../helpers/schemas";
+import { localStorageKeys } from "../helpers/constant";
+import { DisplayMember, DisplayObject, DisplayTemplate, DisplayType, Export } from "../helpers/schema";
 import { addPinned, moveDownInPinned, moveUpInPinned, removePinned } from "../helpers/storage";
-import { pluralize } from "../helpers/strings";
+import { pluralize } from "../helpers/string";
 import CollectionList from "./CollectionList";
 import ObjectDetail from "./ObjectDetail";
 import { CurrentView } from "./ObjectList";

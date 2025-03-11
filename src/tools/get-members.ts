@@ -1,5 +1,5 @@
 import { getMembers } from "../api/getMembers";
-import { apiLimit } from "../helpers/constants";
+import { apiLimit } from "../helpers/constant";
 
 type Input = {
   /**

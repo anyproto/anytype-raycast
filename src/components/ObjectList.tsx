@@ -1,10 +1,10 @@
 import { Icon, Image, List, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { useEffect, useState } from "react";
-import { localStorageKeys } from "../helpers/constants";
+import { localStorageKeys } from "../helpers/constant";
 import { processObject } from "../helpers/object";
-import { DisplayMember, DisplayObject, DisplayType } from "../helpers/schemas";
-import { pluralize } from "../helpers/strings";
+import { DisplayMember, DisplayObject, DisplayType } from "../helpers/schema";
+import { pluralize } from "../helpers/string";
 import { useMembers } from "../hooks/useMembers";
 import { usePinnedMembers, usePinnedObjects, usePinnedTypes } from "../hooks/usePinnedObjects";
 import { useSearch } from "../hooks/useSearch";

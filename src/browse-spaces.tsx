@@ -4,8 +4,8 @@ import { getMembers } from "./api/getMembers";
 import EmptyViewSpace from "./components/EmptyViewSpace";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import SpaceListItem from "./components/SpaceListItem";
-import { DisplaySpace } from "./helpers/schemas";
-import { pluralize } from "./helpers/strings";
+import { DisplaySpace } from "./helpers/schema";
+import { pluralize } from "./helpers/string";
 import { usePinnedSpaces } from "./hooks/usePinnedSpaces";
 import { useSpaces } from "./hooks/useSpaces";
 

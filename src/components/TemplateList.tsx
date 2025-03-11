@@ -1,8 +1,8 @@
 import { List, showToast, Toast } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { processObject } from "../helpers/object";
-import { DisplayTemplate } from "../helpers/schemas";
-import { pluralize } from "../helpers/strings";
+import { DisplayTemplate } from "../helpers/schema";
+import { pluralize } from "../helpers/string";
 import { useSearch } from "../hooks/useSearch";
 import { useTemplates } from "../hooks/useTemplates";
 import EmptyViewObject from "./EmptyViewObject";

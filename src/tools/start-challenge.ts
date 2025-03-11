@@ -1,6 +1,6 @@
 import { displayCode } from "../api/displayCode";
-import { apiAppName } from "../helpers/constants";
-import { DisplayCodeResponse } from "../helpers/schemas";
+import { apiAppName } from "../helpers/constant";
+import { DisplayCodeResponse } from "../helpers/schema";
 
 /**
  * Start pairing with the Anytype desktop app.

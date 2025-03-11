@@ -2,7 +2,7 @@ import { MutatePromise, useCachedPromise } from "@raycast/utils";
 import { getMember } from "../api/getMember";
 import { getObject } from "../api/getObject";
 import { getType } from "../api/getType";
-import { DisplayMember, DisplayObject, DisplayType } from "../helpers/schemas";
+import { DisplayMember, DisplayObject, DisplayType } from "../helpers/schema";
 import { getPinned, removePinned } from "../helpers/storage";
 
 export function usePinnedObjects(spaceId: string): {

@@ -1,6 +1,6 @@
 import { apiFetch } from "../helpers/api";
-import { apiEndpoints } from "../helpers/constants";
-import { DisplayObject, PaginatedResponse, Pagination, SpaceObject } from "../helpers/schemas";
+import { apiEndpoints } from "../helpers/constant";
+import { DisplayObject, PaginatedResponse, Pagination, SpaceObject } from "../helpers/schema";
 import { mapObjects } from "../mappers/objects";
 
 export async function getObjectsInList(

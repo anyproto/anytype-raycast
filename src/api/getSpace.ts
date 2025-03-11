@@ -1,7 +1,7 @@
 import { apiFetch } from "../helpers/api";
-import { apiEndpoints } from "../helpers/constants";
-import { ErrorWithStatus } from "../helpers/errors";
-import { DisplaySpace, Space } from "../helpers/schemas";
+import { apiEndpoints } from "../helpers/constant";
+import { ErrorWithStatus } from "../helpers/error";
+import { DisplaySpace, Space } from "../helpers/schema";
 import { mapSpace } from "../mappers/spaces";
 
 export async function getSpace(spaceId: string): Promise<{

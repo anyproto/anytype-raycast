@@ -1,7 +1,7 @@
 import { apiFetch } from "../helpers/api";
-import { apiEndpoints } from "../helpers/constants";
-import { ErrorWithStatus } from "../helpers/errors";
-import { DisplayType, Type } from "../helpers/schemas";
+import { apiEndpoints } from "../helpers/constant";
+import { ErrorWithStatus } from "../helpers/error";
+import { DisplayType, Type } from "../helpers/schema";
 import { mapType } from "../mappers/types";
 
 export async function getType(

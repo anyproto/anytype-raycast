@@ -1,6 +1,6 @@
 import { Icon, Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import { DisplaySpace } from "../helpers/schemas";
+import { DisplaySpace } from "../helpers/schema";
 import SpaceActions from "./SpaceActions";
 
 type SpaceListItemProps = {

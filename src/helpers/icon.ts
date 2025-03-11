@@ -2,9 +2,8 @@ import { Icon, Image } from "@raycast/api";
 import * as fs from "fs";
 import fetch from "node-fetch";
 import * as path from "path";
-import { ObjectIcon } from "../helpers/schemas";
-import { colorMap, iconWidth } from "./constants";
-import { Type } from "./schemas";
+import { colorMap, iconWidth } from "./constant";
+import { ObjectIcon, Type } from "./schema";
 
 /**
  * Determine which icon to show for a given Object. Icon can be url or emoji.
