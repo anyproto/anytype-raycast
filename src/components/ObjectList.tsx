@@ -198,17 +198,17 @@ export default function ObjectList({ spaceId }: ObjectListProps) {
           <List.Dropdown.Item
             title="Objects"
             value="objects"
-            icon={{ source: "icons/document.svg", tintColor: { light: "black", dark: "white" } }}
+            icon={{ source: "icons/type/document.svg", tintColor: { light: "black", dark: "white" } }}
           />
           <List.Dropdown.Item
             title="Types"
             value="types"
-            icon={{ source: "icons/extension-puzzle.svg", tintColor: { light: "black", dark: "white" } }}
+            icon={{ source: "icons/type/extension-puzzle.svg", tintColor: { light: "black", dark: "white" } }}
           />
           <List.Dropdown.Item
             title="Members"
             value="members"
-            icon={{ source: "icons/person.svg", tintColor: { light: "black", dark: "white" } }}
+            icon={{ source: "icons/type/person.svg", tintColor: { light: "black", dark: "white" } }}
           />
         </List.Dropdown>
       }

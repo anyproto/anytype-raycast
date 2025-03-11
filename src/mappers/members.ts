@@ -1,4 +1,4 @@
-import { getCustomIcon, getFile } from "../helpers/icon";
+import { getCustomTypeIcon, getFile } from "../helpers/icon";
 import { DisplayMember, Member } from "../helpers/schemas";
 
 /**
@@ -22,8 +22,8 @@ export async function mapMembers(members: Member[]): Promise<DisplayMember[]> {
 export async function mapMember(member: Member): Promise<DisplayMember> {
   const icon =
     typeof member.icon === "object" && "file" in member.icon
-      ? (await getFile(member.icon.file)) || (await getCustomIcon("person-circle", "grey"))
-      : await getCustomIcon("person-circle", "grey");
+      ? (await getFile(member.icon.file)) || (await getCustomTypeIcon("person-circle", "grey"))
+      : await getCustomTypeIcon("person-circle", "grey");
   return {
     ...member,
     name: member.name || "Untitled",

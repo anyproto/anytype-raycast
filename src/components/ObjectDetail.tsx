@@ -1,8 +1,8 @@
-import { Detail, Icon, showToast, Toast, useNavigation } from "@raycast/api";
+import { Color, Detail, getPreferenceValues, showToast, Toast, useNavigation } from "@raycast/api";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { getMaskForObject } from "../helpers/icon";
-import type { DetailData, Tag } from "../helpers/schemas";
+import type { DetailData } from "../helpers/schemas";
 import { useExport } from "../hooks/useExport";
 import { useObject } from "../hooks/useObject";
 import ObjectActions from "./ObjectActions";
@@ -25,6 +25,7 @@ export default function ObjectDetail({
   isPinned,
 }: ObjectDetailProps) {
   const { push } = useNavigation();
+  const { linkDisplay } = getPreferenceValues();
   const { object, objectError, isLoadingObject, mutateObject } = useObject(spaceId, objectId);
   const { objectExport, objectExportError, isLoadingObjectExport, mutateObjectExport } = useExport(
     spaceId,
@@ -68,37 +69,113 @@ export default function ObjectDetail({
     const { id, details: detailData } = detail;
     const titleText = detailData.name || id.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
-    if (detailData.type === "text" && detailData.text) {
+    if (detailData.type === "text") {
       return (
         <Detail.Metadata.Label
           key={id}
           title={titleText}
-          text={detailData.text}
-          icon={{ source: "icons/text.svg", tintColor: { light: "grey", dark: "grey" } }}
+          text={{
+            value: detailData.text ? detailData.text : id === "description" ? "No description" : "No text",
+            color: detailData.text ? Color.PrimaryText : Color.SecondaryText,
+          }}
+          icon={{
+            source: id === "description" ? "icons/relation/description.svg" : "icons/relation/text.svg",
+            tintColor: { light: "grey", dark: "grey" },
+          }}
         />
       );
     }
 
-    if (detailData.type === "number" && detailData.number !== undefined) {
+    if (detailData.type === "number") {
       return (
         <Detail.Metadata.Label
           key={id}
           title={titleText}
-          text={String(detailData.number)}
-          icon={{ source: "icons/number.svg", tintColor: { light: "grey", dark: "grey" } }}
+          text={{
+            value: detailData.number ? String(detailData.number) : "No number",
+            color: detailData.number ? Color.PrimaryText : Color.SecondaryText,
+          }}
+          icon={{ source: "icons/relation/number.svg", tintColor: { light: "grey", dark: "grey" } }}
         />
       );
     }
 
-    if (detailData.type === "date" && detailData.date) {
+    if (detailData.type === "select") {
+      const tag = detailData.select;
+      if (tag) {
+        return (
+          <Detail.Metadata.TagList key={id} title={titleText}>
+            <Detail.Metadata.TagList.Item key={tag.id} text={tag.name} color={tag.color} />
+          </Detail.Metadata.TagList>
+        );
+      } else {
+        return (
+          <Detail.Metadata.Label
+            key={id}
+            title={titleText}
+            text={{ value: "No status", color: Color.SecondaryText }}
+            icon={{ source: "icons/relation/select.svg", tintColor: { light: "grey", dark: "grey" } }}
+          />
+        );
+      }
+    }
+
+    if (detailData.type === "multi_select") {
+      const tags = detailData.multi_select;
+      if (tags && tags.length > 0) {
+        return (
+          <Detail.Metadata.TagList key={id} title={titleText}>
+            {tags.map((tag) => (
+              <Detail.Metadata.TagList.Item key={tag.id} text={tag.name} color={tag.color} />
+            ))}
+          </Detail.Metadata.TagList>
+        );
+      } else {
+        return (
+          <Detail.Metadata.Label
+            key={id}
+            title={titleText}
+            text={{ value: "No tags", color: Color.SecondaryText }}
+            icon={{ source: "icons/relation/multiselect.svg", tintColor: { light: "grey", dark: "grey" } }}
+          />
+        );
+      }
+    }
+
+    if (detailData.type === "date") {
       return (
         <Detail.Metadata.Label
           key={id}
           title={titleText}
-          text={format(new Date(detailData.date), "MMMM d, yyyy")}
-          icon={{ source: "icons/calendar.svg", tintColor: { light: "grey", dark: "grey" } }}
+          text={{
+            value: detailData.date ? format(new Date(detailData.date), "MMMM d, yyyy") : "No date",
+            color: detailData.date ? Color.PrimaryText : Color.SecondaryText,
+          }}
+          icon={{ source: "icons/relation/date.svg", tintColor: { light: "grey", dark: "grey" } }}
         />
       );
+    }
+
+    if (detailData.type === "file") {
+      const files = detailData.file;
+      if (files && files.length > 0) {
+        return (
+          <Detail.Metadata.TagList key={id} title={titleText}>
+            {files.map((file) => (
+              <Detail.Metadata.TagList.Item key={file.id} text={file.name} icon={file.icon} color="grey" />
+            ))}
+          </Detail.Metadata.TagList>
+        );
+      } else {
+        return (
+          <Detail.Metadata.Label
+            key={id}
+            title={titleText}
+            text={{ value: "No files", color: Color.SecondaryText }}
+            icon={{ source: "icons/relation/file.svg", tintColor: { light: "grey", dark: "grey" } }}
+          />
+        );
+      }
     }
 
     if (detailData.type === "checkbox") {
@@ -108,59 +185,134 @@ export default function ObjectDetail({
           title=""
           text={titleText}
           icon={{
-            source: detailData.checkbox ? "icons/task0.svg" : "icons/task1.svg",
+            source: detailData.checkbox ? "icons/relation/checkbox0.svg" : "icons/relation/checkbox1.svg",
           }}
         />
       );
     }
 
-    if (
-      (detailData.type === "select" && detailData.select) ||
-      (detailData.type === "multi_select" && detailData.multi_select)
-    ) {
-      const tags = (detailData.type === "select" ? detailData.select : detailData.multi_select) as Tag[];
-      if (tags.length > 0) {
-        return (
-          <Detail.Metadata.TagList key={id} title={titleText}>
-            {tags?.map((tag) => <Detail.Metadata.TagList.Item key={tag.id} text={tag.name} color={tag.color} />)}
-          </Detail.Metadata.TagList>
-        );
+    if (detailData.type === "url") {
+      if (detailData.url) {
+        if (linkDisplay === "text") {
+          return (
+            <Detail.Metadata.Label
+              key={id}
+              title={titleText}
+              text={detailData.url}
+              icon={{ source: "icons/relation/url.svg", tintColor: { light: "grey", dark: "grey" } }}
+            />
+          );
+        } else {
+          return (
+            <Detail.Metadata.Link
+              key={id}
+              title=""
+              target={detailData.url.match(/^[a-zA-Z][a-zA-Z\d+\-.]*:/) ? detailData.url : `https://${detailData.url}`}
+              text="Open link"
+            />
+          );
+        }
       } else {
-        return <Detail.Metadata.Label key={id} title={titleText} icon={Icon.Tag} text="No Tag" />;
+        return (
+          <Detail.Metadata.Label
+            key={id}
+            title={titleText}
+            text={{ value: "No URL", color: Color.SecondaryText }}
+            icon={{ source: "icons/relation/url.svg", tintColor: { light: "grey", dark: "grey" } }}
+          />
+        );
       }
     }
 
-    if (detailData.type === "object" && Array.isArray(detailData.object)) {
-      return (
-        <Detail.Metadata.TagList key={id} title={titleText}>
-          {detailData.object.map((objectItem, index) => {
-            const handleAction = () => {
-              push(
-                <ObjectDetail
-                  spaceId={spaceId}
-                  objectId={objectItem.id}
-                  title={objectItem.name}
-                  viewType={viewType}
-                  isGlobalSearch={isGlobalSearch}
-                  isPinned={isPinned}
-                />,
-              );
-            };
+    if (detailData.type === "email") {
+      if (detailData.email) {
+        if (linkDisplay === "text") {
+          return (
+            <Detail.Metadata.Label
+              key={id}
+              title={titleText}
+              text={detailData.email}
+              icon={{ source: "icons/relation/email.svg", tintColor: { light: "grey", dark: "grey" } }}
+            />
+          );
+        } else {
+          return (
+            <Detail.Metadata.Link
+              key={id}
+              title=""
+              target={`mailto:${detailData.email}`}
+              text={`Mail to ${detailData.email}`}
+            />
+          );
+        }
+      } else {
+        return (
+          <Detail.Metadata.Label
+            key={id}
+            title={titleText}
+            text={{ value: "No email address", color: Color.SecondaryText }}
+            icon={{ source: "icons/relation/email.svg", tintColor: { light: "grey", dark: "grey" } }}
+          />
+        );
+      }
+    }
 
-            return (
-              <Detail.Metadata.TagList.Item
-                key={`${id}-${index}`}
-                text={objectItem.name || objectItem.id}
-                icon={{
-                  source: objectItem.icon,
-                  mask: getMaskForObject(objectItem.icon, objectItem.layout),
-                }}
-                onAction={objectItem.layout !== "participant" ? handleAction : undefined}
-              />
-            );
-          })}
-        </Detail.Metadata.TagList>
+    if (detailData.type === "phone") {
+      return (
+        <Detail.Metadata.Label
+          key={id}
+          title={titleText}
+          text={{
+            value: detailData.phone ? detailData.phone : "No phone number",
+            color: detailData.phone ? Color.PrimaryText : Color.SecondaryText,
+          }}
+          icon={{ source: "icons/relation/phone.svg", tintColor: { light: "grey", dark: "grey" } }}
+        />
       );
+    }
+
+    if (detailData.type === "object" && Array.isArray(detailData.object)) {
+      if (detailData.object.length > 0) {
+        return (
+          <Detail.Metadata.TagList key={id} title={titleText}>
+            {detailData.object.map((objectItem, index) => {
+              const handleAction = () => {
+                push(
+                  <ObjectDetail
+                    spaceId={spaceId}
+                    objectId={objectItem.id}
+                    title={objectItem.name}
+                    viewType={viewType}
+                    isGlobalSearch={isGlobalSearch}
+                    isPinned={isPinned}
+                  />,
+                );
+              };
+
+              return (
+                <Detail.Metadata.TagList.Item
+                  key={`${id}-${index}`}
+                  text={objectItem.name || objectItem.id}
+                  icon={{
+                    source: objectItem.icon,
+                    mask: getMaskForObject(objectItem.icon, objectItem.layout),
+                  }}
+                  onAction={objectItem.layout !== "participant" ? handleAction : undefined}
+                />
+              );
+            })}
+          </Detail.Metadata.TagList>
+        );
+      } else {
+        return (
+          <Detail.Metadata.Label
+            key={id}
+            title={titleText}
+            text={{ value: "No objects", color: Color.SecondaryText }}
+            icon={{ source: "icons/relation/object.svg", tintColor: { light: "grey", dark: "grey" } }}
+          />
+        );
+      }
     }
     return null;
   }

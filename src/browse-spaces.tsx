@@ -95,7 +95,7 @@ function BrowseSpaces() {
                 accessories={[
                   { icon: Icon.Star, tooltip: "Pinned" },
                   {
-                    icon: { source: "icons/person-circle.svg", tintColor: { light: "black", dark: "white" } },
+                    icon: { source: "icons/type/person-circle.svg", tintColor: { light: "black", dark: "white" } },
                     text: memberCount.toString(),
                     tooltip: `Members: ${memberCount}`,
                   },
@@ -121,7 +121,7 @@ function BrowseSpaces() {
                 icon={{ source: space.icon, mask: Image.Mask.RoundedRectangle }}
                 accessories={[
                   {
-                    icon: { source: "icons/person-circle.svg", tintColor: { light: "black", dark: "white" } },
+                    icon: { source: "icons/type/person-circle.svg", tintColor: { light: "black", dark: "white" } },
                     text: memberCount.toString(),
                     tooltip: `Members: ${memberCount}`,
                   },

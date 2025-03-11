@@ -39,7 +39,7 @@ export async function mapObject(object: SpaceObject): Promise<DisplayObject> {
           mappedDetail = {
             type: "text",
             name: details.name,
-            text: details.text || "",
+            text: typeof details.text === "string" ? details.text.trim() : "",
           };
           break;
         case "number":
@@ -47,20 +47,6 @@ export async function mapObject(object: SpaceObject): Promise<DisplayObject> {
             type: "number",
             name: details.name,
             number: details.number !== undefined && details.number !== null ? details.number : 0,
-          };
-          break;
-        case "date":
-          mappedDetail = {
-            type: "date",
-            name: details.name,
-            date: details.date ? new Date(details.date).toISOString() : "",
-          };
-          break;
-        case "checkbox":
-          mappedDetail = {
-            type: "checkbox",
-            name: details.name,
-            checkbox: details.checkbox || false,
           };
           break;
         case "select":
@@ -77,30 +63,55 @@ export async function mapObject(object: SpaceObject): Promise<DisplayObject> {
             multi_select: details.multi_select,
           };
           break;
+        case "date":
+          mappedDetail = {
+            type: "date",
+            name: details.name,
+            date: details.date ? new Date(details.date).toISOString() : "",
+          };
+          break;
+        case "file":
+          mappedDetail = {
+            type: "file",
+            name: details.name,
+            file: details.file ? await mapObjectWithoutDetails(object.space_id, details.file) : [],
+          };
+
+          break;
+        case "checkbox":
+          mappedDetail = {
+            type: "checkbox",
+            name: details.name,
+            checkbox: details.checkbox || false,
+          };
+          break;
+        case "url":
+          mappedDetail = {
+            type: "url",
+            name: details.name,
+            url: typeof details.url === "string" ? details.url.trim() : "",
+          };
+          break;
+        case "email":
+          mappedDetail = {
+            type: "email",
+            name: details.name,
+            email: typeof details.email === "string" ? details.email.trim() : "",
+          };
+          break;
+        case "phone":
+          mappedDetail = {
+            type: "phone",
+            name: details.name,
+            phone: typeof details.phone === "string" ? details.phone.trim() : "",
+          };
+          break;
         case "object":
-          if (details.object) {
-            const rawItems = Array.isArray(details.object) ? details.object : [details.object];
-            const fetchedItems = await Promise.all(
-              rawItems.map(async (item) => {
-                if (typeof item === "string") {
-                  const fetched = await getObjectWithoutMappedDetails(object.space_id, item);
-                  if (!fetched) {
-                    throw new Error(`getRawObject returned null for detail id: ${id} and item ${item}`);
-                  }
-                  return fetched;
-                } else {
-                  return item;
-                }
-              }),
-            );
-            mappedDetail = {
-              type: "object",
-              name: details.name,
-              object: fetchedItems,
-            };
-          } else {
-            throw new Error(`Missing object for detail id: ${id}`);
-          }
+          mappedDetail = {
+            type: "object",
+            name: details.name,
+            object: details.object ? await mapObjectWithoutDetails(object.space_id, details.object) : [],
+          };
           break;
         default:
           mappedDetail = details;
@@ -122,4 +133,21 @@ export async function mapObject(object: SpaceObject): Promise<DisplayObject> {
     type: object.type || "Unknown Type",
     details: mappedDetails,
   };
+}
+
+export async function mapObjectWithoutDetails(spaceId: string, object: DisplayObject[]): Promise<DisplayObject[]> {
+  const rawItems = Array.isArray(object) ? object : [object];
+  return await Promise.all(
+    rawItems.map(async (item) => {
+      if (typeof item === "string") {
+        const fetched = await getObjectWithoutMappedDetails(spaceId, item);
+        if (!fetched) {
+          throw new Error(`getRawObject returned null for item ${item}`);
+        }
+        return fetched;
+      } else {
+        return item;
+      }
+    }),
+  );
 }

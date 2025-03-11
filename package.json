@@ -407,6 +407,24 @@
       ],
       "default": "50",
       "required": false
+    },
+    {
+      "name": "linkDisplay",
+      "title": "Link Display",
+      "description": "Choose how to display URLs and email addresses in sidebar: as plain text or as clickable links.",
+      "type": "dropdown",
+      "data": [
+        {
+          "title": "Show as Text",
+          "value": "text"
+        },
+        {
+          "title": "Clickable Link",
+          "value": "link"
+        }
+      ],
+      "default": "text",
+      "required": false
     }
   ],
   "dependencies": {
