@@ -1,5 +1,6 @@
 import { getPreferenceValues } from "@raycast/api";
 import { getObjectWithoutMappedDetails } from "../api/getObject";
+import { colorMap } from "../helpers/constants";
 import { getIconWithFallback } from "../helpers/icon";
 import { DetailData, DisplayObject, SpaceObject } from "../helpers/schemas";
 
@@ -53,14 +54,20 @@ export async function mapObject(object: SpaceObject): Promise<DisplayObject> {
           mappedDetail = {
             type: "select",
             name: details.name,
-            select: details.select,
+            select: {
+              ...details.select,
+              color: colorMap[details.select.color] || details.select.color,
+            },
           };
           break;
         case "multi_select":
           mappedDetail = {
             type: "multi_select",
             name: details.name,
-            multi_select: details.multi_select,
+            multi_select: details.multi_select.map((tag) => ({
+              ...tag,
+              color: colorMap[tag.color] || tag.color,
+            })),
           };
           break;
         case "date":
