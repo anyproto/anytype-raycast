@@ -3,7 +3,7 @@ import { getMember } from "../api/getMember";
 import { getObject } from "../api/getObject";
 import { getType } from "../api/getType";
 import { DisplayMember, DisplayObject, DisplayType } from "../helpers/schema";
-import { getPinned, removePinned } from "../helpers/storage";
+import { getPinned, removePinned } from "../utils/storage";
 
 export function usePinnedObjects(spaceId: string): {
   pinnedObjects: DisplayObject[];

@@ -5,9 +5,9 @@ import EmptyViewSpace from "./components/EmptyViewSpace";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import SpaceListItem from "./components/SpaceListItem";
 import { DisplaySpace } from "./helpers/schema";
-import { pluralize } from "./helpers/string";
 import { usePinnedSpaces } from "./hooks/usePinnedSpaces";
 import { useSpaces } from "./hooks/useSpaces";
+import { pluralize } from "./utils/string";
 
 const searchPlaceholder = "Search spaces...";
 

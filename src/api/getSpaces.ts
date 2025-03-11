@@ -1,7 +1,7 @@
-import { apiFetch } from "../helpers/api";
-import { apiEndpoints } from "../helpers/constant";
 import { DisplaySpace, PaginatedResponse, Pagination, Space } from "../helpers/schema";
 import { mapSpaces } from "../mappers/spaces";
+import { apiFetch } from "../utils/api";
+import { apiEndpoints } from "../utils/constant";
 
 export async function getSpaces(options: { offset: number; limit: number }): Promise<{
   spaces: DisplaySpace[];

@@ -1,9 +1,9 @@
-import { apiFetch } from "../helpers/api";
-import { apiEndpoints } from "../helpers/constant";
-import { ErrorWithStatus } from "../helpers/error";
-import { getIconWithFallback } from "../helpers/icon";
 import { DisplayObject, SpaceObject } from "../helpers/schema";
 import { mapObject } from "../mappers/objects";
+import { apiFetch } from "../utils/api";
+import { apiEndpoints } from "../utils/constant";
+import { ErrorWithStatus } from "../utils/error";
+import { getIconWithFallback } from "../utils/icon";
 
 export async function getObject(
   spaceId: string,

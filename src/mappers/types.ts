@@ -1,5 +1,5 @@
-import { getIconWithFallback } from "../helpers/icon";
 import { DisplayType, Type } from "../helpers/schema";
+import { getIconWithFallback } from "../utils/icon";
 
 /**
  * Map raw `Type` objects from the API into display-ready data (e.g., icon).

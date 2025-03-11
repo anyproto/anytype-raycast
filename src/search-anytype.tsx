@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import EmptyViewObject from "./components/EmptyViewObject";
 import EnsureAuthenticated from "./components/EnsureAuthenticated";
 import ObjectListItem from "./components/ObjectListItem";
-import { localStorageKeys } from "./helpers/constant";
 import { processObject } from "./helpers/object";
 import { DisplayMember, DisplayObject, DisplayType } from "./helpers/schema";
-import { getShortDateLabel, pluralize } from "./helpers/string";
 import { getAllTypesFromSpaces } from "./helpers/type";
 import { useGlobalSearch } from "./hooks/useGlobalSearch";
 import { usePinnedObjects } from "./hooks/usePinnedObjects";
 import { useSpaces } from "./hooks/useSpaces";
+import { localStorageKeys } from "./utils/constant";
+import { getShortDateLabel, pluralize } from "./utils/string";
 
 const searchBarPlaceholder = "Globally search objects across spaces...";
 

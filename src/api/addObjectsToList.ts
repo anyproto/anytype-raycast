@@ -1,5 +1,5 @@
-import { apiFetch } from "../helpers/api";
-import { apiEndpoints } from "../helpers/constant";
+import { apiFetch } from "../utils/api";
+import { apiEndpoints } from "../utils/constant";
 
 export async function addObjectsToList(spaceId: string, listId: string, objectIds: string[]): Promise<void> {
   const { url, method } = apiEndpoints.addObjectsToList(spaceId, listId);

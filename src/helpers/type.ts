@@ -1,6 +1,6 @@
 import { getTemplates } from "../api/getTemplates";
 import { getTypes } from "../api/getTypes";
-import { apiLimitMax } from "./constant";
+import { apiLimitMax } from "../utils/constant";
 import { DisplaySpace, DisplayTemplate, DisplayType } from "./schema";
 
 /**

@@ -1,5 +1,5 @@
 import { globalSearch } from "../api/globalSearch";
-import { apiLimit } from "../helpers/constant";
+import { apiLimit } from "../utils/constant";
 
 type Input = {
   /**

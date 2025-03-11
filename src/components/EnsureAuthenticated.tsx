@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import { displayCode } from "../api/displayCode";
 import { getToken } from "../api/getToken";
 import { checkApiTokenValidity } from "../api/validateToken";
-import { apiAppName, downloadUrl, localStorageKeys } from "../helpers/constant";
+import { apiAppName, downloadUrl, localStorageKeys } from "../utils/constant";
 
 type EnsureAuthenticatedProps = {
   placeholder?: string;

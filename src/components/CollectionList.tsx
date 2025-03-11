@@ -1,8 +1,8 @@
 import { List, showToast, Toast } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { processObject } from "../helpers/object";
-import { pluralize } from "../helpers/string";
 import { useObjectsInList } from "../hooks/useObjectsInList";
+import { pluralize } from "../utils/string";
 import EmptyViewObject from "./EmptyViewObject";
 import ObjectListItem from "./ObjectListItem";
 

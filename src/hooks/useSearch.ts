@@ -2,7 +2,7 @@ import { getPreferenceValues } from "@raycast/api";
 import { useCachedPromise } from "@raycast/utils";
 import { useMemo } from "react";
 import { search } from "../api/search";
-import { apiLimit } from "../helpers/constant";
+import { apiLimit } from "../utils/constant";
 
 export function useSearch(spaceId: string, query: string, types: string[]) {
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(

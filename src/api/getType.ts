@@ -1,8 +1,8 @@
-import { apiFetch } from "../helpers/api";
-import { apiEndpoints } from "../helpers/constant";
-import { ErrorWithStatus } from "../helpers/error";
 import { DisplayType, Type } from "../helpers/schema";
 import { mapType } from "../mappers/types";
+import { apiFetch } from "../utils/api";
+import { apiEndpoints } from "../utils/constant";
+import { ErrorWithStatus } from "../utils/error";
 
 export async function getType(
   spaceId: string,

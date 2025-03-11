@@ -1,8 +1,8 @@
-import { apiFetch } from "../helpers/api";
-import { apiEndpoints } from "../helpers/constant";
-import { ErrorWithStatus } from "../helpers/error";
 import { DisplayMember, Member } from "../helpers/schema";
 import { mapMember } from "../mappers/members";
+import { apiFetch } from "../utils/api";
+import { apiEndpoints } from "../utils/constant";
+import { ErrorWithStatus } from "../utils/error";
 
 export async function getMember(
   spaceId: string,
