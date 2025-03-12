@@ -1,6 +1,6 @@
 import { getPreferenceValues } from "@raycast/api";
 import { getObjectWithoutMappedDetails } from "../api";
-import { DetailData, DisplayObject, SpaceObject } from "../models";
+import { DisplayObject, Property, SpaceObject } from "../models";
 import { colorMap, getIconWithFallback } from "../utils";
 
 /**
@@ -17,7 +17,7 @@ export async function mapObjects(objects: SpaceObject[]): Promise<DisplayObject[
         icon: await getIconWithFallback(object.icon, object.layout, object.type),
         name: object.name || object.snippet || "Untitled",
         type: object.type || "Unknown Type",
-        details: object.details?.filter((detail) => detail.id === sort) || [],
+        details: object.properties?.filter((property) => property.id === sort) || [],
       };
     }),
   );
@@ -29,105 +29,102 @@ export async function mapObjects(objects: SpaceObject[]): Promise<DisplayObject[
 export async function mapObject(object: SpaceObject): Promise<DisplayObject> {
   const icon = await getIconWithFallback(object.icon, object.layout, object.type);
 
-  const mappedDetails = await Promise.all(
-    object.details.map(async (detail) => {
-      const { id, details } = detail;
-      let mappedDetail: DetailData;
+  const mappedProperties = await Promise.all(
+    object.properties.map(async (property) => {
+      let mappedProperty: Property = {
+        id: property.id,
+        name: property.name,
+        format: property.format,
+      };
 
-      switch (details.type) {
+      switch (property.format) {
         case "text":
-          mappedDetail = {
-            type: "text",
-            name: details.name,
-            text: typeof details.text === "string" ? details.text.trim() : "",
+          mappedProperty = {
+            ...mappedProperty,
+            text: typeof property.text === "string" ? property.text.trim() : "",
           };
           break;
         case "number":
-          mappedDetail = {
-            type: "number",
-            name: details.name,
-            number: details.number !== undefined && details.number !== null ? details.number : 0,
+          mappedProperty = {
+            ...mappedProperty,
+            number: property.number !== undefined && property.number !== null ? property.number : 0,
           };
           break;
         case "select":
-          mappedDetail = {
-            type: "select",
-            name: details.name,
-            select: {
-              ...details.select,
-              color: colorMap[details.select.color] || details.select.color,
-            },
-          };
+          if (property.select) {
+            mappedProperty = {
+              ...mappedProperty,
+              select: {
+                id: property.select.id || "",
+                name: property.select.name || "",
+                color: colorMap[property.select.color] || property.select.color,
+              },
+            };
+          }
           break;
         case "multi_select":
-          mappedDetail = {
-            type: "multi_select",
-            name: details.name,
-            multi_select: details.multi_select.map((tag) => ({
-              ...tag,
-              color: colorMap[tag.color] || tag.color,
-            })),
-          };
+          if (property.multi_select) {
+            mappedProperty = {
+              ...mappedProperty,
+              multi_select: property.multi_select.map((tag) => ({
+                id: tag.id || "",
+                name: tag.name || "",
+                color: colorMap[tag.color] || tag.color,
+              })),
+            };
+          }
           break;
         case "date":
-          mappedDetail = {
-            type: "date",
-            name: details.name,
-            date: details.date ? new Date(details.date).toISOString() : "",
+          mappedProperty = {
+            ...mappedProperty,
+            date: property.date ? new Date(property.date).toISOString() : "",
           };
           break;
         case "file":
-          mappedDetail = {
-            type: "file",
-            name: details.name,
-            file: details.file ? await mapObjectWithoutDetails(object.space_id, details.file) : [],
-          };
-
+          if (property.file) {
+            mappedProperty = {
+              ...mappedProperty,
+              file: await mapObjectWithoutDetails(object.space_id, property.file),
+            };
+          }
           break;
         case "checkbox":
-          mappedDetail = {
-            type: "checkbox",
-            name: details.name,
-            checkbox: details.checkbox || false,
+          mappedProperty = {
+            ...mappedProperty,
+            checkbox: property.checkbox || false,
           };
           break;
         case "url":
-          mappedDetail = {
-            type: "url",
-            name: details.name,
-            url: typeof details.url === "string" ? details.url.trim() : "",
+          mappedProperty = {
+            ...mappedProperty,
+            url: typeof property.url === "string" ? property.url.trim() : "",
           };
           break;
         case "email":
-          mappedDetail = {
-            type: "email",
-            name: details.name,
-            email: typeof details.email === "string" ? details.email.trim() : "",
+          mappedProperty = {
+            ...mappedProperty,
+            email: typeof property.email === "string" ? property.email.trim() : "",
           };
           break;
         case "phone":
-          mappedDetail = {
-            type: "phone",
-            name: details.name,
-            phone: typeof details.phone === "string" ? details.phone.trim() : "",
+          mappedProperty = {
+            ...mappedProperty,
+            phone: typeof property.phone === "string" ? property.phone.trim() : "",
           };
           break;
         case "object":
-          mappedDetail = {
-            type: "object",
-            name: details.name,
-            object: details.object ? await mapObjectWithoutDetails(object.space_id, details.object) : [],
-          };
+          if (property.object) {
+            mappedProperty = {
+              ...mappedProperty,
+              object: await mapObjectWithoutDetails(object.space_id, property.object),
+            };
+          }
           break;
         default:
-          mappedDetail = details;
-          console.warn(`Unknown detail type: ${detail.details.type}`);
+          console.warn(`Unknown property format: ${property.format}`);
       }
 
-      return {
-        id,
-        details: mappedDetail,
-      };
+      return mappedProperty;
     }),
   );
 
@@ -137,7 +134,7 @@ export async function mapObject(object: SpaceObject): Promise<DisplayObject> {
     blocks: [], // remove blocks to improve performance
     name: object.name || object.snippet || "Untitled",
     type: object.type || "Unknown Type",
-    details: mappedDetails,
+    properties: mappedProperties,
   };
 }
 

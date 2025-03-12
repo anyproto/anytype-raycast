@@ -11,8 +11,8 @@ export function processObject(
   mutatePinnedObjects?: MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>,
 ) {
   const { sort } = getPreferenceValues();
-  const dateDetail = object.details.find((detail) => detail.id === sort);
-  const date = dateDetail && "date" in dateDetail.details ? (dateDetail.details.date as string) : undefined;
+  const dateProperty = object.properties.find((property) => property.id === sort);
+  const date = dateProperty && dateProperty.date ? dateProperty.date : undefined;
   const hasValidDate = date && new Date(date).getTime() !== 0;
 
   return {

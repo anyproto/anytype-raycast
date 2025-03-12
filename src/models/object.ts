@@ -22,7 +22,7 @@ export interface SpaceObject {
   space_id: string;
   root_id: string;
   blocks: Block[];
-  details: Detail[];
+  properties: Property[];
 }
 
 export interface DisplayObject extends Omit<SpaceObject, "icon"> {
@@ -59,23 +59,22 @@ export interface File {
   style: string;
 }
 
-export interface Detail {
+export interface Property {
   id: string;
-  details: DetailData;
+  name: string;
+  format: string;
+  text?: string;
+  number?: number;
+  select?: Tag;
+  multi_select?: Tag[];
+  date?: string;
+  file?: DisplayObject[];
+  checkbox?: boolean;
+  url?: string;
+  email?: string;
+  phone?: string;
+  object?: DisplayObject[];
 }
-
-export type DetailData =
-  | { type: "text"; text: string; name: string } // text
-  | { type: "number"; number: number; name: string } // integer
-  | { type: "select"; select: Tag; name: string } // single select tag
-  | { type: "multi_select"; multi_select: Tag[]; name: string } // multi-select tags
-  | { type: "date"; date: string; name: string } // ISO 8601 date string
-  | { type: "file"; file: DisplayObject[]; name: string } // file data
-  | { type: "checkbox"; checkbox: boolean; name: string } // boolean
-  | { type: "url"; url: string; name: string } // URL
-  | { type: "email"; email: string; name: string } // email address
-  | { type: "phone"; phone: string; name: string } // phone number
-  | { type: "object"; object: DisplayObject[]; name: string }; // object data
 
 export interface Tag {
   id: string;

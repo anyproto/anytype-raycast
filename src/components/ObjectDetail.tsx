@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { ObjectActions } from ".";
 import { useExport, useObject } from "../hooks";
-import type { DetailData } from "../models";
+import { Property } from "../models";
 import { getMaskForObject } from "../utils";
 
 type ObjectDetailProps = {
@@ -26,23 +26,23 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
   );
 
   const [showDetails, setShowDetails] = useState(true);
-  const details = object?.details || [];
-  const excludedDetailIds = new Set(["added_date", "last_opened_date"]);
-  const additionalDetails = details.filter((detail) => !excludedDetailIds.has(detail.id));
+  const properties = object?.properties || [];
+  const excludedPropertyIds = new Set(["added_date", "last_opened_date"]);
+  const additionalProperties = properties.filter((property) => !excludedPropertyIds.has(property.id));
 
   const priorityOrder = ["description", "created_date", "created_by", "last_modified_date", "last_modified_by", "tag"];
-  const orderedDetails = additionalDetails.sort((a, b) => {
+  const orderedProperties = additionalProperties.sort((a, b) => {
     const aPriority = priorityOrder.indexOf(a.id);
     const bPriority = priorityOrder.indexOf(b.id);
 
-    // If either detail is in the priority list, use that order.
+    // If either property is in the priority list, use that order.
     if (aPriority !== -1 || bPriority !== -1) {
       if (aPriority === -1) return 1;
       if (bPriority === -1) return -1;
       return aPriority - bPriority;
     }
-    // Otherwise, sort alphabetically by the detail type.
-    return a.details.type.localeCompare(b.details.type);
+    // Otherwise, sort alphabetically by the property type.
+    return a.format.localeCompare(b.format);
   });
 
   useEffect(() => {
@@ -57,53 +57,52 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
     }
   }, [objectExportError]);
 
-  function renderDetailMetadata(detail: { id: string; details: DetailData }) {
-    const { id, details: detailData } = detail;
-    const titleText = detailData.name || id.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+  function renderDetailMetadata(property: Property) {
+    const titleText = property.name || property.id.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
-    if (detailData.type === "text") {
+    if (property.format === "text") {
       return (
         <Detail.Metadata.Label
-          key={id}
+          key={property.id}
           title={titleText}
           text={{
-            value: detailData.text ? detailData.text : id === "description" ? "No description" : "No text",
-            color: detailData.text ? Color.PrimaryText : Color.SecondaryText,
+            value: property.text ? property.text : property.id === "description" ? "No description" : "No text",
+            color: property.text ? Color.PrimaryText : Color.SecondaryText,
           }}
           icon={{
-            source: id === "description" ? "icons/relation/description.svg" : "icons/relation/text.svg",
+            source: property.id === "description" ? "icons/relation/description.svg" : "icons/relation/text.svg",
             tintColor: { light: "grey", dark: "grey" },
           }}
         />
       );
     }
 
-    if (detailData.type === "number") {
+    if (property.format === "number") {
       return (
         <Detail.Metadata.Label
-          key={id}
+          key={property.id}
           title={titleText}
           text={{
-            value: detailData.number ? String(detailData.number) : "No number",
-            color: detailData.number ? Color.PrimaryText : Color.SecondaryText,
+            value: property.number ? String(property.number) : "No number",
+            color: property.number ? Color.PrimaryText : Color.SecondaryText,
           }}
           icon={{ source: "icons/relation/number.svg", tintColor: { light: "grey", dark: "grey" } }}
         />
       );
     }
 
-    if (detailData.type === "select") {
-      const tag = detailData.select;
+    if (property.format === "select") {
+      const tag = property.select;
       if (tag) {
         return (
-          <Detail.Metadata.TagList key={id} title={titleText}>
+          <Detail.Metadata.TagList key={property.id} title={titleText}>
             <Detail.Metadata.TagList.Item key={tag.id} text={tag.name} color={tag.color} />
           </Detail.Metadata.TagList>
         );
       } else {
         return (
           <Detail.Metadata.Label
-            key={id}
+            key={property.id}
             title={titleText}
             text={{ value: "No status", color: Color.SecondaryText }}
             icon={{ source: "icons/relation/select.svg", tintColor: { light: "grey", dark: "grey" } }}
@@ -112,11 +111,11 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
       }
     }
 
-    if (detailData.type === "multi_select") {
-      const tags = detailData.multi_select;
+    if (property.format === "multi_select") {
+      const tags = property.multi_select;
       if (tags && tags.length > 0) {
         return (
-          <Detail.Metadata.TagList key={id} title={titleText}>
+          <Detail.Metadata.TagList key={property.id} title={titleText}>
             {tags.map((tag) => (
               <Detail.Metadata.TagList.Item key={tag.id} text={tag.name} color={tag.color} />
             ))}
@@ -125,7 +124,7 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
       } else {
         return (
           <Detail.Metadata.Label
-            key={id}
+            key={property.id}
             title={titleText}
             text={{ value: "No tags", color: Color.SecondaryText }}
             icon={{ source: "icons/relation/multiselect.svg", tintColor: { light: "grey", dark: "grey" } }}
@@ -134,25 +133,25 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
       }
     }
 
-    if (detailData.type === "date") {
+    if (property.format === "date") {
       return (
         <Detail.Metadata.Label
-          key={id}
+          key={property.id}
           title={titleText}
           text={{
-            value: detailData.date ? format(new Date(detailData.date), "MMMM d, yyyy") : "No date",
-            color: detailData.date ? Color.PrimaryText : Color.SecondaryText,
+            value: property.date ? format(new Date(property.date), "MMMM d, yyyy") : "No date",
+            color: property.date ? Color.PrimaryText : Color.SecondaryText,
           }}
           icon={{ source: "icons/relation/date.svg", tintColor: { light: "grey", dark: "grey" } }}
         />
       );
     }
 
-    if (detailData.type === "file") {
-      const files = detailData.file;
+    if (property.format === "file") {
+      const files = property.file;
       if (files && files.length > 0) {
         return (
-          <Detail.Metadata.TagList key={id} title={titleText}>
+          <Detail.Metadata.TagList key={property.id} title={titleText}>
             {files.map((file) => (
               <Detail.Metadata.TagList.Item key={file.id} text={file.name} icon={file.icon} color="grey" />
             ))}
@@ -161,7 +160,7 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
       } else {
         return (
           <Detail.Metadata.Label
-            key={id}
+            key={property.id}
             title={titleText}
             text={{ value: "No files", color: Color.SecondaryText }}
             icon={{ source: "icons/relation/file.svg", tintColor: { light: "grey", dark: "grey" } }}
@@ -170,36 +169,36 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
       }
     }
 
-    if (detailData.type === "checkbox") {
+    if (property.format === "checkbox") {
       return (
         <Detail.Metadata.Label
-          key={id}
+          key={property.id}
           title=""
           text={titleText}
           icon={{
-            source: detailData.checkbox ? "icons/relation/checkbox0.svg" : "icons/relation/checkbox1.svg",
+            source: property.checkbox ? "icons/relation/checkbox0.svg" : "icons/relation/checkbox1.svg",
           }}
         />
       );
     }
 
-    if (detailData.type === "url") {
-      if (detailData.url) {
+    if (property.format === "url") {
+      if (property.url) {
         if (linkDisplay === "text") {
           return (
             <Detail.Metadata.Label
-              key={id}
+              key={property.id}
               title={titleText}
-              text={detailData.url}
+              text={property.url}
               icon={{ source: "icons/relation/url.svg", tintColor: { light: "grey", dark: "grey" } }}
             />
           );
         } else {
           return (
             <Detail.Metadata.Link
-              key={id}
+              key={property.id}
               title=""
-              target={detailData.url.match(/^[a-zA-Z][a-zA-Z\d+\-.]*:/) ? detailData.url : `https://${detailData.url}`}
+              target={property.url.match(/^[a-zA-Z][a-zA-Z\d+\-.]*:/) ? property.url : `https://${property.url}`}
               text="Open link"
             />
           );
@@ -207,7 +206,7 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
       } else {
         return (
           <Detail.Metadata.Label
-            key={id}
+            key={property.id}
             title={titleText}
             text={{ value: "No URL", color: Color.SecondaryText }}
             icon={{ source: "icons/relation/url.svg", tintColor: { light: "grey", dark: "grey" } }}
@@ -216,31 +215,31 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
       }
     }
 
-    if (detailData.type === "email") {
-      if (detailData.email) {
+    if (property.format === "email") {
+      if (property.email) {
         if (linkDisplay === "text") {
           return (
             <Detail.Metadata.Label
-              key={id}
+              key={property.id}
               title={titleText}
-              text={detailData.email}
+              text={property.email}
               icon={{ source: "icons/relation/email.svg", tintColor: { light: "grey", dark: "grey" } }}
             />
           );
         } else {
           return (
             <Detail.Metadata.Link
-              key={id}
+              key={property.id}
               title=""
-              target={`mailto:${detailData.email}`}
-              text={`Mail to ${detailData.email}`}
+              target={`mailto:${property.email}`}
+              text={`Mail to ${property.email}`}
             />
           );
         }
       } else {
         return (
           <Detail.Metadata.Label
-            key={id}
+            key={property.id}
             title={titleText}
             text={{ value: "No email address", color: Color.SecondaryText }}
             icon={{ source: "icons/relation/email.svg", tintColor: { light: "grey", dark: "grey" } }}
@@ -249,25 +248,25 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
       }
     }
 
-    if (detailData.type === "phone") {
+    if (property.format === "phone") {
       return (
         <Detail.Metadata.Label
-          key={id}
+          key={property.id}
           title={titleText}
           text={{
-            value: detailData.phone ? detailData.phone : "No phone number",
-            color: detailData.phone ? Color.PrimaryText : Color.SecondaryText,
+            value: property.phone ? property.phone : "No phone number",
+            color: property.phone ? Color.PrimaryText : Color.SecondaryText,
           }}
           icon={{ source: "icons/relation/phone.svg", tintColor: { light: "grey", dark: "grey" } }}
         />
       );
     }
 
-    if (detailData.type === "object" && Array.isArray(detailData.object)) {
-      if (detailData.object.length > 0) {
+    if (property.format === "object" && Array.isArray(property.object)) {
+      if (property.object.length > 0) {
         return (
-          <Detail.Metadata.TagList key={id} title={titleText}>
-            {detailData.object.map((objectItem, index) => {
+          <Detail.Metadata.TagList key={property.id} title={titleText}>
+            {property.object.map((objectItem, index) => {
               const handleAction = () => {
                 push(
                   <ObjectDetail
@@ -283,7 +282,7 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
 
               return (
                 <Detail.Metadata.TagList.Item
-                  key={`${id}-${index}`}
+                  key={`${property.id}-${index}`}
                   text={objectItem.name || objectItem.id}
                   icon={{
                     source: objectItem.icon,
@@ -298,7 +297,7 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
       } else {
         return (
           <Detail.Metadata.Label
-            key={id}
+            key={property.id}
             title={titleText}
             text={{ value: "No objects", color: Color.SecondaryText }}
             icon={{ source: "icons/relation/object.svg", tintColor: { light: "grey", dark: "grey" } }}
@@ -309,22 +308,22 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
     return null;
   }
 
-  function getGroup(detailId: string, detailType: string): string {
-    if (detailId === "description") return "description";
-    if (["created_date", "created_by", "last_modified_date", "last_modified_by"].includes(detailId))
+  function getGroup(propertyId: string, propertyFormat: string): string {
+    if (propertyId === "description") return "description";
+    if (["created_date", "created_by", "last_modified_date", "last_modified_by"].includes(propertyId))
       return "modification";
-    if (["select", "multi_select"].includes(detailType)) return "tags";
+    if (["select", "multi_select"].includes(propertyFormat)) return "tags";
     return "others";
   }
 
   const renderedDetailComponents: JSX.Element[] = [];
   let previousGroup: string | null = null;
-  orderedDetails.forEach((detail) => {
-    const currentGroup = getGroup(detail.id, detail.details.type);
-    const rendered = renderDetailMetadata(detail);
+  orderedProperties.forEach((property) => {
+    const currentGroup = getGroup(property.id, property.format);
+    const rendered = renderDetailMetadata(property);
     if (rendered) {
       if (previousGroup !== null && currentGroup !== previousGroup) {
-        renderedDetailComponents.push(<Detail.Metadata.Separator key={`separator-${detail.id}`} />);
+        renderedDetailComponents.push(<Detail.Metadata.Separator key={`separator-${property.id}`} />);
       }
       renderedDetailComponents.push(rendered);
       previousGroup = currentGroup;
