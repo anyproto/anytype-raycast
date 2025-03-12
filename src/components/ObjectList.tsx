@@ -84,7 +84,7 @@ export function ObjectList({ spaceId }: ObjectListProps) {
       icon: type.icon,
       title: type.name,
       subtitle: { value: "", tooltip: "" },
-      accessories: [],
+      accessories: [isPinned ? { icon: Icon.Star, tooltip: "Pinned" } : {}],
       mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>],
       layout: "",
       isPinned,
