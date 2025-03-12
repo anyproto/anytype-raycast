@@ -21,7 +21,7 @@ export async function mapMembers(members: Member[]): Promise<DisplayMember[]> {
  */
 export async function mapMember(member: Member): Promise<DisplayMember> {
   const icon =
-    typeof member.icon === "object" && "file" in member.icon
+    member.icon.format === "file" && member.icon.file
       ? (await getFile(member.icon.file)) || (await getCustomTypeIcon("person-circle", "grey"))
       : await getCustomTypeIcon("person-circle", "grey");
   return {

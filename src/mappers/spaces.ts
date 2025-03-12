@@ -22,9 +22,7 @@ export async function mapSpaces(spaces: Space[]): Promise<DisplaySpace[]> {
  */
 export async function mapSpace(space: Space): Promise<DisplaySpace> {
   const icon =
-    typeof space.icon === "object" && "file" in space.icon
-      ? (await getFile(space.icon.file)) || Icon.BullsEye
-      : Icon.BullsEye;
+    space.icon.format === "file" && space.icon.file ? (await getFile(space.icon.file)) || Icon.BullsEye : Icon.BullsEye;
 
   return {
     ...space,

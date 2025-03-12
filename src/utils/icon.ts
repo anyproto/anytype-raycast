@@ -13,25 +13,25 @@ import { colorMap, iconWidth } from "./constant";
  * @returns The base64 data URI or Raycast Icon.
  */
 export async function getIconWithFallback(icon: ObjectIcon, layout: string, type?: Type): Promise<string | Icon> {
-  if (typeof icon === "object" && "name" in icon) {
+  if (icon.format === "icon" && icon.name) {
     return await getCustomTypeIcon(icon.name, icon.color);
   }
 
-  if (typeof icon === "object" && "file" in icon) {
+  if (icon.format === "file" && icon.file) {
     return (
       (await getFile(icon.file)) ||
-      (typeof type?.icon === "object" && "name" in type.icon
+      (type?.icon.format === "icon" && type?.icon.name
         ? await getCustomTypeIcon(type.icon.name, "grey")
         : await getCustomTypeIcon("document", "grey"))
     );
   }
 
-  if (typeof icon === "object" && "emoji" in icon && icon.emoji) {
+  if (icon.format === "emoji" && icon.emoji) {
     return icon.emoji;
   }
 
-  if (typeof type?.icon === "object" && "name" in type.icon) {
-    return await getCustomTypeIcon(type.icon.name, "grey");
+  if (type?.icon.format === "icon" && type.icon.name) {
+    return await getCustomTypeIcon(type?.icon.name, "grey");
   }
 
   switch (layout) {

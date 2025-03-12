@@ -1,4 +1,7 @@
-export type ObjectIcon =
-  | { type: "emoji"; emoji: string }
-  | { type: "file"; file: string }
-  | { type: "name"; name: string; color: string };
+export interface ObjectIcon {
+  format: string;
+  emoji?: string;
+  file?: string;
+  name?: string;
+  color?: string;
+}
