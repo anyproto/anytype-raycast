@@ -1,6 +1,6 @@
 import { Icon } from "@raycast/api";
 import { DisplaySpace, Space } from "../models";
-import { getFile } from "../utils/icon";
+import { getFile } from "../utils";
 
 /**
  * Map raw `Space` objects from the API into display-ready data (e.g., icon).

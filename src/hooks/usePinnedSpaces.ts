@@ -1,7 +1,6 @@
 import { useCachedPromise } from "@raycast/utils";
-import { getSpace } from "../api/getSpace";
-import { localStorageKeys } from "../utils/constant";
-import { getPinned, removePinned } from "../utils/storage";
+import { getSpace } from "../api";
+import { getPinned, localStorageKeys, removePinned } from "../utils";
 
 export function usePinnedSpaces() {
   const { data, error, isLoading, mutate } = useCachedPromise(

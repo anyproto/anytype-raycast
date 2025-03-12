@@ -1,17 +1,16 @@
 import { List, showToast, Toast } from "@raycast/api";
 import { useEffect, useState } from "react";
+import { EmptyViewObject, ObjectListItem } from ".";
 import { processObject } from "../helpers/object";
-import { useObjectsInList } from "../hooks/useObjectsInList";
-import { pluralize } from "../utils/string";
-import EmptyViewObject from "./EmptyViewObject";
-import ObjectListItem from "./ObjectListItem";
+import { useObjectsInList } from "../hooks";
+import { pluralize } from "../utils";
 
 type CollectionListProps = {
   spaceId: string;
   listId: string;
 };
 
-export default function CollectionList({ spaceId, listId }: CollectionListProps) {
+export function CollectionList({ spaceId, listId }: CollectionListProps) {
   const [searchText, setSearchText] = useState("");
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useObjectsInList(
     spaceId,

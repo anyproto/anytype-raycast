@@ -1,7 +1,7 @@
 import { Icon, Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
+import { SpaceActions } from ".";
 import { DisplaySpace } from "../models";
-import SpaceActions from "./SpaceActions";
 
 type SpaceListItemProps = {
   space: DisplaySpace;
@@ -16,7 +16,7 @@ type SpaceListItemProps = {
   isPinned: boolean;
 };
 
-export default function SpaceListItem({ space, icon, accessories, mutate, isPinned }: SpaceListItemProps) {
+export function SpaceListItem({ space, icon, accessories, mutate, isPinned }: SpaceListItemProps) {
   return (
     <List.Item
       key={space.id}

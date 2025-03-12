@@ -1,7 +1,5 @@
 import { Tool } from "@raycast/api";
-import { createObject } from "../api/createObject";
-import { getSpace } from "../api/getSpace";
-import { getType } from "../api/getType";
+import { createObject, getSpace, getType } from "../api";
 
 type Input = {
   /**

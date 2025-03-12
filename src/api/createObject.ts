@@ -1,7 +1,6 @@
 import { mapObject } from "../mappers/objects";
 import { CreateObjectRequest, DisplayObject, SpaceObject } from "../models";
-import { apiFetch } from "../utils/api";
-import { apiEndpoints } from "../utils/constant";
+import { apiEndpoints, apiFetch } from "../utils";
 
 export async function createObject(
   spaceId: string,

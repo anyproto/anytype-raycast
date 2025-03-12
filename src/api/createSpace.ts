@@ -1,6 +1,5 @@
 import { CreateSpaceRequest } from "../models";
-import { apiFetch } from "../utils/api";
-import { apiEndpoints } from "../utils/constant";
+import { apiEndpoints, apiFetch } from "../utils";
 
 export async function createSpace(space: CreateSpaceRequest): Promise<void> {
   const { url, method } = apiEndpoints.createSpace;

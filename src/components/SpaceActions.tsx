@@ -1,9 +1,16 @@
 import { Action, ActionPanel, Clipboard, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
+import { ObjectList } from ".";
 import { DisplaySpace } from "../models";
-import { anytypeChatDeeplink, anytypeSpaceDeeplink, localStorageKeys } from "../utils/constant";
-import { addPinned, moveDownInPinned, moveUpInPinned, removePinned } from "../utils/storage";
-import ObjectList from "./ObjectList";
+import {
+  addPinned,
+  anytypeChatDeeplink,
+  anytypeSpaceDeeplink,
+  localStorageKeys,
+  moveDownInPinned,
+  moveUpInPinned,
+  removePinned,
+} from "../utils";
 
 type SpaceActionsProps = {
   space: DisplaySpace;
@@ -11,7 +18,7 @@ type SpaceActionsProps = {
   isPinned: boolean;
 };
 
-export default function SpaceActions({ space, mutate, isPinned }: SpaceActionsProps) {
+export function SpaceActions({ space, mutate, isPinned }: SpaceActionsProps) {
   const spaceDeeplink = anytypeSpaceDeeplink(space.id);
   const chatDeepLink = anytypeChatDeeplink(space.id, space.workspace_object_id);
   const pinSuffix = localStorageKeys.suffixForSpaces;

@@ -1,7 +1,7 @@
 import { Action, ActionPanel, Icon, List } from "@raycast/api";
-import CreateSpaceForm from "./CreateSpaceForm";
+import { CreateSpaceForm } from ".";
 
-export default function EmptyViewSpace({ title }: { title: string }) {
+export function EmptyViewSpace({ title }: { title: string }) {
   return (
     <List.EmptyView
       title={title}

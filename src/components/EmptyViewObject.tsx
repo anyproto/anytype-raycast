@@ -1,15 +1,15 @@
 import { Action, ActionPanel, Icon, List } from "@raycast/api";
 import { useEffect } from "react";
+import { CreateObjectForm } from ".";
 import { CreateObjectFormValues } from "../create-object";
-import { useCreateObjectData } from "../hooks/useCreateObjectData";
-import CreateObjectForm from "./CreateObjectForm";
+import { useCreateObjectData } from "../hooks";
 
 type EmptyViewObjectProps = {
   title: string;
   contextValues: CreateObjectFormValues;
 };
 
-export default function EmptyViewObject({ title, contextValues }: EmptyViewObjectProps) {
+export function EmptyViewObject({ title, contextValues }: EmptyViewObjectProps) {
   const draftValues: CreateObjectFormValues = {
     space: contextValues.space,
     type: contextValues.type,

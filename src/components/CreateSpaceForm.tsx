@@ -1,8 +1,8 @@
 import { Action, ActionPanel, Form, Icon, showToast, Toast } from "@raycast/api";
 import { useState } from "react";
-import { createSpace } from "../api/createSpace";
+import { createSpace } from "../api";
 
-export default function CreateSpaceForm() {
+export function CreateSpaceForm() {
   const [spaceName, setSpaceName] = useState("");
 
   const handleSubmit = async () => {

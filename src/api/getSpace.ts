@@ -1,8 +1,6 @@
 import { mapSpace } from "../mappers/spaces";
 import { DisplaySpace, Space } from "../models";
-import { apiFetch } from "../utils/api";
-import { apiEndpoints } from "../utils/constant";
-import { ErrorWithStatus } from "../utils/error";
+import { apiEndpoints, apiFetch, ErrorWithStatus } from "../utils";
 
 export async function getSpace(spaceId: string): Promise<{
   space: DisplaySpace | null;

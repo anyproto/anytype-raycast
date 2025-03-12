@@ -1,5 +1,5 @@
 import { DisplayMember, Member } from "../models";
-import { getCustomTypeIcon, getFile } from "../utils/icon";
+import { getCustomTypeIcon, getFile } from "../utils";
 
 /**
  * Map raw `Member` objects from the API into display-ready data (e.g., icon).

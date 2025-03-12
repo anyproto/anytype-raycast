@@ -1,5 +1,5 @@
-import { getTypes } from "../api/getTypes";
-import { apiLimit } from "../utils/constant";
+import { getTypes } from "../api";
+import { apiLimit } from "../utils";
 
 type Input = {
   /**

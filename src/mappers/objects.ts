@@ -1,8 +1,7 @@
 import { getPreferenceValues } from "@raycast/api";
-import { getObjectWithoutMappedDetails } from "../api/getObject";
+import { getObjectWithoutMappedDetails } from "../api";
 import { DetailData, DisplayObject, SpaceObject } from "../models";
-import { colorMap } from "../utils/constant";
-import { getIconWithFallback } from "../utils/icon";
+import { colorMap, getIconWithFallback } from "../utils";
 
 /**
  * Efficiently map raw `SpaceObject` items to essential display-ready data.

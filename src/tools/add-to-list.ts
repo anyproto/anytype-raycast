@@ -1,4 +1,4 @@
-import { addObjectsToList } from "../api/addObjectsToList";
+import { addObjectsToList } from "../api";
 
 type Input = {
   /**

@@ -13,10 +13,8 @@ import {
 } from "@raycast/api";
 import { useForm } from "@raycast/utils";
 import { useEffect, useState } from "react";
-import { displayCode } from "../api/displayCode";
-import { getToken } from "../api/getToken";
-import { checkApiTokenValidity } from "../api/validateToken";
-import { apiAppName, downloadUrl, localStorageKeys } from "../utils/constant";
+import { checkApiTokenValidity, displayCode, getToken } from "../api";
+import { apiAppName, downloadUrl, localStorageKeys } from "../utils";
 
 type EnsureAuthenticatedProps = {
   placeholder?: string;
@@ -24,7 +22,7 @@ type EnsureAuthenticatedProps = {
   children: React.ReactNode;
 };
 
-export default function EnsureAuthenticated({ placeholder, viewType, children }: EnsureAuthenticatedProps) {
+export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureAuthenticatedProps) {
   const [hasToken, setHasToken] = useState<boolean | null>(null);
   const [tokenIsValid, setTokenIsValid] = useState<boolean>(false);
   const [challengeId, setChallengeId] = useState("");

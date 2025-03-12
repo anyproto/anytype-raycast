@@ -1,16 +1,11 @@
 import { Icon, Image, List, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { useEffect, useState } from "react";
+import { EmptyViewObject, ObjectListItem } from ".";
 import { processObject } from "../helpers/object";
-import { useMembers } from "../hooks/useMembers";
-import { usePinnedMembers, usePinnedObjects, usePinnedTypes } from "../hooks/usePinnedObjects";
-import { useSearch } from "../hooks/useSearch";
-import { useTypes } from "../hooks/useTypes";
+import { useMembers, usePinnedMembers, usePinnedObjects, usePinnedTypes, useSearch, useTypes } from "../hooks";
 import { DisplayMember, DisplayObject, DisplayType } from "../models";
-import { localStorageKeys } from "../utils/constant";
-import { pluralize } from "../utils/string";
-import EmptyViewObject from "./EmptyViewObject";
-import ObjectListItem from "./ObjectListItem";
+import { localStorageKeys, pluralize } from "../utils";
 
 type ObjectListProps = {
   spaceId: string;
@@ -22,7 +17,7 @@ export const CurrentView = {
   members: "members",
 } as const;
 
-export default function ObjectList({ spaceId }: ObjectListProps) {
+export function ObjectList({ spaceId }: ObjectListProps) {
   const [currentView, setCurrentView] = useState<keyof typeof CurrentView>(CurrentView.objects);
   const [searchText, setSearchText] = useState("");
 

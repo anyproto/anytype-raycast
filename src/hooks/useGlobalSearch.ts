@@ -1,9 +1,9 @@
 import { getPreferenceValues } from "@raycast/api";
 import { useCachedPromise } from "@raycast/utils";
 import { useMemo } from "react";
-import { globalSearch } from "../api/globalSearch";
+import { globalSearch } from "../api";
 import { SortDirection } from "../models";
-import { apiLimit } from "../utils/constant";
+import { apiLimit } from "../utils";
 
 export function useGlobalSearch(query: string, types: string[]) {
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(

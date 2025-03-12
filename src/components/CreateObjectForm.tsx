@@ -1,8 +1,7 @@
 import { Action, ActionPanel, Form, Icon, Image, popToRoot, showToast, Toast } from "@raycast/api";
 import { useForm } from "@raycast/utils";
 import { useState } from "react";
-import { addObjectsToList } from "../api/addObjectsToList";
-import { createObject } from "../api/createObject";
+import { addObjectsToList, createObject } from "../api";
 import { CreateObjectFormValues } from "../create-object";
 import { DisplayObject, DisplaySpace, DisplayTemplate, DisplayType } from "../models";
 
@@ -26,7 +25,7 @@ interface CreateObjectFormProps {
   enableDrafts: boolean;
 }
 
-export default function CreateObjectForm({
+export function CreateObjectForm({
   spaces,
   types,
   templates,

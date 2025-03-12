@@ -1,11 +1,10 @@
 import { Color, Detail, getPreferenceValues, showToast, Toast, useNavigation } from "@raycast/api";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { useExport } from "../hooks/useExport";
-import { useObject } from "../hooks/useObject";
+import { ObjectActions } from ".";
+import { useExport, useObject } from "../hooks";
 import type { DetailData } from "../models";
-import { getMaskForObject } from "../utils/icon";
-import ObjectActions from "./ObjectActions";
+import { getMaskForObject } from "../utils";
 
 type ObjectDetailProps = {
   spaceId: string;
@@ -16,14 +15,7 @@ type ObjectDetailProps = {
   isPinned: boolean;
 };
 
-export default function ObjectDetail({
-  spaceId,
-  objectId,
-  title,
-  viewType,
-  isGlobalSearch,
-  isPinned,
-}: ObjectDetailProps) {
+export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearch, isPinned }: ObjectDetailProps) {
   const { push } = useNavigation();
   const { linkDisplay } = getPreferenceValues();
   const { object, objectError, isLoadingObject, mutateObject } = useObject(spaceId, objectId);

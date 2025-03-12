@@ -1,6 +1,6 @@
 import { LocalStorage } from "@raycast/api";
-import { getToken } from "../api/getToken";
-import { localStorageKeys } from "../utils/constant";
+import { getToken } from "../api";
+import { localStorageKeys } from "../utils";
 
 type Input = {
   /**

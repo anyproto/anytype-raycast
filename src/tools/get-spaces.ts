@@ -1,5 +1,5 @@
-import { getSpaces } from "../api/getSpaces";
-import { apiLimit } from "../utils/constant";
+import { getSpaces } from "../api";
+import { apiLimit } from "../utils";
 
 /**
  * Retrieve a list of spaces from the API.

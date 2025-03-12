@@ -1,9 +1,6 @@
 import { mapObject } from "../mappers/objects";
 import { DisplayObject, SpaceObject } from "../models";
-import { apiFetch } from "../utils/api";
-import { apiEndpoints } from "../utils/constant";
-import { ErrorWithStatus } from "../utils/error";
-import { getIconWithFallback } from "../utils/icon";
+import { apiEndpoints, apiFetch, ErrorWithStatus, getIconWithFallback } from "../utils";
 
 export async function getObject(
   spaceId: string,

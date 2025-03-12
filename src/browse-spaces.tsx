@@ -1,13 +1,10 @@
 import { Icon, Image, List, Toast, showToast } from "@raycast/api";
 import { useEffect, useMemo, useState } from "react";
-import { getMembers } from "./api/getMembers";
-import EmptyViewSpace from "./components/EmptyViewSpace";
-import EnsureAuthenticated from "./components/EnsureAuthenticated";
-import SpaceListItem from "./components/SpaceListItem";
-import { usePinnedSpaces } from "./hooks/usePinnedSpaces";
-import { useSpaces } from "./hooks/useSpaces";
+import { getMembers } from "./api";
+import { EmptyViewSpace, EnsureAuthenticated, SpaceListItem } from "./components";
+import { usePinnedSpaces, useSpaces } from "./hooks";
 import { DisplaySpace } from "./models";
-import { pluralize } from "./utils/string";
+import { pluralize } from "./utils";
 
 const searchPlaceholder = "Search spaces...";
 

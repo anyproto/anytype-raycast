@@ -1,7 +1,6 @@
 import { LaunchProps } from "@raycast/api";
-import CreateObjectForm from "./components/CreateObjectForm";
-import EnsureAuthenticated from "./components/EnsureAuthenticated";
-import { useCreateObjectData } from "./hooks/useCreateObjectData";
+import { CreateObjectForm, EnsureAuthenticated } from "./components";
+import { useCreateObjectData } from "./hooks";
 
 export interface CreateObjectFormValues {
   space?: string;

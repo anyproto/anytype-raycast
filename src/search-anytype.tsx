@@ -1,17 +1,12 @@
 import { Icon, Image, List, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { useEffect, useState } from "react";
-import EmptyViewObject from "./components/EmptyViewObject";
-import EnsureAuthenticated from "./components/EnsureAuthenticated";
-import ObjectListItem from "./components/ObjectListItem";
+import { EmptyViewObject, EnsureAuthenticated, ObjectListItem } from "./components";
 import { processObject } from "./helpers/object";
 import { getAllTypesFromSpaces } from "./helpers/type";
-import { useGlobalSearch } from "./hooks/useGlobalSearch";
-import { usePinnedObjects } from "./hooks/usePinnedObjects";
-import { useSpaces } from "./hooks/useSpaces";
+import { useGlobalSearch, usePinnedObjects, useSpaces } from "./hooks";
 import { DisplayMember, DisplayObject, DisplayType } from "./models";
-import { localStorageKeys } from "./utils/constant";
-import { getShortDateLabel, pluralize } from "./utils/string";
+import { getShortDateLabel, localStorageKeys, pluralize } from "./utils";
 
 const searchBarPlaceholder = "Globally search objects across spaces...";
 

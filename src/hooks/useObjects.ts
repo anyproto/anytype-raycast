@@ -1,7 +1,7 @@
 import { useCachedPromise } from "@raycast/utils";
 import { useMemo } from "react";
-import { getObjects } from "../api/getObjects";
-import { apiLimit } from "../utils/constant";
+import { getObjects } from "../api";
+import { apiLimit } from "../utils";
 
 export function useObjects(spaceId: string) {
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(

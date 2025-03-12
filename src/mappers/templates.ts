@@ -1,5 +1,5 @@
 import { DisplayTemplate, Template } from "../models";
-import { getIconWithFallback } from "../utils/icon";
+import { getIconWithFallback } from "../utils";
 
 /**
  * Map raw `Template` objects from the API into display-ready data (e.g., icon).

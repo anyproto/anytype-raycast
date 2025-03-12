@@ -1,6 +1,6 @@
-import { search } from "../api/search";
+import { search } from "../api";
 import { SortDirection, SortTimestamp } from "../models";
-import { apiLimit } from "../utils/constant";
+import { apiLimit } from "../utils";
 
 type Input = {
   /**

@@ -1,14 +1,10 @@
 import { List, showToast, Toast } from "@raycast/api";
 import { useEffect, useState } from "react";
+import { CurrentView, EmptyViewObject, ObjectActions, ObjectListItem } from ".";
 import { processObject } from "../helpers/object";
-import { useSearch } from "../hooks/useSearch";
-import { useTemplates } from "../hooks/useTemplates";
+import { useSearch, useTemplates } from "../hooks";
 import { DisplayTemplate } from "../models";
-import { pluralize } from "../utils/string";
-import EmptyViewObject from "./EmptyViewObject";
-import ObjectActions from "./ObjectActions";
-import { CurrentView } from "./ObjectList";
-import ObjectListItem from "./ObjectListItem";
+import { pluralize } from "../utils";
 
 type TemplatesListProps = {
   spaceId: string;
@@ -17,7 +13,7 @@ type TemplatesListProps = {
   isPinned: boolean;
 };
 
-export default function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned }: TemplatesListProps) {
+export function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned }: TemplatesListProps) {
   const [searchText, setSearchText] = useState("");
   const { templates, templatesError, isLoadingTemplates, mutateTemplates, templatesPagination } = useTemplates(
     spaceId,

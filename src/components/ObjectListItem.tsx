@@ -1,7 +1,7 @@
 import { Icon, Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
+import { ObjectActions } from ".";
 import { DisplayMember, DisplayObject, DisplayType } from "../models";
-import ObjectActions from "./ObjectActions";
 
 type ObjectListItemProps = {
   spaceId: string;
@@ -23,7 +23,7 @@ type ObjectListItemProps = {
   isPinned: boolean;
 };
 
-export default function ObjectListItem({
+export function ObjectListItem({
   spaceId,
   objectId,
   icon,

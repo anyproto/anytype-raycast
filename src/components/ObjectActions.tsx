@@ -11,15 +11,10 @@ import {
   Toast,
 } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import { deleteObject } from "../api/deleteObject";
+import { CollectionList, CurrentView, ObjectDetail, TemplateList } from ".";
+import { deleteObject } from "../api";
 import { DisplayMember, DisplayObject, DisplayTemplate, DisplayType, Export } from "../models";
-import { localStorageKeys } from "../utils/constant";
-import { addPinned, moveDownInPinned, moveUpInPinned, removePinned } from "../utils/storage";
-import { pluralize } from "../utils/string";
-import CollectionList from "./CollectionList";
-import ObjectDetail from "./ObjectDetail";
-import { CurrentView } from "./ObjectList";
-import TemplateList from "./TemplateList";
+import { addPinned, localStorageKeys, moveDownInPinned, moveUpInPinned, pluralize, removePinned } from "../utils";
 
 type ObjectActionsProps = {
   spaceId: string;
@@ -39,7 +34,7 @@ type ObjectActionsProps = {
   onToggleDetails?: () => void;
 };
 
-export default function ObjectActions({
+export function ObjectActions({
   spaceId,
   objectId,
   title,
