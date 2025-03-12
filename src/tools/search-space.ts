@@ -18,6 +18,7 @@ type Input = {
   /**
    * The types of objects to search for, identified by their id or unique_key.
    * This value can be obtained from the `getTypes` tool.
+   * When user asks for 'list' objects, search for 'ot-set' and 'ot-collection' types.
    * If no types are specified, the search will include all types of objects
    * Default value is an empty array.
    */
@@ -48,7 +49,7 @@ type Input = {
  * Perform a search for objects within a specific space.
  * This function queries the specified space and returns a list of objects
  * that match the search criteria.
- * For empty search queries, objects are sorted by creation date in descending order.
+ * For empty search query and sort criterion, most recently modified objects are returned.
  */
 export default async function tool({ spaceId, query, types, sort }: Input) {
   types = types ?? [];
