@@ -1,11 +1,10 @@
 import { Icon, Image, List, showToast, Toast } from "@raycast/api";
-import { MutatePromise } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { EmptyViewObject, EnsureAuthenticated, ObjectListItem } from "./components";
 import { processObject } from "./helpers/object";
 import { getAllTypesFromSpaces } from "./helpers/type";
 import { useGlobalSearch, usePinnedObjects, useSpaces } from "./hooks";
-import { DisplayMember, DisplayObject, DisplayType } from "./models";
+import { DisplayObject } from "./models";
 import { getShortDateLabel, localStorageKeys, pluralize } from "./utils";
 
 const searchBarPlaceholder = "Globally search objects across spaces...";
@@ -211,10 +210,7 @@ function Search() {
               title={object.title}
               subtitle={object.subtitle}
               accessories={object.accessories}
-              mutate={[
-                mutateObjects,
-                mutatePinnedObjects as MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>,
-              ]}
+              mutate={[mutateObjects, mutatePinnedObjects]}
               layout={object.layout}
               viewType={viewType}
               isGlobalSearch={true}
@@ -235,10 +231,7 @@ function Search() {
               title={object.title}
               subtitle={object.subtitle}
               accessories={object.accessories}
-              mutate={[
-                mutateObjects,
-                mutatePinnedObjects as MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>,
-              ]}
+              mutate={[mutateObjects, mutatePinnedObjects]}
               layout={object.layout}
               viewType={viewType}
               isGlobalSearch={true}

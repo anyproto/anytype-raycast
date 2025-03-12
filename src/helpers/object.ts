@@ -1,4 +1,4 @@
-import { Icon, Image, getPreferenceValues } from "@raycast/api";
+import { Icon, getPreferenceValues } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { format } from "date-fns";
 import { DisplayMember, DisplayObject, DisplayType } from "../models";
@@ -9,18 +9,7 @@ export function processObject(
   isPinned: boolean,
   mutateObjects: MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>,
   mutatePinnedObjects?: MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>,
-): {
-  key: string;
-  spaceId: string;
-  id: string;
-  icon: { source: string; mask: Image.Mask };
-  title: string;
-  subtitle: { value: string; tooltip: string };
-  accessories: { icon?: Icon; date?: Date; tooltip: string; text?: string }[];
-  mutate: MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>[];
-  layout: string;
-  isPinned: boolean;
-} {
+) {
   const { sort } = getPreferenceValues();
   const dateDetail = object.details.find((detail) => detail.id === sort);
   const date = dateDetail && "date" in dateDetail.details ? (dateDetail.details.date as string) : undefined;
