@@ -78,7 +78,11 @@ export function SpaceActions({ space, mutate, isPinned }: SpaceActionsProps) {
   return (
     <ActionPanel title={space.name}>
       <ActionPanel.Section>
-        <Action.Push icon={Icon.List} title="View Objects" target={<ObjectList key={space.id} spaceId={space.id} />} />
+        <Action.Push
+          icon={Icon.List}
+          title="View Objects"
+          target={<ObjectList key={space.id} spaceId={space.id} spaceName={space.name} />}
+        />
         <Action.OpenInBrowser
           icon={{ source: "../assets/anytype-icon.png" }}
           title="Open Space in Anytype"

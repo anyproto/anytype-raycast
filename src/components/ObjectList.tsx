@@ -9,6 +9,7 @@ import { localStorageKeys, pluralize } from "../utils";
 
 type ObjectListProps = {
   spaceId: string;
+  spaceName: string;
 };
 
 export const CurrentView = {
@@ -17,7 +18,7 @@ export const CurrentView = {
   members: "members",
 } as const;
 
-export function ObjectList({ spaceId }: ObjectListProps) {
+export function ObjectList({ spaceId, spaceName }: ObjectListProps) {
   const [currentView, setCurrentView] = useState<keyof typeof CurrentView>(CurrentView.objects);
   const [searchText, setSearchText] = useState("");
 
@@ -183,6 +184,7 @@ export function ObjectList({ spaceId }: ObjectListProps) {
       isLoading={isLoading}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder={`Search ${currentView}...`}
+      navigationTitle={`Browse ${spaceName}`}
       pagination={pagination}
       throttle={true}
       searchBarAccessory={
