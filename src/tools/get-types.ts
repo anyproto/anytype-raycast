@@ -1,5 +1,5 @@
 import { getTypes } from "../api";
-import { apiLimit } from "../utils";
+import { apiLimitMax } from "../utils";
 
 type Input = {
   /**
@@ -15,11 +15,21 @@ type Input = {
  * Should be called when user requests objects of a specific type.
  */
 export default async function tool({ spaceId }: Input) {
-  const { types, pagination } = await getTypes(spaceId, { offset: 0, limit: apiLimit });
-  const results = types.map(({ object, name, id, unique_key }) => ({ object, name, id, unique_key }));
+  const allTypes = [];
+  let hasMore = true;
+  let offset = 0;
+
+  while (hasMore) {
+    const { types, pagination } = await getTypes(spaceId, { offset, limit: apiLimitMax });
+    allTypes.push(...types);
+    hasMore = pagination.has_more;
+    offset += apiLimitMax;
+  }
+
+  const results = allTypes.map(({ object, name, id, unique_key }) => ({ object, name, id, unique_key }));
 
   return {
     results,
-    pagination,
+    total: allTypes.length,
   };
 }

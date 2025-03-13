@@ -1,5 +1,5 @@
 import { getMembers } from "../api";
-import { apiLimit } from "../utils";
+import { apiLimitMax } from "../utils";
 
 type Input = {
   /**
@@ -14,11 +14,26 @@ type Input = {
  * This function queries the specified space and returns a list of members.
  */
 export default async function tool({ spaceId }: Input) {
-  const { members, pagination } = await getMembers(spaceId, { offset: 0, limit: apiLimit });
-  const results = members.map(({ object, name, id, global_name, role }) => ({ object, name, id, global_name, role }));
+  const allMembers = [];
+  let hasMore = true;
+  let offset = 0;
+
+  while (hasMore) {
+    const { members, pagination } = await getMembers(spaceId, { offset, limit: apiLimitMax });
+    allMembers.push(...members);
+    hasMore = pagination.has_more;
+    offset += apiLimitMax;
+  }
+  const results = allMembers.map(({ object, name, id, global_name, role }) => ({
+    object,
+    name,
+    id,
+    global_name,
+    role,
+  }));
 
   return {
     results,
-    pagination,
+    total: allMembers.length,
   };
 }
