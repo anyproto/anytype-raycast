@@ -1,7 +1,7 @@
 import { Image } from "@raycast/api";
 import { ObjectIcon } from "./icon";
 
-export interface Member {
+export interface RawMember {
   object: string;
   id: string;
   name: string;
@@ -11,6 +11,6 @@ export interface Member {
   role: string;
 }
 
-export interface DisplayMember extends Omit<Member, "icon"> {
+export interface Member extends Omit<RawMember, "icon"> {
   icon: Image.ImageLike;
 }

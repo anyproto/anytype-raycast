@@ -1,4 +1,4 @@
-import { DisplaySpace, Space } from "../models";
+import { RawSpace, Space } from "../models";
 import { getIconWithFallback } from "../utils";
 
 /**
@@ -6,7 +6,7 @@ import { getIconWithFallback } from "../utils";
  * @param spaces Raw `Space` objects from the API.
  * @returns Display-ready `Space` objects.
  */
-export async function mapSpaces(spaces: Space[]): Promise<DisplaySpace[]> {
+export async function mapSpaces(spaces: RawSpace[]): Promise<Space[]> {
   return Promise.all(
     spaces.map((space) => {
       return mapSpace(space);
@@ -19,7 +19,7 @@ export async function mapSpaces(spaces: Space[]): Promise<DisplaySpace[]> {
  * @param space Raw `Space` object from the API.
  * @returns Display-ready `Space` object.
  */
-export async function mapSpace(space: Space): Promise<DisplaySpace> {
+export async function mapSpace(space: RawSpace): Promise<Space> {
   const icon = await getIconWithFallback(space.icon, "space");
 
   return {

@@ -3,10 +3,10 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { ObjectActions } from ".";
 import { useExport, useObject } from "../hooks";
-import { DisplaySpace, ExportFormat, Property } from "../models";
+import { ExportFormat, Property, Space } from "../models";
 
 type ObjectDetailProps = {
-  space: DisplaySpace;
+  space: Space;
   objectId: string;
   title: string;
   viewType: string;

@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { CurrentView, EmptyViewObject, ObjectActions, ObjectListItem } from ".";
 import { processObject } from "../helpers/object";
 import { useSearch, useTemplates } from "../hooks";
-import { DisplaySpace, DisplayTemplate } from "../models";
+import { Space, Template } from "../models";
 import { pluralize } from "../utils";
 
 type TemplatesListProps = {
-  space: DisplaySpace;
+  space: Space;
   typeId: string;
   isGlobalSearch: boolean;
   isPinned: boolean;
@@ -37,7 +37,7 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
     }
   }, [objectsError]);
 
-  const filteredTemplates = templates?.filter((template: DisplayTemplate) =>
+  const filteredTemplates = templates?.filter((template: Template) =>
     template.name.toLowerCase().includes(searchText.toLowerCase()),
   );
 
@@ -61,7 +61,7 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
           title={searchText ? "Search Results" : "Templates"}
           subtitle={`${pluralize(filteredTemplates.length, "template", { withNumber: true })}`}
         >
-          {filteredTemplates.map((template: DisplayTemplate) => (
+          {filteredTemplates.map((template: Template) => (
             <List.Item
               key={template.id}
               title={template.name}

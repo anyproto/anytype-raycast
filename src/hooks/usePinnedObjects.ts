@@ -1,6 +1,6 @@
 import { MutatePromise, useCachedPromise } from "@raycast/utils";
 import { getObject } from "../api";
-import { DisplayMember, DisplayObject, DisplayType } from "../models";
+import { Member, SpaceObject, Type } from "../models";
 import { getPinned, removePinned } from "../utils";
 
 export function usePinnedObjects(spaceId: string) {
@@ -30,9 +30,9 @@ export function usePinnedObjects(spaceId: string) {
   );
 
   return {
-    pinnedObjects: data as DisplayObject[],
+    pinnedObjects: data as SpaceObject[],
     pinnedObjectsError: error,
     isLoadingPinnedObjects: isLoading,
-    mutatePinnedObjects: mutate as MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>,
+    mutatePinnedObjects: mutate as MutatePromise<SpaceObject[] | Type[] | Member[]>,
   };
 }

@@ -1,4 +1,4 @@
-import { DisplayMember, Member } from "../models";
+import { Member, RawMember } from "../models";
 import { getIconWithFallback } from "../utils";
 
 /**
@@ -6,7 +6,7 @@ import { getIconWithFallback } from "../utils";
  * @param members The raw `Member` objects from the API.
  * @returns The display-ready `Member` objects.
  */
-export async function mapMembers(members: Member[]): Promise<DisplayMember[]> {
+export async function mapMembers(members: RawMember[]): Promise<Member[]> {
   return Promise.all(
     members.map(async (member) => {
       return mapMember(member);
@@ -19,7 +19,7 @@ export async function mapMembers(members: Member[]): Promise<DisplayMember[]> {
  * @param member The raw `Member` object from the API.
  * @returns The display-ready `Member` object.
  */
-export async function mapMember(member: Member): Promise<DisplayMember> {
+export async function mapMember(member: RawMember): Promise<Member> {
   const icon = await getIconWithFallback(member.icon, "participant");
 
   return {

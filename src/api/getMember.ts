@@ -1,16 +1,16 @@
 import { mapMember } from "../mappers/members";
-import { DisplayMember, Member } from "../models";
+import { Member, RawMember } from "../models";
 import { apiEndpoints, apiFetch, ErrorWithStatus } from "../utils";
 
 export async function getMember(
   spaceId: string,
   objectId: string,
 ): Promise<{
-  member: DisplayMember | null;
+  member: Member | null;
 }> {
   const { url, method } = apiEndpoints.getMember(spaceId, objectId);
   try {
-    const response = await apiFetch<{ member: Member }>(url, { method: method });
+    const response = await apiFetch<{ member: RawMember }>(url, { method: method });
     return {
       member: response ? await mapMember(response.payload.member) : null,
     };

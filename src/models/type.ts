@@ -1,7 +1,7 @@
 import { Image } from "@raycast/api";
 import { ObjectIcon } from "./icon";
 
-export interface Type {
+export interface RawType {
   object: string;
   id: string;
   unique_key: string;
@@ -10,6 +10,6 @@ export interface Type {
   recommended_layout: string;
 }
 
-export interface DisplayType extends Omit<Type, "icon"> {
+export interface Type extends Omit<RawType, "icon"> {
   icon: Image.ImageLike;
 }

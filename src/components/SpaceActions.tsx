@@ -1,7 +1,7 @@
 import { Action, ActionPanel, Clipboard, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { ObjectList } from ".";
-import { DisplaySpace } from "../models";
+import { Space } from "../models";
 import {
   addPinned,
   anytypeChatDeeplink,
@@ -13,8 +13,8 @@ import {
 } from "../utils";
 
 type SpaceActionsProps = {
-  space: DisplaySpace;
-  mutate: MutatePromise<DisplaySpace[]>[];
+  space: Space;
+  mutate: MutatePromise<Space[]>[];
   isPinned: boolean;
 };
 

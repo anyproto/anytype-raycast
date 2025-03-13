@@ -1,10 +1,10 @@
-import { DisplayTemplate, Template } from "../models";
+import { RawTemplate, Template } from "../models";
 import { getIconWithFallback } from "../utils";
 
 /**
  * Map raw `Template` objects from the API into display-ready data (e.g., icon).
  */
-export async function mapTemplates(templates: Template[]): Promise<DisplayTemplate[]> {
+export async function mapTemplates(templates: RawTemplate[]): Promise<Template[]> {
   return Promise.all(
     templates.map(async (template) => {
       return mapTemplate(template);
@@ -15,7 +15,7 @@ export async function mapTemplates(templates: Template[]): Promise<DisplayTempla
 /**
  * Map raw `Template` object from the API into display-ready data (e.g., icon).
  */
-export async function mapTemplate(template: Template): Promise<DisplayTemplate> {
+export async function mapTemplate(template: RawTemplate): Promise<Template> {
   const icon = await getIconWithFallback(template.icon, "template");
 
   return {

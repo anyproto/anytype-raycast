@@ -1,13 +1,13 @@
 import { mapSpace } from "../mappers/spaces";
-import { DisplaySpace, Space } from "../models";
+import { RawSpace, Space } from "../models";
 import { apiEndpoints, apiFetch, ErrorWithStatus } from "../utils";
 
 export async function getSpace(spaceId: string): Promise<{
-  space: DisplaySpace | null;
+  space: Space | null;
 }> {
   const { url, method } = apiEndpoints.getSpace(spaceId);
   try {
-    const response = await apiFetch<{ space: Space }>(url, { method: method });
+    const response = await apiFetch<{ space: RawSpace }>(url, { method: method });
     return {
       space: response ? await mapSpace(response.payload.space) : null,
     };

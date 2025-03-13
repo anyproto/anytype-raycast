@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem } from ".";
 import { processObject } from "../helpers/object";
 import { useMembers, usePinnedMembers, usePinnedObjects, usePinnedTypes, useSearch, useTypes } from "../hooks";
-import { DisplayMember, DisplayObject, DisplaySpace, DisplayType } from "../models";
+import { Member, Space, SpaceObject, Type } from "../models";
 import { localStorageKeys, pluralize } from "../utils";
 
 type ObjectListProps = {
-  space: DisplaySpace;
+  space: Space;
 };
 
 export const CurrentView = {
@@ -76,7 +76,7 @@ export function ObjectList({ space }: ObjectListProps) {
     return role.replace("Reader", "Viewer").replace("Writer", "Editor");
   };
 
-  const processType = (type: DisplayType, isPinned: boolean) => {
+  const processType = (type: Type, isPinned: boolean) => {
     return {
       key: type.id,
       spaceId: space.id,
@@ -85,13 +85,13 @@ export function ObjectList({ space }: ObjectListProps) {
       title: type.name,
       subtitle: { value: "", tooltip: "" },
       accessories: [isPinned ? { icon: Icon.Star, tooltip: "Pinned" } : {}],
-      mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>],
+      mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<SpaceObject[] | Type[] | Member[]>],
       layout: "",
       isPinned,
     };
   };
 
-  const processMember = (member: DisplayMember, isPinned: boolean) => {
+  const processMember = (member: Member, isPinned: boolean) => {
     return {
       key: member.id,
       spaceId: space.id,
@@ -106,7 +106,7 @@ export function ObjectList({ space }: ObjectListProps) {
           tooltip: `Role: ${formatRole(member.role)}`,
         },
       ],
-      mutate: [mutateMembers, mutatePinnedMembers as MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>],
+      mutate: [mutateMembers, mutatePinnedMembers as MutatePromise<SpaceObject[] | Type[] | Member[]>],
       layout: "",
       isPinned,
     };

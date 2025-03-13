@@ -1,16 +1,16 @@
 import { mapType } from "../mappers/types";
-import { DisplayType, Type } from "../models";
+import { RawType, Type } from "../models";
 import { apiEndpoints, apiFetch, ErrorWithStatus } from "../utils";
 
 export async function getType(
   spaceId: string,
   typeId: string,
 ): Promise<{
-  type: DisplayType | null;
+  type: Type | null;
 }> {
   const { url, method } = apiEndpoints.getType(spaceId, typeId);
   try {
-    const response = await apiFetch<{ type: Type }>(url, { method: method });
+    const response = await apiFetch<{ type: RawType }>(url, { method: method });
     return {
       type: response ? await mapType(response.payload.type) : null,
     };

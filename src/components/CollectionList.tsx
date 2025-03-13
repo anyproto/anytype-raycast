@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem } from ".";
 import { processObject } from "../helpers/object";
 import { useObjectsInList } from "../hooks";
-import { DisplaySpace } from "../models";
+import { Space } from "../models";
 import { pluralize } from "../utils";
 
 type CollectionListProps = {
-  space: DisplaySpace;
+  space: Space;
   listId: string;
 };
 

@@ -1,14 +1,14 @@
 import { getPreferenceValues, Icon } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { format } from "date-fns";
-import { DisplayMember, DisplayObject, DisplayType } from "../models";
+import { Member, SpaceObject, Type } from "../models";
 import { getDateLabel, getShortDateLabel } from "../utils";
 
 export function processObject(
-  object: DisplayObject,
+  object: SpaceObject,
   isPinned: boolean,
-  mutateObjects: MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>,
-  mutatePinnedObjects?: MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>,
+  mutateObjects: MutatePromise<SpaceObject[] | Type[] | Member[]>,
+  mutatePinnedObjects?: MutatePromise<SpaceObject[] | Type[] | Member[]>,
 ) {
   const { sort } = getPreferenceValues();
   const dateProperty = object.properties.find((property) => property.id === sort);
@@ -35,9 +35,7 @@ export function processObject(
         text: hasValidDate ? undefined : "—",
       },
     ],
-    mutate: [mutateObjects, mutatePinnedObjects].filter(Boolean) as MutatePromise<
-      DisplayObject[] | DisplayType[] | DisplayMember[]
-    >[],
+    mutate: [mutateObjects, mutatePinnedObjects].filter(Boolean) as MutatePromise<SpaceObject[] | Type[] | Member[]>[],
     layout: object.layout,
     isPinned,
   };

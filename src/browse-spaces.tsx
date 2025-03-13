@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getMembers } from "./api";
 import { EmptyViewSpace, EnsureAuthenticated, SpaceListItem } from "./components";
 import { usePinnedSpaces, useSpaces } from "./hooks";
-import { DisplaySpace } from "./models";
+import { Space } from "./models";
 import { pluralize } from "./utils";
 
 const searchPlaceholder = "Search spaces...";
@@ -70,7 +70,7 @@ function BrowseSpaces() {
   const filteredSpaces = spaces?.filter((space) => space.name.toLowerCase().includes(searchText.toLowerCase()));
   const pinnedFiltered = pinnedSpaces
     ?.map((pin) => filteredSpaces.find((space) => space.id === pin.id))
-    .filter(Boolean) as DisplaySpace[];
+    .filter(Boolean) as Space[];
   const regularFiltered = filteredSpaces?.filter((space) => !pinnedFiltered?.includes(space));
 
   return (

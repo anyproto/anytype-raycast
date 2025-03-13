@@ -4,7 +4,7 @@ import { EmptyViewObject, EnsureAuthenticated, ObjectListItem } from "./componen
 import { processObject } from "./helpers/object";
 import { getAllTypesFromSpaces } from "./helpers/type";
 import { useGlobalSearch, usePinnedObjects, useSpaces } from "./hooks";
-import { DisplayObject } from "./models";
+import { SpaceObject } from "./models";
 import { getShortDateLabel, localStorageKeys, pluralize } from "./utils";
 
 const searchBarPlaceholder = "Globally search objects across spaces...";
@@ -116,7 +116,7 @@ function Search() {
     return new Map(spaces.map((space) => [space.id, space]));
   }, [spaces]);
 
-  const processObjectWithSpaceIcon = (object: DisplayObject, isPinned: boolean) => {
+  const processObjectWithSpaceIcon = (object: SpaceObject, isPinned: boolean) => {
     const spaceIcon = spaceIcons.get(object.space_id) || Icon.BullsEye;
     const processedObject = processObject(object, isPinned, mutateObjects, mutatePinnedObjects);
 
@@ -133,7 +133,7 @@ function Search() {
   };
 
   // Helper to filter objects by the search term
-  const filterObjectsBySearchTerm = (objects: DisplayObject[], searchTerm: string) => {
+  const filterObjectsBySearchTerm = (objects: SpaceObject[], searchTerm: string) => {
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     return objects.filter(
       (object) =>

@@ -1,13 +1,13 @@
 import { getPreferenceValues } from "@raycast/api";
 import { getObjectWithoutMappedDetails } from "../api";
-import { DisplayObject, Property, SpaceObject } from "../models";
+import { Property, RawSpaceObject, SpaceObject } from "../models";
 import { colorMap, getIconWithFallback } from "../utils";
 
 /**
  * Efficiently map raw `SpaceObject` items to essential display-ready data.
  * Only includes necessary fields for list rendering for performance.
  */
-export async function mapObjects(objects: SpaceObject[]): Promise<DisplayObject[]> {
+export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject[]> {
   const { sort } = getPreferenceValues();
 
   return Promise.all(
@@ -26,7 +26,7 @@ export async function mapObjects(objects: SpaceObject[]): Promise<DisplayObject[
 /**
  * Map raw `SpaceObject` item into display-ready data, including details, icons, etc.
  */
-export async function mapObject(object: SpaceObject): Promise<DisplayObject> {
+export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
   const icon = await getIconWithFallback(object.icon, object.layout, object.type);
 
   const mappedProperties = await Promise.all(
@@ -138,7 +138,7 @@ export async function mapObject(object: SpaceObject): Promise<DisplayObject> {
   };
 }
 
-export async function mapObjectWithoutDetails(spaceId: string, object: DisplayObject[]): Promise<DisplayObject[]> {
+export async function mapObjectWithoutDetails(spaceId: string, object: SpaceObject[]): Promise<SpaceObject[]> {
   const rawItems = Array.isArray(object) ? object : [object];
   return await Promise.all(
     rawItems.map(async (item) => {

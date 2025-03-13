@@ -1,6 +1,6 @@
 import { Icon, Image } from "@raycast/api";
 import fetch from "node-fetch";
-import { ObjectIcon, Type } from "../models";
+import { ObjectIcon, RawType } from "../models";
 import { colorMap, iconWidth } from "./constant";
 
 /**
@@ -10,7 +10,7 @@ import { colorMap, iconWidth } from "./constant";
  * @param type The type of the object .
  * @returns The base64 data URI or Raycast Icon.
  */
-export async function getIconWithFallback(icon: ObjectIcon, layout: string, type?: Type): Promise<Image.ImageLike> {
+export async function getIconWithFallback(icon: ObjectIcon, layout: string, type?: RawType): Promise<Image.ImageLike> {
   if (icon.format === "icon" && icon.name) {
     return await getCustomTypeIcon(icon.name, icon.color);
   }

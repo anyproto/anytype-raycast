@@ -1,13 +1,13 @@
 import { mapSpaces } from "../mappers/spaces";
-import { DisplaySpace, PaginatedResponse, Pagination, Space } from "../models";
+import { PaginatedResponse, Pagination, RawSpace, Space } from "../models";
 import { apiEndpoints, apiFetch } from "../utils";
 
 export async function getSpaces(options: { offset: number; limit: number }): Promise<{
-  spaces: DisplaySpace[];
+  spaces: Space[];
   pagination: Pagination;
 }> {
   const { url, method } = apiEndpoints.getSpaces(options);
-  const response = await apiFetch<PaginatedResponse<Space>>(url, { method: method });
+  const response = await apiFetch<PaginatedResponse<RawSpace>>(url, { method: method });
 
   return {
     spaces: response.payload.data ? await mapSpaces(response.payload.data) : [],

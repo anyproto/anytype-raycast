@@ -1,16 +1,16 @@
 import { mapObject } from "../mappers/objects";
-import { DisplayObject, SpaceObject } from "../models";
+import { RawSpaceObject, SpaceObject } from "../models";
 import { apiEndpoints, apiFetch, ErrorWithStatus, getIconWithFallback } from "../utils";
 
 export async function getObject(
   spaceId: string,
   objectId: string,
 ): Promise<{
-  object: DisplayObject | null;
+  object: SpaceObject | null;
 }> {
   const { url, method } = apiEndpoints.getObject(spaceId, objectId);
   try {
-    const response = await apiFetch<{ object: SpaceObject }>(url, { method: method });
+    const response = await apiFetch<{ object: RawSpaceObject }>(url, { method: method });
     return {
       object: response ? await mapObject(response.payload.object) : null,
     };
@@ -22,10 +22,10 @@ export async function getObject(
   }
 }
 
-export async function getObjectWithoutMappedDetails(spaceId: string, objectId: string): Promise<DisplayObject | null> {
+export async function getObjectWithoutMappedDetails(spaceId: string, objectId: string): Promise<SpaceObject | null> {
   const { url, method } = apiEndpoints.getObject(spaceId, objectId);
   try {
-    const response = await apiFetch<{ object: SpaceObject }>(url, { method });
+    const response = await apiFetch<{ object: RawSpaceObject }>(url, { method });
     if (!response) {
       return null;
     }

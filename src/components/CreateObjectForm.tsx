@@ -3,13 +3,13 @@ import { useForm } from "@raycast/utils";
 import { useState } from "react";
 import { addObjectsToList, createObject } from "../api";
 import { CreateObjectFormValues } from "../create-object";
-import { DisplayObject, DisplaySpace, DisplayTemplate, DisplayType } from "../models";
+import { Space, SpaceObject, Template, Type } from "../models";
 
 interface CreateObjectFormProps {
-  spaces: DisplaySpace[];
-  types: DisplayType[];
-  templates: DisplayTemplate[];
-  lists: DisplayObject[];
+  spaces: Space[];
+  types: Type[];
+  templates: Template[];
+  lists: SpaceObject[];
   selectedSpace: string;
   setSelectedSpace: (spaceId: string) => void;
   selectedType: string;

@@ -1,10 +1,10 @@
-import { DisplayType, Type } from "../models";
+import { RawType, Type } from "../models";
 import { getIconWithFallback } from "../utils";
 
 /**
  * Map raw `Type` objects from the API into display-ready data (e.g., icon).
  */
-export async function mapTypes(types: Type[]): Promise<DisplayType[]> {
+export async function mapTypes(types: RawType[]): Promise<Type[]> {
   return Promise.all(
     types.map(async (type) => {
       return mapType(type);
@@ -15,7 +15,7 @@ export async function mapTypes(types: Type[]): Promise<DisplayType[]> {
 /**
  * Map raw `Type` object from the API into display-ready data (e.g., icon).
  */
-export async function mapType(type: Type): Promise<DisplayType> {
+export async function mapType(type: RawType): Promise<Type> {
   const icon = await getIconWithFallback(type.icon, "type");
 
   return {

@@ -1,10 +1,10 @@
 import { Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { ObjectActions } from ".";
-import { DisplayMember, DisplayObject, DisplaySpace, DisplayType } from "../models";
+import { Member, Space, SpaceObject, Type } from "../models";
 
 type ObjectListItemProps = {
-  space: DisplaySpace;
+  space: Space;
   objectId: string;
   icon: Image.ImageLike;
   title: string;
@@ -15,7 +15,7 @@ type ObjectListItemProps = {
     text?: string;
     tooltip?: string;
   }[];
-  mutate: MutatePromise<DisplayObject[] | DisplayType[] | DisplayMember[]>[];
+  mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
   layout: string;
   viewType: string;
   isGlobalSearch: boolean;

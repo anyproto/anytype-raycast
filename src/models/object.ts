@@ -1,6 +1,6 @@
 import { Image } from "@raycast/api";
 import { ObjectIcon } from "./icon";
-import { Type } from "./type";
+import { RawType } from "./type";
 
 export interface CreateObjectRequest {
   object_type_unique_key: string;
@@ -12,12 +12,12 @@ export interface CreateObjectRequest {
   source: string;
 }
 
-export interface SpaceObject {
+export interface RawSpaceObject {
   object: string;
   id: string;
   name: string;
   icon: ObjectIcon;
-  type: Type;
+  type: RawType;
   snippet: string;
   layout: string;
   space_id: string;
@@ -26,7 +26,7 @@ export interface SpaceObject {
   properties: Property[];
 }
 
-export interface DisplayObject extends Omit<SpaceObject, "icon"> {
+export interface SpaceObject extends Omit<RawSpaceObject, "icon"> {
   icon: Image.ImageLike;
 }
 
@@ -69,12 +69,12 @@ export interface Property {
   select?: Tag;
   multi_select?: Tag[];
   date?: string;
-  file?: DisplayObject[];
+  file?: SpaceObject[];
   checkbox?: boolean;
   url?: string;
   email?: string;
   phone?: string;
-  object?: DisplayObject[];
+  object?: SpaceObject[];
 }
 
 export interface Tag {

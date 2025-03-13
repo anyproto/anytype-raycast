@@ -5,7 +5,7 @@ export interface CreateSpaceRequest {
   name: string;
 }
 
-export interface Space {
+export interface RawSpace {
   object: string;
   id: string;
   name: string;
@@ -27,6 +27,6 @@ export interface Space {
   network_id: string;
 }
 
-export interface DisplaySpace extends Omit<Space, "icon"> {
+export interface Space extends Omit<RawSpace, "icon"> {
   icon: Image.ImageLike;
 }

@@ -1,13 +1,13 @@
 import { showToast, Toast } from "@raycast/api";
 import semver from "semver";
-import { PaginatedResponse, Space } from "../models";
+import { PaginatedResponse, RawSpace } from "../models";
 import { apiEndpoints, apiFetch, currentApiVersion, errorConnectionMessage } from "../utils";
 
 // Validate api version and token by checking if data can be fetched without errors
 export async function checkApiTokenValidity(): Promise<boolean> {
   try {
     const { url, method } = apiEndpoints.getSpaces({ offset: 0, limit: 1 });
-    const response = await apiFetch<PaginatedResponse<Space>>(url, { method: method });
+    const response = await apiFetch<PaginatedResponse<RawSpace>>(url, { method: method });
 
     const apiVersion = response.headers.get("X-API-Version");
     if (apiVersion) {
