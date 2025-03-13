@@ -294,18 +294,9 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
             })}
           </Detail.Metadata.TagList>
         );
-      } else {
-        return (
-          <Detail.Metadata.Label
-            key={property.id}
-            title={titleText}
-            text={{ value: "No objects", color: Color.SecondaryText }}
-            icon={{ source: "icons/relation/object.svg", tintColor: { light: "grey", dark: "grey" } }}
-          />
-        );
       }
+      return null;
     }
-    return null;
   }
 
   function getGroup(propertyId: string, propertyFormat: string): string {

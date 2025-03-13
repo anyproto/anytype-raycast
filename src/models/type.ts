@@ -1,3 +1,4 @@
+import { Image } from "@raycast/api";
 import { ObjectIcon } from "./icon";
 
 export interface Type {
@@ -10,5 +11,5 @@ export interface Type {
 }
 
 export interface DisplayType extends Omit<Type, "icon"> {
-  icon: string;
+  icon: string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
 }

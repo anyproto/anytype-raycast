@@ -1,3 +1,4 @@
+import { Image } from "@raycast/api";
 import { ObjectIcon } from "./icon";
 
 export interface Member {
@@ -11,5 +12,5 @@ export interface Member {
 }
 
 export interface DisplayMember extends Omit<Member, "icon"> {
-  icon: string;
+  icon: string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
 }

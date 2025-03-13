@@ -7,7 +7,7 @@ type SpaceListItemProps = {
   space: DisplaySpace;
   icon: Image;
   accessories?: {
-    icon?: Icon | { source: string; mask?: Image.Mask; tintColor?: { light: string; dark: string } };
+    icon?: Icon | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
     date?: Date;
     text?: string;
     tooltip?: string;

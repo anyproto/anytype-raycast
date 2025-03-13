@@ -20,7 +20,9 @@ export default function Command() {
 function Search() {
   const [searchText, setSearchText] = useState("");
   const [objectTypes, setObjectTypes] = useState<string[]>([]);
-  const [spaceIcons, setSpaceIcons] = useState<Map<string, string>>(new Map());
+  const [spaceIcons, setSpaceIcons] = useState<
+    Map<string, string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask }>
+  >(new Map());
   const [filterType, setFilterType] = useState("all");
   const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
   const [uniqueKeysForTasks, setUniqueKeysForTasks] = useState<string[]>([]);

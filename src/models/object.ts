@@ -1,3 +1,4 @@
+import { Image } from "@raycast/api";
 import { ObjectIcon } from "./icon";
 import { Type } from "./type";
 
@@ -26,7 +27,7 @@ export interface SpaceObject {
 }
 
 export interface DisplayObject extends Omit<SpaceObject, "icon"> {
-  icon: string;
+  icon: string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
 }
 
 export interface Block {

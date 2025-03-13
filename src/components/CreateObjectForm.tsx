@@ -153,7 +153,11 @@ export function CreateObjectForm({
             key={space.id}
             value={space.id}
             title={space.name}
-            icon={{ source: space.icon, mask: Image.Mask.RoundedRectangle }}
+            icon={
+              typeof space.icon === "string"
+                ? { source: space.icon, mask: Image.Mask.RoundedRectangle }
+                : (space.icon as { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask })
+            }
           />
         ))}
       </Form.Dropdown>

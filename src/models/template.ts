@@ -1,3 +1,4 @@
+import { Image } from "@raycast/api";
 import { ObjectIcon } from "./icon";
 
 export interface Template {
@@ -8,5 +9,5 @@ export interface Template {
 }
 
 export interface DisplayTemplate extends Omit<Template, "icon"> {
-  icon: string;
+  icon: string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
 }

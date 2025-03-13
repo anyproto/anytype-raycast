@@ -1,3 +1,4 @@
+import { Image } from "@raycast/api";
 import { ObjectIcon } from "./icon";
 
 export interface CreateSpaceRequest {
@@ -27,5 +28,5 @@ export interface Space {
 }
 
 export interface DisplaySpace extends Omit<Space, "icon"> {
-  icon: string;
+  icon: string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
 }

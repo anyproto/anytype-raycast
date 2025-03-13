@@ -1,7 +1,5 @@
 import { Icon, Image } from "@raycast/api";
-import * as fs from "fs";
 import fetch from "node-fetch";
-import * as path from "path";
 import { ObjectIcon, Type } from "../models";
 import { colorMap, iconWidth } from "./constant";
 
@@ -12,7 +10,11 @@ import { colorMap, iconWidth } from "./constant";
  * @param type The type of the object .
  * @returns The base64 data URI or Raycast Icon.
  */
-export async function getIconWithFallback(icon: ObjectIcon, layout: string, type?: Type): Promise<string | Icon> {
+export async function getIconWithFallback(
+  icon: ObjectIcon,
+  layout: string,
+  type?: Type,
+): Promise<string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask }> {
   if (icon.format === "icon" && icon.name) {
     return await getCustomTypeIcon(icon.name, icon.color);
   }
@@ -59,25 +61,17 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
  * @param color The color of the icon.
  * @returns The base64 data URI of the icon.
  */
-export async function getCustomTypeIcon(name: string, color?: string): Promise<string> {
-  const iconDirectory = path.join(__dirname, "assets", "icons", "type");
-  const iconPath = path.join(iconDirectory, `${name}.svg`);
-
-  try {
-    let svgContent = fs.readFileSync(iconPath, "utf8");
-    svgContent = svgContent.replace(/fill="[^"]*"/g, "");
-
-    if (color) {
-      const fillColor = colorMap[color] ? colorMap[color] : colorMap.black;
-      svgContent = svgContent.replace(/<svg([^>]*)>/, `<svg$1 fill="${fillColor}">`);
-    }
-
-    const base64Content = Buffer.from(svgContent).toString("base64");
-    return `data:image/svg+xml;base64,${base64Content}`;
-  } catch (error) {
-    console.error(`Failed to read custom SVG icon: ${error}`);
-    return "";
-  }
+export async function getCustomTypeIcon(
+  name: string,
+  color?: string,
+): Promise<{ source: string; tintColor?: { light: string; dark: string } }> {
+  return {
+    source: `icons/type/${name}.svg`,
+    tintColor: {
+      light: colorMap[color || "grey"],
+      dark: colorMap[color || "grey"],
+    },
+  };
 }
 
 /**
