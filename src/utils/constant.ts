@@ -74,8 +74,8 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces/${spaceId}/lists/${listId}/objects`,
     method: "POST",
   }),
-  removeObjectsFromList: (spaceId: string, listId: string) => ({
-    url: `${apiUrl}/spaces/${spaceId}/lists/${listId}/objects`,
+  removeObjectsFromList: (spaceId: string, listId: string, objectId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/lists/${listId}/objects/${objectId}`,
     method: "DELETE",
   }),
 

@@ -31,8 +31,9 @@ export default async function tool({ spaceId, objectId }: Input) {
   }
 
   const results = {
-    id: object.id,
+    object: object.object,
     name: object.name,
+    id: object.id,
     spaceId: object.space_id,
     type: object.type,
     properties: object.properties,

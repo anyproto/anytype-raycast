@@ -57,6 +57,11 @@
       "description": "Get the content and properties of a specific object."
     },
     {
+      "name": "get-list-items",
+      "title": "Get List Items",
+      "description": "Get all objects in a specific list in a specific space."
+    },
+    {
       "name": "get-spaces",
       "title": "Get Spaces",
       "description": "Get all spaces in Anytype."
@@ -67,13 +72,18 @@
       "description": "Get types in a specific space."
     },
     {
+      "name": "remove-from-list",
+      "title": "Remove from List",
+      "description": "Remove an object from a specific list in a specific space."
+    },
+    {
       "name": "search-anytype",
-      "title": "Search Anytype",
+      "title": "Search in Anytype",
       "description": "Search for objects globally in all spaces."
     },
     {
       "name": "search-space",
-      "title": "Search Space",
+      "title": "Search in Space",
       "description": "Search for objects in a specific space."
     },
     {

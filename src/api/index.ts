@@ -16,5 +16,6 @@ export * from "./getToken";
 export * from "./getType";
 export * from "./getTypes";
 export * from "./globalSearch";
+export * from "./removeObjectsFromList";
 export * from "./search";
 export * from "./validateToken";

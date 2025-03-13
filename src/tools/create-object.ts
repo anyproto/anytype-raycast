@@ -62,7 +62,7 @@ type Input = {
  * When creating objects of type 'ot-bookmark', ensure the source URL is provided. The icon, name, and description should not be manually set, as they will be automatically populated upon fetching the URL.
  */
 export default async function tool({ spaceId, type_unique_key, name, icon, description, body, source }: Input) {
-  return createObject(spaceId, {
+  const { object } = await createObject(spaceId, {
     object_type_unique_key: type_unique_key,
     template_id: "", // not supported here
     name: name || "",
@@ -71,6 +71,20 @@ export default async function tool({ spaceId, type_unique_key, name, icon, descr
     body: body || "",
     source: source || "",
   });
+
+  if (!object) {
+    throw new Error("Failed to create object");
+  }
+
+  return {
+    object: object.object,
+    name: object.name,
+    id: object.id,
+    spaceId: object.space_id,
+    type: object.type,
+    snippet: object.snippet,
+    properties: object.properties,
+  };
 }
 
 export const confirmation: Tool.Confirmation<Input> = async (input) => {
