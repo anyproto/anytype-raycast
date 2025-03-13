@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { ObjectActions } from ".";
 import { useExport, useObject } from "../hooks";
-import { DisplaySpace, Property } from "../models";
+import { DisplaySpace, ExportFormat, Property } from "../models";
 
 type ObjectDetailProps = {
   space: DisplaySpace;
@@ -21,7 +21,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
   const { objectExport, objectExportError, isLoadingObjectExport, mutateObjectExport } = useExport(
     space.id,
     objectId,
-    "markdown",
+    ExportFormat.Markdown,
   );
 
   const [showDetails, setShowDetails] = useState(true);

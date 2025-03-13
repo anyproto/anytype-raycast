@@ -1,10 +1,10 @@
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
-import { Export, ObjectExport } from "../models";
+import { Export, ExportFormat, ObjectExport } from "../models";
 import { apiEndpoints, apiFetch } from "../utils";
 
-export async function getExport(spaceId: string, objectId: string, format: string): Promise<Export> {
+export async function getExport(spaceId: string, objectId: string, format: ExportFormat): Promise<Export> {
   const tmpdir = os.tmpdir();
   const { url, method } = apiEndpoints.getExport(spaceId, objectId, format);
 
