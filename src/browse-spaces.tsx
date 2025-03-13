@@ -1,4 +1,4 @@
-import { Icon, Image, List, Toast, showToast } from "@raycast/api";
+import { Icon, List, Toast, showToast } from "@raycast/api";
 import { useEffect, useMemo, useState } from "react";
 import { getMembers } from "./api";
 import { EmptyViewSpace, EnsureAuthenticated, SpaceListItem } from "./components";
@@ -88,11 +88,7 @@ function BrowseSpaces() {
               <SpaceListItem
                 key={space.id}
                 space={space}
-                icon={
-                  typeof space.icon === "string"
-                    ? { source: space.icon, mask: Image.Mask.RoundedRectangle }
-                    : (space.icon as { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask })
-                }
+                icon={space.icon}
                 accessories={[
                   { icon: Icon.Star, tooltip: "Pinned" },
                   {
@@ -119,11 +115,7 @@ function BrowseSpaces() {
               <SpaceListItem
                 key={space.id}
                 space={space}
-                icon={
-                  typeof space.icon === "string"
-                    ? { source: space.icon, mask: Image.Mask.RoundedRectangle }
-                    : (space.icon as { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask })
-                }
+                icon={space.icon}
                 accessories={[
                   {
                     icon: { source: "icons/type/person-circle.svg", tintColor: { light: "black", dark: "white" } },

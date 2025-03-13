@@ -9,5 +9,5 @@ export interface Template {
 }
 
 export interface DisplayTemplate extends Omit<Template, "icon"> {
-  icon: string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
+  icon: Image.ImageLike;
 }

@@ -1,4 +1,4 @@
-import { Icon, Image, List } from "@raycast/api";
+import { Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { ObjectActions } from ".";
 import { DisplayMember, DisplayObject, DisplaySpace, DisplayType } from "../models";
@@ -6,11 +6,11 @@ import { DisplayMember, DisplayObject, DisplaySpace, DisplayType } from "../mode
 type ObjectListItemProps = {
   space: DisplaySpace;
   objectId: string;
-  icon: string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
+  icon: Image.ImageLike;
   title: string;
   subtitle?: { value: string; tooltip: string };
   accessories?: {
-    icon?: Icon | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
+    icon?: Image.ImageLike;
     date?: Date;
     text?: string;
     tooltip?: string;
@@ -41,16 +41,12 @@ export function ObjectListItem({
     <List.Item
       title={title}
       subtitle={subtitle ? { value: subtitle.value, tooltip: subtitle.tooltip } : undefined}
-      icon={
-        typeof icon === "string"
-          ? { source: icon }
-          : (icon as { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask })
-      }
+      icon={icon}
       accessories={[
         ...(accessories?.map((accessory) => {
           const { icon, date, text, tooltip } = accessory;
           const accessoryProps: {
-            icon?: Icon | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
+            icon?: Image.ImageLike;
             date?: Date;
             text?: string;
             tooltip?: string;

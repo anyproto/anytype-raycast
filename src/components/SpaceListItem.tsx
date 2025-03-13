@@ -1,13 +1,13 @@
-import { Icon, Image, List } from "@raycast/api";
+import { Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { SpaceActions } from ".";
 import { DisplaySpace } from "../models";
 
 type SpaceListItemProps = {
   space: DisplaySpace;
-  icon: Image;
+  icon: Image.ImageLike;
   accessories?: {
-    icon?: Icon | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
+    icon?: Image.ImageLike;
     date?: Date;
     text?: string;
     tooltip?: string;
@@ -25,7 +25,7 @@ export function SpaceListItem({ space, icon, accessories, mutate, isPinned }: Sp
         ...(accessories?.map((accessory) => {
           const { icon, date, text, tooltip } = accessory;
           const accessoryProps: {
-            icon?: Icon | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
+            icon?: Image.ImageLike;
             date?: Date;
             text?: string;
             tooltip?: string;

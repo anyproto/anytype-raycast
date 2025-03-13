@@ -1,4 +1,4 @@
-import { Icon, Image, List, showToast, Toast } from "@raycast/api";
+import { Icon, List, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem } from ".";
@@ -96,7 +96,7 @@ export function ObjectList({ space }: ObjectListProps) {
       key: member.id,
       spaceId: space.id,
       id: member.id,
-      icon: { source: member.icon, mask: Image.Mask.Circle },
+      icon: member.icon,
       title: member.name,
       subtitle: { value: member.global_name, tooltip: `Global Name: ${member.global_name}` },
       accessories: [

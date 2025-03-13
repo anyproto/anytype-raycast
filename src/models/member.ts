@@ -12,5 +12,5 @@ export interface Member {
 }
 
 export interface DisplayMember extends Omit<Member, "icon"> {
-  icon: string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
+  icon: Image.ImageLike;
 }

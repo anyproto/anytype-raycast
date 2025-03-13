@@ -11,5 +11,5 @@ export interface Type {
 }
 
 export interface DisplayType extends Omit<Type, "icon"> {
-  icon: string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
+  icon: Image.ImageLike;
 }

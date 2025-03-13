@@ -1,8 +1,8 @@
-import { getPreferenceValues, Icon, Image } from "@raycast/api";
+import { getPreferenceValues, Icon } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { format } from "date-fns";
 import { DisplayMember, DisplayObject, DisplayType } from "../models";
-import { getDateLabel, getMaskForObject, getShortDateLabel } from "../utils";
+import { getDateLabel, getShortDateLabel } from "../utils";
 
 export function processObject(
   object: DisplayObject,
@@ -19,10 +19,7 @@ export function processObject(
     key: object.id,
     spaceId: object.space_id,
     id: object.id,
-    icon:
-      typeof object.icon === "string"
-        ? { source: object.icon, mask: getMaskForObject(object.icon, object.layout) }
-        : (object.icon as { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask }),
+    icon: object.icon,
     title: object.name,
     subtitle: {
       value: object.type.name,

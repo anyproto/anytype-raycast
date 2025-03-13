@@ -1,6 +1,5 @@
-import { Icon } from "@raycast/api";
 import { DisplaySpace, Space } from "../models";
-import { getFile } from "../utils";
+import { getIconWithFallback } from "../utils";
 
 /**
  * Map raw `Space` objects from the API into display-ready data (e.g., icon).
@@ -21,8 +20,7 @@ export async function mapSpaces(spaces: Space[]): Promise<DisplaySpace[]> {
  * @returns Display-ready `Space` object.
  */
 export async function mapSpace(space: Space): Promise<DisplaySpace> {
-  const icon =
-    space.icon.format === "file" && space.icon.file ? (await getFile(space.icon.file)) || Icon.BullsEye : Icon.BullsEye;
+  const icon = await getIconWithFallback(space.icon, "space");
 
   return {
     ...space,

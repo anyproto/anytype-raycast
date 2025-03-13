@@ -28,5 +28,5 @@ export interface Space {
 }
 
 export interface DisplaySpace extends Omit<Space, "icon"> {
-  icon: string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
+  icon: Image.ImageLike;
 }

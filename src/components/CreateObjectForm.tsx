@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Form, Icon, Image, popToRoot, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
 import { useForm } from "@raycast/utils";
 import { useState } from "react";
 import { addObjectsToList, createObject } from "../api";
@@ -149,16 +149,7 @@ export function CreateObjectForm({
         info="Select the space where the object will be created"
       >
         {spaces?.map((space) => (
-          <Form.Dropdown.Item
-            key={space.id}
-            value={space.id}
-            title={space.name}
-            icon={
-              typeof space.icon === "string"
-                ? { source: space.icon, mask: Image.Mask.RoundedRectangle }
-                : (space.icon as { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask })
-            }
-          />
+          <Form.Dropdown.Item key={space.id} value={space.id} title={space.name} icon={space.icon} />
         ))}
       </Form.Dropdown>
 

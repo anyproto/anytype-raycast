@@ -10,22 +10,20 @@ import { colorMap, iconWidth } from "./constant";
  * @param type The type of the object .
  * @returns The base64 data URI or Raycast Icon.
  */
-export async function getIconWithFallback(
-  icon: ObjectIcon,
-  layout: string,
-  type?: Type,
-): Promise<string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask }> {
+export async function getIconWithFallback(icon: ObjectIcon, layout: string, type?: Type): Promise<Image.ImageLike> {
   if (icon.format === "icon" && icon.name) {
     return await getCustomTypeIcon(icon.name, icon.color);
   }
 
   if (icon.format === "file" && icon.file) {
-    return (
-      (await getFile(icon.file)) ||
-      (type?.icon.format === "icon" && type?.icon.name
-        ? await getCustomTypeIcon(type.icon.name, "grey")
-        : await getCustomTypeIcon("document", "grey"))
-    );
+    const fileSource = await getFile(icon.file);
+    if (fileSource) {
+      return { source: fileSource, mask: getMaskForObject(icon.file, layout) };
+    }
+    if (type?.icon.format === "icon" && type?.icon.name) {
+      return await getCustomTypeIcon(type.icon.name, "grey");
+    }
+    return await getCustomTypeIcon("document", "grey");
   }
 
   if (icon.format === "emoji" && icon.emoji) {
@@ -50,6 +48,8 @@ export async function getIconWithFallback(
       return await getCustomTypeIcon("extension-puzzle", "grey");
     case "template":
       return await getCustomTypeIcon("copy", "grey");
+    case "space":
+      return Icon.BullsEye;
     default:
       return await getCustomTypeIcon("document", "grey");
   }
@@ -61,10 +61,7 @@ export async function getIconWithFallback(
  * @param color The color of the icon.
  * @returns The base64 data URI of the icon.
  */
-export async function getCustomTypeIcon(
-  name: string,
-  color?: string,
-): Promise<{ source: string; tintColor?: { light: string; dark: string } }> {
+export async function getCustomTypeIcon(name: string, color?: string): Promise<Image.ImageLike> {
   return {
     source: `icons/type/${name}.svg`,
     tintColor: {
@@ -118,7 +115,7 @@ export async function fetchWithTimeout(url: string, timeout: number): Promise<st
  * @param layout The layout of the object.
  * @returns The mask to use for the object.
  */
-export function getMaskForObject(icon: string, layout: string): Image.Mask {
+export function getMaskForObject(icon: Image.ImageLike, layout: string): Image.Mask {
   return (layout === "participant" || layout === "profile") && icon != Icon.Document
     ? Image.Mask.Circle
     : Image.Mask.RoundedRectangle;

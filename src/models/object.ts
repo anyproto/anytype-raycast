@@ -27,7 +27,7 @@ export interface SpaceObject {
 }
 
 export interface DisplayObject extends Omit<SpaceObject, "icon"> {
-  icon: string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask };
+  icon: Image.ImageLike;
 }
 
 export interface Block {

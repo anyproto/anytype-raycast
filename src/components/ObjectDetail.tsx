@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { ObjectActions } from ".";
 import { useExport, useObject } from "../hooks";
 import { DisplaySpace, Property } from "../models";
-import { getMaskForObject } from "../utils";
 
 type ObjectDetailProps = {
   space: DisplaySpace;
@@ -284,10 +283,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
                 <Detail.Metadata.TagList.Item
                   key={`${property.id}-${index}`}
                   text={objectItem.name || objectItem.id}
-                  icon={{
-                    source: objectItem.icon,
-                    mask: getMaskForObject(objectItem.icon, objectItem.layout),
-                  }}
+                  icon={objectItem.icon}
                   onAction={objectItem.layout !== "participant" ? handleAction : undefined}
                 />
               );

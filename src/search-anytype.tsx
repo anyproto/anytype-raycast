@@ -20,9 +20,7 @@ export default function Command() {
 function Search() {
   const [searchText, setSearchText] = useState("");
   const [objectTypes, setObjectTypes] = useState<string[]>([]);
-  const [spaceIcons, setSpaceIcons] = useState<
-    Map<string, string | { source: string; tintColor?: { light: string; dark: string }; mask?: Image.Mask }>
-  >(new Map());
+  const [spaceIcons, setSpaceIcons] = useState<Map<string, Image.ImageLike>>(new Map());
   const [filterType, setFilterType] = useState("all");
   const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
   const [uniqueKeysForTasks, setUniqueKeysForTasks] = useState<string[]>([]);
@@ -127,10 +125,7 @@ function Search() {
       accessories: [
         ...processedObject.accessories,
         {
-          icon: {
-            source: spaceIcon,
-            mask: Image.Mask.RoundedRectangle,
-          },
+          icon: spaceIcon,
           tooltip: `Space: ${spaces?.find((space) => space.id === object.space_id)?.name}`,
         },
       ],
