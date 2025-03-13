@@ -26,22 +26,40 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
 
   const [showDetails, setShowDetails] = useState(true);
   const properties = object?.properties || [];
-  const excludedPropertyIds = new Set(["added_date", "last_opened_date"]);
+  const excludedPropertyIds = new Set(["added_date", "last_opened_date", "last_modified_date", "last_modified_by"]);
   const additionalProperties = properties.filter((property) => !excludedPropertyIds.has(property.id));
 
-  const priorityOrder = ["description", "created_date", "created_by", "last_modified_date", "last_modified_by", "tag"];
-  const orderedProperties = additionalProperties.sort((a, b) => {
-    const aPriority = priorityOrder.indexOf(a.id);
-    const bPriority = priorityOrder.indexOf(b.id);
+  const formatOrder: { [key: string]: number } = {
+    text: 0,
+    number: 1,
+    select: 2,
+    multi_select: 3,
+    checkbox: 4,
+    phone: 5,
+    date: 6,
+    object: 7,
+    file: 8,
+    email: 9,
+    url: 10,
+  };
 
-    // If either property is in the priority list, use that order.
-    if (aPriority !== -1 || bPriority !== -1) {
-      if (aPriority === -1) return 1;
-      if (bPriority === -1) return -1;
-      return aPriority - bPriority;
+  const orderedProperties = additionalProperties.sort((a, b) => {
+    const aGroup = a.format;
+    const bGroup = b.format;
+    const aGroupOrder = formatOrder[aGroup] ?? 100;
+    const bGroupOrder = formatOrder[bGroup] ?? 100;
+
+    if (aGroupOrder !== bGroupOrder) {
+      return aGroupOrder - bGroupOrder;
     }
-    // Otherwise, sort alphabetically by the property type.
-    return a.format.localeCompare(b.format);
+
+    // For properties in the 'text' group, ensure that 'description' comes first
+    if (aGroup === "text" && bGroup === "text") {
+      if (a.id === "description" && b.id !== "description") return -1;
+      if (b.id === "description" && a.id !== "description") return 1;
+    }
+
+    return a.name.localeCompare(b.name);
   });
 
   useEffect(() => {
@@ -295,18 +313,10 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
     return null;
   }
 
-  function getGroup(propertyId: string, propertyFormat: string): string {
-    if (propertyId === "description") return "description";
-    if (["created_date", "created_by", "last_modified_date", "last_modified_by"].includes(propertyId))
-      return "modification";
-    if (["select", "multi_select"].includes(propertyFormat)) return "tags";
-    return "others";
-  }
-
   const renderedDetailComponents: JSX.Element[] = [];
   let previousGroup: string | null = null;
   orderedProperties.forEach((property) => {
-    const currentGroup = getGroup(property.id, property.format);
+    const currentGroup = property.format;
     const rendered = renderDetailMetadata(property);
     if (rendered) {
       if (previousGroup !== null && currentGroup !== previousGroup) {
