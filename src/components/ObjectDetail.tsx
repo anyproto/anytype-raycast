@@ -291,8 +291,8 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
           </Detail.Metadata.TagList>
         );
       }
-      return null;
     }
+    return null;
   }
 
   function getGroup(propertyId: string, propertyFormat: string): string {
