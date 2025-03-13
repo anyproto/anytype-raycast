@@ -54,7 +54,7 @@
     {
       "name": "get-object",
       "title": "Get Object",
-      "description": "Get the content of a specific object."
+      "description": "Get the content and properties of a specific object."
     },
     {
       "name": "get-spaces",

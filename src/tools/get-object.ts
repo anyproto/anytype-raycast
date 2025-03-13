@@ -1,3 +1,6 @@
+import { getExport, getObject } from "../api";
+import { ExportFormat } from "../models";
+
 type Input = {
   /**
    * The unique identifier of the space to get the object from.
@@ -18,6 +21,25 @@ type Input = {
  * that matches the specified ID.
  */
 export default async function tool({ spaceId, objectId }: Input) {
-  // TODO: Implement in-memory markdown export
-  return { spaceId, objectId };
+  const { object } = await getObject(spaceId, objectId);
+  const { markdown } = await getExport(spaceId, objectId, ExportFormat.Markdown);
+
+  if (!object) {
+    return {
+      markdown,
+    };
+  }
+
+  const results = {
+    id: object.id,
+    name: object.name,
+    spaceId: object.space_id,
+    type: object.type,
+    properties: object.properties,
+  };
+
+  return {
+    results,
+    markdown,
+  };
 }
