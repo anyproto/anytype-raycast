@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem } from ".";
 import { processObject } from "../helpers/object";
 import { useMembers, usePinnedMembers, usePinnedObjects, usePinnedTypes, useSearch, useTypes } from "../hooks";
-import { DisplayMember, DisplayObject, DisplayType } from "../models";
+import { DisplayMember, DisplayObject, DisplaySpace, DisplayType } from "../models";
 import { localStorageKeys, pluralize } from "../utils";
 
 type ObjectListProps = {
-  spaceId: string;
-  spaceName: string;
+  space: DisplaySpace;
 };
 
 export const CurrentView = {
@@ -18,25 +17,25 @@ export const CurrentView = {
   members: "members",
 } as const;
 
-export function ObjectList({ spaceId, spaceName }: ObjectListProps) {
+export function ObjectList({ space }: ObjectListProps) {
   const [currentView, setCurrentView] = useState<keyof typeof CurrentView>(CurrentView.objects);
   const [searchText, setSearchText] = useState("");
 
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
-    spaceId,
+    space.id,
     searchText,
     [],
   );
-  const { types, typesError, isLoadingTypes, mutateTypes, typesPagination } = useTypes(spaceId);
-  const { members, membersError, isLoadingMembers, mutateMembers, membersPagination } = useMembers(spaceId);
+  const { types, typesError, isLoadingTypes, mutateTypes, typesPagination } = useTypes(space.id);
+  const { members, membersError, isLoadingMembers, mutateMembers, membersPagination } = useMembers(space.id);
   const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects(
-    localStorageKeys.suffixForViewsPerSpace(spaceId, CurrentView.objects),
+    localStorageKeys.suffixForViewsPerSpace(space.id, CurrentView.objects),
   );
   const { pinnedTypes, pinnedTypesError, isLoadingPinnedTypes, mutatePinnedTypes } = usePinnedTypes(
-    localStorageKeys.suffixForViewsPerSpace(spaceId, CurrentView.types),
+    localStorageKeys.suffixForViewsPerSpace(space.id, CurrentView.types),
   );
   const { pinnedMembers, pinnedMembersError, isLoadingPinnedMembers, mutatePinnedMembers } = usePinnedMembers(
-    localStorageKeys.suffixForViewsPerSpace(spaceId, CurrentView.members),
+    localStorageKeys.suffixForViewsPerSpace(space.id, CurrentView.members),
   );
   const [pagination, setPagination] = useState(objectsPagination);
 
@@ -80,7 +79,7 @@ export function ObjectList({ spaceId, spaceName }: ObjectListProps) {
   const processType = (type: DisplayType, isPinned: boolean) => {
     return {
       key: type.id,
-      spaceId: spaceId,
+      spaceId: space.id,
       id: type.id,
       icon: type.icon,
       title: type.name,
@@ -95,7 +94,7 @@ export function ObjectList({ spaceId, spaceName }: ObjectListProps) {
   const processMember = (member: DisplayMember, isPinned: boolean) => {
     return {
       key: member.id,
-      spaceId: spaceId,
+      spaceId: space.id,
       id: member.id,
       icon: { source: member.icon, mask: Image.Mask.Circle },
       title: member.name,
@@ -184,7 +183,7 @@ export function ObjectList({ spaceId, spaceName }: ObjectListProps) {
       isLoading={isLoading}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder={`Search ${currentView}...`}
-      navigationTitle={`Browse ${spaceName}`}
+      navigationTitle={`Browse ${space.name}`}
       pagination={pagination}
       throttle={true}
       searchBarAccessory={
@@ -218,7 +217,7 @@ export function ObjectList({ spaceId, spaceName }: ObjectListProps) {
           {processedPinned.map((item) => (
             <ObjectListItem
               key={item.key}
-              spaceId={item.spaceId}
+              space={space}
               objectId={item.id}
               icon={item.icon}
               title={item.title}
@@ -242,7 +241,7 @@ export function ObjectList({ spaceId, spaceName }: ObjectListProps) {
           {processedRegular.map((item) => (
             <ObjectListItem
               key={item.key}
-              spaceId={item.spaceId}
+              space={space}
               objectId={item.id}
               icon={item.icon}
               title={item.title}
@@ -261,7 +260,7 @@ export function ObjectList({ spaceId, spaceName }: ObjectListProps) {
         <EmptyViewObject
           title={`No ${currentView.charAt(0).toUpperCase() + currentView.slice(1)} Found`}
           contextValues={{
-            space: spaceId,
+            space: space.id,
             name: searchText,
           }}
         />

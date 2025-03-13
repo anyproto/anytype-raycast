@@ -3,17 +3,18 @@ import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem } from ".";
 import { processObject } from "../helpers/object";
 import { useObjectsInList } from "../hooks";
+import { DisplaySpace } from "../models";
 import { pluralize } from "../utils";
 
 type CollectionListProps = {
-  spaceId: string;
+  space: DisplaySpace;
   listId: string;
 };
 
-export function CollectionList({ spaceId, listId }: CollectionListProps) {
+export function CollectionList({ space, listId }: CollectionListProps) {
   const [searchText, setSearchText] = useState("");
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useObjectsInList(
-    spaceId,
+    space.id,
     listId,
   );
 
@@ -45,7 +46,7 @@ export function CollectionList({ spaceId, listId }: CollectionListProps) {
           {filteredObjects.map((object) => (
             <ObjectListItem
               key={object.id}
-              spaceId={spaceId}
+              space={space}
               objectId={object.id}
               icon={object.icon}
               title={object.title}
@@ -64,7 +65,7 @@ export function CollectionList({ spaceId, listId }: CollectionListProps) {
         <EmptyViewObject
           title="No objects found"
           contextValues={{
-            space: spaceId,
+            space: space.id,
             list: listId,
             name: searchText,
           }}

@@ -3,11 +3,11 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { ObjectActions } from ".";
 import { useExport, useObject } from "../hooks";
-import { Property } from "../models";
+import { DisplaySpace, Property } from "../models";
 import { getMaskForObject } from "../utils";
 
 type ObjectDetailProps = {
-  spaceId: string;
+  space: DisplaySpace;
   objectId: string;
   title: string;
   viewType: string;
@@ -15,12 +15,12 @@ type ObjectDetailProps = {
   isPinned: boolean;
 };
 
-export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearch, isPinned }: ObjectDetailProps) {
+export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch, isPinned }: ObjectDetailProps) {
   const { push } = useNavigation();
   const { linkDisplay } = getPreferenceValues();
-  const { object, objectError, isLoadingObject, mutateObject } = useObject(spaceId, objectId);
+  const { object, objectError, isLoadingObject, mutateObject } = useObject(space.id, objectId);
   const { objectExport, objectExportError, isLoadingObjectExport, mutateObjectExport } = useExport(
-    spaceId,
+    space.id,
     objectId,
     "markdown",
   );
@@ -270,7 +270,7 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
               const handleAction = () => {
                 push(
                   <ObjectDetail
-                    spaceId={spaceId}
+                    space={space}
                     objectId={objectItem.id}
                     title={objectItem.name}
                     viewType={viewType}
@@ -334,6 +334,7 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
     <Detail
       markdown={objectExport?.markdown}
       isLoading={isLoadingObject || isLoadingObjectExport}
+      navigationTitle={!isGlobalSearch ? `Browse ${space.name}` : undefined}
       metadata={
         showDetails && renderedDetailComponents.length > 0 ? (
           <Detail.Metadata>{renderedDetailComponents}</Detail.Metadata>
@@ -341,7 +342,7 @@ export function ObjectDetail({ spaceId, objectId, title, viewType, isGlobalSearc
       }
       actions={
         <ObjectActions
-          spaceId={spaceId}
+          space={space}
           objectId={objectId}
           title={title}
           mutateObject={mutateObject}

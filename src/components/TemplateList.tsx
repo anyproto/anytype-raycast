@@ -3,25 +3,27 @@ import { useEffect, useState } from "react";
 import { CurrentView, EmptyViewObject, ObjectActions, ObjectListItem } from ".";
 import { processObject } from "../helpers/object";
 import { useSearch, useTemplates } from "../hooks";
-import { DisplayTemplate } from "../models";
+import { DisplaySpace, DisplayTemplate } from "../models";
 import { pluralize } from "../utils";
 
 type TemplatesListProps = {
-  spaceId: string;
+  space: DisplaySpace;
   typeId: string;
   isGlobalSearch: boolean;
   isPinned: boolean;
 };
 
-export function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned }: TemplatesListProps) {
+export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: TemplatesListProps) {
   const [searchText, setSearchText] = useState("");
   const { templates, templatesError, isLoadingTemplates, mutateTemplates, templatesPagination } = useTemplates(
-    spaceId,
+    space.id,
     typeId,
   );
-  const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(spaceId, searchText, [
-    typeId,
-  ]);
+  const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
+    space.id,
+    searchText,
+    [typeId],
+  );
 
   useEffect(() => {
     if (templatesError) {
@@ -50,6 +52,7 @@ export function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned }: Temp
       isLoading={isLoadingTemplates || isLoadingObjects}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder="Search templates and objects..."
+      navigationTitle={`Browse ${space.name}`}
       pagination={objectsPagination || templatesPagination}
       throttle={true}
     >
@@ -65,7 +68,7 @@ export function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned }: Temp
               icon={template.icon}
               actions={
                 <ObjectActions
-                  spaceId={spaceId}
+                  space={space}
                   objectId={template.id}
                   title={template.name}
                   mutateTemplates={mutateTemplates}
@@ -88,7 +91,7 @@ export function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned }: Temp
           {filteredObjects.map((object) => (
             <ObjectListItem
               key={object.key}
-              spaceId={object.spaceId}
+              space={space}
               objectId={object.id}
               icon={object.icon}
               title={object.title}
@@ -109,7 +112,7 @@ export function TemplateList({ spaceId, typeId, isGlobalSearch, isPinned }: Temp
         <EmptyViewObject
           title="No templates or objects found"
           contextValues={{
-            space: spaceId,
+            space: space.id,
             type: typeId,
             name: searchText,
           }}

@@ -1,5 +1,5 @@
 import { Icon, Image, List, showToast, Toast } from "@raycast/api";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { EmptyViewObject, EnsureAuthenticated, ObjectListItem } from "./components";
 import { processObject } from "./helpers/object";
 import { getAllTypesFromSpaces } from "./helpers/type";
@@ -111,6 +111,11 @@ function Search() {
     }
   }, [objectsError, spacesError, pinnedObjectsError]);
 
+  const spaceById = useMemo(() => {
+    if (!spaces) return new Map<string, (typeof spaces)[number]>();
+    return new Map(spaces.map((space) => [space.id, space]));
+  }, [spaces]);
+
   const processObjectWithSpaceIcon = (object: DisplayObject, isPinned: boolean) => {
     const spaceIcon = spaceIcons.get(object.space_id) || Icon.BullsEye;
     const processedObject = processObject(object, isPinned, mutateObjects, mutatePinnedObjects);
@@ -204,7 +209,7 @@ function Search() {
           {processedPinnedObjects.map((object) => (
             <ObjectListItem
               key={object.key}
-              spaceId={object.spaceId}
+              space={spaceById.get(object.spaceId)!}
               objectId={object.id}
               icon={object.icon}
               title={object.title}
@@ -225,7 +230,7 @@ function Search() {
           {processedRegularObjects.map((object) => (
             <ObjectListItem
               key={object.key}
-              spaceId={object.spaceId}
+              space={spaceById.get(object.spaceId)!}
               objectId={object.id}
               icon={object.icon}
               title={object.title}

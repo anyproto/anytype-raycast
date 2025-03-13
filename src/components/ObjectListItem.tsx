@@ -1,10 +1,10 @@
 import { Icon, Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { ObjectActions } from ".";
-import { DisplayMember, DisplayObject, DisplayType } from "../models";
+import { DisplayMember, DisplayObject, DisplaySpace, DisplayType } from "../models";
 
 type ObjectListItemProps = {
-  spaceId: string;
+  space: DisplaySpace;
   objectId: string;
   icon: string | { source: string; mask: Image.Mask };
   title: string;
@@ -24,7 +24,7 @@ type ObjectListItemProps = {
 };
 
 export function ObjectListItem({
-  spaceId,
+  space,
   objectId,
   icon,
   title,
@@ -62,7 +62,7 @@ export function ObjectListItem({
       ]}
       actions={
         <ObjectActions
-          spaceId={spaceId}
+          space={space}
           objectId={objectId}
           title={title}
           mutate={mutate}

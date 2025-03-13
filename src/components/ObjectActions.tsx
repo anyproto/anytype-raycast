@@ -13,11 +13,11 @@ import {
 import { MutatePromise } from "@raycast/utils";
 import { CollectionList, CurrentView, ObjectDetail, TemplateList } from ".";
 import { deleteObject } from "../api";
-import { DisplayMember, DisplayObject, DisplayTemplate, DisplayType, Export } from "../models";
+import { DisplayMember, DisplayObject, DisplaySpace, DisplayTemplate, DisplayType, Export } from "../models";
 import { addPinned, localStorageKeys, moveDownInPinned, moveUpInPinned, pluralize, removePinned } from "../utils";
 
 type ObjectActionsProps = {
-  spaceId: string;
+  space: DisplaySpace;
   objectId: string;
   title: string;
   objectExport?: Export;
@@ -35,7 +35,7 @@ type ObjectActionsProps = {
 };
 
 export function ObjectActions({
-  spaceId,
+  space,
   objectId,
   title,
   mutate,
@@ -52,10 +52,10 @@ export function ObjectActions({
   onToggleDetails,
 }: ObjectActionsProps) {
   const { primaryAction } = getPreferenceValues();
-  const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${spaceId}`;
+  const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${space.id}`;
   const pinSuffixForView = isGlobalSearch
     ? localStorageKeys.suffixForGlobalSearch
-    : localStorageKeys.suffixForViewsPerSpace(spaceId, viewType);
+    : localStorageKeys.suffixForViewsPerSpace(space.id, viewType);
   const isDetailView = objectExport !== undefined;
   const isCollection = layout === "collection";
   const isType = viewType === CurrentView.types;
@@ -97,7 +97,7 @@ export function ObjectActions({
 
     if (confirm) {
       try {
-        await deleteObject(spaceId, objectId);
+        await deleteObject(space.id, objectId);
         if (mutate) {
           for (const m of mutate) {
             await m();
@@ -128,7 +128,7 @@ export function ObjectActions({
   }
 
   async function handleMoveUpInFavorites() {
-    await moveUpInPinned(spaceId, objectId, pinSuffixForView);
+    await moveUpInPinned(space.id, objectId, pinSuffixForView);
     if (mutate) {
       for (const m of mutate) {
         await m();
@@ -141,7 +141,7 @@ export function ObjectActions({
   }
 
   async function handleMoveDownInFavorites() {
-    await moveDownInPinned(spaceId, objectId, pinSuffixForView);
+    await moveDownInPinned(space.id, objectId, pinSuffixForView);
     if (mutate) {
       for (const m of mutate) {
         await m();
@@ -156,9 +156,9 @@ export function ObjectActions({
 
   async function handlePin() {
     if (isPinned) {
-      await removePinned(spaceId, objectId, pinSuffixForView, title, getContextLabel());
+      await removePinned(space.id, objectId, pinSuffixForView, title, getContextLabel());
     } else {
-      await addPinned(spaceId, objectId, pinSuffixForView, title, getContextLabel());
+      await addPinned(space.id, objectId, pinSuffixForView, title, getContextLabel());
     }
     if (mutate) {
       for (const m of mutate) {
@@ -209,7 +209,7 @@ export function ObjectActions({
       title="Show Details"
       target={
         <ObjectDetail
-          spaceId={spaceId}
+          space={space}
           objectId={objectId}
           title={title}
           viewType={viewType}
@@ -239,7 +239,7 @@ export function ObjectActions({
           <Action.Push
             icon={Icon.List}
             title="View Collection"
-            target={<CollectionList spaceId={spaceId} listId={objectId} />}
+            target={<CollectionList space={space} listId={objectId} />}
           />
         )}
         {isType && (
@@ -247,7 +247,7 @@ export function ObjectActions({
             icon={Icon.BulletPoints}
             title="View Templates"
             target={
-              <TemplateList spaceId={spaceId} typeId={objectId} isGlobalSearch={isGlobalSearch} isPinned={isPinned} />
+              <TemplateList space={space} typeId={objectId} isGlobalSearch={isGlobalSearch} isPinned={isPinned} />
             }
           />
         )}
