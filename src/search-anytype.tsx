@@ -170,7 +170,7 @@ function Search() {
       pagination={objectsPagination}
       throttle={true}
       searchBarAccessory={
-        <List.Dropdown tooltip="Filter by kind or space" onChange={(newValue) => setFilterType(newValue)}>
+        <List.Dropdown tooltip="Filter by kind" onChange={(newValue) => setFilterType(newValue)}>
           <List.Dropdown.Item
             title="All"
             value="all"
