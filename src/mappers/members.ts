@@ -1,5 +1,5 @@
 import { DisplayMember, Member } from "../models";
-import { getCustomTypeIcon, getFile } from "../utils";
+import { getIconWithFallback } from "../utils";
 
 /**
  * Map raw `Member` objects from the API into display-ready data (e.g., icon).
@@ -20,10 +20,8 @@ export async function mapMembers(members: Member[]): Promise<DisplayMember[]> {
  * @returns The display-ready `Member` object.
  */
 export async function mapMember(member: Member): Promise<DisplayMember> {
-  const icon =
-    member.icon.format === "file" && member.icon.file
-      ? (await getFile(member.icon.file)) || (await getCustomTypeIcon("person-circle", "grey"))
-      : await getCustomTypeIcon("person-circle", "grey");
+  const icon = await getIconWithFallback(member.icon, "participant");
+
   return {
     ...member,
     name: member.name || "Untitled",
