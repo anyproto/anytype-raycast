@@ -241,7 +241,7 @@ export function ObjectActions({
           <Action.Push
             icon={Icon.List}
             title="View Collection"
-            target={<CollectionList space={space} listId={objectId} dataview={dataview} />}
+            target={<CollectionList space={space} listId={objectId} listName={title} dataview={dataview} />}
           />
         )}
         {isType && (

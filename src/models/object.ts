@@ -67,15 +67,15 @@ export interface Relation {
 }
 
 export interface Dataview {
-  view_list: View[];
+  views: View[];
 }
 
 export interface View {
   id: string;
   name: string;
   layout: ViewLayout;
-  filter_list: Filter[];
-  sort_list: Sort[];
+  filters: Filter[];
+  sorts: Sort[];
 }
 
 export enum ViewLayout {

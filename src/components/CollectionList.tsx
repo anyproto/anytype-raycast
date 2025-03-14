@@ -10,12 +10,13 @@ import { defaultTintColor } from "../utils/constant";
 type CollectionListProps = {
   space: Space;
   listId: string;
+  listName: string;
   dataview: Dataview | undefined;
 };
 
-export function CollectionList({ space, listId, dataview }: CollectionListProps) {
+export function CollectionList({ space, listId, listName, dataview }: CollectionListProps) {
   const [searchText, setSearchText] = useState("");
-  const [viewId, setViewId] = useState(dataview?.view_list[0].id || "");
+  const [viewId, setViewId] = useState(dataview?.views[0].id || "");
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useObjectsInList(
     space.id,
     listId,
@@ -58,11 +59,12 @@ export function CollectionList({ space, listId, dataview }: CollectionListProps)
       isLoading={isLoadingObjects}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder={"Search objects in list..."}
+      navigationTitle={`Browse ${listName}`}
       pagination={objectsPagination}
       throttle={true}
       searchBarAccessory={
         <List.Dropdown tooltip="Change view" onChange={(newValue) => setViewId(newValue)}>
-          {dataview?.view_list.map((view) => (
+          {dataview?.views.map((view) => (
             <List.Dropdown.Item key={view.id} value={view.id} title={view.name} icon={resolveLayoutIcon(view.layout)} />
           ))}
         </List.Dropdown>
