@@ -38,6 +38,8 @@ export interface Block {
   vertical_align: string;
   text: Text;
   file: File;
+  relation: Relation;
+  dataview: Dataview;
 }
 
 export interface Text {
@@ -58,6 +60,46 @@ export interface File {
   target_object_id: string;
   state: string;
   style: string;
+}
+
+export interface Relation {
+  id: string; // TODO: adjust with api changes
+}
+
+export interface Dataview {
+  view_list: View[];
+}
+
+export interface View {
+  id: string;
+  name: string;
+  layout: ViewLayout;
+  filter_list: Filter[];
+  sort_list: Sort[];
+}
+
+export enum ViewLayout {
+  Table = "table",
+  List = "list",
+  Gallery = "gallery",
+  Kanban = "kanban",
+  Calendar = "calendar",
+  Graph = "graph",
+}
+
+export interface Filter {
+  id: string;
+  relation_key: string;
+  format: string;
+  condition: string;
+  value: string;
+}
+
+export interface Sort {
+  id: string;
+  relation_key: string;
+  format: string;
+  sort_type: string;
 }
 
 export interface Property {

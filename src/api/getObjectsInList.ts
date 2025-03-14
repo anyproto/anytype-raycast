@@ -5,12 +5,13 @@ import { apiEndpoints, apiFetch } from "../utils";
 export async function getObjectsInList(
   spaceId: string,
   listId: string,
+  viewId: string,
   options: { offset: number; limit: number },
 ): Promise<{
   objects: SpaceObject[];
   pagination: Pagination;
 }> {
-  const { url, method } = apiEndpoints.getObjectsInList(spaceId, listId, options);
+  const { url, method } = apiEndpoints.getObjectsInList(spaceId, listId, viewId, options);
   const response = await apiFetch<PaginatedResponse<RawSpaceObject>>(url, { method: method });
 
   return {

@@ -83,6 +83,7 @@ export function ObjectList({ space }: ObjectListProps) {
       id: type.id,
       icon: type.icon,
       title: type.name,
+      dataview: undefined,
       subtitle: { value: "", tooltip: "" },
       accessories: [isPinned ? { icon: Icon.Star, tooltip: "Pinned" } : {}],
       mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<SpaceObject[] | Type[] | Member[]>],
@@ -98,6 +99,7 @@ export function ObjectList({ space }: ObjectListProps) {
       id: member.id,
       icon: member.icon,
       title: member.name,
+      dataview: undefined,
       subtitle: { value: member.global_name, tooltip: `Global Name: ${member.global_name}` },
       accessories: [
         ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
@@ -221,6 +223,7 @@ export function ObjectList({ space }: ObjectListProps) {
               objectId={item.id}
               icon={item.icon}
               title={item.title}
+              dataview={item.dataview}
               subtitle={item.subtitle}
               accessories={item.accessories}
               mutate={item.mutate}
@@ -245,6 +248,7 @@ export function ObjectList({ space }: ObjectListProps) {
               objectId={item.id}
               icon={item.icon}
               title={item.title}
+              dataview={item.dataview}
               subtitle={item.subtitle}
               accessories={item.accessories}
               mutate={item.mutate}

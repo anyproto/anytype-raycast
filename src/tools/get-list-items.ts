@@ -25,7 +25,8 @@ export default async function tool({ spaceId, listId }: Input) {
   let offset = 0;
 
   while (hasMore) {
-    const { objects, pagination } = await getObjectsInList(spaceId, listId, { offset, limit: apiLimitMax });
+    // TODO: replace viewId with the actual viewId at some point
+    const { objects, pagination } = await getObjectsInList(spaceId, listId, "", { offset, limit: apiLimitMax });
     allItems.push(...objects);
     hasMore = pagination.has_more;
     offset += apiLimitMax;

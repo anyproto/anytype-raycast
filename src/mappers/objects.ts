@@ -131,7 +131,7 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
   return {
     ...object,
     icon,
-    blocks: [], // remove blocks to improve performance
+    blocks: object.type?.unique_key !== "ot-collection" ? [] : object.blocks, // remove blocks for non-collection types
     name: object.name || object.snippet || "Untitled",
     type: object.type || "Unknown Type",
     properties: mappedProperties,

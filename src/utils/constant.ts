@@ -46,6 +46,7 @@ export const colorMap: { [key: string]: string } = {
   teal: "#0fc8ba",
   lime: "#5dd400",
 };
+export const defaultTintColor = { light: "black", dark: "white" };
 
 // API Endpoints
 export const apiEndpoints = {
@@ -66,8 +67,8 @@ export const apiEndpoints = {
   }),
 
   // lists
-  getObjectsInList: (spaceId: string, listId: string, options: { offset: number; limit: number }) => ({
-    url: `${apiUrl}/spaces/${spaceId}/lists/${listId}/objects${encodeQueryParams(options)}`,
+  getObjectsInList: (spaceId: string, listId: string, viewId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/lists/${listId}/${viewId}/objects${encodeQueryParams(options)}`,
     method: "GET",
   }),
   addObjectsToList: (spaceId: string, listId: string) => ({

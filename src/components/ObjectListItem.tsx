@@ -1,13 +1,14 @@
 import { Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { ObjectActions } from ".";
-import { Member, Space, SpaceObject, Type } from "../models";
+import { Dataview, Member, Space, SpaceObject, Type } from "../models";
 
 type ObjectListItemProps = {
   space: Space;
   objectId: string;
   icon: Image.ImageLike;
   title: string;
+  dataview: Dataview | undefined;
   subtitle?: { value: string; tooltip: string };
   accessories?: {
     icon?: Image.ImageLike;
@@ -28,6 +29,7 @@ export function ObjectListItem({
   objectId,
   icon,
   title,
+  dataview,
   subtitle,
   accessories,
   mutate,
@@ -65,6 +67,7 @@ export function ObjectListItem({
           space={space}
           objectId={objectId}
           title={title}
+          dataview={dataview}
           mutate={mutate}
           layout={layout}
           viewType={viewType}

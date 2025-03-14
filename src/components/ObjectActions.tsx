@@ -13,13 +13,14 @@ import {
 import { MutatePromise } from "@raycast/utils";
 import { CollectionList, CurrentView, ObjectDetail, TemplateList } from ".";
 import { deleteObject } from "../api";
-import { Export, Member, Space, SpaceObject, Template, Type } from "../models";
+import { Dataview, Export, Member, Space, SpaceObject, Template, Type } from "../models";
 import { addPinned, localStorageKeys, moveDownInPinned, moveUpInPinned, pluralize, removePinned } from "../utils";
 
 type ObjectActionsProps = {
   space: Space;
   objectId: string;
   title: string;
+  dataview?: Dataview | undefined;
   objectExport?: Export;
   mutate?: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
   mutateTemplates?: MutatePromise<Template[]>;
@@ -38,6 +39,7 @@ export function ObjectActions({
   space,
   objectId,
   title,
+  dataview,
   mutate,
   objectExport,
   mutateTemplates,
@@ -239,7 +241,7 @@ export function ObjectActions({
           <Action.Push
             icon={Icon.List}
             title="View Collection"
-            target={<CollectionList space={space} listId={objectId} />}
+            target={<CollectionList space={space} listId={objectId} dataview={dataview} />}
           />
         )}
         {isType && (

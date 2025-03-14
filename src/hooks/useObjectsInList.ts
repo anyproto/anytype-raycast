@@ -3,18 +3,18 @@ import { useMemo } from "react";
 import { getObjectsInList } from "../api";
 import { apiLimit } from "../utils";
 
-export function useObjectsInList(spaceId: string, listId: string) {
+export function useObjectsInList(spaceId: string, listId: string, viewId: string) {
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(
-    (spaceId: string, listId) => async (options: { page: number }) => {
+    (spaceId: string, listId: string, viewId: string) => async (options: { page: number }) => {
       const offset = options.page * apiLimit;
-      const response = await getObjectsInList(spaceId, listId, { offset, limit: apiLimit });
+      const response = await getObjectsInList(spaceId, listId, viewId, { offset, limit: apiLimit });
 
       return {
         data: response.objects,
         hasMore: response.pagination.has_more,
       };
     },
-    [spaceId, listId],
+    [spaceId, listId, viewId],
     {
       keepPreviousData: true,
     },
