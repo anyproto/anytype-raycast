@@ -4,7 +4,7 @@ import { getMembers } from "./api";
 import { EmptyViewSpace, EnsureAuthenticated, SpaceListItem } from "./components";
 import { usePinnedSpaces, useSpaces } from "./hooks";
 import { Space } from "./models";
-import { pluralize } from "./utils";
+import { defaultTintColor, pluralize } from "./utils";
 
 const searchPlaceholder = "Search spaces...";
 
@@ -92,7 +92,7 @@ function BrowseSpaces() {
                 accessories={[
                   { icon: Icon.Star, tooltip: "Pinned" },
                   {
-                    icon: { source: "icons/type/person-circle.svg", tintColor: { light: "black", dark: "white" } },
+                    icon: { source: "icons/type/person-circle.svg", tintColor: defaultTintColor },
                     text: memberCount.toString(),
                     tooltip: `Members: ${memberCount}`,
                   },
@@ -118,7 +118,7 @@ function BrowseSpaces() {
                 icon={space.icon}
                 accessories={[
                   {
-                    icon: { source: "icons/type/person-circle.svg", tintColor: { light: "black", dark: "white" } },
+                    icon: { source: "icons/type/person-circle.svg", tintColor: defaultTintColor },
                     text: memberCount.toString(),
                     tooltip: `Members: ${memberCount}`,
                   },

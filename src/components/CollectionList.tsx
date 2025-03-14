@@ -37,19 +37,19 @@ export function CollectionList({ space, listId, dataview }: CollectionListProps)
   const resolveLayoutIcon = (layout: string) => {
     switch (layout.toLowerCase()) {
       case ViewLayout.Table:
-        return { source: "icons/dataview/grid.svg", defaultTintColor };
+        return { source: "icons/dataview/grid.svg", tintColor: defaultTintColor };
       case ViewLayout.List:
-        return { source: "icons/dataview/list.svg", defaultTintColor };
+        return { source: "icons/dataview/list.svg", tintColor: defaultTintColor };
       case ViewLayout.Gallery:
-        return { source: "icons/dataview/gallery.svg", defaultTintColor };
+        return { source: "icons/dataview/gallery.svg", tintColor: defaultTintColor };
       case ViewLayout.Kanban:
-        return { source: "icons/dataview/kanban.svg", defaultTintColor };
+        return { source: "icons/dataview/kanban.svg", tintColor: defaultTintColor };
       case ViewLayout.Calendar:
-        return { source: "icons/dataview/calendar.svg", defaultTintColor };
+        return { source: "icons/dataview/calendar.svg", tintColor: defaultTintColor };
       case ViewLayout.Graph:
-        return { source: "icons/dataview/graph.svg", defaultTintColor };
+        return { source: "icons/dataview/graph.svg", tintColor: defaultTintColor };
       default:
-        return { source: Icon.AppWindowGrid3x3, defaultTintColor };
+        return { source: Icon.AppWindowGrid3x3, tintColor: defaultTintColor };
     }
   };
 

@@ -5,7 +5,7 @@ import { processObject } from "./helpers/object";
 import { getAllTypesFromSpaces } from "./helpers/type";
 import { useGlobalSearch, usePinnedObjects, useSpaces } from "./hooks";
 import { SpaceObject } from "./models";
-import { getShortDateLabel, localStorageKeys, pluralize } from "./utils";
+import { defaultTintColor, getShortDateLabel, localStorageKeys, pluralize } from "./utils";
 
 const searchBarPlaceholder = "Globally search objects across spaces...";
 
@@ -174,28 +174,28 @@ function Search() {
           <List.Dropdown.Item
             title="All"
             value="all"
-            icon={{ source: "icons/type/search.svg", tintColor: { light: "black", dark: "white" } }}
+            icon={{ source: "icons/type/search.svg", tintColor: defaultTintColor }}
           />
           <List.Dropdown.Section>
             <List.Dropdown.Item
               title="Pages"
               value="pages"
-              icon={{ source: "icons/type/document.svg", tintColor: { light: "black", dark: "white" } }}
+              icon={{ source: "icons/type/document.svg", tintColor: defaultTintColor }}
             />
             <List.Dropdown.Item
               title="Tasks"
               value="tasks"
-              icon={{ source: "icons/type/checkbox.svg", tintColor: { light: "black", dark: "white" } }}
+              icon={{ source: "icons/type/checkbox.svg", tintColor: defaultTintColor }}
             />
             <List.Dropdown.Item
               title="Lists"
               value="lists"
-              icon={{ source: "icons/type/layers.svg", tintColor: { light: "black", dark: "white" } }}
+              icon={{ source: "icons/type/layers.svg", tintColor: defaultTintColor }}
             />
             <List.Dropdown.Item
               title="Bookmarks"
               value="bookmarks"
-              icon={{ source: "icons/type/bookmark.svg", tintColor: { light: "black", dark: "white" } }}
+              icon={{ source: "icons/type/bookmark.svg", tintColor: defaultTintColor }}
             />
           </List.Dropdown.Section>
         </List.Dropdown>

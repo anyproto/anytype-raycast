@@ -5,7 +5,7 @@ import { EmptyViewObject, ObjectListItem } from ".";
 import { processObject } from "../helpers/object";
 import { useMembers, usePinnedMembers, usePinnedObjects, usePinnedTypes, useSearch, useTypes } from "../hooks";
 import { Member, Space, SpaceObject, Type } from "../models";
-import { localStorageKeys, pluralize } from "../utils";
+import { defaultTintColor, localStorageKeys, pluralize } from "../utils";
 
 type ObjectListProps = {
   space: Space;
@@ -196,17 +196,17 @@ export function ObjectList({ space }: ObjectListProps) {
           <List.Dropdown.Item
             title="Objects"
             value="objects"
-            icon={{ source: "icons/type/document.svg", tintColor: { light: "black", dark: "white" } }}
+            icon={{ source: "icons/type/document.svg", tintColor: defaultTintColor }}
           />
           <List.Dropdown.Item
             title="Types"
             value="types"
-            icon={{ source: "icons/type/extension-puzzle.svg", tintColor: { light: "black", dark: "white" } }}
+            icon={{ source: "icons/type/extension-puzzle.svg", tintColor: defaultTintColor }}
           />
           <List.Dropdown.Item
             title="Members"
             value="members"
-            icon={{ source: "icons/type/person.svg", tintColor: { light: "black", dark: "white" } }}
+            icon={{ source: "icons/type/person.svg", tintColor: defaultTintColor }}
           />
         </List.Dropdown>
       }
