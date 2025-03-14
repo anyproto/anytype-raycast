@@ -79,7 +79,7 @@ export interface View {
 }
 
 export enum ViewLayout {
-  Table = "table",
+  Grid = "grid",
   List = "list",
   Gallery = "gallery",
   Kanban = "kanban",
