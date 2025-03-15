@@ -73,7 +73,11 @@ export function ObjectList({ space }: ObjectListProps) {
   };
 
   const formatRole = (role: string) => {
-    return role.replace("Reader", "Viewer").replace("Writer", "Editor");
+    return role
+      .replace("reader", "Viewer")
+      .replace("writer", "Editor")
+      .replace("no_permissions", "No Permissions")
+      .replace("owner", "Owner");
   };
 
   const processType = (type: Type, isPinned: boolean) => {
