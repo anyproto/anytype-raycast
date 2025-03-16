@@ -99,30 +99,28 @@ export function SpaceActions({ space, mutate, isPinned }: SpaceActionsProps) {
         onAction={handleCopyLink}
       />
 
-      <ActionPanel.Section>
-        {isPinned && (
+      <Action
+        icon={isPinned ? Icon.StarDisabled : Icon.Star}
+        title={isPinned ? "Unpin Space" : "Pin Space"}
+        shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
+        onAction={handlePin}
+      />
+      {isPinned && (
+        <>
           <Action
             icon={Icon.ArrowUp}
             title="Move Up in Pinned" // eslint-disable-line @raycast/prefer-title-case
             shortcut={{ modifiers: ["opt", "cmd"], key: "arrowUp" }}
             onAction={handleMoveUpInFavorites}
           />
-        )}
-        {isPinned && (
           <Action
             icon={Icon.ArrowDown}
             title="Move Down in Pinned" // eslint-disable-line @raycast/prefer-title-case
             shortcut={{ modifiers: ["opt", "cmd"], key: "arrowDown" }}
             onAction={handleMoveDownInFavorites}
           />
-        )}
-        <Action
-          icon={isPinned ? Icon.StarDisabled : Icon.Star}
-          title={isPinned ? "Unpin Space" : "Pin Space"}
-          shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
-          onAction={handlePin}
-        />
-      </ActionPanel.Section>
+        </>
+      )}
 
       <ActionPanel.Section>
         <Action
