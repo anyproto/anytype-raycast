@@ -25,5 +25,5 @@ type Input = {
  * This function adds the specified object to the specified list.
  */
 export default async function tool({ spaceId, listId, objectId }: Input) {
-  return addObjectsToList(spaceId, listId, [objectId]);
+  return await addObjectsToList(spaceId, listId, [objectId]);
 }
