@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem } from ".";
 import { processObject } from "../helpers/object";
 import { useMembers, usePinnedMembers, usePinnedObjects, usePinnedTypes, useSearch, useTypes } from "../hooks";
-import { Member, MemberRole, Space, SpaceObject, Type } from "../models";
-import { defaultTintColor, localStorageKeys, pluralize } from "../utils";
+import { Member, MemberStatus, Space, SpaceObject, Type } from "../models";
+import { defaultTintColor, formatMemberRole, localStorageKeys, pluralize } from "../utils";
 
 type ObjectListProps = {
   space: Space;
@@ -72,14 +72,6 @@ export function ObjectList({ space }: ObjectListProps) {
     return items?.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
   };
 
-  const formatRole = (role: string) => {
-    return role
-      .replace(MemberRole.Reader, "Viewer")
-      .replace(MemberRole.Writer, "Editor")
-      .replace(MemberRole.Owner, "Owner")
-      .replace(MemberRole.NoPermissions, "No Permissions");
-  };
-
   const processType = (type: Type, isPinned: boolean) => {
     return {
       key: type.id,
@@ -91,6 +83,7 @@ export function ObjectList({ space }: ObjectListProps) {
       subtitle: { value: "", tooltip: "" },
       accessories: [isPinned ? { icon: Icon.Star, tooltip: "Pinned" } : {}],
       mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<SpaceObject[] | Type[] | Member[]>],
+      member: undefined,
       layout: "",
       isPinned,
     };
@@ -107,12 +100,17 @@ export function ObjectList({ space }: ObjectListProps) {
       subtitle: { value: member.global_name, tooltip: `Global Name: ${member.global_name}` },
       accessories: [
         ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
-        {
-          text: formatRole(member.role),
-          tooltip: `Role: ${formatRole(member.role)}`,
-        },
+        member.status === MemberStatus.Joining
+          ? {
+              tag: { value: "Join Request", color: "orange", tooltip: "Pending" },
+            }
+          : {
+              text: formatMemberRole(member.role),
+              tooltip: `Role: ${formatMemberRole(member.role)}`,
+            },
       ],
       mutate: [mutateMembers, mutatePinnedMembers as MutatePromise<SpaceObject[] | Type[] | Member[]>],
+      member: member,
       layout: "",
       isPinned,
     };
@@ -231,6 +229,7 @@ export function ObjectList({ space }: ObjectListProps) {
               subtitle={item.subtitle}
               accessories={item.accessories}
               mutate={item.mutate}
+              member={item.member}
               layout={item.layout}
               viewType={currentView}
               isGlobalSearch={false}
@@ -256,6 +255,7 @@ export function ObjectList({ space }: ObjectListProps) {
               subtitle={item.subtitle}
               accessories={item.accessories}
               mutate={item.mutate}
+              member={item.member}
               layout={item.layout}
               viewType={currentView}
               isGlobalSearch={false}

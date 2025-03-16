@@ -2,8 +2,8 @@ import { Image } from "@raycast/api";
 import { ObjectIcon } from "./icon";
 
 export interface UpdateMemberRequest {
-  status?: Extract<MemberStatus, MemberStatus.Active | MemberStatus.Removed | MemberStatus.Declined>;
-  role?: Extract<MemberRole, MemberRole.Reader | MemberRole.Writer>;
+  status?: UpdateMemberStatus;
+  role?: UpdateMemberRole;
 }
 
 export interface RawMember {
@@ -21,6 +21,18 @@ export interface Member extends Omit<RawMember, "icon"> {
   icon: Image.ImageLike;
 }
 
+export enum MemberStatus {
+  Active = "active",
+  Joining = "joining",
+  Removed = "removed",
+  Declined = "declined",
+}
+
+export type UpdateMemberStatus = Extract<
+  MemberStatus,
+  MemberStatus.Active | MemberStatus.Removed | MemberStatus.Declined
+>;
+
 export enum MemberRole {
   Reader = "reader",
   Writer = "writer",
@@ -28,9 +40,4 @@ export enum MemberRole {
   NoPermissions = "no_permissions",
 }
 
-export enum MemberStatus {
-  Active = "active",
-  Joining = "joining",
-  Removed = "removed",
-  Declined = "declined",
-}
+export type UpdateMemberRole = Extract<MemberRole, MemberRole.Reader | MemberRole.Writer>;

@@ -15,8 +15,10 @@ type ObjectListItemProps = {
     date?: Date;
     text?: string;
     tooltip?: string;
+    tag?: { value: string; color: string; tooltip: string };
   }[];
   mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
+  member: Member | undefined;
   layout: string;
   viewType: string;
   isGlobalSearch: boolean;
@@ -33,6 +35,7 @@ export function ObjectListItem({
   subtitle,
   accessories,
   mutate,
+  member,
   layout,
   viewType,
   isGlobalSearch,
@@ -52,12 +55,14 @@ export function ObjectListItem({
             date?: Date;
             text?: string;
             tooltip?: string;
+            tag?: { value: string; color: string; tooltip: string };
           } = {};
 
           if (icon) accessoryProps.icon = icon;
           if (date) accessoryProps.date = date;
           if (text) accessoryProps.text = text;
           if (tooltip) accessoryProps.tooltip = tooltip;
+          if (accessory.tag) accessoryProps.tag = accessory.tag;
 
           return accessoryProps;
         }) || []),
@@ -69,6 +74,7 @@ export function ObjectListItem({
           title={title}
           dataview={dataview}
           mutate={mutate}
+          member={member}
           layout={layout}
           viewType={viewType}
           isGlobalSearch={isGlobalSearch}

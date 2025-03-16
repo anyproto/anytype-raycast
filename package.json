@@ -44,7 +44,7 @@
     {
       "name": "approve-member",
       "title": "Approve Member",
-      "description": "Approve a member with a certain role in a specific space."
+      "description": "Approve a joining member with a certain role in a specific space."
     },
     {
       "name": "create-object",
@@ -52,9 +52,9 @@
       "description": "Create an object of a specific type in a specific space."
     },
     {
-      "name": "decline-member",
-      "title": "Decline Member",
-      "description": "Decline a member in a specific space."
+      "name": "reject-member",
+      "title": "Reject Member",
+      "description": "Reject a joining member request in a specific space."
     },
     {
       "name": "get-members",

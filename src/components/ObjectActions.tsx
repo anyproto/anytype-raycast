@@ -13,8 +13,28 @@ import {
 import { MutatePromise } from "@raycast/utils";
 import { CollectionList, CurrentView, ObjectDetail, TemplateList } from ".";
 import { deleteObject } from "../api";
-import { Dataview, Export, Member, Space, SpaceObject, Template, Type } from "../models";
-import { addPinned, localStorageKeys, moveDownInPinned, moveUpInPinned, pluralize, removePinned } from "../utils";
+import { updateMember } from "../api/updateMember";
+import {
+  Dataview,
+  Export,
+  Member,
+  MemberRole,
+  MemberStatus,
+  Space,
+  SpaceObject,
+  Template,
+  Type,
+  UpdateMemberRole,
+} from "../models";
+import {
+  addPinned,
+  formatMemberRole,
+  localStorageKeys,
+  moveDownInPinned,
+  moveUpInPinned,
+  pluralize,
+  removePinned,
+} from "../utils";
 
 type ObjectActionsProps = {
   space: Space;
@@ -27,6 +47,7 @@ type ObjectActionsProps = {
   mutateObject?: MutatePromise<SpaceObject | null | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;
   layout?: string;
+  member: Member | undefined;
   viewType: string;
   isGlobalSearch: boolean;
   isNoPinView: boolean;
@@ -46,6 +67,7 @@ export function ObjectActions({
   mutateObject,
   mutateExport,
   layout,
+  member,
   viewType,
   isGlobalSearch,
   isNoPinView,
@@ -61,6 +83,7 @@ export function ObjectActions({
   const isDetailView = objectExport !== undefined;
   const isCollection = layout === "collection";
   const isType = viewType === CurrentView.types;
+  const isMember = viewType === CurrentView.members;
 
   function getContextLabel(isSingular = true) {
     const labelMap: Record<string, string> = {
@@ -204,6 +227,110 @@ export function ObjectActions({
     }
   }
 
+  async function handleApproveMember(identity: string, name: string, role: UpdateMemberRole) {
+    try {
+      await updateMember(space.id, identity, { status: MemberStatus.Active, role });
+      if (mutate) {
+        for (const m of mutate) {
+          await m();
+        }
+      }
+      await showToast({
+        style: Toast.Style.Success,
+        title: `Member approved`,
+        message: `${name} has been approved as ${formatMemberRole(role)}.`,
+      });
+    } catch (error) {
+      await showToast({
+        style: Toast.Style.Failure,
+        title: `Failed to approve member`,
+        message: error instanceof Error ? error.message : "An unknown error occurred.",
+      });
+    }
+  }
+
+  async function handleRejectMember(identity: string, name: string, spaceName: string) {
+    const confirm = await confirmAlert({
+      title: `Reject Member`,
+      message: `Are you sure you want to reject ${name} from ${spaceName}?`,
+      icon: { source: Icon.XMarkCircleHalfDash, tintColor: Color.Red },
+    });
+
+    if (confirm) {
+      try {
+        await updateMember(space.id, identity, { status: MemberStatus.Declined });
+        if (mutate) {
+          for (const m of mutate) {
+            await m();
+          }
+        }
+        await showToast({
+          style: Toast.Style.Success,
+          title: "Member rejected",
+          message: `${name} has been rejected.`,
+        });
+      } catch (error) {
+        await showToast({
+          style: Toast.Style.Failure,
+          title: `Failed to reject member`,
+          message: error instanceof Error ? error.message : "An unknown error occurred.",
+        });
+      }
+    }
+  }
+
+  async function handleRemoveMember(identity: string, memberName: string, spaceName: string) {
+    const confirm = await confirmAlert({
+      title: `Remove Member`,
+      message: `Are you sure you want to remove ${memberName} from ${spaceName}?`,
+      icon: { source: Icon.RemovePerson, tintColor: Color.Red },
+    });
+
+    if (confirm) {
+      try {
+        await updateMember(space.id, identity, { status: MemberStatus.Removed });
+        if (mutate) {
+          for (const m of mutate) {
+            await m();
+          }
+        }
+        await showToast({
+          style: Toast.Style.Success,
+          title: "Member removed",
+          message: `${memberName} has been removed from ${spaceName}.`,
+        });
+      } catch (error) {
+        await showToast({
+          style: Toast.Style.Failure,
+          title: `Failed to remove member`,
+          message: error instanceof Error ? error.message : "An unknown error occurred.",
+        });
+      }
+    }
+  }
+
+  async function handleChangeMemberRole(identity: string, name: string, role: UpdateMemberRole) {
+    try {
+      await updateMember(space.id, identity, { status: MemberStatus.Active, role });
+      if (mutate) {
+        for (const m of mutate) {
+          await m();
+        }
+      }
+      await showToast({
+        style: Toast.Style.Success,
+        title: `Role changed`,
+        message: `${name} has been changed to ${formatMemberRole(role)}.`,
+      });
+    } catch (error) {
+      await showToast({
+        style: Toast.Style.Failure,
+        title: `Failed to change member role`,
+        message: error instanceof Error ? error.message : "An unknown error occurred.",
+      });
+    }
+  }
+
   const canShowDetails = !isType && !isCollection && !isDetailView;
   const showDetailsAction = canShowDetails && (
     <Action.Push
@@ -269,40 +396,90 @@ export function ObjectActions({
           shortcut={Keyboard.Shortcut.Common.CopyDeeplink}
           onAction={handleCopyLink}
         />
-        <Action
-          icon={Icon.Trash}
-          title={`Delete ${getContextLabel()}`}
-          style={Action.Style.Destructive}
-          shortcut={Keyboard.Shortcut.Common.Remove}
-          onAction={handleDeleteObject}
-        />
-      </ActionPanel.Section>
-      {!isDetailView && !isNoPinView && (
-        <ActionPanel.Section>
-          {isPinned && (
-            <Action
-              icon={Icon.ArrowUp}
-              title="Move Up in Pinned" // eslint-disable-line @raycast/prefer-title-case
-              shortcut={{ modifiers: ["opt", "cmd"], key: "arrowUp" }}
-              onAction={handleMoveUpInFavorites}
-            />
-          )}
-          {isPinned && (
-            <Action
-              icon={Icon.ArrowDown}
-              title="Move Down in Pinned" // eslint-disable-line @raycast/prefer-title-case
-              shortcut={{ modifiers: ["opt", "cmd"], key: "arrowDown" }}
-              onAction={handleMoveDownInFavorites}
-            />
-          )}
+        {isMember && member && member.role !== MemberRole.Owner && (
+          <>
+            {member?.status === MemberStatus.Joining && (
+              <>
+                <ActionPanel.Submenu icon={Icon.AddPerson} title="Approve Member">
+                  <Action
+                    icon={{ source: Icon.Pencil, tintColor: Color.Green }}
+                    title="Editor"
+                    onAction={() => handleApproveMember(member.identity, member.name, MemberRole.Writer)}
+                  />
+                  <Action
+                    icon={{ source: Icon.Eye, tintColor: Color.Green }}
+                    title="Viewer"
+                    onAction={() => handleApproveMember(member.identity, member.name, MemberRole.Reader)}
+                  />
+                </ActionPanel.Submenu>
+                <Action
+                  icon={Icon.XMarkCircleHalfDash}
+                  title="Reject Member"
+                  style={Action.Style.Destructive}
+                  onAction={() => handleRejectMember(member.identity, member.name, space.name)}
+                />
+              </>
+            )}
+            {member?.status === MemberStatus.Active && (
+              <>
+                <ActionPanel.Submenu icon={Icon.Replace} title="Change Role">
+                  <Action
+                    icon={{ source: Icon.Pencil, tintColor: Color.Green }}
+                    title="Editor"
+                    onAction={() => handleChangeMemberRole(member.identity, member.name, MemberRole.Writer)}
+                  />
+                  <Action
+                    icon={{ source: Icon.Eye, tintColor: Color.Green }}
+                    title="Viewer"
+                    onAction={() => handleChangeMemberRole(member.identity, member.name, MemberRole.Reader)}
+                  />
+                </ActionPanel.Submenu>
+                <Action
+                  icon={Icon.RemovePerson}
+                  title="Remove Member"
+                  style={Action.Style.Destructive}
+                  onAction={() => handleRemoveMember(member.identity, member.name, space.name)}
+                />
+              </>
+            )}
+          </>
+        )}
+        {!isMember && (
           <Action
-            icon={isPinned ? Icon.StarDisabled : Icon.Star}
-            title={isPinned ? "Unpin Object" : "Pin Object"}
-            shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
-            onAction={handlePin}
+            icon={Icon.Trash}
+            title={`Delete ${getContextLabel()}`}
+            style={Action.Style.Destructive}
+            shortcut={Keyboard.Shortcut.Common.Remove}
+            onAction={handleDeleteObject}
           />
-        </ActionPanel.Section>
-      )}
+        )}
+        {!isDetailView && !isNoPinView && (
+          <>
+            <Action
+              icon={isPinned ? Icon.StarDisabled : Icon.Star}
+              title={isPinned ? `Unpin ${getContextLabel()}` : `Pin ${getContextLabel()}`}
+              shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
+              onAction={handlePin}
+            />
+            {isPinned && (
+              <>
+                <Action
+                  icon={Icon.ArrowUp}
+                  title="Move Up in Pinned" // eslint-disable-line @raycast/prefer-title-case
+                  shortcut={{ modifiers: ["opt", "cmd"], key: "arrowUp" }}
+                  onAction={handleMoveUpInFavorites}
+                />
+                <Action
+                  icon={Icon.ArrowDown}
+                  title="Move Down in Pinned" // eslint-disable-line @raycast/prefer-title-case
+                  shortcut={{ modifiers: ["opt", "cmd"], key: "arrowDown" }}
+                  onAction={handleMoveDownInFavorites}
+                />
+              </>
+            )}
+          </>
+        )}
+      </ActionPanel.Section>
 
       <ActionPanel.Section>
         {isDetailView && (

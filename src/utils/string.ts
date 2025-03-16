@@ -1,4 +1,5 @@
 import { getPreferenceValues } from "@raycast/api";
+import { MemberRole } from "../models";
 
 /**
  * Simple utility for pluralizing words.
@@ -44,4 +45,15 @@ export function getShortDateLabel(): string {
     default:
       return "Date";
   }
+}
+
+/**
+ * Format the member role to readable representation.
+ */
+export function formatMemberRole(role: string): string {
+  return role
+    .replace(MemberRole.Reader, "Viewer")
+    .replace(MemberRole.Writer, "Editor")
+    .replace(MemberRole.Owner, "Owner")
+    .replace(MemberRole.NoPermissions, "No Permissions");
 }
