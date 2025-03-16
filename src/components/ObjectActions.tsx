@@ -47,7 +47,7 @@ type ObjectActionsProps = {
   mutateObject?: MutatePromise<SpaceObject | null | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;
   layout?: string;
-  member: Member | undefined;
+  member?: Member | undefined;
   viewType: string;
   isGlobalSearch: boolean;
   isNoPinView: boolean;
