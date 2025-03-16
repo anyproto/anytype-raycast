@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem } from ".";
 import { processObject } from "../helpers/object";
 import { useMembers, usePinnedMembers, usePinnedObjects, usePinnedTypes, useSearch, useTypes } from "../hooks";
-import { Member, Space, SpaceObject, Type } from "../models";
+import { Member, MemberRole, Space, SpaceObject, Type } from "../models";
 import { defaultTintColor, localStorageKeys, pluralize } from "../utils";
 
 type ObjectListProps = {
@@ -74,10 +74,10 @@ export function ObjectList({ space }: ObjectListProps) {
 
   const formatRole = (role: string) => {
     return role
-      .replace("reader", "Viewer")
-      .replace("writer", "Editor")
-      .replace("no_permissions", "No Permissions")
-      .replace("owner", "Owner");
+      .replace(MemberRole.Reader, "Viewer")
+      .replace(MemberRole.Writer, "Editor")
+      .replace(MemberRole.Owner, "Owner")
+      .replace(MemberRole.NoPermissions, "No Permissions");
   };
 
   const processType = (type: Type, isPinned: boolean) => {

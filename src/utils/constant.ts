@@ -131,6 +131,10 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces/${spaceId}/members${encodeQueryParams(options)}`,
     method: "GET",
   }),
+  updateMember: (spaceId: string, objectId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/members/${objectId}`,
+    method: "PATCH",
+  }),
 
   // types
   getType: (spaceId: string, typeId: string) => ({
