@@ -11,26 +11,28 @@ import { colorMap, iconWidth } from "./constant";
  * @returns The base64 data URI or Raycast Icon.
  */
 export async function getIconWithFallback(icon: ObjectIcon, layout: string, type?: RawType): Promise<Image.ImageLike> {
-  if (icon.format === "icon" && icon.name) {
-    return await getCustomTypeIcon(icon.name, icon.color);
-  }
-
-  if (icon.format === "file" && icon.file) {
-    const fileSource = await getFile(icon.file);
-    if (fileSource) {
-      return { source: fileSource, mask: getMaskForObject(icon.file, layout) };
+  if (icon && icon.format) {
+    if (icon.format === "icon" && icon.name) {
+      return await getCustomTypeIcon(icon.name, icon.color);
     }
-    if (type?.icon.format === "icon" && type?.icon.name) {
-      return await getCustomTypeIcon(type.icon.name, "grey");
+
+    if (icon.format === "file" && icon.file) {
+      const fileSource = await getFile(icon.file);
+      if (fileSource) {
+        return { source: fileSource, mask: getMaskForObject(icon.file, layout) };
+      }
+      if (type?.icon.format === "icon" && type?.icon.name) {
+        return await getCustomTypeIcon(type.icon.name, "grey");
+      }
+      return await getCustomTypeIcon("document", "grey");
     }
-    return await getCustomTypeIcon("document", "grey");
+
+    if (icon.format === "emoji" && icon.emoji) {
+      return icon.emoji;
+    }
   }
 
-  if (icon.format === "emoji" && icon.emoji) {
-    return icon.emoji;
-  }
-
-  if (type?.icon.format === "icon" && type.icon.name) {
+  if (type?.icon && type.icon.format === "icon" && type.icon.name) {
     return await getCustomTypeIcon(type?.icon.name, "grey");
   }
 

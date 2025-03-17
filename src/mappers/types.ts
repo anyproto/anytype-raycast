@@ -20,7 +20,7 @@ export async function mapType(type: RawType): Promise<Type> {
 
   return {
     ...type,
-    name: type.name.trim() || "Untitled", // empty string comes as \n
+    name: type.name?.trim() || "Untitled", // empty string comes as \n
     icon: icon,
   };
 }

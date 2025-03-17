@@ -19,7 +19,7 @@ export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject
         name: object.name || object.snippet || "Untitled",
         type: await mapType(object.type),
         blocks: object.type?.unique_key !== "ot-collection" ? [] : object.blocks, // remove blocks for non-collection types
-        details: object.properties?.filter((property) => property.id === sort) || [],
+        properties: object.properties?.filter((property) => property.id === sort) || [],
       };
     }),
   );
