@@ -1,4 +1,4 @@
-import { getPreferenceValues } from "@raycast/api";
+import { getPreferenceValues, Image } from "@raycast/api";
 import { MemberRole } from "../models";
 
 /**
@@ -56,4 +56,19 @@ export function formatMemberRole(role: string): string {
     .replace(MemberRole.Writer, "Editor")
     .replace(MemberRole.Owner, "Owner")
     .replace(MemberRole.NoPermissions, "No Permissions");
+}
+
+/**
+ * Injects an emoji into the first markdown heading if the emoji is valid.
+ *
+ * @param markdown The markdown content.
+ * @param icon The icon string to inject (if it's a valid emoji).
+ * @returns The updated markdown with the emoji injected into the heading.
+ */
+export function injectEmojiIntoHeading(markdown: string, icon?: Image.ImageLike): string {
+  if (typeof icon !== "string") return markdown;
+  const trimmedIcon = icon.trim();
+  // Check if the trimmed icon has exactly 2 code units (for surrogate pairs)
+  if (trimmedIcon.length !== 2) return markdown;
+  return markdown.replace(/^(#+) (.*)/, (_, hashes, heading) => `${hashes} ${trimmedIcon} ${heading}`);
 }

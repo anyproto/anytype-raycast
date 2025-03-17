@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { ObjectActions } from ".";
 import { useExport, useObject } from "../hooks";
 import { ExportFormat, Property, Space } from "../models";
+import { injectEmojiIntoHeading } from "../utils";
 
 type ObjectDetailProps = {
   space: Space;
@@ -28,6 +29,18 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
   const properties = object?.properties || [];
   const excludedPropertyIds = new Set(["added_date", "last_opened_date", "last_modified_date", "last_modified_by"]);
   const additionalProperties = properties.filter((property) => !excludedPropertyIds.has(property.id));
+
+  useEffect(() => {
+    if (objectError) {
+      showToast(Toast.Style.Failure, "Failed to fetch object", objectError.message);
+    }
+  }, [objectError]);
+
+  useEffect(() => {
+    if (objectExportError) {
+      showToast(Toast.Style.Failure, "Failed to fetch object as markdown", objectExportError.message);
+    }
+  }, [objectExportError]);
 
   const formatOrder: { [key: string]: number } = {
     text: 0,
@@ -61,18 +74,6 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
 
     return a.name.localeCompare(b.name);
   });
-
-  useEffect(() => {
-    if (objectError) {
-      showToast(Toast.Style.Failure, "Failed to fetch object", objectError.message);
-    }
-  }, [objectError]);
-
-  useEffect(() => {
-    if (objectExportError) {
-      showToast(Toast.Style.Failure, "Failed to fetch object as markdown", objectExportError.message);
-    }
-  }, [objectExportError]);
 
   function renderDetailMetadata(property: Property) {
     const titleText = property.name || property.id.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
@@ -327,9 +328,12 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
     }
   });
 
+  const markdown = objectExport?.markdown ?? "";
+  const updatedMarkdown = injectEmojiIntoHeading(markdown, object?.icon);
+
   return (
     <Detail
-      markdown={objectExport?.markdown}
+      markdown={updatedMarkdown}
       isLoading={isLoadingObject || isLoadingObjectExport}
       navigationTitle={!isGlobalSearch ? `Browse ${space.name}` : undefined}
       metadata={
