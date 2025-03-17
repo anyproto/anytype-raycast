@@ -16,7 +16,6 @@ export function processObject(
   const hasValidDate = date && new Date(date).getTime() !== 0;
 
   return {
-    key: object.id,
     spaceId: object.space_id,
     id: object.id,
     icon: object.icon,

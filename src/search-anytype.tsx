@@ -203,9 +203,9 @@ function Search() {
     >
       {processedPinnedObjects.length > 0 && (
         <List.Section title="Pinned" subtitle={subtitle}>
-          {processedPinnedObjects.map((object) => (
+          {processedPinnedObjects.map((object, index) => (
             <ObjectListItem
-              key={object.key}
+              key={`${object.id}-${index}`}
               space={spaceById.get(object.spaceId)!}
               objectId={object.id}
               icon={object.icon}
@@ -225,9 +225,9 @@ function Search() {
       )}
       {processedRegularObjects.length > 0 ? (
         <List.Section title={searchText ? "Search Results" : `${getShortDateLabel()} Recently`} subtitle={subtitle}>
-          {processedRegularObjects.map((object) => (
+          {processedRegularObjects.map((object, index) => (
             <ObjectListItem
-              key={object.key}
+              key={`${object.id}-${index}`}
               space={spaceById.get(object.spaceId)!}
               objectId={object.id}
               icon={object.icon}

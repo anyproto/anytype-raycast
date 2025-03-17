@@ -74,7 +74,6 @@ export function ObjectList({ space }: ObjectListProps) {
 
   const processType = (type: Type, isPinned: boolean) => {
     return {
-      key: type.id,
       spaceId: space.id,
       id: type.id,
       icon: type.icon,
@@ -91,7 +90,6 @@ export function ObjectList({ space }: ObjectListProps) {
 
   const processMember = (member: Member, isPinned: boolean) => {
     return {
-      key: member.id,
       spaceId: space.id,
       id: member.id,
       icon: member.icon,
@@ -220,7 +218,7 @@ export function ObjectList({ space }: ObjectListProps) {
         >
           {processedPinned.map((item) => (
             <ObjectListItem
-              key={item.key}
+              key={item.id}
               space={space}
               objectId={item.id}
               icon={item.icon}
@@ -246,7 +244,7 @@ export function ObjectList({ space }: ObjectListProps) {
         >
           {processedRegular.map((item) => (
             <ObjectListItem
-              key={item.key}
+              key={item.id}
               space={space}
               objectId={item.id}
               icon={item.icon}

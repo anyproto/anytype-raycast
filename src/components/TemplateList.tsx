@@ -90,7 +90,7 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
         >
           {filteredObjects.map((object) => (
             <ObjectListItem
-              key={object.key}
+              key={object.id}
               space={space}
               objectId={object.id}
               icon={object.icon}
