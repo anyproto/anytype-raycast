@@ -17,6 +17,7 @@ export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject
         icon: await getIconWithFallback(object.icon, object.layout, object.type),
         name: object.name || object.snippet || "Untitled",
         type: object.type || "Unknown Type",
+        blocks: object.type?.unique_key !== "ot-collection" ? [] : object.blocks, // remove blocks for non-collection types
         details: object.properties?.filter((property) => property.id === sort) || [],
       };
     }),
@@ -131,9 +132,9 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
   return {
     ...object,
     icon,
-    blocks: object.type?.unique_key !== "ot-collection" ? [] : object.blocks, // remove blocks for non-collection types
     name: object.name || object.snippet || "Untitled",
     type: object.type || "Unknown Type",
+    blocks: object.type?.unique_key !== "ot-collection" ? [] : object.blocks, // remove blocks for non-collection types
     properties: mappedProperties,
   };
 }
