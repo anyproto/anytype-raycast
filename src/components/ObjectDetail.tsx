@@ -88,7 +88,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
             color: property.text ? Color.PrimaryText : Color.SecondaryText,
           }}
           icon={{
-            source: property.id === "description" ? "icons/relation/description.svg" : "icons/relation/text.svg",
+            source: property.id === "description" ? "icons/property/description.svg" : "icons/property/text.svg",
             tintColor: { light: "grey", dark: "grey" },
           }}
         />
@@ -104,7 +104,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
             value: property.number ? String(property.number) : "No number",
             color: property.number ? Color.PrimaryText : Color.SecondaryText,
           }}
-          icon={{ source: "icons/relation/number.svg", tintColor: { light: "grey", dark: "grey" } }}
+          icon={{ source: "icons/property/number.svg", tintColor: { light: "grey", dark: "grey" } }}
         />
       );
     }
@@ -123,7 +123,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
             key={property.id}
             title={titleText}
             text={{ value: "No status", color: Color.SecondaryText }}
-            icon={{ source: "icons/relation/select.svg", tintColor: { light: "grey", dark: "grey" } }}
+            icon={{ source: "icons/property/select.svg", tintColor: { light: "grey", dark: "grey" } }}
           />
         );
       }
@@ -145,7 +145,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
             key={property.id}
             title={titleText}
             text={{ value: "No tags", color: Color.SecondaryText }}
-            icon={{ source: "icons/relation/multiselect.svg", tintColor: { light: "grey", dark: "grey" } }}
+            icon={{ source: "icons/property/multiselect.svg", tintColor: { light: "grey", dark: "grey" } }}
           />
         );
       }
@@ -160,7 +160,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
             value: property.date ? format(new Date(property.date), "MMMM d, yyyy") : "No date",
             color: property.date ? Color.PrimaryText : Color.SecondaryText,
           }}
-          icon={{ source: "icons/relation/date.svg", tintColor: { light: "grey", dark: "grey" } }}
+          icon={{ source: "icons/property/date.svg", tintColor: { light: "grey", dark: "grey" } }}
         />
       );
     }
@@ -181,7 +181,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
             key={property.id}
             title={titleText}
             text={{ value: "No files", color: Color.SecondaryText }}
-            icon={{ source: "icons/relation/file.svg", tintColor: { light: "grey", dark: "grey" } }}
+            icon={{ source: "icons/property/file.svg", tintColor: { light: "grey", dark: "grey" } }}
           />
         );
       }
@@ -194,7 +194,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
           title=""
           text={titleText}
           icon={{
-            source: property.checkbox ? "icons/relation/checkbox0.svg" : "icons/relation/checkbox1.svg",
+            source: property.checkbox ? "icons/property/checkbox0.svg" : "icons/property/checkbox1.svg",
           }}
         />
       );
@@ -208,7 +208,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
               key={property.id}
               title={titleText}
               text={property.url}
-              icon={{ source: "icons/relation/url.svg", tintColor: { light: "grey", dark: "grey" } }}
+              icon={{ source: "icons/property/url.svg", tintColor: { light: "grey", dark: "grey" } }}
             />
           );
         } else {
@@ -227,7 +227,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
             key={property.id}
             title={titleText}
             text={{ value: "No URL", color: Color.SecondaryText }}
-            icon={{ source: "icons/relation/url.svg", tintColor: { light: "grey", dark: "grey" } }}
+            icon={{ source: "icons/property/url.svg", tintColor: { light: "grey", dark: "grey" } }}
           />
         );
       }
@@ -241,7 +241,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
               key={property.id}
               title={titleText}
               text={property.email}
-              icon={{ source: "icons/relation/email.svg", tintColor: { light: "grey", dark: "grey" } }}
+              icon={{ source: "icons/property/email.svg", tintColor: { light: "grey", dark: "grey" } }}
             />
           );
         } else {
@@ -260,7 +260,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
             key={property.id}
             title={titleText}
             text={{ value: "No email address", color: Color.SecondaryText }}
-            icon={{ source: "icons/relation/email.svg", tintColor: { light: "grey", dark: "grey" } }}
+            icon={{ source: "icons/property/email.svg", tintColor: { light: "grey", dark: "grey" } }}
           />
         );
       }
@@ -275,7 +275,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
             value: property.phone ? property.phone : "No phone number",
             color: property.phone ? Color.PrimaryText : Color.SecondaryText,
           }}
-          icon={{ source: "icons/relation/phone.svg", tintColor: { light: "grey", dark: "grey" } }}
+          icon={{ source: "icons/property/phone.svg", tintColor: { light: "grey", dark: "grey" } }}
         />
       );
     }

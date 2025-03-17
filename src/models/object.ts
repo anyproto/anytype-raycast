@@ -39,7 +39,7 @@ export interface Block {
   vertical_align: string;
   text: Text;
   file: File;
-  relation: Relation;
+  property: Property;
   dataview: Dataview;
 }
 
@@ -61,10 +61,6 @@ export interface File {
   target_object_id: string;
   state: string;
   style: string;
-}
-
-export interface Relation {
-  id: string; // TODO: adjust with api changes
 }
 
 export interface Dataview {
@@ -90,7 +86,7 @@ export enum ViewLayout {
 
 export interface Filter {
   id: string;
-  relation_key: string;
+  property_key: string;
   format: string;
   condition: string;
   value: string;
@@ -98,7 +94,7 @@ export interface Filter {
 
 export interface Sort {
   id: string;
-  relation_key: string;
+  property_key: string;
   format: string;
   sort_type: string;
 }
