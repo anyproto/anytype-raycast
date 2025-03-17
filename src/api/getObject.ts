@@ -1,4 +1,5 @@
 import { mapObject } from "../mappers/objects";
+import { mapType } from "../mappers/types";
 import { RawSpaceObject, SpaceObject } from "../models";
 import { apiEndpoints, apiFetch, ErrorWithStatus, getIconWithFallback } from "../utils";
 
@@ -35,8 +36,9 @@ export async function getObjectWithoutMappedDetails(spaceId: string, objectId: s
 
     return {
       ...object,
-      name: object.name || "Untitled",
       icon,
+      name: object.name || "Untitled",
+      type: await mapType(object.type),
     };
   } catch (error) {
     if (error instanceof Error && error.message.includes("404")) {

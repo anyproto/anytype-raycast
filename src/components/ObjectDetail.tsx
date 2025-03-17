@@ -1,7 +1,7 @@
 import { Color, Detail, getPreferenceValues, showToast, Toast, useNavigation } from "@raycast/api";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { ObjectActions } from ".";
+import { ObjectActions, TemplateList } from ".";
 import { useExport, useObject } from "../hooks";
 import { ExportFormat, Property, Space } from "../models";
 import { injectEmojiIntoHeading } from "../utils";
@@ -327,6 +327,35 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
       previousGroup = currentGroup;
     }
   });
+
+  if (object?.type) {
+    const typeTag = (
+      <Detail.Metadata.TagList key="object-type" title="Type">
+        <Detail.Metadata.TagList.Item
+          key={object.type.id}
+          text={object.type.name}
+          icon={object.type.icon}
+          onAction={() => {
+            push(
+              <TemplateList
+                space={space}
+                typeId={object.type.id}
+                isGlobalSearch={isGlobalSearch}
+                isPinned={isPinned}
+              />,
+            );
+          }}
+        />
+      </Detail.Metadata.TagList>
+    );
+
+    const descIndex = renderedDetailComponents.findIndex((el) => el.key === "description");
+    if (descIndex >= 0) {
+      renderedDetailComponents.splice(descIndex + 1, 0, typeTag);
+    } else {
+      renderedDetailComponents.unshift(typeTag);
+    }
+  }
 
   const markdown = objectExport?.markdown ?? "";
   const updatedMarkdown = injectEmojiIntoHeading(markdown, object?.icon);

@@ -2,6 +2,7 @@ import { getPreferenceValues } from "@raycast/api";
 import { getObjectWithoutMappedDetails } from "../api";
 import { Property, RawSpaceObject, SpaceObject } from "../models";
 import { colorMap, getIconWithFallback } from "../utils";
+import { mapType } from "./types";
 
 /**
  * Efficiently map raw `SpaceObject` items to essential display-ready data.
@@ -16,7 +17,7 @@ export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject
         ...object,
         icon: await getIconWithFallback(object.icon, object.layout, object.type),
         name: object.name || object.snippet || "Untitled",
-        type: object.type || "Unknown Type",
+        type: await mapType(object.type),
         blocks: object.type?.unique_key !== "ot-collection" ? [] : object.blocks, // remove blocks for non-collection types
         details: object.properties?.filter((property) => property.id === sort) || [],
       };
@@ -133,7 +134,7 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
     ...object,
     icon,
     name: object.name || object.snippet || "Untitled",
-    type: object.type || "Unknown Type",
+    type: await mapType(object.type),
     blocks: object.type?.unique_key !== "ot-collection" ? [] : object.blocks, // remove blocks for non-collection types
     properties: mappedProperties,
   };

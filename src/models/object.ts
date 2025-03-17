@@ -1,6 +1,6 @@
 import { Image } from "@raycast/api";
 import { ObjectIcon } from "./icon";
-import { RawType } from "./type";
+import { RawType, Type } from "./type";
 
 export interface CreateObjectRequest {
   object_type_unique_key: string;
@@ -26,7 +26,8 @@ export interface RawSpaceObject {
   properties: Property[];
 }
 
-export interface SpaceObject extends Omit<RawSpaceObject, "icon"> {
+export interface SpaceObject extends Omit<RawSpaceObject, "icon" | "type"> {
+  type: Type;
   icon: Image.ImageLike;
 }
 
