@@ -120,7 +120,7 @@
   "ai": {
     "evals": [
       {
-        "input": "@anytype add all objects of type 'quick task' to my to-do list in my personal space",
+        "input": "@anytype add all objects of type 'quick task' to my 'to-do items' list in my personal space",
         "mocks": {
           "get-spaces": [
             {
@@ -133,7 +133,7 @@
             {
               "object": "type",
               "name": "Task",
-              "id": "type123",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1mm",
               "unique_key": "ot-task",
               "recommended_layout": "todo"
             }
@@ -154,7 +154,7 @@
             {
               "object": "object",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1qu",
-              "name": "To-Do List",
+              "name": "to-do items",
               "snippet": "This is the snippet of the list."
             }
           ],
@@ -162,19 +162,67 @@
         },
         "expected": [
           {
-            "callsTool": "get-spaces"
+            "callsTool": {
+              "name": "get-spaces",
+              "arguments": {}
+            }
           },
           {
-            "callsTool": "get-types"
+            "callsTool": {
+              "name": "get-types",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
+              }
+            }
           },
           {
-            "callsTool": "search-space"
+            "callsTool": {
+              "name": "search-space",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+                "query": {
+                  "or": [
+                    {
+                      "includes": "quick task"
+                    },
+                    {
+                      "includes": "to-do list"
+                    }
+                  ]
+                },
+                "types": {
+                  "or": [
+                    {
+                      "includes": "ot-task"
+                    },
+                    {
+                      "includes": [
+                        "ot-collection",
+                        "ot-set"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
           },
           {
-            "callsTool": "add-to-list"
+            "callsTool": {
+              "name": "add-to-list",
+              "arguments": {
+                "listId": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1qu",
+                "objectId": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac"
+              }
+            }
           },
           {
-            "callsTool": "add-to-list"
+            "callsTool": {
+              "name": "add-to-list",
+              "arguments": {
+                "listId": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1qu",
+                "objectId": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1tz"
+              }
+            }
           }
         ],
         "usedAsExample": true
@@ -214,13 +262,28 @@
         },
         "expected": [
           {
-            "callsTool": "get-spaces"
+            "callsTool": {
+              "name": "get-spaces",
+              "arguments": {}
+            }
           },
           {
-            "callsTool": "get-members"
+            "callsTool": {
+              "name": "get-members",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
+              }
+            }
           },
           {
-            "callsTool": "approve-member"
+            "callsTool": {
+              "name": "approve-member",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+                "memberIdentity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+                "role": "editor"
+              }
+            }
           }
         ],
         "usedAsExample": true
@@ -251,7 +314,7 @@
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ff",
               "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
               "type": {
-                "id": "type123",
+                "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1mm",
                 "name": "Page",
                 "unique_key": "ot-page"
               },
@@ -261,13 +324,30 @@
         },
         "expected": [
           {
-            "callsTool": "get-spaces"
+            "callsTool": {
+              "name": "get-spaces",
+              "arguments": {}
+            }
           },
           {
-            "callsTool": "get-types"
+            "callsTool": {
+              "name": "get-types",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
+              }
+            }
           },
           {
-            "callsTool": "create-object"
+            "callsTool": {
+              "name": "create-object",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+                "type_unique_key": "ot-page",
+                "name": {
+                  "includes": "Privacy"
+                }
+              }
+            }
           }
         ],
         "usedAsExample": true
@@ -305,10 +385,18 @@
         },
         "expected": [
           {
-            "callsTool": "get-spaces"
+            "callsTool": {
+              "name": "get-spaces",
+              "arguments": {}
+            }
           },
           {
-            "callsTool": "get-members"
+            "callsTool": {
+              "name": "get-members",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
+              }
+            }
           },
           {
             "includes": "2"
@@ -357,37 +445,47 @@
         },
         "expected": [
           {
-            "callsTool": "get-spaces"
+            "callsTool": {
+              "name": "get-spaces",
+              "arguments": {}
+            }
           },
           {
-            "callsTool": "search-space"
+            "callsTool": {
+              "name": "search-space",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+                "query": "recipes"
+              }
+            }
           },
           {
-            "callsTool": "get-list-items"
+            "callsTool": {
+              "name": "get-list-items",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+                "listId": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac"
+              }
+            }
           }
         ]
       },
       {
-        "input": "@anytype what's written in the 'privacy policy' page in my personal space?",
+        "input": "@anytype what's written in the 'privacy policy' page?",
         "mocks": {
-          "get-spaces": [
-            {
-              "object": "space",
-              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
-              "name": "My Personal Space"
-            }
-          ],
-          "search-space": [
+          "search-anytype": [
             {
               "object": "object",
               "name": "privacy policy",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac",
+              "space_id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
               "snippet": "This is the snippet of the object."
             },
             {
               "object": "object",
               "name": "terms of service",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc3djvdeqoydj23b6d7ou",
+              "space_id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
               "snippet": "This is the snippet of another object."
             }
           ],
@@ -396,6 +494,7 @@
               "object": "object",
               "name": "Privacy Policy",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac",
+              "space_id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
               "snippet": "This is the snippet of the object.",
               "markdown": "# Privacy Policy\n\n Our privacy policy is the following:\n 1. We don't share your data with third parties.\n 2..."
             }
@@ -403,13 +502,20 @@
         },
         "expected": [
           {
-            "callsTool": "get-spaces"
+            "callsTool": {
+              "name": "search-anytype",
+              "arguments": {
+                "query": "privacy policy"
+              }
+            }
           },
           {
-            "callsTool": "search-space"
-          },
-          {
-            "callsTool": "get-object"
+            "callsTool": {
+              "name": "get-object",
+              "arguments": {
+                "objectId": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac"
+              }
+            }
           },
           {
             "includes": "third parties"
@@ -430,7 +536,10 @@
         },
         "expected": [
           {
-            "callsTool": "get-spaces"
+            "callsTool": {
+              "name": "get-spaces",
+              "arguments": {}
+            }
           }
         ],
         "usedAsExample": true
@@ -457,10 +566,18 @@
         },
         "expected": [
           {
-            "callsTool": "get-spaces"
+            "callsTool": {
+              "name": "get-spaces",
+              "arguments": {}
+            }
           },
           {
-            "callsTool": "get-types"
+            "callsTool": {
+              "name": "get-types",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
+              }
+            }
           }
         ],
         "usedAsExample": true
@@ -500,13 +617,27 @@
         },
         "expected": [
           {
-            "callsTool": "get-spaces"
+            "callsTool": {
+              "name": "get-spaces",
+              "arguments": {}
+            }
           },
           {
-            "callsTool": "get-members"
+            "callsTool": {
+              "name": "get-members",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
+              }
+            }
           },
           {
-            "callsTool": "reject-member"
+            "callsTool": {
+              "name": "reject-member",
+              "arguments": {
+                "memberIdentity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
+              }
+            }
           }
         ],
         "usedAsExample": true
@@ -541,16 +672,40 @@
         },
         "expected": [
           {
-            "callsTool": "get-spaces"
+            "callsTool": {
+              "name": "get-spaces",
+              "arguments": {}
+            }
           },
           {
-            "callsTool": "search-space"
+            "callsTool": {
+              "name": "search-space",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+                "query": "recipe"
+              }
+            }
           },
           {
-            "callsTool": "get-list-items"
+            "callsTool": {
+              "name": "get-list-items",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+                "listId": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac"
+              }
+            }
           },
           {
-            "callsTool": "remove-from-list"
+            "callsTool": {
+              "name": "remove-from-list",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+                "listId": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac",
+                "objectIds": [
+                  "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac"
+                ]
+              }
+            }
           }
         ],
         "usedAsExample": true
@@ -589,13 +744,27 @@
         },
         "expected": [
           {
-            "callsTool": "get-spaces"
+            "callsTool": {
+              "name": "get-spaces",
+              "arguments": {}
+            }
           },
           {
-            "callsTool": "get-members"
+            "callsTool": {
+              "name": "get-members",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
+              }
+            }
           },
           {
-            "callsTool": "remove-member"
+            "callsTool": {
+              "name": "remove-member",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+                "memberIdentity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun"
+              }
+            }
           }
         ],
         "usedAsExample": true
@@ -608,7 +777,7 @@
               "object": "object",
               "name": "First Object",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc3djvdeqoydj23b6d7ou",
-              "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "space_id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
               "snippet": "This is the snippet of the object."
             },
             {
@@ -622,7 +791,10 @@
         },
         "expected": [
           {
-            "callsTool": "search-anytype"
+            "callsTool": {
+              "name": "search-anytype",
+              "arguments": {}
+            }
           }
         ],
         "usedAsExample": true
@@ -654,10 +826,21 @@
         },
         "expected": [
           {
-            "callsTool": "get-spaces"
+            "callsTool": {
+              "name": "get-spaces",
+              "arguments": {}
+            }
           },
           {
-            "callsTool": "search-space"
+            "callsTool": {
+              "name": "search-space",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+                "query": "",
+                "sort.direction": "desc",
+                "sort.timestamp": "last_modified_date"
+              }
+            }
           }
         ],
         "usedAsExample": true
@@ -697,13 +880,28 @@
         },
         "expected": [
           {
-            "callsTool": "get-spaces"
+            "callsTool": {
+              "name": "get-spaces",
+              "arguments": {}
+            }
           },
           {
-            "callsTool": "get-members"
+            "callsTool": {
+              "name": "get-members",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
+              }
+            }
           },
           {
-            "callsTool": "update-member"
+            "callsTool": {
+              "name": "update-member",
+              "arguments": {
+                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+                "memberIdentity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+                "role": "editor"
+              }
+            }
           }
         ],
         "usedAsExample": true
