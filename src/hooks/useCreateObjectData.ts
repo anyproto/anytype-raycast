@@ -2,7 +2,7 @@ import { showToast, Toast } from "@raycast/api";
 import { useCachedPromise } from "@raycast/utils";
 import { useEffect, useMemo, useState } from "react";
 import { CreateObjectFormValues } from "../create-object";
-import { fetchAllTemplatesForSpace, fetchAllTypesForSpace } from "../helpers/type";
+import { fetchAllTemplatesForSpace, fetchAllTypesForSpace } from "../utils";
 import { useSearch } from "./useSearch";
 import { useSpaces } from "./useSpaces";
 

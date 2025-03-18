@@ -2,10 +2,9 @@ import { Icon, List, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem } from ".";
-import { processObject } from "../helpers/object";
 import { useMembers, usePinnedMembers, usePinnedObjects, usePinnedTypes, useSearch, useTypes } from "../hooks";
 import { Member, MemberStatus, Space, SpaceObject, Type } from "../models";
-import { defaultTintColor, formatMemberRole, localStorageKeys, pluralize } from "../utils";
+import { defaultTintColor, formatMemberRole, localStorageKeys, pluralize, processObject } from "../utils";
 
 type ObjectListProps = {
   space: Space;

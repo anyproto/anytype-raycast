@@ -1,10 +1,9 @@
 import { List, showToast, Toast } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { CurrentView, EmptyViewObject, ObjectActions, ObjectListItem } from ".";
-import { processObject } from "../helpers/object";
 import { useSearch, useTemplates } from "../hooks";
 import { Space, Template } from "../models";
-import { pluralize } from "../utils";
+import { pluralize, processObject } from "../utils";
 
 type TemplatesListProps = {
   space: Space;

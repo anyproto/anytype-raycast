@@ -1,10 +1,9 @@
 import { Icon, List, showToast, Toast } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem } from ".";
-import { processObject } from "../helpers/object";
 import { useObjectsInList } from "../hooks";
 import { Dataview, Space, ViewLayout } from "../models";
-import { pluralize } from "../utils";
+import { pluralize, processObject } from "../utils";
 import { defaultTintColor } from "../utils/constant";
 
 type CollectionListProps = {
