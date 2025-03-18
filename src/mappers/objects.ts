@@ -32,7 +32,7 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
   const icon = await getIconWithFallback(object.icon, object.layout, object.type);
 
   const mappedProperties = await Promise.all(
-    object.properties.map(async (property) => {
+    (object.properties || []).map(async (property) => {
       let mappedProperty: Property = {
         id: property.id,
         name: property.name,

@@ -76,10 +76,10 @@ export function ObjectActions({
   onToggleDetails,
 }: ObjectActionsProps) {
   const { primaryAction } = getPreferenceValues();
-  const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${space.id}`;
+  const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${space?.id}`;
   const pinSuffixForView = isGlobalSearch
     ? localStorageKeys.suffixForGlobalSearch
-    : localStorageKeys.suffixForViewsPerSpace(space.id, viewType);
+    : localStorageKeys.suffixForViewsPerSpace(space?.id, viewType);
   const isDetailView = objectExport !== undefined;
   const isCollection = layout === "collection";
   const isType = viewType === CurrentView.types;
