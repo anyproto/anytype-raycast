@@ -368,6 +368,56 @@
         ]
       },
       {
+        "input": "@anytype what's written in the 'privacy policy' page in my personal space?",
+        "mocks": {
+          "get-spaces": [
+            {
+              "object": "space",
+              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "name": "My Personal Space"
+            }
+          ],
+          "search-space": [
+            {
+              "object": "object",
+              "name": "privacy policy",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac",
+              "snippet": "This is the snippet of the object."
+            },
+            {
+              "object": "object",
+              "name": "terms of service",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc3djvdeqoydj23b6d7ou",
+              "snippet": "This is the snippet of another object."
+            }
+          ],
+          "get-object": [
+            {
+              "object": "object",
+              "name": "Privacy Policy",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac",
+              "snippet": "This is the snippet of the object.",
+              "markdown": "# Privacy Policy\n\n Our privacy policy is the following:\n 1. We don't share your data with third parties.\n 2..."
+            }
+          ]
+        },
+        "expected": [
+          {
+            "callsTool": "get-spaces"
+          },
+          {
+            "callsTool": "search-space"
+          },
+          {
+            "callsTool": "get-object"
+          },
+          {
+            "includes": "third parties"
+          }
+        ],
+        "usedAsExample": true
+      },
+      {
         "input": "@anytype show all my spaces",
         "mocks": {
           "get-spaces": [
@@ -411,6 +461,141 @@
           },
           {
             "callsTool": "get-types"
+          }
+        ],
+        "usedAsExample": true
+      },
+      {
+        "input": "@anytype reject bob's request to join my personal space",
+        "mocks": {
+          "get-spaces": [
+            {
+              "object": "space",
+              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "name": "My Personal Space"
+            }
+          ],
+          "get-members": [
+            {
+              "object": "member",
+              "name": "Bob",
+              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "global_name": "bob",
+              "status": "pending",
+              "role": "no_permissions"
+            }
+          ],
+          "reject-member": [
+            {
+              "object": "member",
+              "name": "Bob",
+              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "global_name": "bob",
+              "status": "rejected",
+              "role": "no_permissions"
+            }
+          ]
+        },
+        "expected": [
+          {
+            "callsTool": "get-spaces"
+          },
+          {
+            "callsTool": "get-members"
+          },
+          {
+            "callsTool": "reject-member"
+          }
+        ],
+        "usedAsExample": true
+      },
+      {
+        "input": "@anytype remove the garlic pasta recipe from the 'recipe' list in my personal space",
+        "mocks": {
+          "get-spaces": [
+            {
+              "object": "space",
+              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "name": "My Personal Space"
+            }
+          ],
+          "search-space": [
+            {
+              "object": "object",
+              "name": "recipes",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac",
+              "snippet": "This is a collection of recipes."
+            }
+          ],
+          "get-list-items": [
+            {
+              "object": "object",
+              "name": "Garlic Pasta Recipe",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac",
+              "snippet": "This is the snippet of the object."
+            }
+          ],
+          "remove-from-list": []
+        },
+        "expected": [
+          {
+            "callsTool": "get-spaces"
+          },
+          {
+            "callsTool": "search-space"
+          },
+          {
+            "callsTool": "get-list-items"
+          },
+          {
+            "callsTool": "remove-from-list"
+          }
+        ],
+        "usedAsExample": true
+      },
+      {
+        "input": "@anytype remove bob from my personal space",
+        "mocks": {
+          "get-spaces": [
+            {
+              "object": "space",
+              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "name": "My Personal Space"
+            }
+          ],
+          "get-members": [
+            {
+              "object": "member",
+              "name": "Alice",
+              "id": "_participant_bafyreihliylimyqct7vbyc2jqsoanibku612jj4uwwhulx9tctb4qw346q_2lcu0r85yg10d_AAHTtt1wuQEnaYBNZ5Cyfcvs6DqPqxgn8KXDVa4avsUkMuha",
+              "identity": "AAHTtt1wuQEnaYBNZ5Cyfcvs6DqPqxgn8KXDVa4avsUkMuha",
+              "global_name": "alice",
+              "status": "active",
+              "role": "owner"
+            },
+            {
+              "object": "member",
+              "name": "Bob",
+              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "global_name": "bob",
+              "status": "active",
+              "role": "editor"
+            }
+          ],
+          "remove-member": []
+        },
+        "expected": [
+          {
+            "callsTool": "get-spaces"
+          },
+          {
+            "callsTool": "get-members"
+          },
+          {
+            "callsTool": "remove-member"
           }
         ],
         "usedAsExample": true
@@ -473,6 +658,52 @@
           },
           {
             "callsTool": "search-space"
+          }
+        ],
+        "usedAsExample": true
+      },
+      {
+        "input": "@anytype make bob an editor in my personal space",
+        "mocks": {
+          "get-spaces": [
+            {
+              "object": "space",
+              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "name": "My Personal Space"
+            }
+          ],
+          "get-members": [
+            {
+              "object": "member",
+              "name": "Bob",
+              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "global_name": "bob",
+              "status": "active",
+              "role": "viewer"
+            }
+          ],
+          "update-member": [
+            {
+              "object": "member",
+              "name": "Bob",
+              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "global_name": "bob",
+              "status": "active",
+              "role": "editor"
+            }
+          ]
+        },
+        "expected": [
+          {
+            "callsTool": "get-spaces"
+          },
+          {
+            "callsTool": "get-members"
+          },
+          {
+            "callsTool": "update-member"
           }
         ],
         "usedAsExample": true
