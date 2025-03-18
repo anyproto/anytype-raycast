@@ -16,7 +16,7 @@ type Input = {
   query: string;
 
   /**
-   * The types of objects to search for, identified by their id or unique_key.
+   * The types of objects to search for, identified by their unique_key or id.
    * This value can be obtained from the `getTypes` tool and must be called if users request to search for objects of a certain type.
    * When user asks for 'list' objects, search for 'ot-set' and 'ot-collection' types.
    * If no types are specified, the search will include all types of objects.
