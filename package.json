@@ -120,38 +120,40 @@
   "ai": {
     "evals": [
       {
-        "input": "@anytype add all objects of type 'task' to my to-do list in my personal space",
+        "input": "@anytype add all objects of type 'quick task' to my to-do list in my personal space",
         "mocks": {
           "get-spaces": [
             {
-              "id": "space123",
-              "name": "My Personal Space",
-              "icon": "🌌"
+              "object": "space",
+              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "name": "My Personal Space"
             }
           ],
           "get-types": [
             {
-              "id": "type123",
+              "object": "type",
               "name": "Task",
-              "icon": "📝"
+              "id": "type123",
+              "unique_key": "ot-task",
+              "recommended_layout": "todo"
             }
           ],
           "search-space": [
             {
-              "id": "task123",
-              "spaceId": "space123",
+              "object": "object",
               "name": "First Task",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac",
               "snippet": "This is the snippet of the task."
             },
             {
-              "id": "task456",
-              "spaceId": "space123",
+              "object": "object",
               "name": "Another Task",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1tz",
               "snippet": "This is the snippet of another task."
             },
             {
-              "id": "list123",
-              "spaceId": "space123",
+              "object": "object",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1qu",
               "name": "To-Do List",
               "snippet": "This is the snippet of the list."
             }
@@ -178,28 +180,81 @@
         "usedAsExample": true
       },
       {
+        "input": "@anytype approve bob as an editor in my personal space",
+        "mocks": {
+          "get-spaces": [
+            {
+              "object": "space",
+              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "name": "My Personal Space"
+            }
+          ],
+          "get-members": [
+            {
+              "object": "member",
+              "name": "Bob",
+              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "global_name": "bob",
+              "status": "pending",
+              "role": "no_permissions"
+            }
+          ],
+          "approve-member": [
+            {
+              "object": "member",
+              "name": "Bob",
+              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "global_name": "bob",
+              "status": "active",
+              "role": "editor"
+            }
+          ]
+        },
+        "expected": [
+          {
+            "callsTool": "get-spaces"
+          },
+          {
+            "callsTool": "get-members"
+          },
+          {
+            "callsTool": "approve-member"
+          }
+        ],
+        "usedAsExample": true
+      },
+      {
         "input": "@anytype create a new page in my personal space explaining the concept of privacy",
         "mocks": {
           "get-spaces": [
             {
-              "id": "space123",
-              "name": "My Personal Space",
-              "icon": "🌌"
+              "object": "space",
+              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "name": "My Personal Space"
             }
           ],
           "get-types": [
             {
-              "id": "type123",
+              "object": "type",
               "name": "Page",
-              "icon": "📄"
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1pp",
+              "unique_key": "ot-page",
+              "recommended_layout": "basic"
             }
           ],
           "create-object": [
             {
-              "id": "object123",
-              "spaceId": "space123",
-              "name": "First Page",
-              "icon": "📄",
+              "object": "object",
+              "name": "The Concept of Privacy",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ff",
+              "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "type": {
+                "id": "type123",
+                "name": "Page",
+                "unique_key": "ot-page"
+              },
               "snippet": "This is the snippet of the object."
             }
           ]
@@ -222,22 +277,28 @@
         "mocks": {
           "get-spaces": [
             {
-              "id": "space123",
-              "name": "My Personal Space",
-              "icon": "🌌"
+              "object": "space",
+              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "name": "My Personal Space"
             }
           ],
           "get-members": [
             {
-              "id": "member123",
+              "object": "member",
               "name": "Alice",
+              "id": "_participant_bafyreihliylimyqct7vbyc2jqsoanibku612jj4uwwhulx9tctb4qw346q_2lcu0r85yg10d_AAHTtt1wuQEnaYBNZ5Cyfcvs6DqPqxgn8KXDVa4avsUkMuha",
+              "identity": "AAHTtt1wuQEnaYBNZ5Cyfcvs6DqPqxgn8KXDVa4avsUkMuha",
               "global_name": "alice",
+              "status": "active",
               "role": "owner"
             },
             {
-              "id": "member456",
+              "object": "member",
               "name": "Bob",
+              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
+              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
               "global_name": "bob",
+              "status": "active",
               "role": "editor"
             }
           ]
@@ -256,13 +317,64 @@
         "usedAsExample": true
       },
       {
+        "input": "@anytype show all items in my list called 'recipes' in my personal space",
+        "mocks": {
+          "get-spaces": [
+            {
+              "object": "space",
+              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "name": "My Personal Space"
+            }
+          ],
+          "search-space": [
+            {
+              "object": "object",
+              "name": "recipes",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac",
+              "snippet": "This is a collection of recipes."
+            },
+            {
+              "object": "object",
+              "name": "Another List",
+              "id": "object456",
+              "snippet": "This is another list."
+            }
+          ],
+          "get-list-items": [
+            {
+              "object": "object",
+              "name": "First Recipe",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1ac",
+              "snippet": "This is the snippet of the object."
+            },
+            {
+              "object": "object",
+              "name": "Another Recipe",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc3djvdeqoydj23b6d7ou",
+              "snippet": "This is the snippet of another object."
+            }
+          ]
+        },
+        "expected": [
+          {
+            "callsTool": "get-spaces"
+          },
+          {
+            "callsTool": "search-space"
+          },
+          {
+            "callsTool": "get-list-items"
+          }
+        ]
+      },
+      {
         "input": "@anytype show all my spaces",
         "mocks": {
           "get-spaces": [
             {
-              "id": "space123",
-              "name": "My Personal Space",
-              "icon": "🌌"
+              "object": "space",
+              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "name": "My Personal Space"
             }
           ]
         },
@@ -278,16 +390,18 @@
         "mocks": {
           "get-spaces": [
             {
-              "id": "space123",
-              "name": "My Personal Space",
-              "icon": "🌌"
+              "object": "space",
+              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "name": "My Personal Space"
             }
           ],
           "get-types": [
             {
-              "id": "type123",
+              "object": "type",
               "name": "Page",
-              "icon": "📄"
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1pp",
+              "unique_key": "ot-page",
+              "recommended_layout": "basic"
             }
           ]
         },
@@ -306,17 +420,17 @@
         "mocks": {
           "search-anytype": [
             {
-              "id": "object123",
-              "spaceId": "space123",
+              "object": "object",
               "name": "First Object",
-              "icon": "📄",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc3djvdeqoydj23b6d7ou",
+              "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
               "snippet": "This is the snippet of the object."
             },
             {
-              "id": "object456",
-              "spaceId": "space345",
+              "object": "object",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc3djvdeqoydj23b6d1jd",
               "name": "Another Object",
-              "icon": "📜",
+              "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
               "snippet": "This is the snippet of another object."
             }
           ]
@@ -333,24 +447,22 @@
         "mocks": {
           "get-spaces": [
             {
-              "id": "space123",
-              "name": "My Personal Space",
-              "icon": "🌌"
+              "object": "space",
+              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
+              "name": "My Personal Space"
             }
           ],
           "search-space": [
             {
-              "id": "object123",
-              "spaceId": "space123",
+              "object": "object",
               "name": "First Object",
-              "icon": "📄",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc3djvdeqoydj23b6d7hh",
               "snippet": "This is the snippet of the object."
             },
             {
-              "id": "object456",
-              "spaceId": "space123",
+              "object": "object",
               "name": "Another Object",
-              "icon": "📜",
+              "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc3djvdeqoydj23b6d7kk",
               "snippet": "This is the snippet of another object."
             }
           ]
