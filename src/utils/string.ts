@@ -59,7 +59,7 @@ export function formatMemberRole(role: string): string {
 }
 
 /**
- * Injects an emoji into the first markdown heading if the emoji is valid.
+ * Injects an emoji into the first markdown heading if the emoji is valid sequence of one or more emoji characters.
  *
  * @param markdown The markdown content.
  * @param icon The icon string to inject (if it's a valid emoji).
@@ -68,7 +68,7 @@ export function formatMemberRole(role: string): string {
 export function injectEmojiIntoHeading(markdown: string, icon?: Image.ImageLike): string {
   if (typeof icon !== "string") return markdown;
   const trimmedIcon = icon.trim();
-  // Check if the trimmed icon has exactly 2 code units (for surrogate pairs)
-  if (trimmedIcon.length !== 2) return markdown;
+  const emojiRegex = /^(?:\p{Extended_Pictographic}(?:\p{Grapheme_Extend}|\u200D\p{Extended_Pictographic})*)+$/u;
+  if (!emojiRegex.test(trimmedIcon)) return markdown;
   return markdown.replace(/^(#+) (.*)/, (_, hashes, heading) => `${hashes} ${trimmedIcon} ${heading}`);
 }
