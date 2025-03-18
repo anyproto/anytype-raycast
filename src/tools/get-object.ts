@@ -35,7 +35,11 @@ export default async function tool({ spaceId, objectId }: Input) {
     name: object.name,
     id: object.id,
     spaceId: object.space_id,
-    type: object.type,
+    type: {
+      name: object.type.name,
+      id: object.type.id,
+      unique_key: object.type.unique_key,
+    },
     properties: object.properties,
   };
 

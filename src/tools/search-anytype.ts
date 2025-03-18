@@ -52,10 +52,15 @@ export default async function tool({ query, types, sort }: Input) {
   };
 
   const { data, pagination } = await globalSearch({ query, types, sort: sortOptions }, { offset: 0, limit: apiLimit });
-  const results = data.map(({ object, name, id, space_id, snippet }) => ({
+  const results = data.map(({ object, name, id, type, space_id, snippet }) => ({
     object,
     name,
     id,
+    type: {
+      name: type.name,
+      id: type.id,
+      unique_key: type.unique_key,
+    },
     space_id,
     snippet,
   }));

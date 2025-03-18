@@ -62,10 +62,15 @@ export default async function tool({ spaceId, query, types, sort }: Input) {
     { query, types, sort: sortOptions },
     { offset: 0, limit: apiLimit },
   );
-  const results = data.map(({ object, name, id, snippet }) => ({
+  const results = data.map(({ object, name, id, type, snippet }) => ({
     object,
     name,
     id,
+    type: {
+      name: type.name,
+      id: type.id,
+      unique_key: type.unique_key,
+    },
     snippet,
   }));
 
