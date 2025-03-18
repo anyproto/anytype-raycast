@@ -32,7 +32,7 @@ export default async function tool({ spaceId, listId }: Input) {
     offset += apiLimitMax;
   }
 
-  const results = allItems.map(({ object, name, id }) => ({ object, name, id }));
+  const results = allItems.map(({ object, name, id, snippet }) => ({ object, name, id, snippet }));
 
   return {
     results,

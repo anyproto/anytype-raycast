@@ -34,10 +34,10 @@ export type UpdateMemberStatus = Extract<
 >;
 
 export enum MemberRole {
-  Reader = "reader",
-  Writer = "writer",
+  Viewer = "viewer",
+  Editor = "editor",
   Owner = "owner",
   NoPermissions = "no_permissions",
 }
 
-export type UpdateMemberRole = Extract<MemberRole, MemberRole.Reader | MemberRole.Writer>;
+export type UpdateMemberRole = Extract<MemberRole, MemberRole.Viewer | MemberRole.Editor>;

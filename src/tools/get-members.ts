@@ -12,6 +12,7 @@ type Input = {
 /**
  * Retrieve a list of members in the specified space.
  * This function queries the specified space and returns a list of members.
+ * A status of 'joining' signifies that the member is requesting to join the space, whereas 'active' indicates they are already a member.
  */
 export default async function tool({ spaceId }: Input) {
   const allMembers = [];
@@ -24,11 +25,13 @@ export default async function tool({ spaceId }: Input) {
     hasMore = pagination.has_more;
     offset += apiLimitMax;
   }
-  const results = allMembers.map(({ object, name, id, global_name, role }) => ({
+  const results = allMembers.map(({ object, name, id, identity, global_name, status, role }) => ({
     object,
     name,
     id,
+    identity,
     global_name,
+    status,
     role,
   }));
 

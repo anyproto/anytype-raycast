@@ -49,7 +49,7 @@ export function ObjectListItem({
       icon={icon}
       accessories={[
         ...(accessories?.map((accessory) => {
-          const { icon, date, text, tooltip } = accessory;
+          const { icon, date, text, tooltip, tag } = accessory;
           const accessoryProps: {
             icon?: Image.ImageLike;
             date?: Date;
@@ -62,7 +62,7 @@ export function ObjectListItem({
           if (date) accessoryProps.date = date;
           if (text) accessoryProps.text = text;
           if (tooltip) accessoryProps.tooltip = tooltip;
-          if (accessory.tag) accessoryProps.tag = accessory.tag;
+          if (tag) accessoryProps.tag = accessory.tag;
 
           return accessoryProps;
         }) || []),

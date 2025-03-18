@@ -14,7 +14,6 @@ type Input = {
    * This value can be obtained from the `getTypes` tool.
    * When user asks for 'list' objects, search for 'ot-set' and 'ot-collection' types.
    * If no types are specified, the search will include all types of objects.
-   * Default value is an empty array.
    */
   types?: string[];
 
@@ -53,10 +52,11 @@ export default async function tool({ query, types, sort }: Input) {
   };
 
   const { data, pagination } = await globalSearch({ query, types, sort: sortOptions }, { offset: 0, limit: apiLimit });
-  const results = data.map(({ object, name, id, snippet }) => ({
+  const results = data.map(({ object, name, id, space_id, snippet }) => ({
     object,
     name,
     id,
+    space_id,
     snippet,
   }));
 

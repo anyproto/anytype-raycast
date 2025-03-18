@@ -404,12 +404,12 @@ export function ObjectActions({
                   <Action
                     icon={{ source: Icon.Pencil, tintColor: Color.Green }}
                     title="Editor"
-                    onAction={() => handleApproveMember(member.identity, member.name, MemberRole.Writer)}
+                    onAction={() => handleApproveMember(member.identity, member.name, MemberRole.Editor)}
                   />
                   <Action
                     icon={{ source: Icon.Eye, tintColor: Color.Green }}
                     title="Viewer"
-                    onAction={() => handleApproveMember(member.identity, member.name, MemberRole.Reader)}
+                    onAction={() => handleApproveMember(member.identity, member.name, MemberRole.Viewer)}
                   />
                 </ActionPanel.Submenu>
                 <Action
@@ -426,12 +426,12 @@ export function ObjectActions({
                   <Action
                     icon={{ source: Icon.Pencil, tintColor: Color.Green }}
                     title="Editor"
-                    onAction={() => handleChangeMemberRole(member.identity, member.name, MemberRole.Writer)}
+                    onAction={() => handleChangeMemberRole(member.identity, member.name, MemberRole.Editor)}
                   />
                   <Action
                     icon={{ source: Icon.Eye, tintColor: Color.Green }}
                     title="Viewer"
-                    onAction={() => handleChangeMemberRole(member.identity, member.name, MemberRole.Reader)}
+                    onAction={() => handleChangeMemberRole(member.identity, member.name, MemberRole.Viewer)}
                   />
                 </ActionPanel.Submenu>
                 <Action

@@ -52,8 +52,8 @@ export function getShortDateLabel(): string {
  */
 export function formatMemberRole(role: string): string {
   return role
-    .replace(MemberRole.Reader, "Viewer")
-    .replace(MemberRole.Writer, "Editor")
+    .replace(MemberRole.Viewer, "Viewer")
+    .replace(MemberRole.Editor, "Editor")
     .replace(MemberRole.Owner, "Owner")
     .replace(MemberRole.NoPermissions, "No Permissions");
 }
