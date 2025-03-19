@@ -837,8 +837,8 @@
               "arguments": {
                 "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
                 "query": "",
-                "sort.direction": "desc",
-                "sort.timestamp": "last_modified_date"
+                "sort.property": "last_modified_date",
+                "sort.direction": "desc"
               }
             }
           }
@@ -952,6 +952,10 @@
         {
           "title": "Last Opened Date",
           "value": "last_opened_date"
+        },
+        {
+          "title": "Name",
+          "value": "name"
         }
       ],
       "default": "last_modified_date",

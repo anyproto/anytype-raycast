@@ -1,5 +1,5 @@
 import { getPreferenceValues, Image } from "@raycast/api";
-import { MemberRole } from "../models";
+import { MemberRole, SortProperty } from "../models";
 
 /**
  * Simple utility for pluralizing words.
@@ -19,11 +19,11 @@ export function pluralize(
 export function getDateLabel(): string | undefined {
   const { sort } = getPreferenceValues();
   switch (sort) {
-    case "created_date":
+    case SortProperty.CreatedDate:
       return "Created Date";
-    case "last_modified_date":
+    case SortProperty.LastModifiedDate:
       return "Last Modified Date";
-    case "last_opened_date":
+    case SortProperty.LastOpenedDate:
       return "Last Opened Date";
     default:
       return undefined;
@@ -36,11 +36,11 @@ export function getDateLabel(): string | undefined {
 export function getShortDateLabel(): string {
   const { sort } = getPreferenceValues();
   switch (sort) {
-    case "created_date":
+    case SortProperty.CreatedDate:
       return "Created";
-    case "last_modified_date":
+    case SortProperty.LastModifiedDate:
       return "Modified";
-    case "last_opened_date":
+    case SortProperty.LastOpenedDate:
       return "Opened";
     default:
       return "Date";

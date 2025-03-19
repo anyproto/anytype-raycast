@@ -10,7 +10,7 @@ export function useGlobalSearch(query: string, types: string[]) {
     (query: string, types: string[]) => async (options: { page: number }) => {
       const offset = options.page * apiLimit;
       const response = await globalSearch(
-        { query, types, sort: { direction: SortDirection.Descending, timestamp: getPreferenceValues().sort } },
+        { query, types, sort: { property: getPreferenceValues().sort, direction: SortDirection.Ascending } },
         { offset, limit: apiLimit },
       );
 

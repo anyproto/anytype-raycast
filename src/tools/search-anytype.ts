@@ -1,5 +1,5 @@
 import { globalSearch } from "../api";
-import { SortDirection, SortTimestamp } from "../models";
+import { SortDirection, SortProperty } from "../models";
 import { apiLimit } from "../utils";
 
 type Input = {
@@ -31,10 +31,10 @@ type Input = {
 
     /**
      * The sorting field for the search results.
-     * This value can be "last_modified_date", "last_opened_date", or "created_date".
+     * This value can be "last_modified_date", "last_opened_date", "created_date" or "name".
      * Default value is "last_modified_date".
      */
-    timestamp?: SortTimestamp;
+    property?: SortProperty;
   };
 };
 
@@ -47,8 +47,8 @@ type Input = {
 export default async function tool({ query, types, sort }: Input) {
   types = types ?? [];
   const sortOptions = {
+    property: sort?.property ?? SortProperty.LastModifiedDate,
     direction: sort?.direction ?? SortDirection.Descending,
-    timestamp: sort?.timestamp ?? SortTimestamp.LastModifiedDate,
   };
 
   const { data, pagination } = await globalSearch({ query, types, sort: sortOptions }, { offset: 0, limit: apiLimit });

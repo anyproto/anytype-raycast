@@ -11,7 +11,7 @@ export function useSearch(spaceId: string, query: string, types: string[]) {
       const offset = options.page * apiLimit;
       const response = await search(
         spaceId,
-        { query, types, sort: { direction: SortDirection.Descending, timestamp: getPreferenceValues().sort } },
+        { query, types, sort: { property: getPreferenceValues().sort, direction: SortDirection.Descending } },
         { offset, limit: apiLimit },
       );
 
