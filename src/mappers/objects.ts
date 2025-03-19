@@ -1,6 +1,6 @@
 import { getPreferenceValues } from "@raycast/api";
 import { getObjectWithoutMappedDetails } from "../api";
-import { Property, RawSpaceObject, SpaceObject } from "../models";
+import { Property, RawSpaceObject, SortProperty, SpaceObject } from "../models";
 import { colorMap, getIconWithFallback } from "../utils";
 import { mapType } from "./types";
 
@@ -19,7 +19,13 @@ export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject
         name: object.name || object.snippet || "Untitled",
         type: await mapType(object.type),
         blocks: object.type?.unique_key !== "ot-collection" ? [] : object.blocks, // remove blocks for non-collection types
-        properties: object.properties?.filter((property) => property.id === sort) || [],
+        properties: object.properties?.filter((property) => {
+          if (sort === SortProperty.Name) {
+            // When sorting by name, keep the 'LastModifiedDate' property for tooltip purposes
+            return property.id === SortProperty.LastModifiedDate;
+          }
+          return property.id === sort;
+        }),
       };
     }),
   );

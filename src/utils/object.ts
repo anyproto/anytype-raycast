@@ -1,7 +1,7 @@
 import { getPreferenceValues, Icon } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { format } from "date-fns";
-import { Member, SpaceObject, Type } from "../models";
+import { Member, SortProperty, SpaceObject, Type } from "../models";
 import { getDateLabel, getShortDateLabel } from "../utils";
 
 export function processObject(
@@ -11,9 +11,15 @@ export function processObject(
   mutatePinnedObjects?: MutatePromise<SpaceObject[] | Type[] | Member[]>,
 ) {
   const { sort } = getPreferenceValues();
-  const dateProperty = object.properties.find((property) => property.id === sort);
+  // If sort is 'Name', fall back to using 'LastModifiedDate' for date details
+  const sortForDate = sort === SortProperty.Name ? SortProperty.LastModifiedDate : sort;
+  const dateProperty = object.properties.find((property) => property.id === sortForDate);
   const date = dateProperty && dateProperty.date ? dateProperty.date : undefined;
   const hasValidDate = date && new Date(date).getTime() !== 0;
+
+  // Use proper labels: if sort is 'Name', use Last Modified labels
+  const label = sort === SortProperty.Name ? "Last Modified Date" : getDateLabel();
+  const shortLabel = sort === SortProperty.Name ? "Modified" : getShortDateLabel();
 
   return {
     spaceId: object.space_id,
@@ -30,8 +36,8 @@ export function processObject(
       {
         date: hasValidDate ? new Date(date) : undefined,
         tooltip: hasValidDate
-          ? `${getDateLabel()}: ${format(new Date(date), "EEEE d MMMM yyyy 'at' HH:mm")}`
-          : `Never ${getShortDateLabel()}`,
+          ? `${label}: ${format(new Date(date), "EEEE d MMMM yyyy 'at' HH:mm")}`
+          : `Never ${shortLabel}`,
         text: hasValidDate ? undefined : "—",
       },
     ],

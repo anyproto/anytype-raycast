@@ -9,8 +9,11 @@ export function useGlobalSearch(query: string, types: string[]) {
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     (query: string, types: string[]) => async (options: { page: number }) => {
       const offset = options.page * apiLimit;
+      const sortPreference = getPreferenceValues().sort;
+      const sortDirection = sortPreference === "name" ? SortDirection.Ascending : SortDirection.Descending;
+
       const response = await globalSearch(
-        { query, types, sort: { property: getPreferenceValues().sort, direction: SortDirection.Ascending } },
+        { query, types, sort: { property: sortPreference, direction: sortDirection } },
         { offset, limit: apiLimit },
       );
 

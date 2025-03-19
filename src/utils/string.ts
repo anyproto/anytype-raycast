@@ -16,7 +16,7 @@ export function pluralize(
 /**
  * Get the label for the date field based on the sort preference.
  */
-export function getDateLabel(): string | undefined {
+export function getDateLabel(): string {
   const { sort } = getPreferenceValues();
   switch (sort) {
     case SortProperty.CreatedDate:
@@ -26,7 +26,7 @@ export function getDateLabel(): string | undefined {
     case SortProperty.LastOpenedDate:
       return "Last Opened Date";
     default:
-      return undefined;
+      return "";
   }
 }
 
@@ -43,8 +43,22 @@ export function getShortDateLabel(): string {
     case SortProperty.LastOpenedDate:
       return "Opened";
     default:
-      return "Date";
+      return "";
   }
+}
+
+/**
+ * Get the section title based on the search text and sort preference.
+ */
+export function getSectionTitle(searchText: string): string {
+  const { sort } = getPreferenceValues();
+  if (searchText) {
+    return "Search Results";
+  }
+  if (sort === SortProperty.Name) {
+    return "Alphabetical Order";
+  }
+  return `${getShortDateLabel()} Recently`;
 }
 
 /**

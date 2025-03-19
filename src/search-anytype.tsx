@@ -6,7 +6,7 @@ import { SpaceObject } from "./models";
 import {
   defaultTintColor,
   getAllTypesFromSpaces,
-  getShortDateLabel,
+  getSectionTitle,
   localStorageKeys,
   pluralize,
   processObject,
@@ -229,7 +229,7 @@ function Search() {
         </List.Section>
       )}
       {processedRegularObjects.length > 0 ? (
-        <List.Section title={searchText ? "Search Results" : `${getShortDateLabel()} Recently`} subtitle={subtitle}>
+        <List.Section title={getSectionTitle(searchText)} subtitle={subtitle}>
           {processedRegularObjects.map((object, index) => (
             <ObjectListItem
               key={`${object.id}-${index}`}
