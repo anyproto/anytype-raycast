@@ -134,7 +134,7 @@
               "object": "type",
               "name": "Task",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1mm",
-              "unique_key": "ot-task",
+              "type_key": "ot-task",
               "recommended_layout": "todo"
             }
           ],
@@ -303,7 +303,7 @@
               "object": "type",
               "name": "Page",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1pp",
-              "unique_key": "ot-page",
+              "type_key": "ot-page",
               "recommended_layout": "basic"
             }
           ],
@@ -316,7 +316,7 @@
               "type": {
                 "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1mm",
                 "name": "Page",
-                "unique_key": "ot-page"
+                "type_key": "ot-page"
               },
               "snippet": "This is the snippet of the object."
             }
@@ -342,7 +342,7 @@
               "name": "create-object",
               "arguments": {
                 "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
-                "type_unique_key": "ot-page",
+                "type_key": "ot-page",
                 "name": {
                   "includes": "Privacy"
                 }
@@ -559,7 +559,7 @@
               "object": "type",
               "name": "Page",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1pp",
-              "unique_key": "ot-page",
+              "type_key": "ot-page",
               "recommended_layout": "basic"
             }
           ]

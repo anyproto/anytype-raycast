@@ -46,7 +46,7 @@ export function CreateObjectForm({
 }: CreateObjectFormProps) {
   const [loading, setLoading] = useState(false);
   const hasSelectedSpaceAndType = selectedSpace && selectedType;
-  const selectedTypeUniqueKey = types.reduce((acc, type) => (type.id === selectedType ? type.unique_key : acc), "");
+  const selectedTypeUniqueKey = types.reduce((acc, type) => (type.id === selectedType ? type.type_key : acc), "");
 
   const { handleSubmit, itemProps } = useForm<CreateObjectFormValues>({
     initialValues: draftValues,
@@ -56,13 +56,13 @@ export function CreateObjectForm({
         await showToast({ style: Toast.Style.Animated, title: "Creating object..." });
 
         const response = await createObject(selectedSpace, {
-          object_type_unique_key: selectedTypeUniqueKey,
-          template_id: values.template || "",
-          icon: values.icon || "",
           name: values.name || "",
+          icon: values.icon || "",
           description: values.description || "",
           body: values.body || "",
           source: values.source || "",
+          template_id: values.template || "",
+          type_key: selectedTypeUniqueKey,
         });
 
         if (response.object?.id) {
@@ -118,7 +118,7 @@ export function CreateObjectForm({
     };
 
     return {
-      name: `Create ${types.find((type) => type.unique_key === selectedTypeUniqueKey)?.name} in ${spaces.find((space) => space.id === selectedSpace)?.name}`,
+      name: `Create ${types.find((type) => type.type_key === selectedTypeUniqueKey)?.name} in ${spaces.find((space) => space.id === selectedSpace)?.name}`,
       link: url + "?launchContext=" + encodeURIComponent(JSON.stringify(launchContext)),
     };
   }
@@ -133,7 +133,7 @@ export function CreateObjectForm({
           <Action.SubmitForm title="Create Object" icon={Icon.Plus} onSubmit={handleSubmit} />
           {hasSelectedSpaceAndType && (
             <Action.CreateQuicklink
-              title={`Create Quicklink: ${types.find((type) => type.unique_key === selectedTypeUniqueKey)?.name}`}
+              title={`Create Quicklink: ${types.find((type) => type.type_key === selectedTypeUniqueKey)?.name}`}
               quicklink={getQuicklink()}
             />
           )}

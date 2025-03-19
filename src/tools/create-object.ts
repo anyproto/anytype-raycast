@@ -9,10 +9,10 @@ type Input = {
   spaceId: string;
 
   /**
-   * The unique key of the object type to create.
+   * The key of the type of object to create.
    * This value can be obtained from the `getTypes` tool.
    */
-  type_unique_key: string;
+  type_key: string;
 
   /**
    * The unique identifier of the object type to create.
@@ -48,7 +48,7 @@ type Input = {
   body?: string;
 
   /**
-   * The URL of the bookmark, applicable when creating an object with type_unique_key='ot-bookmark'.
+   * The URL of the bookmark, applicable when creating an object with type_key='ot-bookmark'.
    * This value should be chosen based on the user's input.
    * If not given, set as an empty string.
    */
@@ -61,15 +61,15 @@ type Input = {
  * The object is created with the specified name, icon, description, body.
  * When creating objects of type 'ot-bookmark', ensure the source URL is provided. The icon, name, and description should not be manually set, as they will be automatically populated upon fetching the URL.
  */
-export default async function tool({ spaceId, type_unique_key, name, icon, description, body, source }: Input) {
+export default async function tool({ spaceId, type_key, name, icon, description, body, source }: Input) {
   const { object } = await createObject(spaceId, {
-    object_type_unique_key: type_unique_key,
-    template_id: "", // not supported here
     name: name || "",
     icon: icon || "",
     description: description || "",
     body: body || "",
     source: source || "",
+    template_id: "", // not supported here
+    type_key: type_key,
   });
 
   if (!object) {
@@ -84,7 +84,7 @@ export default async function tool({ spaceId, type_unique_key, name, icon, descr
     type: {
       name: object.type.name,
       id: object.type.id,
-      unique_key: object.type.unique_key,
+      type_key: object.type.type_key,
     },
     snippet: object.snippet,
     properties: object.properties,

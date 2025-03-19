@@ -12,7 +12,7 @@ type Input = {
 /**
  * Retrieve a list of all types in a space.
  * This function queries the specified space and returns a list of types that are available in the space.
- * Should be called when user requests objects of a specific type.
+ * Should always be called when user requests objects of a specific type to retrieve type_key.
  */
 export default async function tool({ spaceId }: Input) {
   const allTypes = [];
@@ -26,11 +26,11 @@ export default async function tool({ spaceId }: Input) {
     offset += apiLimitMax;
   }
 
-  const results = allTypes.map(({ object, name, id, unique_key, recommended_layout }) => ({
+  const results = allTypes.map(({ object, name, id, type_key, recommended_layout }) => ({
     object,
     name,
     id,
-    unique_key,
+    type_key,
     recommended_layout,
   }));
 

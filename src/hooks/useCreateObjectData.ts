@@ -40,7 +40,7 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
 
   const types = useMemo(() => {
     if (!allTypes) return [];
-    return allTypes.filter((type) => !restrictedTypes.includes(type.unique_key));
+    return allTypes.filter((type) => !restrictedTypes.includes(type.type_key));
   }, [allTypes, restrictedTypes]);
 
   const {

@@ -72,7 +72,7 @@ function Search() {
       if (spaces) {
         const allTypes = await getAllTypesFromSpaces(spaces);
         const uniqueKeysSet = new Set(
-          allTypes.map((type) => type.unique_key).filter((key) => !excludedKeysForPages.has(key)),
+          allTypes.map((type) => type.type_key).filter((key) => !excludedKeysForPages.has(key)),
         );
         setUniqueKeysForPages(Array.from(uniqueKeysSet));
       }
@@ -86,7 +86,7 @@ function Search() {
       if (spaces) {
         const tasksTypes = await getAllTypesFromSpaces(spaces);
         const uniqueKeysSet = new Set(
-          tasksTypes.filter((type) => type.recommended_layout === "todo").map((type) => type.unique_key),
+          tasksTypes.filter((type) => type.recommended_layout === "todo").map((type) => type.type_key),
         );
         setUniqueKeysForTasks(Array.from(uniqueKeysSet));
       }
@@ -151,7 +151,7 @@ function Search() {
   const processedPinnedObjects = pinnedObjects?.length
     ? pinnedObjects
         // TODO: decide on wanted behavior for pinned objects
-        .filter((object) => objectTypes.length === 0 || objectTypes.includes(object.type.unique_key))
+        .filter((object) => objectTypes.length === 0 || objectTypes.includes(object.type.type_key))
         .filter((object) => filterObjectsBySearchTerm([object], searchText).length > 0)
         .map((object) => processObjectWithSpaceIcon(object, true))
     : [];

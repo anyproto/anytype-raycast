@@ -16,7 +16,7 @@ type Input = {
   query: string;
 
   /**
-   * The types of objects to search for, identified by their unique_key or id.
+   * The types of objects to search for, identified by their type_key or id.
    * This value can be obtained from the `getTypes` tool and must be called if users request to search for objects of a certain type.
    * When user asks for 'list' objects, search for 'ot-set' and 'ot-collection' types.
    * If no types are specified, the search will include all types of objects.
@@ -69,7 +69,7 @@ export default async function tool({ spaceId, query, types, sort }: Input) {
     type: {
       name: type.name,
       id: type.id,
-      unique_key: type.unique_key,
+      type_key: type.type_key,
     },
     snippet,
   }));

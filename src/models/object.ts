@@ -3,13 +3,13 @@ import { ObjectIcon } from "./icon";
 import { RawType, Type } from "./type";
 
 export interface CreateObjectRequest {
-  object_type_unique_key: string;
-  template_id: string;
-  icon: string;
   name: string;
+  icon: string;
   description: string;
   body: string;
   source: string;
+  template_id: string;
+  type_key: string;
 }
 
 export interface RawSpaceObject {
