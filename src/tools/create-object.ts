@@ -1,5 +1,6 @@
 import { Tool } from "@raycast/api";
 import { createObject, getSpace, getType } from "../api";
+import { IconFormat } from "../models";
 
 type Input = {
   /**
@@ -64,7 +65,7 @@ type Input = {
 export default async function tool({ spaceId, type_key, name, icon, description, body, source }: Input) {
   const { object } = await createObject(spaceId, {
     name: name || "",
-    icon: icon || "",
+    icon: { format: IconFormat.Emoji, emoji: icon || "" },
     description: description || "",
     body: body || "",
     source: source || "",

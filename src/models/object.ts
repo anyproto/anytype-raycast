@@ -1,10 +1,9 @@
 import { Image } from "@raycast/api";
-import { ObjectIcon } from "./icon";
-import { RawType, Type } from "./type";
+import { ObjectIcon, RawType, Type } from ".";
 
 export interface CreateObjectRequest {
   name: string;
-  icon: string;
+  icon: ObjectIcon;
   description: string;
   body: string;
   source: string;

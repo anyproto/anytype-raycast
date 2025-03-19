@@ -1,5 +1,5 @@
 import { Image } from "@raycast/api";
-import { ObjectIcon } from "./icon";
+import { ObjectIcon } from ".";
 
 export interface CreateSpaceRequest {
   name: string;

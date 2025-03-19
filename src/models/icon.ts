@@ -1,5 +1,11 @@
+export enum IconFormat {
+  Emoji = "emoji",
+  File = "file",
+  Icon = "icon",
+}
+
 export interface ObjectIcon {
-  format: string;
+  format: IconFormat;
   emoji?: string;
   file?: string;
   name?: string;

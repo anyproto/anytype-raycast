@@ -3,7 +3,7 @@ import { useForm } from "@raycast/utils";
 import { useState } from "react";
 import { addObjectsToList, createObject } from "../api";
 import { CreateObjectFormValues } from "../create-object";
-import { Space, SpaceObject, Template, Type } from "../models";
+import { IconFormat, Space, SpaceObject, Template, Type } from "../models";
 
 interface CreateObjectFormProps {
   spaces: Space[];
@@ -57,7 +57,7 @@ export function CreateObjectForm({
 
         const response = await createObject(selectedSpace, {
           name: values.name || "",
-          icon: values.icon || "",
+          icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
           description: values.description || "",
           body: values.body || "",
           source: values.source || "",
