@@ -20,7 +20,6 @@ export interface RawSpaceObject {
   snippet: string;
   layout: string;
   space_id: string;
-  root_id: string;
   archived: boolean;
   blocks: Block[];
   properties: Property[];
