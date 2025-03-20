@@ -47,19 +47,12 @@ export function ObjectList({ space }: ObjectListProps) {
   const [pagination, setPagination] = useState(objectsPagination);
 
   useEffect(() => {
-    const newPagination = (() => {
-      switch (currentView) {
-        case ViewType.objects:
-          return objectsPagination;
-        case ViewType.types:
-          return typesPagination;
-        case ViewType.members:
-          return membersPagination;
-        default:
-          return undefined;
-      }
-    })();
-    setPagination(newPagination);
+    const paginationMap: Partial<Record<ViewType, typeof objectsPagination>> = {
+      [ViewType.objects]: objectsPagination,
+      [ViewType.types]: typesPagination,
+      [ViewType.members]: membersPagination,
+    };
+    setPagination(paginationMap[currentView]);
   }, [currentView, objects, types, members]);
 
   useEffect(() => {

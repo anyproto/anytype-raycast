@@ -24,7 +24,7 @@ export default function Command() {
 
 function Search() {
   const [searchText, setSearchText] = useState("");
-  const [objectTypes, setObjectTypes] = useState<string[]>([]);
+  const [types, setTypes] = useState<string[]>([]);
   const [spaceIcons, setSpaceIcons] = useState<Map<string, Image.ImageLike>>(new Map());
   const [currentView, setCurrentView] = useState<ViewType>(ViewType.objects);
   const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
@@ -32,7 +32,7 @@ function Search() {
 
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useGlobalSearch(
     searchText,
-    objectTypes,
+    types,
   );
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
   const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects(
@@ -95,14 +95,14 @@ function Search() {
 
   // Set object types based on the selected filter
   useEffect(() => {
-    const objectTypeMap: Record<string, string[]> = {
-      all: [],
-      pages: uniqueKeysForPages,
-      tasks: uniqueKeysForTasks,
-      lists: ["ot-set", "ot-collection"],
-      bookmarks: ["ot-bookmark"],
+    const viewToType: Partial<Record<ViewType, string[]>> = {
+      [ViewType.objects]: [],
+      [ViewType.pages]: uniqueKeysForPages,
+      [ViewType.tasks]: uniqueKeysForTasks,
+      [ViewType.lists]: ["ot-set", "ot-collection"],
+      [ViewType.bookmarks]: ["ot-bookmark"],
     };
-    setObjectTypes(objectTypeMap[currentView] || []);
+    setTypes(viewToType[currentView] ?? []);
   }, [currentView, uniqueKeysForPages, uniqueKeysForTasks]);
 
   useEffect(() => {
@@ -150,7 +150,7 @@ function Search() {
   const processedPinnedObjects = pinnedObjects?.length
     ? pinnedObjects
         // TODO: decide on wanted behavior for pinned objects
-        .filter((object) => objectTypes.length === 0 || objectTypes.includes(object.type.type_key))
+        .filter((object) => types.length === 0 || types.includes(object.type.type_key))
         .filter((object) => filterObjectsBySearchTerm([object], searchText).length > 0)
         .map((object) => processObjectWithSpaceIcon(object, true))
     : [];
