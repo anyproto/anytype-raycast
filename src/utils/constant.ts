@@ -10,8 +10,6 @@ export const errorConnectionMessage = "Can't connect to API. Please ensure Anyty
 export const apiUrl = "http://localhost:31009/v1";
 export const downloadUrl = "https://download.anytype.io/";
 export const anytypeSpaceDeeplink = (spaceId: string) => `anytype://main/object/_blank_/space.id/${spaceId}`;
-export const anytypeChatDeeplink = (spaceId: string, workspaceId: string) =>
-  `anytype://main/chat/${workspaceId}/space.id/${spaceId}`;
 
 // Numbers
 export const currentApiVersion = "2025-03-17";

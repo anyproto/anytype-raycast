@@ -4,7 +4,6 @@ import { ObjectList } from ".";
 import { Space } from "../models";
 import {
   addPinned,
-  anytypeChatDeeplink,
   anytypeSpaceDeeplink,
   localStorageKeys,
   moveDownInPinned,
@@ -20,7 +19,6 @@ type SpaceActionsProps = {
 
 export function SpaceActions({ space, mutate, isPinned }: SpaceActionsProps) {
   const spaceDeeplink = anytypeSpaceDeeplink(space.id);
-  const chatDeepLink = anytypeChatDeeplink(space.id, space.workspace_object_id);
   const pinSuffix = localStorageKeys.suffixForSpaces;
 
   async function handleCopyLink() {
@@ -83,12 +81,6 @@ export function SpaceActions({ space, mutate, isPinned }: SpaceActionsProps) {
           icon={{ source: "../assets/anytype-icon.png" }}
           title="Open Space in Anytype"
           url={spaceDeeplink}
-        />
-        <Action.OpenInBrowser
-          icon={Icon.Bubble}
-          title="Open Chat in Anytype"
-          url={chatDeepLink}
-          shortcut={{ modifiers: ["cmd"], key: "o" }}
         />
       </ActionPanel.Section>
 
