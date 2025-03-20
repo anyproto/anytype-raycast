@@ -1,5 +1,7 @@
-import { updateMember } from "../api/updateMember";
+import { Tool } from "@raycast/api";
+import { getMember, getSpace, updateMember } from "../api";
 import { MemberRole, MemberStatus } from "../models";
+import { formatMemberRole } from "../utils";
 
 type Input = {
   /**
@@ -44,3 +46,25 @@ export default async function tool({ spaceId, memberIdentity, role }: Input) {
     role: response.member.role,
   };
 }
+
+export const confirmation: Tool.Confirmation<Input> = async (input) => {
+  const s = await getSpace(input.spaceId);
+  const m = await getMember(input.spaceId, input.memberIdentity);
+  return {
+    message: `Are you sure you want to approve ${m.member?.name} as ${formatMemberRole(input.role)}?`,
+    info: [
+      {
+        name: "Space",
+        value: s.space?.name,
+      },
+      {
+        name: "Name",
+        value: m.member?.name,
+      },
+      {
+        name: "Role",
+        value: formatMemberRole(input.role),
+      },
+    ],
+  };
+};

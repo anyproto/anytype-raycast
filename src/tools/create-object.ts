@@ -96,11 +96,11 @@ export const confirmation: Tool.Confirmation<Input> = async (input) => {
   const s = await getSpace(input.spaceId);
   const t = await getType(input.spaceId, input.type_id);
   return {
-    message: `Are you sure you want to create the following object`,
+    message: `Are you sure you want to create the following object?`,
     info: [
       {
         name: "Space",
-        value: s.space?.name || "",
+        value: s.space?.name,
       },
       {
         name: "Type",

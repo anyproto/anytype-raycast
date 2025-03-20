@@ -18,4 +18,5 @@ export * from "./getTypes";
 export * from "./globalSearch";
 export * from "./removeObjectsFromList";
 export * from "./search";
+export * from "./updateMember";
 export * from "./validateToken";
