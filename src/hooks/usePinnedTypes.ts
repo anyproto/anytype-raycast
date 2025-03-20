@@ -1,20 +1,24 @@
 import { useCachedPromise } from "@raycast/utils";
 import { getType } from "../api";
-import { getPinned, removePinned } from "../utils";
+import { ErrorWithStatus, getPinned, removePinned } from "../utils";
 
-export function usePinnedTypes(spaceId: string) {
+export function usePinnedTypes(key: string) {
   const { data, error, isLoading, mutate } = useCachedPromise(
-    async (spaceId) => {
-      const pinnedTypes = await getPinned(spaceId);
+    async (key: string) => {
+      const pinnedTypes = await getPinned(key);
       const types = await Promise.all(
         pinnedTypes.map(async (pinned) => {
           try {
             const response = await getType(pinned.spaceId, pinned.objectId);
+            if (response.type?.archived) {
+              await removePinned(pinned.spaceId, pinned.objectId, key);
+              return null;
+            }
             return response.type;
           } catch (error) {
-            const typedError = error as Error & { status?: number };
-            if (typedError.status === 404) {
-              await removePinned(pinned.spaceId, pinned.objectId, spaceId);
+            const typedError = error as ErrorWithStatus;
+            if (typedError.status === 404 || typedError.status === 410) {
+              await removePinned(pinned.spaceId, pinned.objectId, key);
             }
             return null;
           }
@@ -22,7 +26,7 @@ export function usePinnedTypes(spaceId: string) {
       );
       return types.filter((type) => type !== null);
     },
-    [spaceId],
+    [key],
     {
       keepPreviousData: true,
     },

@@ -1,6 +1,6 @@
 import { List, showToast, Toast } from "@raycast/api";
 import { useEffect, useState } from "react";
-import { CurrentView, EmptyViewObject, ObjectActions, ObjectListItem } from ".";
+import { EmptyViewObject, ObjectActions, ObjectListItem, ViewType } from ".";
 import { useSearch, useTemplates } from "../hooks";
 import { Space, Template } from "../models";
 import { pluralize, processObject } from "../utils";
@@ -71,7 +71,7 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
                   objectId={template.id}
                   title={template.name}
                   mutateTemplates={mutateTemplates}
-                  viewType="template"
+                  viewType={ViewType.templates}
                   isGlobalSearch={isGlobalSearch}
                   isNoPinView={true}
                   isPinned={isPinned}
@@ -99,7 +99,7 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
               accessories={object.accessories}
               mutate={object.mutate}
               layout={object.layout}
-              viewType={CurrentView.objects}
+              viewType={ViewType.objects}
               isGlobalSearch={isGlobalSearch}
               isNoPinView={true}
               isPinned={object.isPinned}

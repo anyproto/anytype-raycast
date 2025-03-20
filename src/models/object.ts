@@ -21,6 +21,7 @@ export interface RawSpaceObject {
   layout: string;
   space_id: string;
   root_id: string;
+  archived: boolean;
   blocks: Block[];
   properties: Property[];
 }

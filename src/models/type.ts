@@ -8,6 +8,7 @@ export interface RawType {
   name: string;
   icon: ObjectIcon;
   recommended_layout: string;
+  archived: boolean;
 }
 
 export interface Type extends Omit<RawType, "icon"> {

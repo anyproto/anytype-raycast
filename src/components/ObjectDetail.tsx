@@ -1,7 +1,7 @@
 import { Color, Detail, getPreferenceValues, showToast, Toast, useNavigation } from "@raycast/api";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-import { ObjectActions, TemplateList } from ".";
+import { ObjectActions, TemplateList, ViewType } from ".";
 import { useExport, useObject } from "../hooks";
 import { ExportFormat, Property, Space } from "../models";
 import { injectEmojiIntoHeading } from "../utils";
@@ -10,7 +10,7 @@ type ObjectDetailProps = {
   space: Space;
   objectId: string;
   title: string;
-  viewType: string;
+  viewType: ViewType;
   isGlobalSearch: boolean;
   isPinned: boolean;
 };

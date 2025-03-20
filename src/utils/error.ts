@@ -22,14 +22,26 @@ export async function checkResponseError(response: Response): Promise<void> {
     // ignore errors during error text parsing
   }
 
+  let error: ErrorWithStatus = new Error(errorMessage) as ErrorWithStatus;
   switch (response.status) {
-    case 429:
-      throw new Error("Rate Limit Exceeded: Please try again later.");
     case 403:
-      throw new Error("Operation not permitted.");
+      error = new Error("Operation not permitted.") as ErrorWithStatus;
+      error.status = 403;
+      break;
     case 404:
-      throw new Error("Resource not found (404).");
+      error = new Error("Object not found.") as ErrorWithStatus;
+      error.status = 404;
+      break;
+    case 410:
+      error = new Error("Object has been deleted.") as ErrorWithStatus;
+      error.status = 410;
+      break;
+    case 429:
+      error = new Error("Rate Limit Exceeded: Please try again later.") as ErrorWithStatus;
+      error.status = 429;
+      break;
     default:
-      throw new Error(errorMessage);
+      error.status = response.status;
   }
+  throw error;
 }

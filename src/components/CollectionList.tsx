@@ -1,6 +1,6 @@
 import { Icon, List, showToast, Toast } from "@raycast/api";
 import { useEffect, useState } from "react";
-import { EmptyViewObject, ObjectListItem } from ".";
+import { EmptyViewObject, ObjectListItem, ViewType } from ".";
 import { useObjectsInList } from "../hooks";
 import { Dataview, Space, ViewLayout } from "../models";
 import { pluralize, processObject } from "../utils";
@@ -86,7 +86,7 @@ export function CollectionList({ space, listId, listName, dataview }: Collection
               accessories={object.accessories}
               mutate={object.mutate}
               layout={object.layout}
-              viewType="object"
+              viewType={ViewType.objects}
               isGlobalSearch={false}
               isNoPinView={true}
               isPinned={object.isPinned}

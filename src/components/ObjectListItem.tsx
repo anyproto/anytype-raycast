@@ -1,6 +1,6 @@
 import { Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import { ObjectActions } from ".";
+import { ObjectActions, ViewType } from ".";
 import { Dataview, Member, Space, SpaceObject, Type } from "../models";
 
 type ObjectListItemProps = {
@@ -20,7 +20,7 @@ type ObjectListItemProps = {
   mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
   member?: Member | undefined;
   layout: string;
-  viewType: string;
+  viewType: ViewType;
   isGlobalSearch: boolean;
   isNoPinView: boolean;
   isPinned: boolean;

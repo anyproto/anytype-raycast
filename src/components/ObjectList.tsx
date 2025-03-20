@@ -10,14 +10,22 @@ type ObjectListProps = {
   space: Space;
 };
 
-export const CurrentView = {
-  objects: "objects",
-  types: "types",
-  members: "members",
-} as const;
+export enum ViewType {
+  // browse
+  objects = "Object", // is "all" view in global search
+  types = "Type",
+  members = "Member",
+  templates = "Template",
+
+  // search
+  pages = "Page",
+  tasks = "Task",
+  lists = "List",
+  bookmarks = "Bookmark",
+}
 
 export function ObjectList({ space }: ObjectListProps) {
-  const [currentView, setCurrentView] = useState<keyof typeof CurrentView>(CurrentView.objects);
+  const [currentView, setCurrentView] = useState<ViewType>(ViewType.objects);
   const [searchText, setSearchText] = useState("");
 
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
@@ -28,22 +36,29 @@ export function ObjectList({ space }: ObjectListProps) {
   const { types, typesError, isLoadingTypes, mutateTypes, typesPagination } = useTypes(space.id);
   const { members, membersError, isLoadingMembers, mutateMembers, membersPagination } = useMembers(space.id);
   const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects(
-    localStorageKeys.suffixForViewsPerSpace(space.id, CurrentView.objects),
+    localStorageKeys.suffixForViewsPerSpace(space.id, ViewType.objects),
   );
   const { pinnedTypes, pinnedTypesError, isLoadingPinnedTypes, mutatePinnedTypes } = usePinnedTypes(
-    localStorageKeys.suffixForViewsPerSpace(space.id, CurrentView.types),
+    localStorageKeys.suffixForViewsPerSpace(space.id, ViewType.types),
   );
   const { pinnedMembers, pinnedMembersError, isLoadingPinnedMembers, mutatePinnedMembers } = usePinnedMembers(
-    localStorageKeys.suffixForViewsPerSpace(space.id, CurrentView.members),
+    localStorageKeys.suffixForViewsPerSpace(space.id, ViewType.members),
   );
   const [pagination, setPagination] = useState(objectsPagination);
 
   useEffect(() => {
-    const newPagination = {
-      objects: objectsPagination,
-      types: typesPagination,
-      members: membersPagination,
-    }[currentView];
+    const newPagination = (() => {
+      switch (currentView) {
+        case ViewType.objects:
+          return objectsPagination;
+        case ViewType.types:
+          return typesPagination;
+        case ViewType.members:
+          return membersPagination;
+        default:
+          return undefined;
+      }
+    })();
     setPagination(newPagination);
   }, [currentView, objects, types, members]);
 
@@ -115,7 +130,7 @@ export function ObjectList({ space }: ObjectListProps) {
 
   const getCurrentItems = () => {
     switch (currentView) {
-      case "objects": {
+      case ViewType.objects: {
         const processedPinned = pinnedObjects?.length
           ? pinnedObjects
               .filter((object) => filterItems([object], searchText).length > 0)
@@ -132,7 +147,7 @@ export function ObjectList({ space }: ObjectListProps) {
         return { processedPinned, processedRegular };
       }
 
-      case "types": {
+      case ViewType.types: {
         const processedPinned = pinnedTypes?.length
           ? pinnedTypes
               .filter((type) => filterItems([type], searchText).length > 0)
@@ -147,7 +162,7 @@ export function ObjectList({ space }: ObjectListProps) {
         return { processedPinned, processedRegular };
       }
 
-      case "members": {
+      case ViewType.members: {
         const processedPinned = pinnedMembers?.length
           ? pinnedMembers
               .filter((member) => filterItems([member], searchText).length > 0)
@@ -190,21 +205,22 @@ export function ObjectList({ space }: ObjectListProps) {
       searchBarAccessory={
         <List.Dropdown
           tooltip="Choose View"
-          onChange={(value) => setCurrentView(value as "objects" | "types" | "members")}
+          onChange={(value) => setCurrentView(value as ViewType)}
+          value={currentView}
         >
           <List.Dropdown.Item
             title="Objects"
-            value="objects"
+            value={ViewType.objects}
             icon={{ source: "icons/type/document.svg", tintColor: defaultTintColor }}
           />
           <List.Dropdown.Item
             title="Types"
-            value="types"
+            value={ViewType.types}
             icon={{ source: "icons/type/extension-puzzle.svg", tintColor: defaultTintColor }}
           />
           <List.Dropdown.Item
             title="Members"
-            value="members"
+            value={ViewType.members}
             icon={{ source: "icons/type/person.svg", tintColor: defaultTintColor }}
           />
         </List.Dropdown>

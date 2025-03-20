@@ -1,4 +1,5 @@
 import { getPreferenceValues } from "@raycast/api";
+import { ViewType } from "../components";
 import { encodeQueryParams } from "./query";
 
 // Strings
@@ -23,7 +24,7 @@ export const localStorageKeys = {
   appKey: "app_key",
   suffixForSpaces: "spaces",
   suffixForGlobalSearch: "global_search",
-  suffixForViewsPerSpace(spaceId: string, viewType: string): string {
+  suffixForViewsPerSpace(spaceId: string, viewType: ViewType): string {
     return `${spaceId}_${viewType}`;
   },
   pinnedObjectsWith(suffix: string): string {

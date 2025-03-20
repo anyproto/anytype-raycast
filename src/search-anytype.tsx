@@ -1,6 +1,6 @@
 import { Icon, Image, List, showToast, Toast } from "@raycast/api";
 import { useEffect, useMemo, useState } from "react";
-import { EmptyViewObject, EnsureAuthenticated, ObjectListItem } from "./components";
+import { EmptyViewObject, EnsureAuthenticated, ObjectListItem, ViewType } from "./components";
 import { useGlobalSearch, usePinnedObjects, useSpaces } from "./hooks";
 import { SpaceObject } from "./models";
 import {
@@ -26,7 +26,7 @@ function Search() {
   const [searchText, setSearchText] = useState("");
   const [objectTypes, setObjectTypes] = useState<string[]>([]);
   const [spaceIcons, setSpaceIcons] = useState<Map<string, Image.ImageLike>>(new Map());
-  const [filterType, setFilterType] = useState("all");
+  const [currentView, setCurrentView] = useState<ViewType>(ViewType.objects);
   const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
   const [uniqueKeysForTasks, setUniqueKeysForTasks] = useState<string[]>([]);
 
@@ -39,7 +39,6 @@ function Search() {
     localStorageKeys.suffixForGlobalSearch,
   );
 
-  const viewType = filterType === "all" ? "objects" : filterType;
   const excludedKeysForPages = new Set([
     // not shown anywhere
     "ot-audio",
@@ -103,8 +102,8 @@ function Search() {
       lists: ["ot-set", "ot-collection"],
       bookmarks: ["ot-bookmark"],
     };
-    setObjectTypes(objectTypeMap[filterType] || []);
-  }, [filterType, uniqueKeysForPages, uniqueKeysForTasks]);
+    setObjectTypes(objectTypeMap[currentView] || []);
+  }, [currentView, uniqueKeysForPages, uniqueKeysForTasks]);
 
   useEffect(() => {
     if (objectsError || spacesError || pinnedObjectsError) {
@@ -163,7 +162,7 @@ function Search() {
     )
     .map((object) => processObjectWithSpaceIcon(object, false));
 
-  const subtitle = pluralize(processedRegularObjects.length, viewType.replace(/s$/, ""), {
+  const subtitle = pluralize(processedRegularObjects.length, currentView, {
     withNumber: true,
   });
 
@@ -175,31 +174,35 @@ function Search() {
       pagination={objectsPagination}
       throttle={true}
       searchBarAccessory={
-        <List.Dropdown tooltip="Filter by kind" onChange={(newValue) => setFilterType(newValue)}>
+        <List.Dropdown
+          tooltip="Filter by kind"
+          onChange={(value) => setCurrentView(value as ViewType)}
+          value={currentView}
+        >
           <List.Dropdown.Item
             title="All"
-            value="all"
+            value={ViewType.objects}
             icon={{ source: "icons/type/search.svg", tintColor: defaultTintColor }}
           />
           <List.Dropdown.Section>
             <List.Dropdown.Item
               title="Pages"
-              value="pages"
+              value={ViewType.pages}
               icon={{ source: "icons/type/document.svg", tintColor: defaultTintColor }}
             />
             <List.Dropdown.Item
               title="Tasks"
-              value="tasks"
+              value={ViewType.tasks}
               icon={{ source: "icons/type/checkbox.svg", tintColor: defaultTintColor }}
             />
             <List.Dropdown.Item
               title="Lists"
-              value="lists"
+              value={ViewType.lists}
               icon={{ source: "icons/type/layers.svg", tintColor: defaultTintColor }}
             />
             <List.Dropdown.Item
               title="Bookmarks"
-              value="bookmarks"
+              value={ViewType.bookmarks}
               icon={{ source: "icons/type/bookmark.svg", tintColor: defaultTintColor }}
             />
           </List.Dropdown.Section>
@@ -220,7 +223,7 @@ function Search() {
               accessories={object.accessories}
               mutate={[mutateObjects, mutatePinnedObjects]}
               layout={object.layout}
-              viewType={viewType}
+              viewType={currentView}
               isGlobalSearch={true}
               isNoPinView={false}
               isPinned={object.isPinned}
@@ -242,7 +245,7 @@ function Search() {
               accessories={object.accessories}
               mutate={[mutateObjects, mutatePinnedObjects]}
               layout={object.layout}
-              viewType={viewType}
+              viewType={currentView}
               isGlobalSearch={true}
               isNoPinView={false}
               isPinned={object.isPinned}

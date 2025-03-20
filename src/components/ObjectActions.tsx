@@ -11,7 +11,7 @@ import {
   Toast,
 } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
-import { CollectionList, CurrentView, ObjectDetail, TemplateList } from ".";
+import { CollectionList, ObjectDetail, TemplateList, ViewType } from ".";
 import { deleteObject } from "../api";
 import { updateMember } from "../api/updateMember";
 import {
@@ -48,7 +48,7 @@ type ObjectActionsProps = {
   mutateExport?: MutatePromise<Export | undefined>;
   layout?: string;
   member?: Member | undefined;
-  viewType: string;
+  viewType: ViewType;
   isGlobalSearch: boolean;
   isNoPinView: boolean;
   isPinned: boolean;
@@ -82,27 +82,10 @@ export function ObjectActions({
     : localStorageKeys.suffixForViewsPerSpace(space?.id, viewType);
   const isDetailView = objectExport !== undefined;
   const isCollection = layout === "collection";
-  const isType = viewType === CurrentView.types;
-  const isMember = viewType === CurrentView.members;
+  const isType = viewType === ViewType.types;
+  const isMember = viewType === ViewType.members;
 
-  function getContextLabel(isSingular = true) {
-    const labelMap: Record<string, string> = {
-      // browse
-      objects: "Object",
-      types: "Type",
-      members: "Member",
-      templates: "Template",
-
-      // search
-      all: "Object",
-      pages: "Page",
-      tasks: "Task",
-      lists: "List",
-      bookmarks: "Bookmark",
-    };
-    const baseLabel = labelMap[viewType] || "Item";
-    return !isDetailView && !isSingular ? pluralize(2, baseLabel) : baseLabel;
-  }
+  const getContextLabel = (isSingular = true) => (isDetailView || isSingular ? viewType : pluralize(2, viewType));
 
   async function handleCopyLink() {
     await Clipboard.copy(objectUrl);

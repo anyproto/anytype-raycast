@@ -6,6 +6,13 @@ export async function getPinned(pinSuffix: string): Promise<{ spaceId: string; o
   return pinnedObjects ? JSON.parse(pinnedObjects) : [];
 }
 
+export async function setPinned(
+  pinSuffix: string,
+  pinnedObjects: { spaceId: string; objectId: string }[],
+): Promise<void> {
+  await LocalStorage.setItem(localStorageKeys.pinnedObjectsWith(pinSuffix), JSON.stringify(pinnedObjects));
+}
+
 export async function addPinned(
   spaceId: string,
   objectId: string,
@@ -33,7 +40,7 @@ export async function addPinned(
   }
 
   pinnedObjects.push({ spaceId, objectId });
-  await LocalStorage.setItem(localStorageKeys.pinnedObjectsWith(pinSuffix), JSON.stringify(pinnedObjects));
+  await setPinned(pinSuffix, pinnedObjects);
 
   await showToast({
     style: Toast.Style.Success,
@@ -62,13 +69,15 @@ export async function removePinned(
     return;
   }
 
-  await LocalStorage.setItem(localStorageKeys.pinnedObjectsWith(pinSuffix), JSON.stringify(updatedPinnedObjects));
+  await setPinned(pinSuffix, updatedPinnedObjects);
 
-  await showToast({
-    style: Toast.Style.Success,
-    title: `${contextLabel} unpinned`,
-    message: title,
-  });
+  if (title && contextLabel) {
+    await showToast({
+      style: Toast.Style.Success,
+      title: `${contextLabel} unpinned`,
+      message: title,
+    });
+  }
 }
 
 async function movePinnedItem(spaceId: string, objectId: string, pinSuffix: string, direction: -1 | 1): Promise<void> {
@@ -80,7 +89,7 @@ async function movePinnedItem(spaceId: string, objectId: string, pinSuffix: stri
   }
   // Swap the two items using destructuring assignment
   [pinnedObjects[index], pinnedObjects[targetIndex]] = [pinnedObjects[targetIndex], pinnedObjects[index]];
-  await LocalStorage.setItem(localStorageKeys.pinnedObjectsWith(pinSuffix), JSON.stringify(pinnedObjects));
+  await setPinned(pinSuffix, pinnedObjects);
 }
 
 export async function moveUpInPinned(spaceId: string, objectId: string, pinSuffix: string): Promise<void> {
