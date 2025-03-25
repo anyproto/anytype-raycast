@@ -5,7 +5,9 @@ import { useGlobalSearch, usePinnedObjects, useSpaces } from "./hooks";
 import { SpaceObject } from "./models";
 import {
   defaultTintColor,
-  getAllTypesFromSpaces,
+  fetchTypeKeysForLists,
+  fetchTypeKeysForPages,
+  fetchTypesKeysForTasks,
   getSectionTitle,
   localStorageKeys,
   pluralize,
@@ -40,25 +42,6 @@ function Search() {
     localStorageKeys.suffixForGlobalSearch,
   );
 
-  const excludedKeysForPages = new Set([
-    // not shown anywhere
-    "ot-audio",
-    "ot-chat",
-    "ot-file",
-    "ot-image",
-    "ot-objectType",
-    "ot-tag",
-    "ot-template",
-    "ot-video",
-
-    // shown in other views
-    "ot-set",
-    "ot-collection",
-    "ot-bookmark",
-    "ot-participant",
-    ...uniqueKeysForTasks,
-  ]);
-
   useEffect(() => {
     if (spaces) {
       const spaceIconMap = new Map(spaces.map((space) => [space.id, space.icon]));
@@ -70,25 +53,19 @@ function Search() {
   useEffect(() => {
     const fetchTypesForPages = async () => {
       if (spaces) {
-        const allTypes = await getAllTypesFromSpaces(spaces);
-        const uniqueKeysSet = new Set(
-          allTypes.map((type) => type.type_key).filter((key) => !excludedKeysForPages.has(key)),
-        );
-        setUniqueKeysForPages(Array.from(uniqueKeysSet));
+        const pagesTypes = await fetchTypeKeysForPages(spaces, uniqueKeysForTasks, uniqueKeysForLists);
+        setUniqueKeysForPages(pagesTypes);
       }
     };
     fetchTypesForPages();
-  }, [spaces]);
+  }, [spaces, uniqueKeysForTasks, uniqueKeysForLists]);
 
   // Fetch unique keys for tasks view
   useEffect(() => {
     const fetchTypesForTasks = async () => {
       if (spaces) {
-        const tasksTypes = await getAllTypesFromSpaces(spaces);
-        const uniqueKeysSet = new Set(
-          tasksTypes.filter((type) => type.recommended_layout === "todo").map((type) => type.type_key),
-        );
-        setUniqueKeysForTasks(Array.from(uniqueKeysSet));
+        const tasksTypes = await fetchTypesKeysForTasks(spaces);
+        setUniqueKeysForTasks(tasksTypes);
       }
     };
     fetchTypesForTasks();
@@ -98,13 +75,8 @@ function Search() {
   useEffect(() => {
     const fetchTypesForLists = async () => {
       if (spaces) {
-        const listsTypes = await getAllTypesFromSpaces(spaces);
-        const uniqueKeysSet = new Set(
-          listsTypes
-            .filter((type) => type.recommended_layout === "set" || type.recommended_layout === "collection")
-            .map((type) => type.type_key),
-        );
-        setUniqueKeysForLists(Array.from(uniqueKeysSet));
+        const listTypes = await fetchTypeKeysForLists(spaces);
+        setUniqueKeysForLists(listTypes);
       }
     };
     fetchTypesForLists();

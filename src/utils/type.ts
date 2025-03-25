@@ -1,6 +1,13 @@
 import { getTemplates, getTypes } from "../api";
-import { Space, Template, Type } from "../models";
+import { RawType, Space, Template, Type } from "../models";
 import { apiLimitMax } from "../utils";
+
+/**
+ * Checks if a given `Type` is a list type.
+ */
+export function isList(type: RawType) {
+  return type.type_key === "ot-set" || type.type_key === "ot-collection";
+}
 
 /**
  * Fetches all `Type`s from a single space, doing pagination if necessary.
@@ -52,4 +59,61 @@ export async function fetchAllTemplatesForSpace(spaceId: string, typeId: string)
   }
 
   return allTemplates;
+}
+
+/**
+ * Fetches all unique type keys for page types.
+ */
+export async function fetchTypeKeysForPages(
+  spaces: Space[],
+  uniqueKeysForTasks: string[],
+  uniqueKeysForLists: string[],
+): Promise<string[]> {
+  const excludedKeysForPages = new Set([
+    // not shown anywhere
+    "ot-audio",
+    "ot-chat",
+    "ot-file",
+    "ot-image",
+    "ot-objectType",
+    "ot-tag",
+    "ot-template",
+    "ot-video",
+
+    // shown in other views
+    "ot-set",
+    "ot-collection",
+    "ot-bookmark",
+    "ot-participant",
+    ...uniqueKeysForTasks,
+    ...uniqueKeysForLists,
+  ]);
+
+  const allTypes = await getAllTypesFromSpaces(spaces);
+  const uniqueKeysSet = new Set(allTypes.map((type) => type.type_key).filter((key) => !excludedKeysForPages.has(key)));
+  return Array.from(uniqueKeysSet);
+}
+
+/**
+ * Fetches all unique type keys for task types.
+ */
+export async function fetchTypesKeysForTasks(spaces: Space[]): Promise<string[]> {
+  const tasksTypes = await getAllTypesFromSpaces(spaces);
+  const uniqueKeys = new Set(
+    tasksTypes.filter((type) => type.recommended_layout === "todo").map((type) => type.type_key),
+  );
+  return Array.from(uniqueKeys);
+}
+
+/**
+ * Fetches all unique type keys for list types.
+ */
+export async function fetchTypeKeysForLists(spaces: Space[]): Promise<string[]> {
+  const listsTypes = await getAllTypesFromSpaces(spaces);
+  const typeKeys = new Set(
+    listsTypes
+      .filter((type) => type.recommended_layout === "set" || type.recommended_layout === "collection")
+      .map((type) => type.type_key),
+  );
+  return Array.from(typeKeys);
 }
