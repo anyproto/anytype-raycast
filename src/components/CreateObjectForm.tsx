@@ -46,7 +46,7 @@ export function CreateObjectForm({
   enableDrafts,
 }: CreateObjectFormProps) {
   const [loading, setLoading] = useState(false);
-  const [typeKeysForLists, setUniqueKeysForLists] = useState<string[]>([]);
+  const [typeKeysForLists, setTypeKeysForLists] = useState<string[]>([]);
   const hasSelectedSpaceAndType = selectedSpace && selectedType;
   const selectedTypeUniqueKey = types.reduce((acc, type) => (type.id === selectedType ? type.type_key : acc), "");
 
@@ -54,7 +54,7 @@ export function CreateObjectForm({
     const fetchTypesForLists = async () => {
       if (spaces) {
         const listsTypes = await fetchTypeKeysForLists(spaces);
-        setUniqueKeysForLists(listsTypes);
+        setTypeKeysForLists(listsTypes);
       }
     };
     fetchTypesForLists();

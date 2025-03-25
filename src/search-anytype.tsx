@@ -29,9 +29,9 @@ function Search() {
   const [types, setTypes] = useState<string[]>([]);
   const [spaceIcons, setSpaceIcons] = useState<Map<string, Image.ImageLike>>(new Map());
   const [currentView, setCurrentView] = useState<ViewType>(ViewType.objects);
-  const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
-  const [uniqueKeysForTasks, setUniqueKeysForTasks] = useState<string[]>([]);
-  const [uniqueKeysForLists, setUniqueKeysForLists] = useState<string[]>([]);
+  const [typeKeysForPages, setTypeKeysForPages] = useState<string[]>([]);
+  const [typeKeysForTasks, setTypeKeysForTasks] = useState<string[]>([]);
+  const [typeKeysForLists, setTypeKeysForLists] = useState<string[]>([]);
 
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useGlobalSearch(
     searchText,
@@ -53,19 +53,19 @@ function Search() {
   useEffect(() => {
     const fetchTypesForPages = async () => {
       if (spaces) {
-        const pagesTypes = await fetchTypeKeysForPages(spaces, uniqueKeysForTasks, uniqueKeysForLists);
-        setUniqueKeysForPages(pagesTypes);
+        const pagesTypes = await fetchTypeKeysForPages(spaces, typeKeysForTasks, typeKeysForLists);
+        setTypeKeysForPages(pagesTypes);
       }
     };
     fetchTypesForPages();
-  }, [spaces, uniqueKeysForTasks, uniqueKeysForLists]);
+  }, [spaces, typeKeysForTasks, typeKeysForLists]);
 
   // Fetch unique keys for tasks view
   useEffect(() => {
     const fetchTypesForTasks = async () => {
       if (spaces) {
         const tasksTypes = await fetchTypesKeysForTasks(spaces);
-        setUniqueKeysForTasks(tasksTypes);
+        setTypeKeysForTasks(tasksTypes);
       }
     };
     fetchTypesForTasks();
@@ -76,7 +76,7 @@ function Search() {
     const fetchTypesForLists = async () => {
       if (spaces) {
         const listTypes = await fetchTypeKeysForLists(spaces);
-        setUniqueKeysForLists(listTypes);
+        setTypeKeysForLists(listTypes);
       }
     };
     fetchTypesForLists();
@@ -86,13 +86,13 @@ function Search() {
   useEffect(() => {
     const viewToType: Partial<Record<ViewType, string[]>> = {
       [ViewType.objects]: [],
-      [ViewType.pages]: uniqueKeysForPages,
-      [ViewType.tasks]: uniqueKeysForTasks,
-      [ViewType.lists]: uniqueKeysForLists,
+      [ViewType.pages]: typeKeysForPages,
+      [ViewType.tasks]: typeKeysForTasks,
+      [ViewType.lists]: typeKeysForLists,
       [ViewType.bookmarks]: ["ot-bookmark"],
     };
     setTypes(viewToType[currentView] ?? []);
-  }, [currentView, uniqueKeysForPages, uniqueKeysForTasks]);
+  }, [currentView, typeKeysForPages, typeKeysForTasks]);
 
   useEffect(() => {
     if (objectsError || spacesError || pinnedObjectsError) {
