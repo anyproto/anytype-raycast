@@ -29,6 +29,7 @@ function Search() {
   const [currentView, setCurrentView] = useState<ViewType>(ViewType.objects);
   const [uniqueKeysForPages, setUniqueKeysForPages] = useState<string[]>([]);
   const [uniqueKeysForTasks, setUniqueKeysForTasks] = useState<string[]>([]);
+  const [uniqueKeysForLists, setUniqueKeysForLists] = useState<string[]>([]);
 
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useGlobalSearch(
     searchText,
@@ -93,13 +94,29 @@ function Search() {
     fetchTypesForTasks();
   }, [spaces]);
 
+  // Fetch unique keys for lists view
+  useEffect(() => {
+    const fetchTypesForLists = async () => {
+      if (spaces) {
+        const listsTypes = await getAllTypesFromSpaces(spaces);
+        const uniqueKeysSet = new Set(
+          listsTypes
+            .filter((type) => type.recommended_layout === "set" || type.recommended_layout === "collection")
+            .map((type) => type.type_key),
+        );
+        setUniqueKeysForLists(Array.from(uniqueKeysSet));
+      }
+    };
+    fetchTypesForLists();
+  }, [spaces]);
+
   // Set object types based on the selected filter
   useEffect(() => {
     const viewToType: Partial<Record<ViewType, string[]>> = {
       [ViewType.objects]: [],
       [ViewType.pages]: uniqueKeysForPages,
       [ViewType.tasks]: uniqueKeysForTasks,
-      [ViewType.lists]: ["ot-set", "ot-collection"],
+      [ViewType.lists]: uniqueKeysForLists,
       [ViewType.bookmarks]: ["ot-bookmark"],
     };
     setTypes(viewToType[currentView] ?? []);
