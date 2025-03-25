@@ -1,9 +1,10 @@
 import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
 import { useForm } from "@raycast/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { addObjectsToList, createObject } from "../api";
 import { CreateObjectFormValues } from "../create-object";
 import { IconFormat, Space, SpaceObject, Template, Type } from "../models";
+import { fetchTypeKeysForLists } from "../utils";
 
 interface CreateObjectFormProps {
   spaces: Space[];
@@ -45,8 +46,19 @@ export function CreateObjectForm({
   enableDrafts,
 }: CreateObjectFormProps) {
   const [loading, setLoading] = useState(false);
+  const [typeKeysForLists, setUniqueKeysForLists] = useState<string[]>([]);
   const hasSelectedSpaceAndType = selectedSpace && selectedType;
   const selectedTypeUniqueKey = types.reduce((acc, type) => (type.id === selectedType ? type.type_key : acc), "");
+
+  useEffect(() => {
+    const fetchTypesForLists = async () => {
+      if (spaces) {
+        const listsTypes = await fetchTypeKeysForLists(spaces);
+        setUniqueKeysForLists(listsTypes);
+      }
+    };
+    fetchTypesForLists();
+  }, [spaces]);
 
   const { handleSubmit, itemProps } = useForm<CreateObjectFormValues>({
     initialValues: draftValues,
@@ -231,7 +243,7 @@ export function CreateObjectForm({
                 placeholder="Add a description"
                 info="Provide a brief description of the object"
               />
-              {!["ot-set", "ot-collection"].includes(selectedTypeUniqueKey) && (
+              {!typeKeysForLists.includes(selectedTypeUniqueKey) && (
                 <Form.TextArea
                   {...itemProps.body}
                   title="Body"
