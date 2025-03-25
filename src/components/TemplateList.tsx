@@ -71,6 +71,7 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
                   objectId={template.id}
                   title={template.name}
                   mutateTemplates={mutateTemplates}
+                  layout={"basic"} // TODO: refactor to use correct layout
                   viewType={ViewType.templates}
                   isGlobalSearch={isGlobalSearch}
                   isNoPinView={true}

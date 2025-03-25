@@ -10,12 +10,21 @@ type ObjectDetailProps = {
   space: Space;
   objectId: string;
   title: string;
+  layout: string;
   viewType: ViewType;
   isGlobalSearch: boolean;
   isPinned: boolean;
 };
 
-export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch, isPinned }: ObjectDetailProps) {
+export function ObjectDetail({
+  space,
+  objectId,
+  title,
+  layout,
+  viewType,
+  isGlobalSearch,
+  isPinned,
+}: ObjectDetailProps) {
   const { push } = useNavigation();
   const { linkDisplay } = getPreferenceValues();
   const { object, objectError, isLoadingObject, mutateObject } = useObject(space.id, objectId);
@@ -291,6 +300,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
                     space={space}
                     objectId={objectItem.id}
                     title={objectItem.name}
+                    layout={objectItem.layout}
                     viewType={viewType}
                     isGlobalSearch={isGlobalSearch}
                     isPinned={isPinned}
@@ -378,6 +388,7 @@ export function ObjectDetail({ space, objectId, title, viewType, isGlobalSearch,
           mutateObject={mutateObject}
           mutateExport={mutateObjectExport}
           objectExport={objectExport}
+          layout={layout}
           viewType={viewType}
           isGlobalSearch={isGlobalSearch}
           isNoPinView={false}

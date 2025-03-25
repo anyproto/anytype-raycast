@@ -34,6 +34,7 @@ import {
   moveUpInPinned,
   pluralize,
   removePinned,
+  typeIsList,
 } from "../utils";
 
 type ObjectActionsProps = {
@@ -46,7 +47,7 @@ type ObjectActionsProps = {
   mutateTemplates?: MutatePromise<Template[]>;
   mutateObject?: MutatePromise<SpaceObject | null | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;
-  layout?: string;
+  layout: string;
   member?: Member | undefined;
   viewType: ViewType;
   isGlobalSearch: boolean;
@@ -81,7 +82,7 @@ export function ObjectActions({
     ? localStorageKeys.suffixForGlobalSearch
     : localStorageKeys.suffixForViewsPerSpace(space?.id, viewType);
   const isDetailView = objectExport !== undefined;
-  const isCollection = layout === "collection";
+  const isList = typeIsList(layout);
   const isType = viewType === ViewType.types;
   const isMember = viewType === ViewType.members;
 
@@ -314,7 +315,7 @@ export function ObjectActions({
     }
   }
 
-  const canShowDetails = !isType && !isCollection && !isDetailView;
+  const canShowDetails = !isType && !isList && !isDetailView;
   const showDetailsAction = canShowDetails && (
     <Action.Push
       icon={{ source: Icon.Sidebar }}
@@ -324,6 +325,7 @@ export function ObjectActions({
           space={space}
           objectId={objectId}
           title={title}
+          layout={layout}
           viewType={viewType}
           isGlobalSearch={isGlobalSearch}
           isPinned={isPinned}
@@ -347,17 +349,17 @@ export function ObjectActions({
     <ActionPanel title={title}>
       <ActionPanel.Section>
         {firstPrimaryAction}
-        {isCollection && (
+        {isList && (
           <Action.Push
             icon={Icon.List}
-            title="View Collection"
+            title="Show List"
             target={<CollectionList space={space} listId={objectId} listName={title} dataview={dataview} />}
           />
         )}
         {isType && (
           <Action.Push
             icon={Icon.BulletPoints}
-            title="View Templates"
+            title="Show Type"
             target={
               <TemplateList space={space} typeId={objectId} isGlobalSearch={isGlobalSearch} isPinned={isPinned} />
             }

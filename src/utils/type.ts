@@ -1,12 +1,12 @@
 import { getTemplates, getTypes } from "../api";
-import { RawType, Space, Template, Type } from "../models";
+import { Space, Template, Type } from "../models";
 import { apiLimitMax } from "../utils";
 
 /**
  * Checks if a given `Type` is a list type.
  */
-export function isList(type: RawType) {
-  return type.type_key === "ot-set" || type.type_key === "ot-collection";
+export function typeIsList(layout: string): boolean {
+  return layout === "set" || layout === "collection";
 }
 
 /**
