@@ -17,7 +17,7 @@ type ObjectListItemProps = {
     tag?: { value: string; color: string; tooltip: string };
   }[];
   mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
-  mutateViews: MutatePromise<View[]>;
+  mutateViews?: MutatePromise<View[]>;
   member?: Member | undefined;
   layout: string;
   viewType: ViewType;
