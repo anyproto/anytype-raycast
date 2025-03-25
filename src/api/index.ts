@@ -4,6 +4,7 @@ export * from "./createSpace";
 export * from "./deleteObject";
 export * from "./displayCode";
 export * from "./getExport";
+export * from "./getListViews";
 export * from "./getMember";
 export * from "./getMembers";
 export * from "./getObject";

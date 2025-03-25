@@ -39,7 +39,6 @@ export interface Block {
   text: Text;
   file: File;
   property: Property;
-  dataview: Dataview;
 }
 
 export interface Text {
@@ -60,42 +59,6 @@ export interface File {
   target_object_id: string;
   state: string;
   style: string;
-}
-
-export interface Dataview {
-  views: View[];
-}
-
-export interface View {
-  id: string;
-  name: string;
-  layout: ViewLayout;
-  filters: Filter[];
-  sorts: Sort[];
-}
-
-export enum ViewLayout {
-  Grid = "grid",
-  List = "list",
-  Gallery = "gallery",
-  Kanban = "kanban",
-  Calendar = "calendar",
-  Graph = "graph",
-}
-
-export interface Filter {
-  id: string;
-  property_key: string;
-  format: string;
-  condition: string;
-  value: string;
-}
-
-export interface Sort {
-  id: string;
-  property_key: string;
-  format: string;
-  sort_type: string;
 }
 
 export interface Property {

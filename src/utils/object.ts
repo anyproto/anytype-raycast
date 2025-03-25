@@ -26,7 +26,6 @@ export function processObject(
     id: object.id,
     icon: object.icon,
     title: object.name,
-    dataview: object.blocks.find((block) => block.id === "dataview")?.dataview || undefined,
     subtitle: {
       value: object.type.name,
       tooltip: `Type: ${object.type.name}`,

@@ -66,6 +66,10 @@ export const apiEndpoints = {
   }),
 
   // lists
+  getListViews: (spaceId: string, listId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/lists/${listId}/views${encodeQueryParams(options)}`,
+    method: "GET",
+  }),
   getObjectsInList: (spaceId: string, listId: string, viewId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/lists/${listId}/${viewId}/objects${encodeQueryParams(options)}`,
     method: "GET",

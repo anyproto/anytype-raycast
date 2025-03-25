@@ -2,7 +2,8 @@ import { Icon, List, showToast, Toast } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem, ViewType } from ".";
 import { useObjectsInList } from "../hooks";
-import { Dataview, Space, ViewLayout } from "../models";
+import { useListViews } from "../hooks/useListViews";
+import { Space, ViewLayout } from "../models";
 import { pluralize, processObject } from "../utils";
 import { defaultTintColor } from "../utils/constant";
 
@@ -10,12 +11,12 @@ type CollectionListProps = {
   space: Space;
   listId: string;
   listName: string;
-  dataview: Dataview | undefined;
 };
 
-export function CollectionList({ space, listId, listName, dataview }: CollectionListProps) {
+export function CollectionList({ space, listId, listName }: CollectionListProps) {
   const [searchText, setSearchText] = useState("");
-  const [viewId, setViewId] = useState(dataview?.views[0].id || "");
+  const { views, viewsError, isLoadingViews, mutateViews } = useListViews(space.id, listId);
+  const [viewId, setViewId] = useState(views?.[0]?.id);
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useObjectsInList(
     space.id,
     listId,
@@ -23,10 +24,10 @@ export function CollectionList({ space, listId, listName, dataview }: Collection
   );
 
   useEffect(() => {
-    if (objectsError) {
-      showToast(Toast.Style.Failure, "Failed to fetch objects", objectsError.message);
+    if (viewsError || objectsError) {
+      showToast(Toast.Style.Failure, "Failed to fetch objects", viewsError?.message || objectsError?.message);
     }
-  }, [objectsError]);
+  }, [viewsError, objectsError]);
 
   const filteredObjects = objects
     ?.filter((object) => object.name.toLowerCase().includes(searchText.toLowerCase()))
@@ -55,7 +56,7 @@ export function CollectionList({ space, listId, listName, dataview }: Collection
 
   return (
     <List
-      isLoading={isLoadingObjects}
+      isLoading={isLoadingViews || isLoadingObjects}
       onSearchTextChange={setSearchText}
       searchBarPlaceholder={"Search objects in list..."}
       navigationTitle={`Browse ${listName}`}
@@ -63,7 +64,7 @@ export function CollectionList({ space, listId, listName, dataview }: Collection
       throttle={true}
       searchBarAccessory={
         <List.Dropdown tooltip="Change view" onChange={(newValue) => setViewId(newValue)}>
-          {dataview?.views.map((view) => (
+          {views.map((view) => (
             <List.Dropdown.Item key={view.id} value={view.id} title={view.name} icon={resolveLayoutIcon(view.layout)} />
           ))}
         </List.Dropdown>
@@ -81,10 +82,10 @@ export function CollectionList({ space, listId, listName, dataview }: Collection
               objectId={object.id}
               icon={object.icon}
               title={object.title}
-              dataview={object.dataview}
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={object.mutate}
+              mutateViews={mutateViews}
               layout={object.layout}
               viewType={ViewType.objects}
               isGlobalSearch={false}

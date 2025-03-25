@@ -17,6 +17,7 @@ export function useObjectsInList(spaceId: string, listId: string, viewId: string
     [spaceId, listId, viewId],
     {
       keepPreviousData: true,
+      execute: !!viewId,
     },
   );
 

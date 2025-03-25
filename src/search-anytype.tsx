@@ -207,7 +207,6 @@ function Search() {
               objectId={object.id}
               icon={object.icon}
               title={object.title}
-              dataview={object.dataview}
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={[mutateObjects, mutatePinnedObjects]}
@@ -229,7 +228,6 @@ function Search() {
               objectId={object.id}
               icon={object.icon}
               title={object.title}
-              dataview={object.dataview}
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={[mutateObjects, mutatePinnedObjects]}

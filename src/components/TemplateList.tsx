@@ -95,7 +95,6 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
               objectId={object.id}
               icon={object.icon}
               title={object.title}
-              dataview={object.dataview}
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={object.mutate}

@@ -15,7 +15,6 @@ import { CollectionList, ObjectDetail, TemplateList, ViewType } from ".";
 import { deleteObject } from "../api";
 import { updateMember } from "../api/updateMember";
 import {
-  Dataview,
   Export,
   Member,
   MemberRole,
@@ -25,6 +24,7 @@ import {
   Template,
   Type,
   UpdateMemberRole,
+  View,
 } from "../models";
 import {
   addPinned,
@@ -41,12 +41,12 @@ type ObjectActionsProps = {
   space: Space;
   objectId: string;
   title: string;
-  dataview?: Dataview | undefined;
   objectExport?: Export;
   mutate?: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
   mutateTemplates?: MutatePromise<Template[]>;
   mutateObject?: MutatePromise<SpaceObject | null | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;
+  mutateViews?: MutatePromise<View[]>;
   layout: string;
   member?: Member | undefined;
   viewType: ViewType;
@@ -61,12 +61,12 @@ export function ObjectActions({
   space,
   objectId,
   title,
-  dataview,
   mutate,
   objectExport,
   mutateTemplates,
   mutateObject,
   mutateExport,
+  mutateViews,
   layout,
   member,
   viewType,
@@ -120,6 +120,9 @@ export function ObjectActions({
         }
         if (mutateExport) {
           await mutateExport();
+        }
+        if (mutateViews) {
+          await mutateViews();
         }
         await showToast({
           style: Toast.Style.Success,
@@ -353,7 +356,7 @@ export function ObjectActions({
           <Action.Push
             icon={Icon.List}
             title="Show List"
-            target={<CollectionList space={space} listId={objectId} listName={title} dataview={dataview} />}
+            target={<CollectionList space={space} listId={objectId} listName={title} />}
           />
         )}
         {isType && (
