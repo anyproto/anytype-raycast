@@ -85,7 +85,7 @@ export default async function tool({ spaceId, type_key, name, icon, description,
     type: {
       name: object.type.name,
       id: object.type.id,
-      type_key: object.type.type_key,
+      type_key: object.type.key,
     },
     snippet: object.snippet,
     properties: object.properties,

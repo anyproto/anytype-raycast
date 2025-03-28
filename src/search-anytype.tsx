@@ -139,7 +139,7 @@ function Search() {
   const processedPinnedObjects = pinnedObjects?.length
     ? pinnedObjects
         // TODO: decide on wanted behavior for pinned objects
-        .filter((object) => types.length === 0 || types.includes(object.type.type_key))
+        .filter((object) => types.length === 0 || types.includes(object.type.key))
         .filter((object) => filterObjectsBySearchTerm([object], searchText).length > 0)
         .map((object) => processObjectWithSpaceIcon(object, true))
     : [];

@@ -59,7 +59,7 @@ export default async function tool({ query, types, sort }: Input) {
     type: {
       name: type.name,
       id: type.id,
-      type_key: type.type_key,
+      type_key: type.key,
     },
     space_id,
     snippet,

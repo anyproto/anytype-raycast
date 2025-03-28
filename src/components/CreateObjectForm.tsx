@@ -48,7 +48,7 @@ export function CreateObjectForm({
   const [loading, setLoading] = useState(false);
   const [typeKeysForLists, setTypeKeysForLists] = useState<string[]>([]);
   const hasSelectedSpaceAndType = selectedSpace && selectedType;
-  const selectedTypeUniqueKey = types.reduce((acc, type) => (type.id === selectedType ? type.type_key : acc), "");
+  const selectedTypeUniqueKey = types.reduce((acc, type) => (type.id === selectedType ? type.key : acc), "");
 
   useEffect(() => {
     const fetchTypesForLists = async () => {
@@ -130,7 +130,7 @@ export function CreateObjectForm({
     };
 
     return {
-      name: `Create ${types.find((type) => type.type_key === selectedTypeUniqueKey)?.name} in ${spaces.find((space) => space.id === selectedSpace)?.name}`,
+      name: `Create ${types.find((type) => type.key === selectedTypeUniqueKey)?.name} in ${spaces.find((space) => space.id === selectedSpace)?.name}`,
       link: url + "?launchContext=" + encodeURIComponent(JSON.stringify(launchContext)),
     };
   }
@@ -145,7 +145,7 @@ export function CreateObjectForm({
           <Action.SubmitForm title="Create Object" icon={Icon.Plus} onSubmit={handleSubmit} />
           {hasSelectedSpaceAndType && (
             <Action.CreateQuicklink
-              title={`Create Quicklink: ${types.find((type) => type.type_key === selectedTypeUniqueKey)?.name}`}
+              title={`Create Quicklink: ${types.find((type) => type.key === selectedTypeUniqueKey)?.name}`}
               quicklink={getQuicklink()}
             />
           )}

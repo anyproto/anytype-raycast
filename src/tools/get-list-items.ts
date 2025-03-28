@@ -39,7 +39,7 @@ export default async function tool({ spaceId, listId }: Input) {
     type: {
       name: type.name,
       id: type.id,
-      type_key: type.type_key,
+      type_key: type.key,
     },
     snippet,
   }));

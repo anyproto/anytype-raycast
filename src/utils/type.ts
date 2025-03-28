@@ -90,7 +90,7 @@ export async function fetchTypeKeysForPages(
   ]);
 
   const allTypes = await getAllTypesFromSpaces(spaces);
-  const uniqueKeysSet = new Set(allTypes.map((type) => type.type_key).filter((key) => !excludedKeysForPages.has(key)));
+  const uniqueKeysSet = new Set(allTypes.map((type) => type.key).filter((key) => !excludedKeysForPages.has(key)));
   return Array.from(uniqueKeysSet);
 }
 
@@ -99,9 +99,7 @@ export async function fetchTypeKeysForPages(
  */
 export async function fetchTypesKeysForTasks(spaces: Space[]): Promise<string[]> {
   const tasksTypes = await getAllTypesFromSpaces(spaces);
-  const uniqueKeys = new Set(
-    tasksTypes.filter((type) => type.recommended_layout === "todo").map((type) => type.type_key),
-  );
+  const uniqueKeys = new Set(tasksTypes.filter((type) => type.recommended_layout === "todo").map((type) => type.key));
   return Array.from(uniqueKeys);
 }
 
@@ -113,7 +111,7 @@ export async function fetchTypeKeysForLists(spaces: Space[]): Promise<string[]> 
   const typeKeys = new Set(
     listsTypes
       .filter((type) => type.recommended_layout === "set" || type.recommended_layout === "collection")
-      .map((type) => type.type_key),
+      .map((type) => type.key),
   );
   return Array.from(typeKeys);
 }

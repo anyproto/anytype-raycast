@@ -4,7 +4,7 @@ import { ObjectIcon } from ".";
 export interface RawType {
   object: string;
   id: string;
-  type_key: string;
+  key: string;
   name: string;
   icon: ObjectIcon;
   recommended_layout: string;

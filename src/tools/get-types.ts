@@ -26,7 +26,7 @@ export default async function tool({ spaceId }: Input) {
     offset += apiLimitMax;
   }
 
-  const results = allTypes.map(({ object, name, id, type_key, recommended_layout }) => ({
+  const results = allTypes.map(({ object, name, id, key: type_key, recommended_layout }) => ({
     object,
     name,
     id,
