@@ -130,7 +130,12 @@ function BrowseSpaces() {
           })}
         </List.Section>
       ) : (
-        <EmptyViewSpace title="No spaces found" />
+        <EmptyViewSpace
+          title="No spaces found"
+          contextValues={{
+            name: searchText,
+          }}
+        />
       )}
     </List>
   );

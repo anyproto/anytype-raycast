@@ -1,27 +1,45 @@
-import { Action, ActionPanel, Form, Icon, showToast, Toast } from "@raycast/api";
-import { useState } from "react";
+import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
+import { useForm } from "@raycast/utils";
 import { createSpace } from "../api";
 
-export function CreateSpaceForm() {
-  const [spaceName, setSpaceName] = useState("");
+export interface CreateSpaceFormValues {
+  name?: string;
+  description?: string;
+}
+interface CreateSpaceFormProps {
+  draftValues: CreateSpaceFormValues;
+}
 
-  const handleSubmit = async () => {
-    if (!spaceName) {
-      showToast(Toast.Style.Failure, "Space name is required");
-      return;
-    }
+export function CreateSpaceForm({ draftValues }: CreateSpaceFormProps) {
+  const { handleSubmit, itemProps } = useForm<CreateSpaceFormValues>({
+    initialValues: draftValues,
+    onSubmit: async (values) => {
+      try {
+        await showToast({ style: Toast.Style.Animated, title: "Creating space..." });
 
-    try {
-      await createSpace({ name: spaceName });
-      showToast(Toast.Style.Success, "Space created successfully");
-    } catch (error) {
-      if (error instanceof Error) {
-        showToast(Toast.Style.Failure, "Failed to create space", error.message);
-      } else {
-        showToast(Toast.Style.Failure, "Failed to create space", "Unknown error");
+        await createSpace({
+          name: values.name || "",
+          description: values.description || "",
+        });
+
+        showToast(Toast.Style.Success, "Space created successfully");
+        popToRoot();
+      } catch (error) {
+        if (error instanceof Error) {
+          showToast(Toast.Style.Failure, "Failed to create space", error.message);
+        } else {
+          showToast(Toast.Style.Failure, "Failed to create space", "Unknown error");
+        }
       }
-    }
-  };
+    },
+    validation: {
+      name: (value) => {
+        if (!value) {
+          return "Name is required";
+        }
+      },
+    },
+  });
 
   return (
     <Form
@@ -32,12 +50,12 @@ export function CreateSpaceForm() {
         </ActionPanel>
       }
     >
+      <Form.TextField {...itemProps.name} title="Name" placeholder="Enter space name" info="The name of the space" />
       <Form.TextField
-        id="spaceName"
-        title="Space Name"
-        placeholder="Enter space name"
-        value={spaceName}
-        onChange={setSpaceName}
+        {...itemProps.description}
+        title="Description"
+        placeholder="Enter space description"
+        info="The description of the space"
       />
     </Form>
   );

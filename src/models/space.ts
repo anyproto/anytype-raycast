@@ -3,6 +3,7 @@ import { ObjectIcon } from ".";
 
 export interface CreateSpaceRequest {
   name: string;
+  description: string;
 }
 
 export interface RawSpace {
