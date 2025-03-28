@@ -61,8 +61,8 @@ export const apiEndpoints = {
 
   // export
   getExport: (spaceId: string, objectId: string, format: string) => ({
-    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}/export/${format}`,
-    method: "POST",
+    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}/${format}`,
+    method: "GET",
   }),
 
   // lists
