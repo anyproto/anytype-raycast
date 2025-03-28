@@ -266,7 +266,7 @@
             }
           }
         ],
-        "usedAsExample": true
+        "usedAsExample": false
       },
       {
         "input": "@anytype create a new page in my personal space explaining the concept of privacy",
@@ -522,7 +522,7 @@
             }
           }
         ],
-        "usedAsExample": true
+        "usedAsExample": false
       },
       {
         "input": "@anytype get all types in my personal space",
@@ -560,7 +560,7 @@
             }
           }
         ],
-        "usedAsExample": true
+        "usedAsExample": false
       },
       {
         "input": "@anytype reject bob's request to join my personal space",
@@ -620,7 +620,7 @@
             }
           }
         ],
-        "usedAsExample": true
+        "usedAsExample": false
       },
       {
         "input": "@anytype remove the garlic pasta recipe from the 'recipe' list in my personal space",
@@ -747,7 +747,7 @@
             }
           }
         ],
-        "usedAsExample": true
+        "usedAsExample": false
       },
       {
         "input": "@anytype search for objects globally",
@@ -777,7 +777,7 @@
             }
           }
         ],
-        "usedAsExample": true
+        "usedAsExample": false
       },
       {
         "input": "@anytype search for recently modified objects in my personal space",
@@ -884,7 +884,7 @@
             }
           }
         ],
-        "usedAsExample": true
+        "usedAsExample": false
       }
     ]
   },
