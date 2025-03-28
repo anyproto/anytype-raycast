@@ -2,6 +2,7 @@ import { Tool } from "@raycast/api";
 import { getMember, getSpace, updateMember } from "../api";
 import { MemberStatus } from "../models";
 
+//! Member management not enabled yet
 type Input = {
   /**
    * The unique identifier of the space to reject the member from.

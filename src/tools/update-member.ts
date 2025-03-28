@@ -3,6 +3,7 @@ import { getMember, getSpace, updateMember } from "../api";
 import { MemberRole, MemberStatus } from "../models";
 import { formatMemberRole } from "../utils";
 
+//! Member management not enabled yet
 type Input = {
   /**
    * The unique identifier of the space to update the member role in.

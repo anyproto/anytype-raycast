@@ -134,6 +134,7 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces/${spaceId}/members${encodeQueryParams(options)}`,
     method: "GET",
   }),
+  //! Member management not enabled yet
   updateMember: (spaceId: string, objectId: string) => ({
     url: `${apiUrl}/spaces/${spaceId}/members/${objectId}`,
     method: "PATCH",

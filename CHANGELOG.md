@@ -6,7 +6,7 @@
 
 - Interact naturally with your Anytype spaces using `@anytype` to create object content with the power of AI
 - Use simple natural-language queries to search globally or within specific spaces
-- Manage members, objects, and lists (collections) easily with commands like approving members, updating roles, or handling objects and lists
+- Manage objects and lists (collections) easily with commands like adding to or removing objects from lists
 
 **Pinning**
 
@@ -32,9 +32,9 @@
 
 **Browsing**
 
-- Browse items within collections with support for multiple views
+- Browse items within lists (collections and sets) with support for multiple views
 - Display objects of a specific type beneath their corresponding templates when viewing types within a space
-- Show space names in navigation titles when browsing spaces or collections
+- Show space names in navigation titles when browsing spaces or lists
 
 **Preferences**
 

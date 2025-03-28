@@ -13,22 +13,9 @@ import {
 import { MutatePromise } from "@raycast/utils";
 import { CollectionList, ObjectDetail, TemplateList, ViewType } from ".";
 import { deleteObject } from "../api";
-import { updateMember } from "../api/updateMember";
-import {
-  Export,
-  Member,
-  MemberRole,
-  MemberStatus,
-  Space,
-  SpaceObject,
-  Template,
-  Type,
-  UpdateMemberRole,
-  View,
-} from "../models";
+import { Export, Member, Space, SpaceObject, Template, Type, View } from "../models";
 import {
   addPinned,
-  formatMemberRole,
   localStorageKeys,
   moveDownInPinned,
   moveUpInPinned,
@@ -68,7 +55,6 @@ export function ObjectActions({
   mutateExport,
   mutateViews,
   layout,
-  member,
   viewType,
   isGlobalSearch,
   isNoPinView,
@@ -214,109 +200,110 @@ export function ObjectActions({
     }
   }
 
-  async function handleApproveMember(identity: string, name: string, role: UpdateMemberRole) {
-    try {
-      await updateMember(space.id, identity, { status: MemberStatus.Active, role });
-      if (mutate) {
-        for (const m of mutate) {
-          await m();
-        }
-      }
-      await showToast({
-        style: Toast.Style.Success,
-        title: `Member approved`,
-        message: `${name} has been approved as ${formatMemberRole(role)}.`,
-      });
-    } catch (error) {
-      await showToast({
-        style: Toast.Style.Failure,
-        title: `Failed to approve member`,
-        message: error instanceof Error ? error.message : "An unknown error occurred.",
-      });
-    }
-  }
+  //! Member management not enabled yet
+  //   async function handleApproveMember(identity: string, name: string, role: UpdateMemberRole) {
+  //     try {
+  //       await updateMember(space.id, identity, { status: MemberStatus.Active, role });
+  //       if (mutate) {
+  //         for (const m of mutate) {
+  //           await m();
+  //         }
+  //       }
+  //       await showToast({
+  //         style: Toast.Style.Success,
+  //         title: `Member approved`,
+  //         message: `${name} has been approved as ${formatMemberRole(role)}.`,
+  //       });
+  //     } catch (error) {
+  //       await showToast({
+  //         style: Toast.Style.Failure,
+  //         title: `Failed to approve member`,
+  //         message: error instanceof Error ? error.message : "An unknown error occurred.",
+  //       });
+  //     }
+  //   }
 
-  async function handleRejectMember(identity: string, name: string, spaceName: string) {
-    const confirm = await confirmAlert({
-      title: `Reject Member`,
-      message: `Are you sure you want to reject ${name} from ${spaceName}?`,
-      icon: { source: Icon.XMarkCircleHalfDash, tintColor: Color.Red },
-    });
+  //   async function handleRejectMember(identity: string, name: string, spaceName: string) {
+  //     const confirm = await confirmAlert({
+  //       title: `Reject Member`,
+  //       message: `Are you sure you want to reject ${name} from ${spaceName}?`,
+  //       icon: { source: Icon.XMarkCircleHalfDash, tintColor: Color.Red },
+  //     });
 
-    if (confirm) {
-      try {
-        await updateMember(space.id, identity, { status: MemberStatus.Declined });
-        if (mutate) {
-          for (const m of mutate) {
-            await m();
-          }
-        }
-        await showToast({
-          style: Toast.Style.Success,
-          title: "Member rejected",
-          message: `${name} has been rejected.`,
-        });
-      } catch (error) {
-        await showToast({
-          style: Toast.Style.Failure,
-          title: `Failed to reject member`,
-          message: error instanceof Error ? error.message : "An unknown error occurred.",
-        });
-      }
-    }
-  }
+  //     if (confirm) {
+  //       try {
+  //         await updateMember(space.id, identity, { status: MemberStatus.Declined });
+  //         if (mutate) {
+  //           for (const m of mutate) {
+  //             await m();
+  //           }
+  //         }
+  //         await showToast({
+  //           style: Toast.Style.Success,
+  //           title: "Member rejected",
+  //           message: `${name} has been rejected.`,
+  //         });
+  //       } catch (error) {
+  //         await showToast({
+  //           style: Toast.Style.Failure,
+  //           title: `Failed to reject member`,
+  //           message: error instanceof Error ? error.message : "An unknown error occurred.",
+  //         });
+  //       }
+  //     }
+  //   }
 
-  async function handleRemoveMember(identity: string, memberName: string, spaceName: string) {
-    const confirm = await confirmAlert({
-      title: `Remove Member`,
-      message: `Are you sure you want to remove ${memberName} from ${spaceName}?`,
-      icon: { source: Icon.RemovePerson, tintColor: Color.Red },
-    });
+  //   async function handleRemoveMember(identity: string, memberName: string, spaceName: string) {
+  //     const confirm = await confirmAlert({
+  //       title: `Remove Member`,
+  //       message: `Are you sure you want to remove ${memberName} from ${spaceName}?`,
+  //       icon: { source: Icon.RemovePerson, tintColor: Color.Red },
+  //     });
 
-    if (confirm) {
-      try {
-        await updateMember(space.id, identity, { status: MemberStatus.Removed });
-        if (mutate) {
-          for (const m of mutate) {
-            await m();
-          }
-        }
-        await showToast({
-          style: Toast.Style.Success,
-          title: "Member removed",
-          message: `${memberName} has been removed from ${spaceName}.`,
-        });
-      } catch (error) {
-        await showToast({
-          style: Toast.Style.Failure,
-          title: `Failed to remove member`,
-          message: error instanceof Error ? error.message : "An unknown error occurred.",
-        });
-      }
-    }
-  }
+  //     if (confirm) {
+  //       try {
+  //         await updateMember(space.id, identity, { status: MemberStatus.Removed });
+  //         if (mutate) {
+  //           for (const m of mutate) {
+  //             await m();
+  //           }
+  //         }
+  //         await showToast({
+  //           style: Toast.Style.Success,
+  //           title: "Member removed",
+  //           message: `${memberName} has been removed from ${spaceName}.`,
+  //         });
+  //       } catch (error) {
+  //         await showToast({
+  //           style: Toast.Style.Failure,
+  //           title: `Failed to remove member`,
+  //           message: error instanceof Error ? error.message : "An unknown error occurred.",
+  //         });
+  //       }
+  //     }
+  //   }
 
-  async function handleChangeMemberRole(identity: string, name: string, role: UpdateMemberRole) {
-    try {
-      await updateMember(space.id, identity, { status: MemberStatus.Active, role });
-      if (mutate) {
-        for (const m of mutate) {
-          await m();
-        }
-      }
-      await showToast({
-        style: Toast.Style.Success,
-        title: `Role changed`,
-        message: `${name} has been changed to ${formatMemberRole(role)}.`,
-      });
-    } catch (error) {
-      await showToast({
-        style: Toast.Style.Failure,
-        title: `Failed to change member role`,
-        message: error instanceof Error ? error.message : "An unknown error occurred.",
-      });
-    }
-  }
+  //   async function handleChangeMemberRole(identity: string, name: string, role: UpdateMemberRole) {
+  //     try {
+  //       await updateMember(space.id, identity, { status: MemberStatus.Active, role });
+  //       if (mutate) {
+  //         for (const m of mutate) {
+  //           await m();
+  //         }
+  //       }
+  //       await showToast({
+  //         style: Toast.Style.Success,
+  //         title: `Role changed`,
+  //         message: `${name} has been changed to ${formatMemberRole(role)}.`,
+  //       });
+  //     } catch (error) {
+  //       await showToast({
+  //         style: Toast.Style.Failure,
+  //         title: `Failed to change member role`,
+  //         message: error instanceof Error ? error.message : "An unknown error occurred.",
+  //       });
+  //     }
+  //   }
 
   const canShowDetails = !isType && !isList && !isDetailView;
   const showDetailsAction = canShowDetails && (
@@ -384,54 +371,6 @@ export function ObjectActions({
           shortcut={Keyboard.Shortcut.Common.CopyDeeplink}
           onAction={handleCopyLink}
         />
-        {isMember && member && member.role !== MemberRole.Owner && (
-          <>
-            {member?.status === MemberStatus.Joining && (
-              <>
-                <ActionPanel.Submenu icon={Icon.AddPerson} title="Approve Member">
-                  <Action
-                    icon={{ source: Icon.Pencil, tintColor: Color.Green }}
-                    title="Editor"
-                    onAction={() => handleApproveMember(member.identity, member.name, MemberRole.Editor)}
-                  />
-                  <Action
-                    icon={{ source: Icon.Eye, tintColor: Color.Green }}
-                    title="Viewer"
-                    onAction={() => handleApproveMember(member.identity, member.name, MemberRole.Viewer)}
-                  />
-                </ActionPanel.Submenu>
-                <Action
-                  icon={Icon.XMarkCircleHalfDash}
-                  title="Reject Member"
-                  style={Action.Style.Destructive}
-                  onAction={() => handleRejectMember(member.identity, member.name, space.name)}
-                />
-              </>
-            )}
-            {member?.status === MemberStatus.Active && (
-              <>
-                <ActionPanel.Submenu icon={Icon.Replace} title="Change Role">
-                  <Action
-                    icon={{ source: Icon.Pencil, tintColor: Color.Green }}
-                    title="Editor"
-                    onAction={() => handleChangeMemberRole(member.identity, member.name, MemberRole.Editor)}
-                  />
-                  <Action
-                    icon={{ source: Icon.Eye, tintColor: Color.Green }}
-                    title="Viewer"
-                    onAction={() => handleChangeMemberRole(member.identity, member.name, MemberRole.Viewer)}
-                  />
-                </ActionPanel.Submenu>
-                <Action
-                  icon={Icon.RemovePerson}
-                  title="Remove Member"
-                  style={Action.Style.Destructive}
-                  onAction={() => handleRemoveMember(member.identity, member.name, space.name)}
-                />
-              </>
-            )}
-          </>
-        )}
         {!isMember && (
           <Action
             icon={Icon.Trash}

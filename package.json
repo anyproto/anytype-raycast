@@ -42,19 +42,9 @@
       "description": "Add an object to a specific list in a specific space."
     },
     {
-      "name": "approve-member",
-      "title": "Approve Member",
-      "description": "Approve a joining member with a certain role in a specific space."
-    },
-    {
       "name": "create-object",
       "title": "Create Object",
       "description": "Create an object of a specific type in a specific space."
-    },
-    {
-      "name": "reject-member",
-      "title": "Reject Member",
-      "description": "Reject a joining member request in a specific space."
     },
     {
       "name": "get-members",
@@ -87,11 +77,6 @@
       "description": "Remove an object from a specific list in a specific space."
     },
     {
-      "name": "remove-member",
-      "title": "Remove Member",
-      "description": "Remove a member from a specific space."
-    },
-    {
       "name": "search-anytype",
       "title": "Search in Anytype",
       "description": "Search for objects globally in all spaces."
@@ -110,11 +95,6 @@
       "name": "start-challenge",
       "title": "Start Challenge",
       "description": "Start the pairing process with the Anytype desktop app."
-    },
-    {
-      "name": "update-member",
-      "title": "Update Member",
-      "description": "Update the role of a member in a specific space."
     }
   ],
   "ai": {

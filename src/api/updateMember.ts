@@ -2,6 +2,7 @@ import { mapMember } from "../mappers/members";
 import { Member, RawMember, UpdateMemberRequest } from "../models";
 import { apiEndpoints, apiFetch } from "../utils";
 
+//! Member management not enabled yet
 export async function updateMember(
   spaceId: string,
   memberId: string,
