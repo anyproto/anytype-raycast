@@ -21,6 +21,7 @@ export function SpaceListItem({ space, icon, accessories, mutate, isPinned }: Sp
     <List.Item
       key={space.id}
       title={space.name}
+      subtitle={{ value: space.description, tooltip: `Description: ${space.description}` }}
       accessories={[
         ...(accessories?.map((accessory) => {
           const { icon, date, text, tooltip } = accessory;

@@ -11,6 +11,7 @@ export interface RawSpace {
   id: string;
   name: string;
   icon: ObjectIcon;
+  description: string;
   gateway_url: string;
   network_id: string;
 }
