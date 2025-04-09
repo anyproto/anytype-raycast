@@ -1,6 +1,6 @@
 import { mapObject } from "../mappers/objects";
 import { mapType } from "../mappers/types";
-import { RawSpaceObject, SpaceObject } from "../models";
+import { RawSpaceObjectWithBlocks, SpaceObject } from "../models";
 import { apiEndpoints, apiFetch, getIconWithFallback } from "../utils";
 
 export async function getObject(
@@ -10,7 +10,7 @@ export async function getObject(
   object: SpaceObject | null;
 }> {
   const { url, method } = apiEndpoints.getObject(spaceId, objectId);
-  const response = await apiFetch<{ object: RawSpaceObject }>(url, { method: method });
+  const response = await apiFetch<{ object: RawSpaceObjectWithBlocks }>(url, { method: method });
   return {
     object: response ? await mapObject(response.payload.object) : null,
   };
@@ -18,7 +18,7 @@ export async function getObject(
 
 export async function getObjectWithoutMappedDetails(spaceId: string, objectId: string): Promise<SpaceObject | null> {
   const { url, method } = apiEndpoints.getObject(spaceId, objectId);
-  const response = await apiFetch<{ object: RawSpaceObject }>(url, { method });
+  const response = await apiFetch<{ object: RawSpaceObjectWithBlocks }>(url, { method });
   if (!response) {
     return null;
   }
