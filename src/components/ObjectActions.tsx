@@ -326,7 +326,7 @@ export function ObjectActions({
 
   const openObjectAction = (
     <Action.OpenInBrowser
-      icon={{ source: "../assets/anytype-icon.png" }}
+      icon={{ source: "../assets/anytype.png" }}
       title={`Open ${getContextLabel()} in Anytype`}
       url={objectUrl}
     />
