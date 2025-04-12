@@ -33,6 +33,13 @@
       "subtitle": "Anytype",
       "description": "Search objects globally in all spaces.",
       "mode": "view"
+    },
+    {
+      "name": "add-to-list",
+      "title": "Add to List",
+      "subtitle": "Anytype",
+      "description": "Add an existing object to a list.",
+      "mode": "view"
     }
   ],
   "tools": [
