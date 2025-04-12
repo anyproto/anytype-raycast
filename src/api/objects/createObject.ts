@@ -1,6 +1,6 @@
-import { mapObject } from "../mappers/objects";
-import { CreateObjectRequest, RawSpaceObject, SpaceObject } from "../models";
-import { apiEndpoints, apiFetch } from "../utils";
+import { mapObject } from "../../mappers/objects";
+import { CreateObjectRequest, RawSpaceObject, SpaceObject } from "../../models";
+import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function createObject(
   spaceId: string,

@@ -1,6 +1,6 @@
 import { showToast, Toast } from "@raycast/api";
-import { PaginatedResponse, RawSpace } from "../models";
-import { apiEndpoints, apiFetch, currentApiVersion, errorConnectionMessage } from "../utils";
+import { PaginatedResponse, RawSpace } from "../../models";
+import { apiEndpoints, apiFetch, currentApiVersion, errorConnectionMessage } from "../../utils";
 
 // Validate api version and token by checking if data can be fetched without errors
 export async function checkApiTokenValidity(): Promise<boolean> {

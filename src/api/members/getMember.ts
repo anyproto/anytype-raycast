@@ -1,6 +1,6 @@
-import { mapMember } from "../mappers/members";
-import { Member, RawMember } from "../models";
-import { apiEndpoints, apiFetch } from "../utils";
+import { mapMember } from "../../mappers/members";
+import { Member, RawMember } from "../../models";
+import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function getMember(
   spaceId: string,

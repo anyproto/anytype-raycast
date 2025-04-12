@@ -1,6 +1,6 @@
-import { mapType } from "../mappers/types";
-import { RawType, Type } from "../models";
-import { apiEndpoints, apiFetch } from "../utils";
+import { mapType } from "../../mappers/types";
+import { RawType, Type } from "../../models";
+import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function getType(
   spaceId: string,

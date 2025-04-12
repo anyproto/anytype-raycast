@@ -1,6 +1,6 @@
-import { mapObjects } from "../mappers/objects";
-import { PaginatedResponse, Pagination, RawSpaceObject, SpaceObject } from "../models";
-import { apiEndpoints, apiFetch } from "../utils";
+import { mapObjects } from "../../mappers/objects";
+import { PaginatedResponse, Pagination, RawSpaceObject, SpaceObject } from "../../models";
+import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function getObjects(
   spaceId: string,

@@ -1,12 +1,13 @@
-import { mapObjects } from "../mappers/objects";
-import { PaginatedResponse, RawSpaceObject, SearchRequest, SpaceObject } from "../models";
-import { apiEndpoints, apiFetch } from "../utils";
+import { mapObjects } from "../../mappers/objects";
+import { PaginatedResponse, RawSpaceObject, SearchRequest, SpaceObject } from "../../models";
+import { apiEndpoints, apiFetch } from "../../utils";
 
-export async function globalSearch(
+export async function search(
+  spaceId: string,
   SearchRequest: SearchRequest,
   options: { offset: number; limit: number },
 ): Promise<PaginatedResponse<SpaceObject>> {
-  const { url, method } = apiEndpoints.globalSearch(options);
+  const { url, method } = apiEndpoints.search(spaceId, options);
   const response = await apiFetch<PaginatedResponse<RawSpaceObject>>(url, {
     method: method,
     body: JSON.stringify(SearchRequest),

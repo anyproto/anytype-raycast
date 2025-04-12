@@ -1,7 +1,7 @@
-import { mapObject } from "../mappers/objects";
-import { mapType } from "../mappers/types";
-import { RawSpaceObjectWithBlocks, SpaceObject } from "../models";
-import { apiEndpoints, apiFetch, getIconWithFallback } from "../utils";
+import { mapObject } from "../../mappers/objects";
+import { mapType } from "../../mappers/types";
+import { RawSpaceObjectWithBlocks, SpaceObject } from "../../models";
+import { apiEndpoints, apiFetch, getIconWithFallback } from "../../utils";
 
 export async function getObject(
   spaceId: string,

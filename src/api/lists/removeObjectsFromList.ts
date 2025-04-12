@@ -1,4 +1,4 @@
-import { apiEndpoints, apiFetch } from "../utils";
+import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function removeObjectsFromList(spaceId: string, listId: string, objectIds: string[]): Promise<void> {
   for (const objectId of objectIds) {

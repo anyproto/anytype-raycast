@@ -1,6 +1,6 @@
-import { mapSpace } from "../mappers/spaces";
-import { RawSpace, Space } from "../models";
-import { apiEndpoints, apiFetch } from "../utils";
+import { mapSpace } from "../../mappers/spaces";
+import { RawSpace, Space } from "../../models";
+import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function getSpace(spaceId: string): Promise<{
   space: Space | null;

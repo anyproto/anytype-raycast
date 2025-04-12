@@ -1,6 +1,6 @@
-import { mapTemplates } from "../mappers/templates";
-import { PaginatedResponse, Pagination, RawTemplate, Template } from "../models";
-import { apiEndpoints, apiFetch } from "../utils";
+import { mapTemplates } from "../../mappers/templates";
+import { PaginatedResponse, Pagination, RawTemplate, Template } from "../../models";
+import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function getTemplates(
   spaceId: string,

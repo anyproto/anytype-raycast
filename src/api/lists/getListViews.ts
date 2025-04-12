@@ -1,5 +1,5 @@
-import { PaginatedResponse, Pagination, View } from "../models";
-import { apiEndpoints, apiFetch } from "../utils";
+import { PaginatedResponse, Pagination, View } from "../../models";
+import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function getListViews(
   spaceId: string,

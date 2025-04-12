@@ -1,6 +1,6 @@
-import { mapMembers } from "../mappers/members";
-import { Member, PaginatedResponse, Pagination, RawMember } from "../models";
-import { apiEndpoints, apiFetch } from "../utils";
+import { mapMembers } from "../../mappers/members";
+import { Member, PaginatedResponse, Pagination, RawMember } from "../../models";
+import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function getMembers(
   spaceId: string,

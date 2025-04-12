@@ -1,6 +1,6 @@
-import { mapTypes } from "../mappers/types";
-import { PaginatedResponse, Pagination, RawType, Type } from "../models";
-import { apiEndpoints, apiFetch } from "../utils";
+import { mapTypes } from "../../mappers/types";
+import { PaginatedResponse, Pagination, RawType, Type } from "../../models";
+import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function getTypes(
   spaceId: string,
