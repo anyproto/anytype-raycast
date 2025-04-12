@@ -1,8 +1,15 @@
 import { Action, ActionPanel, Form, popToRoot, showToast, Toast } from "@raycast/api";
+import { useForm } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { addObjectsToList } from "./api";
 import { EnsureAuthenticated } from "./components/EnsureAuthenticated";
 import { useSearch, useSpaces } from "./hooks";
+
+export interface AddToListValues {
+  space: string;
+  list: string;
+  object: string;
+}
 
 export default function Command() {
   return (
@@ -38,24 +45,42 @@ export function AddToList() {
     }
   }, [spacesError, objectsError, listsError]);
 
-  const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      await showToast(Toast.Style.Animated, "Adding object to list...");
-      const response = await addObjectsToList(selectedSpace, selectedList, [selectedObject]);
-
-      if (response.payload) {
-        await showToast(Toast.Style.Success, "Object added to list successfully", response.payload);
-        popToRoot();
-      } else {
-        await showToast(Toast.Style.Failure, "Failed to add object to list");
+  const { handleSubmit, itemProps } = useForm<AddToListValues>({
+    onSubmit: async (values) => {
+      setLoading(true);
+      try {
+        await showToast(Toast.Style.Animated, "Adding object to list...");
+        const response = await addObjectsToList(values.space, values.list, [values.object]);
+        if (response.payload) {
+          await showToast(Toast.Style.Success, "Object added to list successfully", response.payload);
+          popToRoot();
+        } else {
+          await showToast(Toast.Style.Failure, "Failed to add object to list");
+        }
+      } catch (error) {
+        await showToast(Toast.Style.Failure, "Failed to add object to list", String(error));
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      await showToast(Toast.Style.Failure, "Failed to add object to list", String(error));
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    validation: {
+      space: (value) => {
+        if (!value) {
+          return "Space is required";
+        }
+      },
+      list: (value) => {
+        if (!value) {
+          return "List is required";
+        }
+      },
+      object: (value) => {
+        if (!value) {
+          return "Object is required";
+        }
+      },
+    },
+  });
 
   return (
     <Form
@@ -67,7 +92,7 @@ export function AddToList() {
       }
     >
       <Form.Dropdown
-        id="space"
+        {...itemProps.space}
         title="Space"
         value={selectedSpace}
         onChange={setSelectedSpace}
@@ -81,7 +106,7 @@ export function AddToList() {
       </Form.Dropdown>
 
       <Form.Dropdown
-        id="list"
+        {...itemProps.list}
         title="Collection"
         value={selectedList}
         onChange={setSelectedList}
@@ -96,7 +121,7 @@ export function AddToList() {
       </Form.Dropdown>
 
       <Form.Dropdown
-        id="object"
+        {...itemProps.object}
         title="Object"
         value={selectedObject}
         onChange={setSelectedObject}
