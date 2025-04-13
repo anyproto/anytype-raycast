@@ -71,6 +71,7 @@ export interface File {
 
 export interface Property {
   id: string;
+  key: string;
   name: string;
   format: string;
   text?: string;
