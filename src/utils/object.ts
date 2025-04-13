@@ -13,7 +13,7 @@ export function processObject(
   const { sort } = getPreferenceValues();
   // If sort is 'Name', fall back to using 'LastModifiedDate' for date details
   const sortForDate = sort === SortProperty.Name ? SortProperty.LastModifiedDate : sort;
-  const dateProperty = object.properties.find((property) => property.id === sortForDate);
+  const dateProperty = object.properties.find((property) => property.key === sortForDate);
   const date = dateProperty && dateProperty.date ? dateProperty.date : undefined;
   const hasValidDate = date && new Date(date).getTime() !== 0;
 

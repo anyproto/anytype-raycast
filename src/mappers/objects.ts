@@ -21,9 +21,9 @@ export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject
         properties: object.properties?.filter((property) => {
           if (sort === SortProperty.Name) {
             // When sorting by name, keep the 'LastModifiedDate' property for tooltip purposes
-            return property.id === SortProperty.LastModifiedDate;
+            return property.key === SortProperty.LastModifiedDate;
           }
-          return property.id === sort;
+          return property.key === sort;
         }),
       };
     }),
@@ -40,6 +40,7 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
     (object.properties || []).map(async (property) => {
       let mappedProperty: Property = {
         id: property.id,
+        key: property.key,
         name: property.name,
         format: property.format,
       };
