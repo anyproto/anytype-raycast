@@ -78,7 +78,7 @@ export function SpaceActions({ space, mutate, isPinned }: SpaceActionsProps) {
       <ActionPanel.Section>
         <Action.Push icon={Icon.List} title="View Objects" target={<ObjectList key={space.id} space={space} />} />
         <Action.OpenInBrowser
-          icon={{ source: "../assets/anytype.png" }}
+          icon={{ source: "../assets/anytype-icon.png" }}
           title="Open Space in Anytype"
           url={spaceDeeplink}
         />
