@@ -1,7 +1,8 @@
 import { getPreferenceValues } from "@raycast/api";
 import { getObjectWithoutMappedDetails } from "../api";
 import { Property, RawSpaceObject, SortProperty, SpaceObject } from "../models";
-import { colorMap, getIconWithFallback } from "../utils";
+import { getIconWithFallback } from "../utils";
+import { mapTag } from "./properties";
 import { mapType } from "./types";
 
 /**
@@ -62,11 +63,7 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
           if (property.select) {
             mappedProperty = {
               ...mappedProperty,
-              select: {
-                id: property.select.id || "",
-                name: property.select.name || "",
-                color: colorMap[property.select.color] || property.select.color,
-              },
+              select: mapTag(property.select),
             };
           }
           break;
@@ -74,11 +71,7 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
           if (property.multi_select) {
             mappedProperty = {
               ...mappedProperty,
-              multi_select: property.multi_select.map((tag) => ({
-                id: tag.id || "",
-                name: tag.name || "",
-                color: colorMap[tag.color] || tag.color,
-              })),
+              multi_select: property.multi_select.map((tag) => mapTag(tag)),
             };
           }
           break;

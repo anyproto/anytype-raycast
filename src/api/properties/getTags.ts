@@ -1,3 +1,4 @@
+import { mapTags } from "../../mappers/properties";
 import { PaginatedResponse, Pagination, Tag } from "../../models";
 import { apiEndpoints, apiFetch } from "../../utils";
 
@@ -13,7 +14,7 @@ export async function getTags(
   const response = await apiFetch<PaginatedResponse<Tag>>(url, { method: method });
 
   return {
-    tags: response.payload.data,
+    tags: response.payload.data ? mapTags(response.payload.data) : [],
     pagination: response.payload.pagination,
   };
 }
