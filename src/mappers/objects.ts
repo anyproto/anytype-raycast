@@ -17,7 +17,7 @@ export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject
       return {
         ...object,
         icon: await getIconWithFallback(object.icon, object.layout, object.type),
-        name: object.name || object.snippet || "Untitled",
+        name: object.name || `${object.snippet.split("\n")[0]}...` || "Untitled",
         type: await mapType(object.type),
         properties: object.properties?.filter((property) => {
           if (sort === SortProperty.Name) {
@@ -132,7 +132,7 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
   return {
     ...object,
     icon,
-    name: object.name || object.snippet || "Untitled",
+    name: object.name || `${object.snippet.split("\n")[0]}...` || "Untitled",
     type: await mapType(object.type),
     properties: mappedProperties,
   };
