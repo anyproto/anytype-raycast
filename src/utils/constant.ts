@@ -101,6 +101,24 @@ export const apiEndpoints = {
     method: "GET",
   }),
 
+  // properties
+  getProperties: (spaceId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties`,
+    method: "GET",
+  }),
+  //   getProperty: (spaceId: string, propertyId: string) => ({
+  //     url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}`,
+  //     method: "GET",
+  //   }),
+  getTags: (spaceId: string, propertyId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/options${encodeQueryParams(options)}`,
+    method: "GET",
+  }),
+  //   getTag: (spaceId: string, propertyId: string, optionId: string) => ({
+  //     url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/options/${optionId}`,
+  //     method: "GET",
+  //   }),
+
   // search
   globalSearch: (options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/search${encodeQueryParams(options)}`,

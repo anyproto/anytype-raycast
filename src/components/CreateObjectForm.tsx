@@ -1,8 +1,9 @@
 import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
 import { useForm } from "@raycast/utils";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { addObjectsToList, createObject } from "../api";
 import { CreateObjectFormValues } from "../create-object";
+import { useTagsMap } from "../hooks";
 import { IconFormat, Space, SpaceObject, Template, Type } from "../models";
 import { fetchTypeKeysForLists } from "../utils";
 
@@ -48,7 +49,18 @@ export function CreateObjectForm({
   const [loading, setLoading] = useState(false);
   const [typeKeysForLists, setTypeKeysForLists] = useState<string[]>([]);
   const hasSelectedSpaceAndType = selectedSpace && selectedType;
-  const selectedTypeUniqueKey = types.reduce((acc, type) => (type.id === selectedType ? type.key : acc), "");
+  const selectedTypeUniqueKey = useMemo(
+    () => types.reduce((acc, type) => (type.id === selectedType ? type.key : acc), ""),
+    [types, selectedType],
+  );
+
+  // Fetch tags for all properties in one hook call
+  const selectedTypeDef = types.find((type) => type.id === selectedType);
+  const properties = selectedTypeDef?.properties || [];
+  const { tagsMap = {} } = useTagsMap(
+    selectedSpace,
+    properties.map((prop) => prop.key), // TODO: change to id
+  );
 
   useEffect(() => {
     const fetchTypesForLists = async () => {
@@ -241,12 +253,12 @@ export function CreateObjectForm({
                   info="Enter a single emoji character to represent the object"
                 />
               )}
-              <Form.TextField
+              {/* <Form.TextField
                 {...itemProps.description}
                 title="Description"
                 placeholder="Add a description"
                 info="Provide a brief description of the object"
-              />
+              /> */}
               {!typeKeysForLists.includes(selectedTypeUniqueKey) && (
                 <Form.TextArea
                   {...itemProps.body}
@@ -261,6 +273,52 @@ It supports:
 - Text formatting: bold, italics, strikethrough, inline code, hyperlinks"
                 />
               )}
+
+              <Form.Separator />
+
+              {properties.map((prop) => {
+                const tags = tagsMap[prop.key] ?? []; // TODO: change to id
+                const id = prop.key;
+                const title = prop.name;
+                if (prop.format === "text") {
+                  return <Form.TextField key={id} id={id} title={title} placeholder="Add text" />;
+                }
+                if (prop.format === "number") {
+                  return <Form.TextField key={id} id={id} title={title} placeholder="Add number" />;
+                }
+                if (prop.format === "date") {
+                  return <Form.DatePicker key={id} id={id} title={title} />;
+                }
+                if (prop.format === "select") {
+                  return (
+                    <Form.Dropdown key={id} id={id} title={title} placeholder="Select tag">
+                      {tags.map((tag) => (
+                        <Form.Dropdown.Item
+                          key={tag.id}
+                          value={tag.id}
+                          title={tag.name}
+                          icon={{ source: "icons/property/tag.svg", tintColor: tag.color }}
+                        />
+                      ))}
+                    </Form.Dropdown>
+                  );
+                }
+                if (prop.format === "multi_select") {
+                  return (
+                    <Form.TagPicker key={id} id={id} title={title} placeholder="Select tags">
+                      {tags.map((tag) => (
+                        <Form.TagPicker.Item
+                          key={tag.id}
+                          value={tag.id}
+                          title={tag.name}
+                          icon={{ source: "icons/property/tag.svg", tintColor: tag.color }}
+                        />
+                      ))}
+                    </Form.TagPicker>
+                  );
+                }
+                return null;
+              })}
             </>
           )}
         </>

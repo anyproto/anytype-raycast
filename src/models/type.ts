@@ -1,5 +1,5 @@
 import { Image } from "@raycast/api";
-import { ObjectIcon } from ".";
+import { ObjectIcon, Property } from ".";
 
 export interface RawType {
   object: string;
@@ -9,7 +9,7 @@ export interface RawType {
   icon: ObjectIcon;
   layout: string;
   archived: boolean;
-  properties: string[];
+  properties: Property[];
 }
 
 export interface Type extends Omit<RawType, "icon"> {

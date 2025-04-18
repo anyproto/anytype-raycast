@@ -11,5 +11,6 @@ export * from "./usePinnedSpaces";
 export * from "./usePinnedTypes";
 export * from "./useSearch";
 export * from "./useSpaces";
+export * from "./useTags";
 export * from "./useTemplates";
 export * from "./useTypes";
