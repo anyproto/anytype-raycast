@@ -1,5 +1,5 @@
 import { Image } from "@raycast/api";
-import { ObjectIcon, RawType, Type } from ".";
+import { Color, ObjectIcon, RawType, Type } from ".";
 
 export interface CreateObjectRequest {
   name: string;
@@ -90,5 +90,5 @@ export interface Property {
 export interface Tag {
   id: string;
   name: string;
-  color: string;
+  color: Color;
 }
