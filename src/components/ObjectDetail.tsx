@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ObjectActions, TemplateList, ViewType } from ".";
 import { useExport, useObject } from "../hooks";
 import { ExportFormat, Property, Space } from "../models";
-import { apiKeys, injectEmojiIntoHeading } from "../utils";
+import { apiPropertyKeys, injectEmojiIntoHeading } from "../utils";
 
 type ObjectDetailProps = {
   space: Space;
@@ -36,7 +36,12 @@ export function ObjectDetail({
 
   const [showDetails, setShowDetails] = useState(true);
   const properties = object?.properties || [];
-  const excludedPropertyKeys = new Set(["added_date", "last_opened_date", "last_modified_date", "last_modified_by"]);
+  const excludedPropertyKeys = new Set([
+    apiPropertyKeys.addedDate,
+    apiPropertyKeys.lastModifiedDate,
+    apiPropertyKeys.lastOpenedDate,
+    apiPropertyKeys.lastModifiedBy,
+  ]);
   const additionalProperties = properties.filter((property) => !excludedPropertyKeys.has(property.key));
 
   useEffect(() => {
@@ -77,8 +82,8 @@ export function ObjectDetail({
 
     // For properties in the 'text' group, ensure that 'description' comes first
     if (aGroup === "text" && bGroup === "text") {
-      if (a.key === apiKeys.properties.description && b.key !== apiKeys.properties.description) return -1;
-      if (b.key === apiKeys.properties.description && a.key !== apiKeys.properties.description) return 1;
+      if (a.key === apiPropertyKeys.description && b.key !== apiPropertyKeys.description) return -1;
+      if (b.key === apiPropertyKeys.description && a.key !== apiPropertyKeys.description) return 1;
     }
 
     return a.name.localeCompare(b.name);
@@ -95,14 +100,14 @@ export function ObjectDetail({
           text={{
             value: property.text
               ? property.text
-              : property.key === apiKeys.properties.description
+              : property.key === apiPropertyKeys.description
                 ? "No description"
                 : "No text",
             color: property.text ? Color.PrimaryText : Color.SecondaryText,
           }}
           icon={{
             source:
-              property.key === apiKeys.properties.description
+              property.key === apiPropertyKeys.description
                 ? "icons/property/description.svg"
                 : "icons/property/text.svg",
             tintColor: { light: "grey", dark: "grey" },
@@ -366,7 +371,7 @@ export function ObjectDetail({
       </Detail.Metadata.TagList>
     );
 
-    const descIndex = renderedDetailComponents.findIndex((el) => el.key === apiKeys.properties.description);
+    const descIndex = renderedDetailComponents.findIndex((el) => el.key === apiPropertyKeys.description);
     if (descIndex >= 0) {
       renderedDetailComponents.splice(descIndex + 1, 0, typeTag);
     } else {

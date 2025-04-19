@@ -6,7 +6,7 @@ import { addObjectsToList, createObject } from "../api";
 import { CreateObjectFormValues } from "../create-object";
 import { useTagsMap } from "../hooks";
 import { CreateObjectRequest, IconFormat, Space, SpaceObject, Template, Type } from "../models";
-import { apiKeys, fetchTypeKeysForLists } from "../utils";
+import { apiPropertyKeys, fetchTypeKeysForLists } from "../utils";
 
 interface CreateObjectFormProps {
   spaces: Space[];
@@ -59,7 +59,7 @@ export function CreateObjectForm({
 
   // Fetch tags for all properties in one hook call
   const selectedTypeDef = types.find((type) => type.id === selectedType);
-  const properties = selectedTypeDef?.properties.filter((prop) => prop.key !== apiKeys.properties.description) || []; // handle description separately
+  const properties = selectedTypeDef?.properties.filter((prop) => prop.key !== apiPropertyKeys.description) || []; // handle description separately
   const { tagsMap = {} } = useTagsMap(
     selectedSpace,
     properties.filter((prop) => prop.format === "select" || prop.format === "multi_select").map((prop) => prop.key),

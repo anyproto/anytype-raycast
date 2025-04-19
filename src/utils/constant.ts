@@ -39,17 +39,16 @@ export const apiKeyPrefixes = {
 };
 
 // API Property/Type Keys
-export const apiKeys = {
-  properties: {
-    description: "prop_description",
-    createdDate: "prop_created_date",
-    lastModifiedDate: "prop_last_modified_date",
-    lastOpenedDate: "prop_last_opened_date",
-    addedDate: "prop_added_date",
-    lastModifiedBy: "prop_last_modified_by",
-  },
-  types: {},
+export const apiPropertyKeys = {
+  description: `${apiKeyPrefixes.properties}description`,
+  createdDate: `${apiKeyPrefixes.properties}created_date`,
+  lastModifiedDate: `${apiKeyPrefixes.properties}last_modified_date`,
+  lastOpenedDate: `${apiKeyPrefixes.properties}last_opened_date`,
+  addedDate: `${apiKeyPrefixes.properties}added_date`,
+  lastModifiedBy: `${apiKeyPrefixes.properties}last_modified_by`,
 };
+
+export const apiTypeKeys = {};
 
 // Colors
 export const colorMap: { [key: string]: string } = {

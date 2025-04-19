@@ -71,6 +71,7 @@ export default async function tool({ spaceId, type_key, name, icon, description,
     source: source || "",
     template_id: "", // not supported here
     type_key: type_key,
+    properties: {}, // TODO: needs to be implemented
   });
 
   if (!object) {
