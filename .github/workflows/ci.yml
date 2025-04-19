@@ -3,10 +3,10 @@ name: CI
 on:
   push:
     branches:
-      - main
+      - "**"
   pull_request:
     branches:
-      - main
+      - "**"
 
 jobs:
   lint:
@@ -44,7 +44,6 @@ jobs:
 
       - name: Build extension
         run: npm run build
-
 
   type-check:
     runs-on: ubuntu-latest
