@@ -13,6 +13,8 @@ export * from "./objects/createObject";
 export * from "./objects/deleteObject";
 export * from "./objects/getObject";
 export * from "./objects/getObjects";
+export * from "./properties/getProperties";
+export * from "./properties/getProperty";
 export * from "./properties/getTags";
 export * from "./search/globalSearch";
 export * from "./search/search";

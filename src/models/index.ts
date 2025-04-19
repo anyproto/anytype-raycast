@@ -5,6 +5,7 @@ export * from "./list";
 export * from "./member";
 export * from "./object";
 export * from "./pagination";
+export * from "./property";
 export * from "./search";
 export * from "./space";
 export * from "./template";

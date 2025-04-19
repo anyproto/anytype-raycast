@@ -1,5 +1,5 @@
 import { Image } from "@raycast/api";
-import { Color, ObjectIcon, RawType, Type } from ".";
+import { ObjectIcon, RawProperty, RawType, Type } from ".";
 
 export interface CreateObjectRequest {
   name: string;
@@ -22,7 +22,7 @@ export interface RawSpaceObject {
   layout: string;
   space_id: string;
   archived: boolean;
-  properties: Property[];
+  properties: RawProperty[];
 }
 
 export interface RawSpaceObjectWithBlocks extends RawSpaceObject {
@@ -47,7 +47,7 @@ export interface Block {
   vertical_align: string;
   text: Text;
   file: File;
-  property: Property;
+  property: RawProperty;
 }
 
 export interface Text {
@@ -68,28 +68,4 @@ export interface File {
   target_object_id: string;
   state: string;
   style: string;
-}
-
-export interface Property {
-  id: string;
-  key: string;
-  name: string;
-  format: string;
-  text?: string;
-  number?: number;
-  select?: Tag;
-  multi_select?: Tag[];
-  date?: string;
-  file?: SpaceObject[];
-  checkbox?: boolean;
-  url?: string;
-  email?: string;
-  phone?: string;
-  object?: SpaceObject[];
-}
-
-export interface Tag {
-  id: string;
-  name: string;
-  color: Color | string;
 }

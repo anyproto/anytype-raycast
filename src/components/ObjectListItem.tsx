@@ -1,7 +1,7 @@
 import { Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { ObjectActions, ViewType } from ".";
-import { Member, Space, SpaceObject, Type, View } from "../models";
+import { Member, Property, Space, SpaceObject, Type, View } from "../models";
 
 type ObjectListItemProps = {
   space: Space;
@@ -16,7 +16,7 @@ type ObjectListItemProps = {
     tooltip?: string;
     tag?: { value: string; color: string; tooltip: string };
   }[];
-  mutate: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
+  mutate: MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>[];
   mutateViews?: MutatePromise<View[]>;
   member?: Member | undefined;
   layout: string;

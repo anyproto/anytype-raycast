@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { ObjectActions, TemplateList, ViewType } from ".";
 import { useExport, useObject } from "../hooks";
-import { ExportFormat, Property, Space } from "../models";
+import { ExportFormat, RawProperty, Space } from "../models";
 import { apiPropertyKeys, injectEmojiIntoHeading } from "../utils";
 
 type ObjectDetailProps = {
@@ -89,7 +89,7 @@ export function ObjectDetail({
     return a.name.localeCompare(b.name);
   });
 
-  function renderDetailMetadata(property: Property) {
+  function renderDetailMetadata(property: RawProperty) {
     const titleText = property.name || property.key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
     if (property.format === "text") {

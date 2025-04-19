@@ -13,7 +13,7 @@ import {
 import { MutatePromise } from "@raycast/utils";
 import { CollectionList, ObjectDetail, TemplateList, ViewType } from ".";
 import { deleteObject } from "../api";
-import { Export, Member, Space, SpaceObject, Template, Type, View } from "../models";
+import { Export, Member, Property, Space, SpaceObject, Template, Type, View } from "../models";
 import {
   addPinned,
   localStorageKeys,
@@ -29,7 +29,7 @@ type ObjectActionsProps = {
   objectId: string;
   title: string;
   objectExport?: Export;
-  mutate?: MutatePromise<SpaceObject[] | Type[] | Member[]>[];
+  mutate?: MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>[];
   mutateTemplates?: MutatePromise<Template[]>;
   mutateObject?: MutatePromise<SpaceObject | null | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;

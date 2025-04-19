@@ -1,6 +1,6 @@
 import { getPreferenceValues } from "@raycast/api";
 import { getObjectWithoutMappedDetails } from "../api";
-import { Property, RawSpaceObject, SortProperty, SpaceObject } from "../models";
+import { RawProperty, RawSpaceObject, SortProperty, SpaceObject } from "../models";
 import { getIconWithFallback } from "../utils";
 import { mapTag } from "./properties";
 import { mapType } from "./types";
@@ -39,7 +39,7 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
 
   const mappedProperties = await Promise.all(
     (object.properties || []).map(async (property) => {
-      let mappedProperty: Property = {
+      let mappedProperty: RawProperty = {
         id: property.id,
         key: property.key,
         name: property.name,

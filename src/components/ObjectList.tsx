@@ -2,9 +2,26 @@ import { Icon, List, showToast, Toast } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem } from ".";
-import { useMembers, usePinnedMembers, usePinnedObjects, usePinnedTypes, useSearch, useTypes } from "../hooks";
-import { Member, MemberStatus, Space, SpaceObject, Type } from "../models";
-import { defaultTintColor, formatMemberRole, isUserType, localStorageKeys, pluralize, processObject } from "../utils";
+import {
+  useMembers,
+  usePinnedMembers,
+  usePinnedObjects,
+  usePinnedProperties,
+  usePinnedTypes,
+  useProperties,
+  useSearch,
+  useTypes,
+} from "../hooks";
+import { Member, MemberStatus, Property, Space, SpaceObject, Type } from "../models";
+import {
+  defaultTintColor,
+  formatMemberRole,
+  isUserProperty,
+  isUserType,
+  localStorageKeys,
+  pluralize,
+  processObject,
+} from "../utils";
 
 type ObjectListProps = {
   space: Space;
@@ -14,6 +31,7 @@ export enum ViewType {
   // browse
   objects = "Object", // is "all" view in global search
   types = "Type",
+  properties = "Property",
   members = "Member",
   templates = "Template",
 
@@ -34,6 +52,9 @@ export function ObjectList({ space }: ObjectListProps) {
     [],
   );
   const { types, typesError, isLoadingTypes, mutateTypes, typesPagination } = useTypes(space.id);
+  const { properties, propertiesError, isLoadingProperties, mutateProperties, propertiesPagination } = useProperties(
+    space.id,
+  );
   const { members, membersError, isLoadingMembers, mutateMembers, membersPagination } = useMembers(space.id);
   const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects(
     localStorageKeys.suffixForViewsPerSpace(space.id, ViewType.objects),
@@ -41,6 +62,8 @@ export function ObjectList({ space }: ObjectListProps) {
   const { pinnedTypes, pinnedTypesError, isLoadingPinnedTypes, mutatePinnedTypes } = usePinnedTypes(
     localStorageKeys.suffixForViewsPerSpace(space.id, ViewType.types),
   );
+  const { pinnedProperties, pinnedPropertiesError, isLoadingPinnedProperties, mutatePinnedProperties } =
+    usePinnedProperties(localStorageKeys.suffixForViewsPerSpace(space.id, ViewType.properties));
   const { pinnedMembers, pinnedMembersError, isLoadingPinnedMembers, mutatePinnedMembers } = usePinnedMembers(
     localStorageKeys.suffixForViewsPerSpace(space.id, ViewType.members),
   );
@@ -50,27 +73,31 @@ export function ObjectList({ space }: ObjectListProps) {
     const paginationMap: Partial<Record<ViewType, typeof objectsPagination>> = {
       [ViewType.objects]: objectsPagination,
       [ViewType.types]: typesPagination,
+      [ViewType.properties]: propertiesPagination,
       [ViewType.members]: membersPagination,
     };
     setPagination(paginationMap[currentView]);
   }, [currentView, objects, types, members]);
 
   useEffect(() => {
-    if (objectsError || typesError || membersError) {
+    if (objectsError || typesError || propertiesError || membersError) {
       showToast(
         Toast.Style.Failure,
         "Failed to fetch latest data",
-        objectsError?.message || typesError?.message || membersError?.message,
+        objectsError?.message || typesError?.message || propertiesError?.message || membersError?.message,
       );
     }
   }, [objectsError, typesError, membersError]);
 
   useEffect(() => {
-    if (pinnedObjectsError || pinnedTypesError || pinnedMembersError) {
+    if (pinnedObjectsError || pinnedTypesError || pinnedPropertiesError || pinnedMembersError) {
       showToast(
         Toast.Style.Failure,
         "Failed to fetch pinned data",
-        pinnedObjectsError?.message || pinnedTypesError?.message || pinnedMembersError?.message,
+        pinnedObjectsError?.message ||
+          pinnedTypesError?.message ||
+          pinnedPropertiesError?.message ||
+          pinnedMembersError?.message,
       );
     }
   }, [pinnedObjectsError, pinnedTypesError, pinnedMembersError]);
@@ -90,7 +117,28 @@ export function ObjectList({ space }: ObjectListProps) {
         ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
         ...(!isUserType(type.key) ? [{ icon: Icon.Lock, tooltip: "System" }] : []),
       ],
-      mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<SpaceObject[] | Type[] | Member[]>],
+      mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>],
+      member: undefined,
+      layout: "",
+      isPinned,
+    };
+  };
+
+  const processProperty = (property: Property, isPinned: boolean) => {
+    return {
+      spaceId: space.id,
+      id: property.id,
+      icon: property.icon,
+      title: property.name,
+      subtitle: { value: "", tooltip: "" },
+      accessories: [
+        ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
+        ...(!isUserProperty(property.key) ? [{ icon: Icon.Lock, tooltip: "System" }] : []),
+      ],
+      mutate: [
+        mutateProperties,
+        mutatePinnedProperties as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>,
+      ],
       member: undefined,
       layout: "",
       isPinned,
@@ -115,7 +163,7 @@ export function ObjectList({ space }: ObjectListProps) {
               tooltip: `Role: ${formatMemberRole(member.role)}`,
             },
       ],
-      mutate: [mutateMembers, mutatePinnedMembers as MutatePromise<SpaceObject[] | Type[] | Member[]>],
+      mutate: [mutateMembers, mutatePinnedMembers as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>],
       member: member,
       layout: "",
       isPinned,
@@ -156,6 +204,20 @@ export function ObjectList({ space }: ObjectListProps) {
         return { processedPinned, processedRegular };
       }
 
+      case ViewType.properties: {
+        const processedPinned = pinnedProperties?.length
+          ? pinnedProperties
+              .filter((property) => filterItems([property], searchText).length > 0)
+              .map((property) => processProperty(property, true))
+          : [];
+        const processedRegular = properties
+          .filter((property) => !pinnedProperties?.some((pinned) => pinned.id === property.id))
+          .filter((property) => filterItems([property], searchText).length > 0)
+          .map((property) => processProperty(property, false));
+
+        return { processedPinned, processedRegular };
+      }
+
       case ViewType.members: {
         const processedPinned = pinnedMembers?.length
           ? pinnedMembers
@@ -183,9 +245,11 @@ export function ObjectList({ space }: ObjectListProps) {
   const isLoading =
     isLoadingObjects ||
     isLoadingTypes ||
+    isLoadingProperties ||
     isLoadingMembers ||
     isLoadingPinnedObjects ||
     isLoadingPinnedTypes ||
+    isLoadingPinnedProperties ||
     isLoadingPinnedMembers;
 
   return (
@@ -211,6 +275,11 @@ export function ObjectList({ space }: ObjectListProps) {
             title="Types"
             value={ViewType.types}
             icon={{ source: "icons/type/extension-puzzle.svg", tintColor: defaultTintColor }}
+          />
+          <List.Dropdown.Item
+            title="Properties"
+            value={ViewType.properties}
+            icon={{ source: "icons/type/pricetags.svg", tintColor: defaultTintColor }}
           />
           <List.Dropdown.Item
             title="Members"
