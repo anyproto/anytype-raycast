@@ -256,7 +256,7 @@ export function ObjectList({ space }: ObjectListProps) {
     <List
       isLoading={isLoading}
       onSearchTextChange={setSearchText}
-      searchBarPlaceholder={`Search ${currentView}...`}
+      searchBarPlaceholder={`Search ${pluralize(2, currentView.charAt(0).toLowerCase() + currentView.slice(1))}...`}
       navigationTitle={`Browse ${space.name}`}
       pagination={pagination}
       throttle={true}
