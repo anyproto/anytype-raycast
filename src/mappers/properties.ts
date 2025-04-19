@@ -1,6 +1,6 @@
 import { Image } from "@raycast/api";
 import { Property, PropertyFormat, RawProperty, Tag } from "../models";
-import { colorMap, defaultTintColor } from "../utils";
+import { colorMap } from "../utils";
 
 export function mapProperties(properties: RawProperty[]): Property[] {
   return properties.map((property) => {
@@ -17,29 +17,30 @@ export function mapProperty(property: RawProperty): Property {
 }
 
 function getIconForProperty(format: PropertyFormat): Image.ImageLike {
+  const tintColor = { light: "grey", dark: "grey" };
   switch (format) {
     case PropertyFormat.Text:
-      return { source: "icons/property/text.svg", tintColor: defaultTintColor };
+      return { source: "icons/property/text.svg", tintColor: tintColor };
     case PropertyFormat.Number:
-      return { source: "icons/property/number.svg", tintColor: defaultTintColor };
+      return { source: "icons/property/number.svg", tintColor: tintColor };
     case PropertyFormat.Select:
-      return { source: "icons/property/select.svg", tintColor: defaultTintColor };
+      return { source: "icons/property/select.svg", tintColor: tintColor };
     case PropertyFormat.MultiSelect:
-      return { source: "icons/property/multiSelect.svg", tintColor: defaultTintColor };
+      return { source: "icons/property/multiSelect.svg", tintColor: tintColor };
     case PropertyFormat.Date:
-      return { source: "icons/property/date.svg", tintColor: defaultTintColor };
+      return { source: "icons/property/date.svg", tintColor: tintColor };
     case PropertyFormat.File:
-      return { source: "icons/property/file.svg", tintColor: defaultTintColor };
+      return { source: "icons/property/file.svg", tintColor: tintColor };
     case PropertyFormat.Checkbox:
-      return { source: "icons/property/checkbox.svg", tintColor: defaultTintColor };
+      return { source: "icons/property/checkbox.svg", tintColor: tintColor };
     case PropertyFormat.Url:
-      return { source: "icons/property/url.svg", tintColor: defaultTintColor };
+      return { source: "icons/property/url.svg", tintColor: tintColor };
     case PropertyFormat.Email:
-      return { source: "icons/property/email.svg", tintColor: defaultTintColor };
+      return { source: "icons/property/email.svg", tintColor: tintColor };
     case PropertyFormat.Phone:
-      return { source: "icons/property/phone.svg", tintColor: defaultTintColor };
+      return { source: "icons/property/phone.svg", tintColor: tintColor };
     case PropertyFormat.Object:
-      return { source: "icons/property/object.svg", tintColor: defaultTintColor };
+      return { source: "icons/property/object.svg", tintColor: tintColor };
   }
 }
 
