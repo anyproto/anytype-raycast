@@ -22,5 +22,5 @@ export interface ObjectIcon {
   emoji?: string;
   file?: string;
   name?: string;
-  color?: Color;
+  color?: Color | string;
 }

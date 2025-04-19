@@ -91,5 +91,5 @@ export interface Property {
 export interface Tag {
   id: string;
   name: string;
-  color: Color;
+  color: Color | string;
 }
