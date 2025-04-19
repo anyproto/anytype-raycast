@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ObjectActions, TemplateList, ViewType } from ".";
 import { useExport, useObject } from "../hooks";
 import { ExportFormat, Property, Space } from "../models";
-import { injectEmojiIntoHeading } from "../utils";
+import { apiKeys, injectEmojiIntoHeading } from "../utils";
 
 type ObjectDetailProps = {
   space: Space;
@@ -77,8 +77,8 @@ export function ObjectDetail({
 
     // For properties in the 'text' group, ensure that 'description' comes first
     if (aGroup === "text" && bGroup === "text") {
-      if (a.key === "description" && b.key !== "description") return -1;
-      if (b.key === "description" && a.key !== "description") return 1;
+      if (a.key === apiKeys.properties.description && b.key !== apiKeys.properties.description) return -1;
+      if (b.key === apiKeys.properties.description && a.key !== apiKeys.properties.description) return 1;
     }
 
     return a.name.localeCompare(b.name);
@@ -93,11 +93,18 @@ export function ObjectDetail({
           key={property.key}
           title={titleText}
           text={{
-            value: property.text ? property.text : property.key === "description" ? "No description" : "No text",
+            value: property.text
+              ? property.text
+              : property.key === apiKeys.properties.description
+                ? "No description"
+                : "No text",
             color: property.text ? Color.PrimaryText : Color.SecondaryText,
           }}
           icon={{
-            source: property.key === "description" ? "icons/property/description.svg" : "icons/property/text.svg",
+            source:
+              property.key === apiKeys.properties.description
+                ? "icons/property/description.svg"
+                : "icons/property/text.svg",
             tintColor: { light: "grey", dark: "grey" },
           }}
         />
@@ -359,7 +366,7 @@ export function ObjectDetail({
       </Detail.Metadata.TagList>
     );
 
-    const descIndex = renderedDetailComponents.findIndex((el) => el.key === "description");
+    const descIndex = renderedDetailComponents.findIndex((el) => el.key === apiKeys.properties.description);
     if (descIndex >= 0) {
       renderedDetailComponents.splice(descIndex + 1, 0, typeTag);
     } else {

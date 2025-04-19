@@ -32,6 +32,14 @@ export const localStorageKeys = {
   },
 };
 
+// API Property/Type Keys
+export const apiKeys = {
+  properties: {
+    description: "prop_description",
+  },
+  types: {},
+};
+
 // Colors
 export const colorMap: { [key: string]: string } = {
   grey: "#b6b6b6",

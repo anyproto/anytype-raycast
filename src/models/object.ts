@@ -9,6 +9,7 @@ export interface CreateObjectRequest {
   source: string;
   template_id: string;
   type_key: string;
+  properties: Record<string, string | number | boolean | string[]>;
 }
 
 export interface RawSpaceObject {

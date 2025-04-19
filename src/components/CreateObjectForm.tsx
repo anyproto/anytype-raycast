@@ -1,11 +1,12 @@
 import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
 import { useForm } from "@raycast/utils";
+import { formatRFC3339 } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { addObjectsToList, createObject } from "../api";
 import { CreateObjectFormValues } from "../create-object";
 import { useTagsMap } from "../hooks";
-import { IconFormat, Space, SpaceObject, Template, Type } from "../models";
-import { fetchTypeKeysForLists } from "../utils";
+import { CreateObjectRequest, IconFormat, Space, SpaceObject, Template, Type } from "../models";
+import { apiKeys, fetchTypeKeysForLists } from "../utils";
 
 interface CreateObjectFormProps {
   spaces: Space[];
@@ -26,6 +27,8 @@ interface CreateObjectFormProps {
   draftValues: CreateObjectFormValues;
   enableDrafts: boolean;
 }
+
+type FieldValue = string | boolean | string[] | Date | null | undefined;
 
 export function CreateObjectForm({
   spaces,
@@ -56,10 +59,10 @@ export function CreateObjectForm({
 
   // Fetch tags for all properties in one hook call
   const selectedTypeDef = types.find((type) => type.id === selectedType);
-  const properties = selectedTypeDef?.properties || [];
+  const properties = selectedTypeDef?.properties.filter((prop) => prop.key !== apiKeys.properties.description) || []; // handle description separately
   const { tagsMap = {} } = useTagsMap(
     selectedSpace,
-    properties.map((prop) => prop.key), // TODO: change to id
+    properties.filter((prop) => prop.format === "select" || prop.format === "multi_select").map((prop) => prop.key),
   );
 
   useEffect(() => {
@@ -78,8 +81,30 @@ export function CreateObjectForm({
       setLoading(true);
       try {
         await showToast({ style: Toast.Style.Animated, title: "Creating object..." });
+        const propertiesObj: Record<string, string | number | boolean | string[]> = {};
+        properties.forEach((prop) => {
+          const propValue = itemProps[prop.key as keyof typeof itemProps]?.value;
+          if (propValue !== undefined && propValue !== null && propValue !== "") {
+            switch (prop.format) {
+              case "number":
+                propertiesObj[prop.key] = Number(propValue);
+                break;
+              case "multi_select":
+                propertiesObj[prop.key] = propValue as string[];
+                break;
+              case "date":
+                propertiesObj[prop.key] = formatRFC3339(propValue as Date);
+                break;
+              case "checkbox":
+                propertiesObj[prop.key] = Boolean(propValue);
+                break;
+              default:
+                propertiesObj[prop.key] = propValue as string;
+            }
+          }
+        });
 
-        const response = await createObject(selectedSpace, {
+        const objectData: CreateObjectRequest = {
           name: values.name || "",
           icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
           description: values.description || "",
@@ -87,7 +112,10 @@ export function CreateObjectForm({
           source: values.source || "",
           template_id: values.template || "",
           type_key: selectedTypeUniqueKey,
-        });
+          properties: propertiesObj,
+        };
+
+        const response = await createObject(selectedSpace, objectData);
 
         if (response.object?.id) {
           if (selectedList) {
@@ -107,18 +135,20 @@ export function CreateObjectForm({
       }
     },
     validation: {
-      name: (value) => {
-        if (!["ot-bookmark", "ot-note"].includes(selectedTypeUniqueKey) && !value) {
+      name: (value: FieldValue) => {
+        const str = typeof value === "string" ? value : undefined;
+        if (!["ot-bookmark", "ot-note"].includes(selectedTypeUniqueKey) && (!str || str.trim() === "")) {
           return "Name is required";
         }
       },
-      icon: (value) => {
-        if (value && value.length > 2) {
+      icon: (value: FieldValue) => {
+        if (typeof value === "string" && value.length > 2) {
           return "Icon must be a single character";
         }
       },
-      source: (value) => {
-        if (selectedTypeUniqueKey === "ot-bookmark" && !value) {
+      source: (value: FieldValue) => {
+        const str = typeof value === "string" ? value : undefined;
+        if (selectedTypeUniqueKey === "ot-bookmark" && (!str || str.trim() === "")) {
           return "Source is required for Bookmarks";
         }
       },
@@ -253,12 +283,12 @@ export function CreateObjectForm({
                   info="Enter a single emoji character to represent the object"
                 />
               )}
-              {/* <Form.TextField
+              <Form.TextField
                 {...itemProps.description}
                 title="Description"
                 placeholder="Add a description"
                 info="Provide a brief description of the object"
-              /> */}
+              />
               {!typeKeysForLists.includes(selectedTypeUniqueKey) && (
                 <Form.TextArea
                   {...itemProps.body}
@@ -281,17 +311,60 @@ It supports:
                 const id = prop.key;
                 const title = prop.name;
                 if (prop.format === "text") {
-                  return <Form.TextField key={id} id={id} title={title} placeholder="Add text" />;
+                  return (
+                    <Form.TextField
+                      {...itemProps[id as keyof typeof itemProps]}
+                      title={title}
+                      placeholder="Add text"
+                      value={
+                        itemProps[id as keyof typeof itemProps].value !== null
+                          ? String(itemProps[id as keyof typeof itemProps].value)
+                          : undefined
+                      }
+                      defaultValue={
+                        itemProps[id as keyof typeof itemProps].value !== null
+                          ? String(itemProps[id as keyof typeof itemProps].value)
+                          : undefined
+                      }
+                    />
+                  );
                 }
                 if (prop.format === "number") {
-                  return <Form.TextField key={id} id={id} title={title} placeholder="Add number" />;
-                }
-                if (prop.format === "date") {
-                  return <Form.DatePicker key={id} id={id} title={title} />;
+                  return (
+                    <Form.TextField
+                      {...itemProps[id as keyof typeof itemProps]}
+                      title={title}
+                      placeholder="Add number"
+                      value={
+                        itemProps[id as keyof typeof itemProps].value !== null
+                          ? String(itemProps[id as keyof typeof itemProps].value)
+                          : undefined
+                      }
+                      defaultValue={
+                        itemProps[id as keyof typeof itemProps].value !== null
+                          ? String(itemProps[id as keyof typeof itemProps].value)
+                          : undefined
+                      }
+                    />
+                  );
                 }
                 if (prop.format === "select") {
                   return (
-                    <Form.Dropdown key={id} id={id} title={title} placeholder="Select tag">
+                    <Form.Dropdown
+                      {...itemProps[id as keyof typeof itemProps]}
+                      title={title}
+                      placeholder="Select tag"
+                      value={
+                        itemProps[id as keyof typeof itemProps].value !== undefined
+                          ? String(itemProps[id as keyof typeof itemProps].value)
+                          : undefined
+                      }
+                      defaultValue={
+                        itemProps[id as keyof typeof itemProps].value !== undefined
+                          ? String(itemProps[id as keyof typeof itemProps].value)
+                          : undefined
+                      }
+                    >
                       {tags.map((tag) => (
                         <Form.Dropdown.Item
                           key={tag.id}
@@ -305,7 +378,21 @@ It supports:
                 }
                 if (prop.format === "multi_select") {
                   return (
-                    <Form.TagPicker key={id} id={id} title={title} placeholder="Select tags">
+                    <Form.TagPicker
+                      {...itemProps[id as keyof typeof itemProps]}
+                      title={title}
+                      placeholder="Select tags"
+                      value={
+                        itemProps[id as keyof typeof itemProps].value !== undefined
+                          ? (itemProps[id as keyof typeof itemProps].value as string[])
+                          : undefined
+                      }
+                      defaultValue={
+                        itemProps[id as keyof typeof itemProps].value !== undefined
+                          ? (itemProps[id as keyof typeof itemProps].value as string[])
+                          : undefined
+                      }
+                    >
                       {tags.map((tag) => (
                         <Form.TagPicker.Item
                           key={tag.id}
@@ -315,6 +402,35 @@ It supports:
                         />
                       ))}
                     </Form.TagPicker>
+                  );
+                }
+                if (prop.format === "date") {
+                  return (
+                    <Form.DatePicker
+                      {...itemProps[id as keyof typeof itemProps]}
+                      title={title}
+                      value={
+                        itemProps[id as keyof typeof itemProps].value !== undefined
+                          ? (itemProps[id as keyof typeof itemProps].value as Date)
+                          : undefined
+                      }
+                      defaultValue={
+                        itemProps[id as keyof typeof itemProps].value !== undefined
+                          ? (itemProps[id as keyof typeof itemProps].value as Date)
+                          : undefined
+                      }
+                    />
+                  );
+                }
+                if (prop.format === "checkbox") {
+                  return (
+                    <Form.Checkbox
+                      {...itemProps[id as keyof typeof itemProps]}
+                      title={title}
+                      label=""
+                      value={Boolean(itemProps[id as keyof typeof itemProps].value)}
+                      defaultValue={Boolean(itemProps[id as keyof typeof itemProps].value)}
+                    />
                   );
                 }
                 return null;
