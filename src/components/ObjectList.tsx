@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem } from ".";
 import { useMembers, usePinnedMembers, usePinnedObjects, usePinnedTypes, useSearch, useTypes } from "../hooks";
 import { Member, MemberStatus, Space, SpaceObject, Type } from "../models";
-import { defaultTintColor, formatMemberRole, localStorageKeys, pluralize, processObject } from "../utils";
+import { defaultTintColor, formatMemberRole, isUserType, localStorageKeys, pluralize, processObject } from "../utils";
 
 type ObjectListProps = {
   space: Space;
@@ -86,7 +86,10 @@ export function ObjectList({ space }: ObjectListProps) {
       icon: type.icon,
       title: type.name,
       subtitle: { value: "", tooltip: "" },
-      accessories: [isPinned ? { icon: Icon.Star, tooltip: "Pinned" } : {}],
+      accessories: [
+        ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
+        ...(!isUserType(type.key) ? [{ icon: Icon.Lock, tooltip: "System" }] : []),
+      ],
       mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<SpaceObject[] | Type[] | Member[]>],
       member: undefined,
       layout: "",
