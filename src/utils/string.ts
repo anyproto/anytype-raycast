@@ -9,7 +9,12 @@ export function pluralize(
   noun: string,
   { suffix = "s", withNumber = false }: { suffix?: string; withNumber?: boolean } = {},
 ): string {
-  const pluralizedNoun = `${noun}${count !== 1 ? suffix : ""}`;
+  let pluralizedNoun;
+  if (noun.endsWith("y") && count !== 1) {
+    pluralizedNoun = `${noun.slice(0, -1)}ies`;
+  } else {
+    pluralizedNoun = `${noun}${count !== 1 ? suffix : ""}`;
+  }
   return withNumber ? `${count} ${pluralizedNoun}` : pluralizedNoun;
 }
 
