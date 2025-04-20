@@ -1,15 +1,17 @@
 import { Color, Detail, getPreferenceValues, showToast, Toast, useNavigation } from "@raycast/api";
+import { MutatePromise } from "@raycast/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { ObjectActions, TemplateList, ViewType } from ".";
 import { useExport, useObject } from "../hooks";
-import { ExportFormat, RawProperty, Space } from "../models";
+import { ExportFormat, Member, Property, RawProperty, Space, SpaceObject, Type } from "../models";
 import { apiPropertyKeys, injectEmojiIntoHeading } from "../utils";
 
 type ObjectDetailProps = {
   space: Space;
   objectId: string;
   title: string;
+  mutate?: MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>[];
   layout: string;
   viewType: ViewType;
   isGlobalSearch: boolean;
@@ -20,6 +22,7 @@ export function ObjectDetail({
   space,
   objectId,
   title,
+  mutate,
   layout,
   viewType,
   isGlobalSearch,
@@ -397,6 +400,7 @@ export function ObjectDetail({
           space={space}
           objectId={objectId}
           title={title}
+          mutate={mutate}
           mutateObject={mutateObject}
           mutateExport={mutateObjectExport}
           objectExport={objectExport}

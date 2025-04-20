@@ -9,6 +9,7 @@ import {
   Keyboard,
   showToast,
   Toast,
+  useNavigation,
 } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { CollectionList, ObjectDetail, TemplateList, ViewType } from ".";
@@ -62,6 +63,7 @@ export function ObjectActions({
   showDetails,
   onToggleDetails,
 }: ObjectActionsProps) {
+  const { pop } = useNavigation();
   const { primaryAction } = getPreferenceValues();
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${space?.id}`;
   const pinSuffixForView = isGlobalSearch
@@ -91,6 +93,9 @@ export function ObjectActions({
     });
 
     if (confirm) {
+      if (isDetailView) {
+        pop(); // pop back to list view
+      }
       try {
         await deleteObject(space.id, objectId);
         if (mutate) {
@@ -315,6 +320,7 @@ export function ObjectActions({
           space={space}
           objectId={objectId}
           title={title}
+          mutate={mutate}
           layout={layout}
           viewType={viewType}
           isGlobalSearch={isGlobalSearch}
