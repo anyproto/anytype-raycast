@@ -3,7 +3,7 @@ import { showFailureToast, useForm } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { addObjectsToList } from "./api";
 import { EnsureAuthenticated } from "./components/EnsureAuthenticated";
-import { useSearch, useSpaces } from "./hooks";
+import { useObjectsInList, useSearch, useSpaces } from "./hooks";
 
 export interface AddToListValues {
   space: string;
@@ -34,10 +34,17 @@ export function AddToList() {
     isLoadingObjects: isLoadingLists,
   } = useSearch(selectedSpace, listSearchText, ["ot-collection"]);
   const { objects, objectsError, isLoadingObjects } = useSearch(selectedSpace, objectSearchText, []);
+  const {
+    objects: listItems,
+    objectsError: listItemsError,
+    isLoadingObjects: isLoadingListItems,
+  } = useObjectsInList(selectedSpace, selectedList, "");
 
   useEffect(() => {
-    if (spacesError || objectsError || listsError) {
-      showFailureToast(spacesError || objectsError || listsError, { title: "Failed to fetch latest data" });
+    if (spacesError || objectsError || listsError || listItemsError) {
+      showFailureToast(spacesError || objectsError || listsError || listItemsError, {
+        title: "Failed to fetch latest data",
+      });
     }
   }, [spacesError, objectsError, listsError]);
 
@@ -80,7 +87,8 @@ export function AddToList() {
 
   return (
     <Form
-      isLoading={loading || isLoadingSpaces || isLoadingObjects || isLoadingLists}
+      isLoading={loading || isLoadingSpaces || isLoadingObjects || isLoadingLists || isLoadingListItems}
+      enableDrafts={false}
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Add to List" onSubmit={handleSubmit} />
@@ -126,9 +134,11 @@ export function AddToList() {
         storeValue={true}
         info="The object to add to the list"
       >
-        {objects.map((object) => (
-          <Form.Dropdown.Item key={object.id} value={object.id} title={object.name} icon={object.icon} />
-        ))}
+        {objects
+          .filter((object) => !listItems.some((item) => item.id === object.id) && object.id !== selectedList)
+          .map((object) => (
+            <Form.Dropdown.Item key={object.id} value={object.id} title={object.name} icon={object.icon} />
+          ))}
       </Form.Dropdown>
     </Form>
   );
