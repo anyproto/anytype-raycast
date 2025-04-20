@@ -12,7 +12,7 @@ import {
   useNavigation,
 } from "@raycast/api";
 import { MutatePromise, showFailureToast } from "@raycast/utils";
-import { CollectionList, ObjectDetail, TemplateList, ViewType } from ".";
+import { CollectionList, ListSubmenu, ObjectDetail, TemplateList, ViewType } from ".";
 import { deleteObject } from "../api";
 import { Export, Member, Property, Space, SpaceObject, Template, Type, View } from "../models";
 import {
@@ -348,6 +348,7 @@ export function ObjectActions({
             content={objectExport.markdown}
           />
         )}
+        <ListSubmenu spaceId={space.id} objectId={objectId} />
         <Action
           icon={Icon.Link}
           title="Copy Link"

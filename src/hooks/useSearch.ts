@@ -5,7 +5,7 @@ import { search } from "../api";
 import { SortDirection } from "../models";
 import { apiLimit } from "../utils";
 
-export function useSearch(spaceId: string, query: string, types: string[]) {
+export function useSearch(spaceId: string, query: string, types: string[], config?: { execute?: boolean }) {
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     (spaceId: string, query: string, types: string[]) => async (options: { page: number }) => {
       const offset = options.page * apiLimit;
@@ -26,7 +26,7 @@ export function useSearch(spaceId: string, query: string, types: string[]) {
     [spaceId, query, types],
     {
       keepPreviousData: true,
-      execute: !!spaceId,
+      execute: !!spaceId && !!config?.execute,
     },
   );
 

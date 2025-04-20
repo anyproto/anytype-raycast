@@ -5,6 +5,7 @@ export * from "./EmptyViewObject";
 export * from "./EmptyViewSpace";
 export * from "./EnsureAuthenticated";
 export * from "./ObjectActions";
+export * from "./ObjectActions/ListSubmenu";
 export * from "./ObjectDetail";
 export * from "./ObjectList";
 export * from "./ObjectListItem";
