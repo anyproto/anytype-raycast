@@ -72,6 +72,7 @@ export function ObjectActions({
   const isDetailView = objectExport !== undefined;
   const isList = typeIsList(layout);
   const isType = viewType === ViewType.types;
+  const isProperty = viewType === ViewType.properties;
   const isMember = viewType === ViewType.members;
 
   const getContextLabel = (isSingular = true) => (isDetailView || isSingular ? viewType : pluralize(2, viewType));
@@ -286,7 +287,7 @@ export function ObjectActions({
   //     }
   //   }
 
-  const canShowDetails = !isType && !isList && !isDetailView;
+  const canShowDetails = !isType && !isProperty && !isList && !isDetailView;
   const showDetailsAction = canShowDetails && (
     <Action.Push
       icon={{ source: Icon.Sidebar }}
