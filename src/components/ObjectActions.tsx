@@ -11,7 +11,7 @@ import {
   Toast,
   useNavigation,
 } from "@raycast/api";
-import { MutatePromise } from "@raycast/utils";
+import { MutatePromise, showFailureToast } from "@raycast/utils";
 import { CollectionList, ObjectDetail, TemplateList, ViewType } from ".";
 import { deleteObject } from "../api";
 import { Export, Member, Property, Space, SpaceObject, Template, Type, View } from "../models";
@@ -121,11 +121,7 @@ export function ObjectActions({
           message: `"${title}" has been deleted.`,
         });
       } catch (error) {
-        await showToast({
-          style: Toast.Style.Failure,
-          title: `Failed to delete ${getContextLabel()}`,
-          message: error instanceof Error ? error.message : "An unknown error occurred.",
-        });
+        await showFailureToast(error, { title: `Failed to delete ${getContextLabel()}` });
       }
     }
   }
@@ -197,11 +193,7 @@ export function ObjectActions({
         title: `${label} refreshed`,
       });
     } catch (error) {
-      await showToast({
-        style: Toast.Style.Failure,
-        title: `Failed to refresh ${label}`,
-        message: error instanceof Error ? error.message : "An unknown error occurred.",
-      });
+      await showFailureToast(error, { title: `Failed to refresh ${label}` });
     }
   }
 
@@ -220,11 +212,7 @@ export function ObjectActions({
   //         message: `${name} has been approved as ${formatMemberRole(role)}.`,
   //       });
   //     } catch (error) {
-  //       await showToast({
-  //         style: Toast.Style.Failure,
-  //         title: `Failed to approve member`,
-  //         message: error instanceof Error ? error.message : "An unknown error occurred.",
-  //       });
+  //       await showFailureToast(error, { title: `Failed to approve member` });
   //     }
   //   }
 
@@ -249,11 +237,7 @@ export function ObjectActions({
   //           message: `${name} has been rejected.`,
   //         });
   //       } catch (error) {
-  //         await showToast({
-  //           style: Toast.Style.Failure,
-  //           title: `Failed to reject member`,
-  //           message: error instanceof Error ? error.message : "An unknown error occurred.",
-  //         });
+  //         await showFailureToast(error, { title: `Failed to reject member` });
   //       }
   //     }
   //   }
@@ -279,11 +263,7 @@ export function ObjectActions({
   //           message: `${memberName} has been removed from ${spaceName}.`,
   //         });
   //       } catch (error) {
-  //         await showToast({
-  //           style: Toast.Style.Failure,
-  //           title: `Failed to remove member`,
-  //           message: error instanceof Error ? error.message : "An unknown error occurred.",
-  //         });
+  //         await showFailureToast(error, { title: `Failed to remove member` });
   //       }
   //     }
   //   }
@@ -302,11 +282,7 @@ export function ObjectActions({
   //         message: `${name} has been changed to ${formatMemberRole(role)}.`,
   //       });
   //     } catch (error) {
-  //       await showToast({
-  //         style: Toast.Style.Failure,
-  //         title: `Failed to change member role`,
-  //         message: error instanceof Error ? error.message : "An unknown error occurred.",
-  //       });
+  //       await showFailureToast(error, { title: `Failed to change member role` });
   //     }
   //   }
 

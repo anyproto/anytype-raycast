@@ -1,5 +1,5 @@
-import { Color, Detail, getPreferenceValues, showToast, Toast, useNavigation } from "@raycast/api";
-import { MutatePromise } from "@raycast/utils";
+import { Color, Detail, getPreferenceValues, useNavigation } from "@raycast/api";
+import { MutatePromise, showFailureToast } from "@raycast/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { ObjectActions, TemplateList, ViewType } from ".";
@@ -49,13 +49,13 @@ export function ObjectDetail({
 
   useEffect(() => {
     if (objectError) {
-      showToast(Toast.Style.Failure, "Failed to fetch object", objectError.message);
+      showFailureToast(objectError, { title: "Failed to fetch object" });
     }
   }, [objectError]);
 
   useEffect(() => {
     if (objectExportError) {
-      showToast(Toast.Style.Failure, "Failed to fetch object as markdown", objectExportError.message);
+      showFailureToast(objectExportError, { title: "Failed to fetch object export" });
     }
   }, [objectExportError]);
 

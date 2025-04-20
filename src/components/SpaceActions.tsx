@@ -1,5 +1,5 @@
 import { Action, ActionPanel, Clipboard, Icon, Keyboard, showToast, Toast } from "@raycast/api";
-import { MutatePromise } from "@raycast/utils";
+import { MutatePromise, showFailureToast } from "@raycast/utils";
 import { ObjectList } from ".";
 import { Space } from "../models";
 import {
@@ -64,11 +64,7 @@ export function SpaceActions({ space, mutate, isPinned }: SpaceActionsProps) {
         await Promise.all(mutate.map((mutateFunc) => mutateFunc()));
         await showToast({ style: Toast.Style.Success, title: "Spaces refreshed" });
       } catch (error) {
-        await showToast({
-          style: Toast.Style.Failure,
-          title: "Failed to refresh spaces",
-          message: error instanceof Error ? error.message : "An unknown error occurred.",
-        });
+        await showFailureToast(error, { title: "Failed to refresh spaces" });
       }
     }
   }

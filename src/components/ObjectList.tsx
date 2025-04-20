@@ -1,5 +1,5 @@
-import { Icon, List, showToast, Toast } from "@raycast/api";
-import { MutatePromise } from "@raycast/utils";
+import { Icon, List } from "@raycast/api";
+import { MutatePromise, showFailureToast } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem } from ".";
 import {
@@ -81,24 +81,17 @@ export function ObjectList({ space }: ObjectListProps) {
 
   useEffect(() => {
     if (objectsError || typesError || propertiesError || membersError) {
-      showToast(
-        Toast.Style.Failure,
-        "Failed to fetch latest data",
-        objectsError?.message || typesError?.message || propertiesError?.message || membersError?.message,
-      );
+      showFailureToast(objectsError || typesError || propertiesError || membersError, {
+        title: "Failed to fetch latest data",
+      });
     }
   }, [objectsError, typesError, membersError]);
 
   useEffect(() => {
     if (pinnedObjectsError || pinnedTypesError || pinnedPropertiesError || pinnedMembersError) {
-      showToast(
-        Toast.Style.Failure,
-        "Failed to fetch pinned data",
-        pinnedObjectsError?.message ||
-          pinnedTypesError?.message ||
-          pinnedPropertiesError?.message ||
-          pinnedMembersError?.message,
-      );
+      showFailureToast(pinnedObjectsError || pinnedTypesError || pinnedPropertiesError || pinnedMembersError, {
+        title: "Failed to fetch pinned data",
+      });
     }
   }, [pinnedObjectsError, pinnedTypesError, pinnedMembersError]);
 

@@ -1,4 +1,5 @@
-import { Icon, List, showToast, Toast } from "@raycast/api";
+import { Icon, List } from "@raycast/api";
+import { showFailureToast } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectListItem, ViewType } from ".";
 import { useObjectsInList } from "../hooks";
@@ -25,7 +26,7 @@ export function CollectionList({ space, listId, listName }: CollectionListProps)
 
   useEffect(() => {
     if (viewsError || objectsError) {
-      showToast(Toast.Style.Failure, "Failed to fetch objects", viewsError?.message || objectsError?.message);
+      showFailureToast(viewsError || objectsError, { title: "Failed to fetch latest data" });
     }
   }, [viewsError, objectsError]);
 

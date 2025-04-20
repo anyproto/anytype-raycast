@@ -1,5 +1,5 @@
 import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
-import { useForm } from "@raycast/utils";
+import { showFailureToast, useForm } from "@raycast/utils";
 import { formatRFC3339 } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { addObjectsToList, createObject } from "../api";
@@ -151,7 +151,7 @@ export function CreateObjectForm({
           await showToast(Toast.Style.Failure, "Failed to create object");
         }
       } catch (error) {
-        await showToast(Toast.Style.Failure, "Failed to create object", String(error));
+        await showFailureToast(error, { title: "Failed to create object" });
       } finally {
         setLoading(false);
       }

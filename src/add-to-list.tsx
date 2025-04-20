@@ -1,5 +1,5 @@
 import { Action, ActionPanel, Form, popToRoot, showToast, Toast } from "@raycast/api";
-import { useForm } from "@raycast/utils";
+import { showFailureToast, useForm } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { addObjectsToList } from "./api";
 import { EnsureAuthenticated } from "./components/EnsureAuthenticated";
@@ -37,11 +37,7 @@ export function AddToList() {
 
   useEffect(() => {
     if (spacesError || objectsError || listsError) {
-      showToast(
-        Toast.Style.Failure,
-        "Failed to fetch latest data",
-        spacesError?.message || objectsError?.message || listsError?.message,
-      );
+      showFailureToast(spacesError || objectsError || listsError, { title: "Failed to fetch latest data" });
     }
   }, [spacesError, objectsError, listsError]);
 
@@ -58,7 +54,7 @@ export function AddToList() {
           await showToast(Toast.Style.Failure, "Failed to add object to list");
         }
       } catch (error) {
-        await showToast(Toast.Style.Failure, "Failed to add object to list", String(error));
+        await showFailureToast(error, { title: "Failed to add object to list" });
       } finally {
         setLoading(false);
       }

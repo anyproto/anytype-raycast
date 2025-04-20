@@ -1,4 +1,5 @@
-import { Icon, List, Toast, showToast } from "@raycast/api";
+import { Icon, List } from "@raycast/api";
+import { showFailureToast } from "@raycast/utils";
 import { useEffect, useMemo, useState } from "react";
 import { getMembers } from "./api";
 import { EmptyViewSpace, EnsureAuthenticated, SpaceListItem } from "./components";
@@ -39,11 +40,7 @@ function BrowseSpaces() {
         );
         setMembersData((prev) => ({ ...prev, ...newData }));
       } catch (error) {
-        showToast(
-          Toast.Style.Failure,
-          "Failed to fetch members",
-          error instanceof Error ? error.message : "An unknown error occurred.",
-        );
+        await showFailureToast(error, { title: "Failed to fetch members" });
       }
     };
 
@@ -57,13 +54,13 @@ function BrowseSpaces() {
 
   useEffect(() => {
     if (spacesError) {
-      showToast(Toast.Style.Failure, "Failed to fetch spaces", spacesError.message);
+      showFailureToast(spacesError, { title: "Failed to fetch spaces" });
     }
   }, [spacesError]);
 
   useEffect(() => {
     if (pinnedSpacesError) {
-      showToast(Toast.Style.Failure, "Failed to fetch pinned spaces", pinnedSpacesError.message);
+      showFailureToast(pinnedSpacesError, { title: "Failed to fetch pinned spaces" });
     }
   }, [pinnedSpacesError]);
 

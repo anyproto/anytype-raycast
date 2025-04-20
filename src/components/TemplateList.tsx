@@ -1,4 +1,5 @@
-import { List, showToast, Toast } from "@raycast/api";
+import { List } from "@raycast/api";
+import { showFailureToast } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectActions, ObjectListItem, ViewType } from ".";
 import { useSearch, useTemplates } from "../hooks";
@@ -26,13 +27,13 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
 
   useEffect(() => {
     if (templatesError) {
-      showToast(Toast.Style.Failure, "Failed to fetch templates", templatesError.message);
+      showFailureToast(templatesError, { title: "Failed to fetch templates" });
     }
   }, [templatesError]);
 
   useEffect(() => {
     if (objectsError) {
-      showToast(Toast.Style.Failure, "Failed to fetch objects", objectsError.message);
+      showFailureToast(objectsError, { title: "Failed to fetch objects" });
     }
   }, [objectsError]);
 

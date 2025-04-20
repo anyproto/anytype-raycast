@@ -1,4 +1,5 @@
-import { Icon, Image, List, showToast, Toast } from "@raycast/api";
+import { Icon, Image, List } from "@raycast/api";
+import { showFailureToast } from "@raycast/utils";
 import { useEffect, useMemo, useState } from "react";
 import { EmptyViewObject, EnsureAuthenticated, ObjectListItem, ViewType } from "./components";
 import { useGlobalSearch, usePinnedObjects, useSpaces } from "./hooks";
@@ -96,11 +97,9 @@ function Search() {
 
   useEffect(() => {
     if (objectsError || spacesError || pinnedObjectsError) {
-      showToast(
-        Toast.Style.Failure,
-        "Failed to fetch latest data",
-        objectsError?.message || spacesError?.message || pinnedObjectsError?.message,
-      );
+      showFailureToast(objectsError || spacesError || pinnedObjectsError, {
+        title: "Failed to fetch latest data",
+      });
     }
   }, [objectsError, spacesError, pinnedObjectsError]);
 
