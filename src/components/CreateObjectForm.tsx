@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { addObjectsToList, createObject } from "../api";
 import { CreateObjectFormValues } from "../create-object";
 import { useTagsMap } from "../hooks";
-import { CreateObjectRequest, IconFormat, Space, SpaceObject, Template, Type } from "../models";
+import { CreateObjectRequest, IconFormat, PropertyFormat, Space, SpaceObject, Template, Type } from "../models";
 import { apiPropertyKeys, fetchTypeKeysForLists, isEmoji } from "../utils";
 
 interface CreateObjectFormProps {
@@ -13,6 +13,7 @@ interface CreateObjectFormProps {
   types: Type[];
   templates: Template[];
   lists: SpaceObject[];
+  objects: SpaceObject[];
   selectedSpace: string;
   setSelectedSpace: (spaceId: string) => void;
   selectedType: string;
@@ -23,6 +24,8 @@ interface CreateObjectFormProps {
   setSelectedList: (listId: string) => void;
   listSearchText: string;
   setListSearchText: (searchText: string) => void;
+  objectSearchText: string;
+  setObjectSearchText: (searchText: string) => void;
   isLoading: boolean;
   draftValues: CreateObjectFormValues;
   enableDrafts: boolean;
@@ -35,6 +38,7 @@ export function CreateObjectForm({
   types,
   templates,
   lists,
+  objects,
   selectedSpace,
   setSelectedSpace,
   selectedType,
@@ -45,6 +49,8 @@ export function CreateObjectForm({
   setSelectedList,
   listSearchText,
   setListSearchText,
+  objectSearchText,
+  setObjectSearchText,
   isLoading,
   draftValues,
   enableDrafts,
@@ -59,7 +65,10 @@ export function CreateObjectForm({
 
   // Fetch tags for all properties in one hook call
   const selectedTypeDef = types.find((type) => type.id === selectedType);
-  const properties = selectedTypeDef?.properties.filter((prop) => prop.key !== apiPropertyKeys.description) || []; // handle description separately
+  const properties =
+    selectedTypeDef?.properties.filter(
+      (prop) => ![apiPropertyKeys.description, apiPropertyKeys.type].includes(prop.key),
+    ) || []; // handle description and type separately
   const { tagsMap = {} } = useTagsMap(
     selectedSpace,
     properties.filter((prop) => prop.format === "select" || prop.format === "multi_select").map((prop) => prop.key),
@@ -86,20 +95,33 @@ export function CreateObjectForm({
           const propValue = itemProps[prop.key as keyof typeof itemProps]?.value;
           if (propValue !== undefined && propValue !== null && propValue !== "") {
             switch (prop.format) {
-              case "number":
+              case PropertyFormat.Text:
+              case PropertyFormat.Select:
+              case PropertyFormat.Url:
+              case PropertyFormat.Email:
+              case PropertyFormat.Phone:
+                propertiesObj[prop.key] = String(propValue);
+                break;
+              case PropertyFormat.Number:
                 propertiesObj[prop.key] = Number(propValue);
                 break;
-              case "multi_select":
+              case PropertyFormat.MultiSelect:
                 propertiesObj[prop.key] = propValue as string[];
                 break;
-              case "date":
-                propertiesObj[prop.key] = formatRFC3339(propValue as Date);
+              case PropertyFormat.Date:
+                if (propValue instanceof Date && !isNaN(propValue.getTime())) {
+                  propertiesObj[prop.key] = formatRFC3339(propValue);
+                }
                 break;
-              case "checkbox":
+              case PropertyFormat.Checkbox:
                 propertiesObj[prop.key] = Boolean(propValue);
                 break;
+              case PropertyFormat.File:
+              case PropertyFormat.Object:
+                propertiesObj[prop.key] = Array.isArray(propValue) ? propValue : ([propValue] as string[]);
+                break;
               default:
-                propertiesObj[prop.key] = propValue as string;
+                propertiesObj[prop.key] = String(propValue);
             }
           }
         });
@@ -142,7 +164,7 @@ export function CreateObjectForm({
         }
       },
       icon: (value: FieldValue) => {
-        if (typeof value === "string" && !isEmoji(value)) {
+        if (typeof value === "string" && value && !isEmoji(value)) {
           return "Icon must be single emoji";
         }
       },
@@ -213,7 +235,7 @@ export function CreateObjectForm({
         title="Type"
         value={selectedType}
         onChange={setSelectedType}
-        storeValue={true} // TODO: does not work
+        storeValue={true} // TODO: storeValue does not work here
         placeholder={`Search types in '${spaces.find((space) => space.id === selectedSpace)?.name}'...`}
         info="Select the type of object to create"
       >
@@ -310,7 +332,11 @@ It supports:
                 const tags = tagsMap[prop.key] ?? []; // TODO: change to id
                 const id = prop.key;
                 const title = prop.name;
-                if (prop.format === "text") {
+                if (
+                  [PropertyFormat.Text, PropertyFormat.Url, PropertyFormat.Email, PropertyFormat.Phone].includes(
+                    prop.format,
+                  )
+                ) {
                   return (
                     <Form.TextField
                       {...itemProps[id as keyof typeof itemProps]}
@@ -329,7 +355,7 @@ It supports:
                     />
                   );
                 }
-                if (prop.format === "number") {
+                if (prop.format === PropertyFormat.Number) {
                   return (
                     <Form.TextField
                       {...itemProps[id as keyof typeof itemProps]}
@@ -348,7 +374,7 @@ It supports:
                     />
                   );
                 }
-                if (prop.format === "select") {
+                if (prop.format === PropertyFormat.Select) {
                   return (
                     <Form.Dropdown
                       {...itemProps[id as keyof typeof itemProps]}
@@ -365,6 +391,7 @@ It supports:
                           : undefined
                       }
                     >
+                      <Form.Dropdown.Item key="none" value="" title="No Tag" icon={Icon.Dot} />
                       {tags.map((tag) => (
                         <Form.Dropdown.Item
                           key={tag.id}
@@ -376,7 +403,7 @@ It supports:
                     </Form.Dropdown>
                   );
                 }
-                if (prop.format === "multi_select") {
+                if (prop.format === PropertyFormat.MultiSelect) {
                   return (
                     <Form.TagPicker
                       {...itemProps[id as keyof typeof itemProps]}
@@ -404,7 +431,7 @@ It supports:
                     </Form.TagPicker>
                   );
                 }
-                if (prop.format === "date") {
+                if (prop.format === PropertyFormat.Date) {
                   return (
                     <Form.DatePicker
                       {...itemProps[id as keyof typeof itemProps]}
@@ -422,7 +449,11 @@ It supports:
                     />
                   );
                 }
-                if (prop.format === "checkbox") {
+                if (prop.format === PropertyFormat.File) {
+                  // TODO: implement
+                  return null;
+                }
+                if (prop.format === PropertyFormat.Checkbox) {
                   return (
                     <Form.Checkbox
                       {...itemProps[id as keyof typeof itemProps]}
@@ -431,6 +462,35 @@ It supports:
                       value={Boolean(itemProps[id as keyof typeof itemProps].value)}
                       defaultValue={Boolean(itemProps[id as keyof typeof itemProps].value)}
                     />
+                  );
+                }
+                if (prop.format === PropertyFormat.Object) {
+                  return (
+                    // TODO: TagPicker would be the more appropriate component, but it does not support onSearchTextChange
+                    <Form.Dropdown
+                      {...itemProps[id as keyof typeof itemProps]}
+                      title={title}
+                      placeholder="Select objects"
+                      value={
+                        itemProps[id as keyof typeof itemProps].value !== undefined
+                          ? String(itemProps[id as keyof typeof itemProps].value)
+                          : undefined
+                      }
+                      defaultValue={
+                        itemProps[id as keyof typeof itemProps].value !== undefined
+                          ? String(itemProps[id as keyof typeof itemProps].value)
+                          : undefined
+                      }
+                      onSearchTextChange={setObjectSearchText}
+                      throttle={true}
+                    >
+                      {!objectSearchText && (
+                        <Form.Dropdown.Item key="none" value="" title="No Object" icon={Icon.Dot} />
+                      )}
+                      {objects.map((object) => (
+                        <Form.Dropdown.Item key={object.id} value={object.id} title={object.name} icon={object.icon} />
+                      ))}
+                    </Form.Dropdown>
                   );
                 }
                 return null;

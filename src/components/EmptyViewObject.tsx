@@ -26,6 +26,7 @@ export function EmptyViewObject({ title, contextValues }: EmptyViewObjectProps) 
     types,
     templates,
     lists,
+    objects,
     selectedSpace,
     setSelectedSpace,
     selectedType,
@@ -36,6 +37,8 @@ export function EmptyViewObject({ title, contextValues }: EmptyViewObjectProps) 
     setSelectedList,
     listSearchText,
     setListSearchText,
+    objectSearchText,
+    setObjectSearchText,
     isLoading,
   } = useCreateObjectData(draftValues);
 
@@ -65,6 +68,7 @@ export function EmptyViewObject({ title, contextValues }: EmptyViewObjectProps) 
                 types={types}
                 templates={templates}
                 lists={lists}
+                objects={objects}
                 selectedSpace={selectedSpace}
                 setSelectedSpace={setSelectedSpace}
                 selectedType={selectedType}
@@ -75,6 +79,8 @@ export function EmptyViewObject({ title, contextValues }: EmptyViewObjectProps) 
                 setSelectedList={setSelectedList}
                 listSearchText={listSearchText}
                 setListSearchText={setListSearchText}
+                objectSearchText={objectSearchText}
+                setObjectSearchText={setObjectSearchText}
                 isLoading={isLoading}
                 draftValues={draftValues}
                 enableDrafts={false}

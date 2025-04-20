@@ -60,6 +60,7 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
     types,
     templates,
     lists,
+    objects,
     selectedSpace,
     setSelectedSpace,
     selectedType,
@@ -70,6 +71,8 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
     setSelectedList,
     listSearchText,
     setListSearchText,
+    objectSearchText,
+    setObjectSearchText,
     isLoading,
   } = useCreateObjectData(mergedValues);
 
@@ -79,6 +82,7 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
       types={types}
       templates={templates}
       lists={lists}
+      objects={objects}
       selectedSpace={selectedSpace}
       setSelectedSpace={setSelectedSpace}
       selectedType={selectedType}
@@ -89,6 +93,8 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
       setSelectedList={setSelectedList}
       listSearchText={listSearchText}
       setListSearchText={setListSearchText}
+      objectSearchText={objectSearchText}
+      setObjectSearchText={setObjectSearchText}
       isLoading={isLoading}
       draftValues={mergedValues}
       enableDrafts={true}

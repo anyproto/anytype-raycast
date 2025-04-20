@@ -13,7 +13,7 @@ export const downloadUrl = "https://download.anytype.io/";
 export const anytypeSpaceDeeplink = (spaceId: string) => `anytype://main/object/_blank_/space.id/${spaceId}`;
 
 // Numbers
-export const currentApiVersion = "2025-03-17";
+export const currentApiVersion = "2025-04-22";
 export const apiLimit = getPreferenceValues().limit;
 export const apiLimitMax = 1000;
 export const iconWidth = 64;
@@ -41,6 +41,7 @@ export const apiKeyPrefixes = {
 // API Property/Type Keys
 export const apiPropertyKeys = {
   description: `${apiKeyPrefixes.properties}description`,
+  type: `${apiKeyPrefixes.properties}type`,
   createdDate: `${apiKeyPrefixes.properties}created_date`,
   lastModifiedDate: `${apiKeyPrefixes.properties}last_modified_date`,
   lastOpenedDate: `${apiKeyPrefixes.properties}last_opened_date`,
