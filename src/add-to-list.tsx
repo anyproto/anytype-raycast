@@ -124,22 +124,24 @@ export function AddToList() {
         ))}
       </Form.Dropdown>
 
-      <Form.Dropdown
-        {...itemProps.object}
-        title="Object"
-        value={selectedObject}
-        onChange={setSelectedObject}
-        onSearchTextChange={setObjectSearchText}
-        throttle={true}
-        storeValue={true}
-        info="The object to add to the list"
-      >
-        {objects
-          .filter((object) => !listItems.some((item) => item.id === object.id) && object.id !== selectedList)
-          .map((object) => (
-            <Form.Dropdown.Item key={object.id} value={object.id} title={object.name} icon={object.icon} />
-          ))}
-      </Form.Dropdown>
+      {selectedList && (
+        <Form.Dropdown
+          {...itemProps.object}
+          title="Object"
+          value={selectedObject}
+          onChange={setSelectedObject}
+          onSearchTextChange={setObjectSearchText}
+          throttle={true}
+          storeValue={true}
+          info="The object to add to the list"
+        >
+          {objects
+            .filter((object) => !listItems.some((item) => item.id === object.id) && object.id !== selectedList)
+            .map((object) => (
+              <Form.Dropdown.Item key={object.id} value={object.id} title={object.name} icon={object.icon} />
+            ))}
+        </Form.Dropdown>
+      )}
     </Form>
   );
 }
