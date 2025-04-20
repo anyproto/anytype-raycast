@@ -1,6 +1,6 @@
 import { Icon, Image } from "@raycast/api";
 import fetch from "node-fetch";
-import { ObjectIcon, RawType } from "../models";
+import { IconFormat, ObjectIcon, RawType } from "../models";
 import { colorMap, iconWidth } from "./constant";
 
 /**
@@ -13,30 +13,30 @@ import { colorMap, iconWidth } from "./constant";
 export async function getIconWithFallback(icon: ObjectIcon, layout: string, type?: RawType): Promise<Image.ImageLike> {
   if (icon && icon.format) {
     // type built-in icons
-    if (icon.format === "icon" && icon.name) {
+    if (icon.format === IconFormat.Icon && icon.name) {
       return getCustomTypeIcon(icon.name, icon.color);
     }
 
     // file reference
-    if (icon.format === "file" && icon.file) {
+    if (icon.format === IconFormat.File && icon.file) {
       const fileSource = await getFile(icon.file);
       if (fileSource) {
         return { source: fileSource, mask: getMaskForObject(icon.file, layout) };
       }
-      if (type?.icon.format === "icon" && type?.icon.name) {
+      if (type?.icon.format === IconFormat.Icon && type?.icon.name) {
         return getCustomTypeIcon(type.icon.name, "grey");
       }
       return await fallbackToLayout(layout);
     }
 
     // regular emoji
-    if (icon.format === "emoji" && icon.emoji) {
+    if (icon.format === IconFormat.Emoji && icon.emoji) {
       return icon.emoji;
     }
   }
 
   // fallback to grey version of type built-in icon
-  if (type?.icon && type.icon.format === "icon" && type.icon.name) {
+  if (type?.icon && type.icon.format === IconFormat.Icon && type.icon.name) {
     return getCustomTypeIcon(type?.icon.name, "grey");
   }
 

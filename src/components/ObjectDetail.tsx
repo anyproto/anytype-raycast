@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { ObjectActions, TemplateList, ViewType } from ".";
 import { useExport, useObject } from "../hooks";
-import { ExportFormat, Member, Property, RawProperty, Space, SpaceObject, Type } from "../models";
+import { ExportFormat, Member, Property, PropertyFormat, RawProperty, Space, SpaceObject, Type } from "../models";
 import { apiPropertyKeys, injectEmojiIntoHeading } from "../utils";
 
 type ObjectDetailProps = {
@@ -84,7 +84,7 @@ export function ObjectDetail({
     }
 
     // For properties in the 'text' group, ensure that 'description' comes first
-    if (aGroup === "text" && bGroup === "text") {
+    if (aGroup === PropertyFormat.Text && bGroup === PropertyFormat.Text) {
       if (a.key === apiPropertyKeys.description && b.key !== apiPropertyKeys.description) return -1;
       if (b.key === apiPropertyKeys.description && a.key !== apiPropertyKeys.description) return 1;
     }
@@ -95,7 +95,7 @@ export function ObjectDetail({
   function renderDetailMetadata(property: RawProperty) {
     const titleText = property.name || property.key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
-    if (property.format === "text") {
+    if (property.format === PropertyFormat.Text) {
       return (
         <Detail.Metadata.Label
           key={property.key}
@@ -119,7 +119,7 @@ export function ObjectDetail({
       );
     }
 
-    if (property.format === "number") {
+    if (property.format === PropertyFormat.Number) {
       return (
         <Detail.Metadata.Label
           key={property.key}
@@ -133,7 +133,7 @@ export function ObjectDetail({
       );
     }
 
-    if (property.format === "select") {
+    if (property.format === PropertyFormat.Select) {
       const tag = property.select;
       if (tag) {
         return (
@@ -153,7 +153,7 @@ export function ObjectDetail({
       }
     }
 
-    if (property.format === "multi_select") {
+    if (property.format === PropertyFormat.MultiSelect) {
       const tags = property.multi_select;
       if (tags && tags.length > 0) {
         return (
@@ -175,7 +175,7 @@ export function ObjectDetail({
       }
     }
 
-    if (property.format === "date") {
+    if (property.format === PropertyFormat.Date) {
       return (
         <Detail.Metadata.Label
           key={property.key}
@@ -189,7 +189,7 @@ export function ObjectDetail({
       );
     }
 
-    if (property.format === "file") {
+    if (property.format === PropertyFormat.File) {
       const files = property.file;
       if (files && files.length > 0) {
         return (
@@ -211,7 +211,7 @@ export function ObjectDetail({
       }
     }
 
-    if (property.format === "checkbox") {
+    if (property.format === PropertyFormat.Checkbox) {
       return (
         <Detail.Metadata.Label
           key={property.key}
@@ -224,7 +224,7 @@ export function ObjectDetail({
       );
     }
 
-    if (property.format === "url") {
+    if (property.format === PropertyFormat.Url) {
       if (property.url) {
         if (linkDisplay === "text") {
           return (
@@ -257,7 +257,7 @@ export function ObjectDetail({
       }
     }
 
-    if (property.format === "email") {
+    if (property.format === PropertyFormat.Email) {
       if (property.email) {
         if (linkDisplay === "text") {
           return (
@@ -290,7 +290,7 @@ export function ObjectDetail({
       }
     }
 
-    if (property.format === "phone") {
+    if (property.format === PropertyFormat.Phone) {
       return (
         <Detail.Metadata.Label
           key={property.key}
@@ -304,7 +304,7 @@ export function ObjectDetail({
       );
     }
 
-    if (property.format === "object" && Array.isArray(property.object)) {
+    if (property.format === PropertyFormat.Object && Array.isArray(property.object)) {
       if (property.object.length > 0) {
         return (
           <Detail.Metadata.TagList key={property.key} title={titleText}>

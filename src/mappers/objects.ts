@@ -1,6 +1,6 @@
 import { getPreferenceValues } from "@raycast/api";
 import { getObjectWithoutMappedDetails } from "../api";
-import { RawProperty, RawSpaceObject, SortProperty, SpaceObject } from "../models";
+import { PropertyFormat, RawProperty, RawSpaceObject, SortProperty, SpaceObject } from "../models";
 import { getIconWithFallback } from "../utils";
 import { mapTag } from "./properties";
 import { mapType } from "./types";
@@ -47,19 +47,19 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
       };
 
       switch (property.format) {
-        case "text":
+        case PropertyFormat.Text:
           mappedProperty = {
             ...mappedProperty,
             text: typeof property.text === "string" ? property.text.trim() : "",
           };
           break;
-        case "number":
+        case PropertyFormat.Number:
           mappedProperty = {
             ...mappedProperty,
             number: property.number !== undefined && property.number !== null ? property.number : 0,
           };
           break;
-        case "select":
+        case PropertyFormat.Select:
           if (property.select) {
             mappedProperty = {
               ...mappedProperty,
@@ -67,7 +67,7 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
             };
           }
           break;
-        case "multi_select":
+        case PropertyFormat.MultiSelect:
           if (property.multi_select) {
             mappedProperty = {
               ...mappedProperty,
@@ -75,13 +75,13 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
             };
           }
           break;
-        case "date":
+        case PropertyFormat.Date:
           mappedProperty = {
             ...mappedProperty,
             date: property.date ? new Date(property.date).toISOString() : "",
           };
           break;
-        case "file":
+        case PropertyFormat.File:
           if (property.file) {
             mappedProperty = {
               ...mappedProperty,
@@ -89,31 +89,31 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
             };
           }
           break;
-        case "checkbox":
+        case PropertyFormat.Checkbox:
           mappedProperty = {
             ...mappedProperty,
             checkbox: property.checkbox || false,
           };
           break;
-        case "url":
+        case PropertyFormat.Url:
           mappedProperty = {
             ...mappedProperty,
             url: typeof property.url === "string" ? property.url.trim() : "",
           };
           break;
-        case "email":
+        case PropertyFormat.Email:
           mappedProperty = {
             ...mappedProperty,
             email: typeof property.email === "string" ? property.email.trim() : "",
           };
           break;
-        case "phone":
+        case PropertyFormat.Phone:
           mappedProperty = {
             ...mappedProperty,
             phone: typeof property.phone === "string" ? property.phone.trim() : "",
           };
           break;
-        case "object":
+        case PropertyFormat.Object:
           if (property.object) {
             mappedProperty = {
               ...mappedProperty,

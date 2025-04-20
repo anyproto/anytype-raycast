@@ -71,7 +71,9 @@ export function CreateObjectForm({
     ) || []; // handle description and type separately
   const { tagsMap = {} } = useTagsMap(
     selectedSpace,
-    properties.filter((prop) => prop.format === "select" || prop.format === "multi_select").map((prop) => prop.key),
+    properties
+      .filter((prop) => prop.format === PropertyFormat.Select || prop.format === PropertyFormat.MultiSelect)
+      .map((prop) => prop.key),
   );
 
   useEffect(() => {
