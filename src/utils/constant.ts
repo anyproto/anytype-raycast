@@ -130,13 +130,13 @@ export const apiEndpoints = {
     method: "GET",
   }),
   getTags: (spaceId: string, propertyId: string, options: { offset: number; limit: number }) => ({
-    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/options${encodeQueryParams(options)}`,
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/tags${encodeQueryParams(options)}`,
     method: "GET",
   }),
-  //   getTag: (spaceId: string, propertyId: string, optionId: string) => ({
-  //     url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/options/${optionId}`,
-  //     method: "GET",
-  //   }),
+  getTag: (spaceId: string, propertyId: string, tagId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/tags/${tagId}`,
+    method: "GET",
+  }),
 
   // search
   globalSearch: (options: { offset: number; limit: number }) => ({
