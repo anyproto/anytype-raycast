@@ -14,7 +14,7 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
   if (icon && icon.format) {
     // type built-in icons
     if (icon.format === "icon" && icon.name) {
-      return await getCustomTypeIcon(icon.name, icon.color);
+      return getCustomTypeIcon(icon.name, icon.color);
     }
 
     // file reference
@@ -24,7 +24,7 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
         return { source: fileSource, mask: getMaskForObject(icon.file, layout) };
       }
       if (type?.icon.format === "icon" && type?.icon.name) {
-        return await getCustomTypeIcon(type.icon.name, "grey");
+        return getCustomTypeIcon(type.icon.name, "grey");
       }
       return await fallbackToLayout(layout);
     }
@@ -37,7 +37,7 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
 
   // fallback to grey version of type built-in icon
   if (type?.icon && type.icon.format === "icon" && type.icon.name) {
-    return await getCustomTypeIcon(type?.icon.name, "grey");
+    return getCustomTypeIcon(type?.icon.name, "grey");
   }
 
   // fallback to layout
@@ -52,22 +52,22 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
 async function fallbackToLayout(layout: string): Promise<Image.ImageLike> {
   switch (layout) {
     case "todo":
-      return await getCustomTypeIcon("checkbox", "grey");
+      return getCustomTypeIcon("checkbox", "grey");
     case "set":
     case "collection":
-      return await getCustomTypeIcon("layers", "grey");
+      return getCustomTypeIcon("layers", "grey");
     case "participant":
-      return await getCustomTypeIcon("person", "grey");
+      return getCustomTypeIcon("person", "grey");
     case "bookmark":
-      return await getCustomTypeIcon("bookmark", "grey");
+      return getCustomTypeIcon("bookmark", "grey");
     case "type":
-      return await getCustomTypeIcon("extension-puzzle", "grey");
+      return getCustomTypeIcon("extension-puzzle", "grey");
     case "template":
-      return await getCustomTypeIcon("copy", "grey");
+      return getCustomTypeIcon("copy", "grey");
     case "space":
       return Icon.BullsEye;
     default:
-      return await getCustomTypeIcon("document", "grey");
+      return getCustomTypeIcon("document", "grey");
   }
 }
 
@@ -77,7 +77,7 @@ async function fallbackToLayout(layout: string): Promise<Image.ImageLike> {
  * @param color The color of the icon.
  * @returns The base64 data URI of the icon.
  */
-export async function getCustomTypeIcon(name: string, color?: string): Promise<Image.ImageLike> {
+export function getCustomTypeIcon(name: string, color?: string): Image.ImageLike {
   return {
     source: `icons/type/${name}.svg`,
     tintColor: {
