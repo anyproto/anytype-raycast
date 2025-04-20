@@ -1,4 +1,5 @@
 import { getPreferenceValues, Image } from "@raycast/api";
+import emojiRegex from "emoji-regex";
 import { MemberRole, SortProperty } from "../models";
 
 /**
@@ -87,7 +88,18 @@ export function formatMemberRole(role: string): string {
 export function injectEmojiIntoHeading(markdown: string, icon?: Image.ImageLike): string {
   if (typeof icon !== "string") return markdown;
   const trimmedIcon = icon.trim();
-  const emojiRegex = /^(?:\p{Extended_Pictographic}(?:\p{Grapheme_Extend}|\u200D\p{Extended_Pictographic})*)+$/u;
-  if (!emojiRegex.test(trimmedIcon)) return markdown;
+  if (!isEmoji(trimmedIcon)) return markdown;
   return markdown.replace(/^(#+) (.*)/, (_, hashes, heading) => `${hashes} ${trimmedIcon} ${heading}`);
+}
+
+/**
+ * Checks if a string is a valid emoji.
+ *
+ * @param s The string to check.
+ * @returns True if the string is a valid emoji, false otherwise.
+ */
+export function isEmoji(s: string) {
+  const re = emojiRegex();
+  const match = re.exec(s);
+  return match !== null && match[0] === s;
 }

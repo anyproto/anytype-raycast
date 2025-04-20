@@ -6,7 +6,7 @@ import { addObjectsToList, createObject } from "../api";
 import { CreateObjectFormValues } from "../create-object";
 import { useTagsMap } from "../hooks";
 import { CreateObjectRequest, IconFormat, Space, SpaceObject, Template, Type } from "../models";
-import { apiPropertyKeys, fetchTypeKeysForLists } from "../utils";
+import { apiPropertyKeys, fetchTypeKeysForLists, isEmoji } from "../utils";
 
 interface CreateObjectFormProps {
   spaces: Space[];
@@ -142,8 +142,8 @@ export function CreateObjectForm({
         }
       },
       icon: (value: FieldValue) => {
-        if (typeof value === "string" && value.length > 2) {
-          return "Icon must be a single character";
+        if (typeof value === "string" && !isEmoji(value)) {
+          return "Icon must be single emoji";
         }
       },
       source: (value: FieldValue) => {

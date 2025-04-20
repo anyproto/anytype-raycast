@@ -993,6 +993,7 @@
     "@raycast/api": "^1.93.1",
     "@raycast/utils": "^1.17.0",
     "date-fns": "^4.1.0",
+    "emoji-regex": "^10.4.0",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
