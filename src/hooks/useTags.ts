@@ -51,7 +51,7 @@ export function useTagsMap(spaceId: string, propertyIds: string[]) {
     [spaceId, propertyIds],
     {
       keepPreviousData: true,
-      execute: !!spaceId && !!propertyIds.length,
+      execute: !!spaceId && propertyIds.length > 0,
     },
   );
 

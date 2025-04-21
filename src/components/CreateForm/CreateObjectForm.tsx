@@ -73,7 +73,7 @@ export function CreateObjectForm({
     selectedSpace,
     properties
       .filter((prop) => prop.format === PropertyFormat.Select || prop.format === PropertyFormat.MultiSelect)
-      .map((prop) => prop.key),
+      .map((prop) => prop.id),
   );
 
   useEffect(() => {
@@ -331,7 +331,7 @@ It supports:
               <Form.Separator />
 
               {properties.map((prop) => {
-                const tags = tagsMap[prop.key] ?? []; // TODO: change to id
+                const tags = tagsMap[prop.id] ?? [];
                 const id = prop.key;
                 const title = prop.name;
                 if (

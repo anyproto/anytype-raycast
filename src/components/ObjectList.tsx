@@ -120,7 +120,7 @@ export function ObjectList({ space }: ObjectListProps) {
   const processProperty = (property: Property, isPinned: boolean) => {
     return {
       spaceId: space.id,
-      id: property.key, // TODO: change to ID
+      id: property.id,
       icon: property.icon,
       title: property.name,
       subtitle: { value: "", tooltip: "" },

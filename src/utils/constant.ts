@@ -33,9 +33,9 @@ export const localStorageKeys = {
 };
 
 export const apiKeyPrefixes = {
-  properties: "prop_",
+  properties: "",
   types: "ot-", // TODO: change to "type_" when API is updated
-  tags: "tag_",
+  tags: "",
 };
 
 // API Property/Type Keys
