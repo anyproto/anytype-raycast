@@ -8,12 +8,12 @@ export enum PropertyFormat {
   Select = "select",
   MultiSelect = "multi_select",
   Date = "date",
-  File = "file",
+  Files = "files",
   Checkbox = "checkbox",
   Url = "url",
   Email = "email",
   Phone = "phone",
-  Object = "object",
+  Objects = "objects",
 }
 
 export interface CreatePropertyRequest {
@@ -36,12 +36,12 @@ export interface RawProperty {
   select?: Tag;
   multi_select?: Tag[];
   date?: string;
-  file?: SpaceObject[];
+  files?: SpaceObject[];
   checkbox?: boolean;
   url?: string;
   email?: string;
   phone?: string;
-  object?: SpaceObject[];
+  objects?: SpaceObject[];
 }
 
 export interface Property extends RawProperty {

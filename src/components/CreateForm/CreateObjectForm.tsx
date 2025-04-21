@@ -118,8 +118,8 @@ export function CreateObjectForm({
               case PropertyFormat.Checkbox:
                 propertiesObj[prop.key] = Boolean(propValue);
                 break;
-              case PropertyFormat.File:
-              case PropertyFormat.Object:
+              case PropertyFormat.Files:
+              case PropertyFormat.Objects:
                 propertiesObj[prop.key] = Array.isArray(propValue) ? propValue : ([propValue] as string[]);
                 break;
               default:
@@ -451,7 +451,7 @@ It supports:
                     />
                   );
                 }
-                if (prop.format === PropertyFormat.File) {
+                if (prop.format === PropertyFormat.Files) {
                   // TODO: implement
                   return null;
                 }
@@ -466,7 +466,7 @@ It supports:
                     />
                   );
                 }
-                if (prop.format === PropertyFormat.Object) {
+                if (prop.format === PropertyFormat.Objects) {
                   return (
                     // TODO: TagPicker would be the more appropriate component, but it does not support onSearchTextChange
                     <Form.Dropdown

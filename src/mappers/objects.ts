@@ -81,11 +81,11 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
             date: property.date ? new Date(property.date).toISOString() : "",
           };
           break;
-        case PropertyFormat.File:
-          if (property.file) {
+        case PropertyFormat.Files:
+          if (property.files) {
             mappedProperty = {
               ...mappedProperty,
-              file: await mapObjectWithoutDetails(object.space_id, property.file),
+              files: await mapObjectWithoutDetails(object.space_id, property.files),
             };
           }
           break;
@@ -113,11 +113,11 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
             phone: typeof property.phone === "string" ? property.phone.trim() : "",
           };
           break;
-        case PropertyFormat.Object:
-          if (property.object) {
+        case PropertyFormat.Objects:
+          if (property.objects) {
             mappedProperty = {
               ...mappedProperty,
-              object: await mapObjectWithoutDetails(object.space_id, property.object),
+              objects: await mapObjectWithoutDetails(object.space_id, property.objects),
             };
           }
           break;

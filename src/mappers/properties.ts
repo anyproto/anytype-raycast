@@ -29,8 +29,8 @@ function getIconForProperty(format: PropertyFormat): Image.ImageLike {
       return { source: "icons/property/multi_select.svg", tintColor: tintColor };
     case PropertyFormat.Date:
       return { source: "icons/property/date.svg", tintColor: tintColor };
-    case PropertyFormat.File:
-      return { source: "icons/property/file.svg", tintColor: tintColor };
+    case PropertyFormat.Files:
+      return { source: "icons/property/files.svg", tintColor: tintColor };
     case PropertyFormat.Checkbox:
       return { source: "icons/property/checkbox.svg", tintColor: tintColor };
     case PropertyFormat.Url:
@@ -39,8 +39,8 @@ function getIconForProperty(format: PropertyFormat): Image.ImageLike {
       return { source: "icons/property/email.svg", tintColor: tintColor };
     case PropertyFormat.Phone:
       return { source: "icons/property/phone.svg", tintColor: tintColor };
-    case PropertyFormat.Object:
-      return { source: "icons/property/object.svg", tintColor: tintColor };
+    case PropertyFormat.Objects:
+      return { source: "icons/property/objects.svg", tintColor: tintColor };
   }
 }
 

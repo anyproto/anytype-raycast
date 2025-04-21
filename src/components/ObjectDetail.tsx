@@ -189,8 +189,8 @@ export function ObjectDetail({
       );
     }
 
-    if (property.format === PropertyFormat.File) {
-      const files = property.file;
+    if (property.format === PropertyFormat.Files) {
+      const files = property.files;
       if (files && files.length > 0) {
         return (
           <Detail.Metadata.TagList key={property.key} title={titleText}>
@@ -205,7 +205,7 @@ export function ObjectDetail({
             key={property.key}
             title={titleText}
             text={{ value: "No files", color: Color.SecondaryText }}
-            icon={{ source: "icons/property/file.svg", tintColor: { light: "grey", dark: "grey" } }}
+            icon={{ source: "icons/property/files.svg", tintColor: { light: "grey", dark: "grey" } }}
           />
         );
       }
@@ -304,11 +304,11 @@ export function ObjectDetail({
       );
     }
 
-    if (property.format === PropertyFormat.Object && Array.isArray(property.object)) {
-      if (property.object.length > 0) {
+    if (property.format === PropertyFormat.Objects && Array.isArray(property.objects)) {
+      if (property.objects.length > 0) {
         return (
           <Detail.Metadata.TagList key={property.key} title={titleText}>
-            {property.object.map((objectItem, index) => {
+            {property.objects.map((objectItem, index) => {
               const handleAction = () => {
                 push(
                   <ObjectDetail
