@@ -12,7 +12,7 @@ import {
   useNavigation,
 } from "@raycast/api";
 import { MutatePromise, showFailureToast } from "@raycast/utils";
-import { CollectionList, ListSubmenu, ObjectDetail, TemplateList, ViewType } from ".";
+import { CollectionList, ListSubmenu, ObjectDetail, TagList, TemplateList, ViewType } from ".";
 import { deleteObject } from "../api";
 import { Export, Member, Property, Space, SpaceObject, Template, Type, View } from "../models";
 import {
@@ -74,6 +74,7 @@ export function ObjectActions({
   const isType = viewType === ViewType.types;
   const isProperty = viewType === ViewType.properties;
   const isMember = viewType === ViewType.members;
+  const hasTags = layout === "select" || layout === "multi_select";
 
   const getContextLabel = (isSingular = true) => (isDetailView || isSingular ? viewType : pluralize(2, viewType));
 
@@ -338,8 +339,12 @@ export function ObjectActions({
             }
           />
         )}
+        {hasTags && (
+          <Action.Push icon={Icon.Tag} title="Show Tags" target={<TagList space={space} propertyId={objectId} />} />
+        )}
         {secondPrimaryAction}
       </ActionPanel.Section>
+
       <ActionPanel.Section>
         {objectExport && (
           <Action.CopyToClipboard
