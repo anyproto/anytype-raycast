@@ -26,7 +26,7 @@ export function useSearch(spaceId: string, query: string, types: string[], confi
     [spaceId, query, types],
     {
       keepPreviousData: true,
-      execute: !!spaceId && !!config?.execute,
+      execute: !!spaceId && config?.execute !== false,
     },
   );
 
