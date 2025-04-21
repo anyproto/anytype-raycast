@@ -77,7 +77,7 @@ export function ObjectList({ space }: ObjectListProps) {
       [ViewType.members]: membersPagination,
     };
     setPagination(paginationMap[currentView]);
-  }, [currentView, objects, types, members]);
+  }, [currentView, objects, types, properties, members]);
 
   useEffect(() => {
     if (objectsError || typesError || propertiesError || membersError) {
