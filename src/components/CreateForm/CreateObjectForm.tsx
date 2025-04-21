@@ -76,6 +76,23 @@ export function CreateObjectForm({
       .map((prop) => prop.id),
   );
 
+  const numberFieldValidations = useMemo(() => {
+    return properties
+      .filter((prop) => prop.format === PropertyFormat.Number)
+      .reduce(
+        (acc, prop) => {
+          acc[prop.key] = (value: FieldValue) => {
+            const str = typeof value === "string" ? value : undefined;
+            if (str && isNaN(Number(str))) {
+              return "Value must be a number";
+            }
+          };
+          return acc;
+        },
+        {} as Record<string, (value: FieldValue) => string | undefined>,
+      );
+  }, [properties]);
+
   useEffect(() => {
     const fetchTypesForLists = async () => {
       if (spaces) {
@@ -176,6 +193,7 @@ export function CreateObjectForm({
           return "Source is required for Bookmarks";
         }
       },
+      ...numberFieldValidations,
     },
   });
 
