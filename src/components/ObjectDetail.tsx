@@ -304,8 +304,8 @@ export function ObjectDetail({
       );
     }
 
-    if (property.format === PropertyFormat.Objects && Array.isArray(property.objects)) {
-      if (property.objects.length > 0) {
+    if (property.format === PropertyFormat.Objects) {
+      if (Array.isArray(property.objects) && property.objects.length > 0) {
         return (
           <Detail.Metadata.TagList key={property.key} title={titleText}>
             {property.objects.map((objectItem, index) => {
@@ -333,6 +333,15 @@ export function ObjectDetail({
               );
             })}
           </Detail.Metadata.TagList>
+        );
+      } else {
+        return (
+          <Detail.Metadata.Label
+            key={property.key}
+            title={titleText}
+            text={{ value: "No objects", color: Color.SecondaryText }}
+            icon={{ source: "icons/property/objects.svg", tintColor: { light: "grey", dark: "grey" } }}
+          />
         );
       }
     }
