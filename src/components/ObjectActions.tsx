@@ -353,7 +353,7 @@ export function ObjectActions({
             content={objectExport.markdown}
           />
         )}
-        <ListSubmenu spaceId={space.id} objectId={objectId} />
+        {!isType && !isProperty && <ListSubmenu spaceId={space.id} objectId={objectId} />}
         <Action
           icon={Icon.Link}
           title="Copy Link"
