@@ -1,6 +1,6 @@
 import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
 import { showFailureToast, useForm } from "@raycast/utils";
-import { createSpace } from "../api";
+import { createSpace } from "../../api";
 
 export interface CreateSpaceFormValues {
   name?: string;

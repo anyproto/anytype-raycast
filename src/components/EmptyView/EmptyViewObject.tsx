@@ -1,8 +1,8 @@
 import { Action, ActionPanel, Icon, List } from "@raycast/api";
 import { useEffect } from "react";
-import { CreateObjectForm } from ".";
-import { CreateObjectFormValues } from "../create-object";
-import { useCreateObjectData } from "../hooks";
+import { CreateObjectForm } from "..";
+import { CreateObjectFormValues } from "../../create-object";
+import { useCreateObjectData } from "../../hooks";
 
 type EmptyViewObjectProps = {
   title: string;

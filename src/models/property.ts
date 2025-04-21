@@ -16,6 +16,16 @@ export enum PropertyFormat {
   Object = "object",
 }
 
+export interface CreatePropertyRequest {
+  name: string;
+  format: PropertyFormat;
+}
+
+export interface UpdatePropertyRequest {
+  id: string;
+  name: string;
+}
+
 export interface RawProperty {
   id: string;
   key: string;

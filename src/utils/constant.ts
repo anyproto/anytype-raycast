@@ -103,14 +103,6 @@ export const apiEndpoints = {
   }),
 
   // objects
-  createObject: (spaceId: string) => ({
-    url: `${apiUrl}/spaces/${spaceId}/objects`,
-    method: "POST",
-  }),
-  deleteObject: (spaceId: string, objectId: string) => ({
-    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
-    method: "DELETE",
-  }),
   getObject: (spaceId: string, objectId: string) => ({
     url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
     method: "GET",
@@ -118,6 +110,14 @@ export const apiEndpoints = {
   getObjects: (spaceId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/objects${encodeQueryParams(options)}`,
     method: "GET",
+  }),
+  createObject: (spaceId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects`,
+    method: "POST",
+  }),
+  deleteObject: (spaceId: string, objectId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
+    method: "DELETE",
   }),
 
   // properties
@@ -129,6 +129,20 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}`,
     method: "GET",
   }),
+  createProperty: (spaceId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties`,
+    method: "POST",
+  }),
+  updateProperty: (spaceId: string, propertyId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}`,
+    method: "PATCH",
+  }),
+  deleteProperty: (spaceId: string, propertyId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}`,
+    method: "DELETE",
+  }),
+
+  // tags
   getTags: (spaceId: string, propertyId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/tags${encodeQueryParams(options)}`,
     method: "GET",

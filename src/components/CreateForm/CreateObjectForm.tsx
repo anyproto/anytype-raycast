@@ -2,11 +2,11 @@ import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@r
 import { showFailureToast, useForm } from "@raycast/utils";
 import { formatRFC3339 } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
-import { addObjectsToList, createObject } from "../api";
-import { CreateObjectFormValues } from "../create-object";
-import { useTagsMap } from "../hooks";
-import { CreateObjectRequest, IconFormat, PropertyFormat, Space, SpaceObject, Template, Type } from "../models";
-import { apiPropertyKeys, fetchTypeKeysForLists, isEmoji } from "../utils";
+import { addObjectsToList, createObject } from "../../api";
+import { CreateObjectFormValues } from "../../create-object";
+import { useTagsMap } from "../../hooks";
+import { CreateObjectRequest, IconFormat, PropertyFormat, Space, SpaceObject, Template, Type } from "../../models";
+import { apiPropertyKeys, fetchTypeKeysForLists, isEmoji } from "../../utils";
 
 interface CreateObjectFormProps {
   spaces: Space[];
