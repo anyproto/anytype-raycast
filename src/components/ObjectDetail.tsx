@@ -169,7 +169,7 @@ export function ObjectDetail({
             key={property.key}
             title={titleText}
             text={{ value: "No tags", color: Color.SecondaryText }}
-            icon={{ source: "icons/property/multiselect.svg", tintColor: { light: "grey", dark: "grey" } }}
+            icon={{ source: "icons/property/multi_select.svg", tintColor: { light: "grey", dark: "grey" } }}
           />
         );
       }

@@ -26,7 +26,7 @@ function getIconForProperty(format: PropertyFormat): Image.ImageLike {
     case PropertyFormat.Select:
       return { source: "icons/property/select.svg", tintColor: tintColor };
     case PropertyFormat.MultiSelect:
-      return { source: "icons/property/multiSelect.svg", tintColor: tintColor };
+      return { source: "icons/property/multi_select.svg", tintColor: tintColor };
     case PropertyFormat.Date:
       return { source: "icons/property/date.svg", tintColor: tintColor };
     case PropertyFormat.File:
