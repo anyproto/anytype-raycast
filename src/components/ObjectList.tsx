@@ -120,7 +120,7 @@ export function ObjectList({ space }: ObjectListProps) {
   const processProperty = (property: Property, isPinned: boolean) => {
     return {
       spaceId: space.id,
-      id: property.id,
+      id: property.key, // TODO: change to ID
       icon: property.icon,
       title: property.name,
       subtitle: { value: "", tooltip: "" },
@@ -133,7 +133,7 @@ export function ObjectList({ space }: ObjectListProps) {
         mutatePinnedProperties as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>,
       ],
       member: undefined,
-      layout: "",
+      layout: property.format, // hacky workaround for TagList
       isPinned,
     };
   };

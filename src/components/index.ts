@@ -13,4 +13,5 @@ export * from "./ObjectList";
 export * from "./ObjectListItem";
 export * from "./SpaceActions";
 export * from "./SpaceListItem";
+export * from "./TagList";
 export * from "./TemplateList";
