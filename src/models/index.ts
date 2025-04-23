@@ -8,5 +8,6 @@ export * from "./pagination";
 export * from "./property";
 export * from "./search";
 export * from "./space";
+export * from "./tag";
 export * from "./template";
 export * from "./type";

@@ -7,16 +7,16 @@ export async function updateProperty(
   propertyId: string,
   data: UpdatePropertyRequest,
 ): Promise<{
-  member: Property | null;
+  property: Property | null;
 }> {
   const { url, method } = apiEndpoints.updateProperty(spaceId, propertyId);
 
-  const response = await apiFetch<{ member: RawProperty }>(url, {
+  const response = await apiFetch<{ property: RawProperty }>(url, {
     method: method,
     body: JSON.stringify(data),
   });
 
   return {
-    member: response ? mapProperty(response.payload.member) : null,
+    property: response ? mapProperty(response.payload.property) : null,
   };
 }

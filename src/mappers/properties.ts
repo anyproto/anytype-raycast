@@ -1,5 +1,5 @@
 import { Image } from "@raycast/api";
-import { Property, PropertyFormat, RawProperty, Tag } from "../models";
+import { Property, PropertyFormat, RawProperty, RawTag, Tag } from "../models";
 import { colorMap } from "../utils";
 
 export function mapProperties(properties: RawProperty[]): Property[] {
@@ -44,13 +44,13 @@ function getIconForProperty(format: PropertyFormat): Image.ImageLike {
   }
 }
 
-export function mapTags(tags: Tag[]): Tag[] {
+export function mapTags(tags: RawTag[]): Tag[] {
   return tags.map((tag) => {
     return mapTag(tag);
   });
 }
 
-export function mapTag(tag: Tag): Tag {
+export function mapTag(tag: RawTag): Tag {
   return {
     ...tag,
     name: tag.name || "Untitled",

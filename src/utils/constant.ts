@@ -151,6 +151,18 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/tags/${tagId}`,
     method: "GET",
   }),
+  createTag: (spaceId: string, propertyId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/tags`,
+    method: "POST",
+  }),
+  updateTag: (spaceId: string, propertyId: string, tagId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/tags/${tagId}`,
+    method: "PATCH",
+  }),
+  deleteTag: (spaceId: string, propertyId: string, tagId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/tags/${tagId}`,
+    method: "DELETE",
+  }),
 
   // search
   globalSearch: (options: { offset: number; limit: number }) => ({

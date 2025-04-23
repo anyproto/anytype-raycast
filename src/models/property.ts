@@ -1,5 +1,5 @@
 import { Image } from "@raycast/api";
-import { Color } from ".";
+import { RawTag, Tag } from ".";
 import { SpaceObject } from "./object";
 
 export enum PropertyFormat {
@@ -33,8 +33,8 @@ export interface RawProperty {
   format: PropertyFormat;
   text?: string;
   number?: number;
-  select?: Tag;
-  multi_select?: Tag[];
+  select?: RawTag;
+  multi_select?: RawTag[];
   date?: string;
   files?: SpaceObject[];
   checkbox?: boolean;
@@ -44,12 +44,8 @@ export interface RawProperty {
   objects?: SpaceObject[];
 }
 
-export interface Property extends RawProperty {
+export interface Property extends Omit<RawProperty, "select" | "multi_select"> {
   icon: Image.ImageLike;
-}
-
-export interface Tag {
-  id: string;
-  name: string;
-  color: Color | string;
+  select?: Tag;
+  multi_select?: Tag[];
 }
