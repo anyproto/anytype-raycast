@@ -6,7 +6,7 @@ import { colorMap } from "../../utils";
 
 export interface CreateTagFormValues {
   name: string;
-  color?: Color;
+  color?: string;
 }
 
 interface CreateTagFormProps {
@@ -17,14 +17,14 @@ interface CreateTagFormProps {
 
 export function CreateTagForm({ spaceId, propertyId, draftValues }: CreateTagFormProps) {
   const { handleSubmit, itemProps } = useForm<CreateTagFormValues>({
-    initialValues: { ...draftValues, color: draftValues.color as Color },
+    initialValues: { ...draftValues, name: draftValues.name, color: draftValues.color as Color },
     onSubmit: async (values) => {
       try {
         await showToast({ style: Toast.Style.Animated, title: "Creating tag..." });
 
         await createTag(spaceId, propertyId, {
           name: values.name || "",
-          color: values.color || Color.Ice,
+          color: values.color as Color,
         });
 
         showToast(Toast.Style.Success, "Tag created successfully");
@@ -37,6 +37,11 @@ export function CreateTagForm({ spaceId, propertyId, draftValues }: CreateTagFor
       name: (value) => {
         if (!value) {
           return "Name is required";
+        }
+      },
+      color: (value) => {
+        if (!value) {
+          return "Color is required";
         }
       },
     },
@@ -54,23 +59,7 @@ export function CreateTagForm({ spaceId, propertyId, draftValues }: CreateTagFor
       }
     >
       <Form.TextField {...itemProps.name} title="Name" placeholder="Enter tag name" info="The name of the tag" />
-      <Form.Dropdown
-        {...itemProps.color}
-        title="Format"
-        info="The color of the tag"
-        onBlur={(event) => {
-          const colorValue = event.target.value as Color;
-          itemProps.color.onChange?.(colorValue);
-        }}
-        onChange={(newValue) => {
-          const colorValue = newValue as Color;
-          itemProps.color.onChange?.(colorValue);
-        }}
-        onFocus={(event) => {
-          const colorValue = event.target.value as Color;
-          itemProps.color.onChange?.(colorValue);
-        }}
-      >
+      <Form.Dropdown {...itemProps.color} title="Color" info="The color of the tag">
         {tagColorKeys.map((key) => {
           const value = Color[key];
           return (

@@ -81,7 +81,7 @@ export function TagList({ space, propertyId }: TagListProps) {
           spaceId={space.id}
           propertyId={propertyId}
           contextValues={{
-            name: "",
+            name: searchText,
           }}
         />
       )}

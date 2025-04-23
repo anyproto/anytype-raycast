@@ -5,7 +5,7 @@ import { PropertyFormat } from "../../models";
 
 export interface CreatePropertyFormValues {
   name: string;
-  format?: PropertyFormat;
+  format?: string;
 }
 
 interface CreatePropertyFormProps {
@@ -22,7 +22,7 @@ export function CreatePropertyForm({ spaceId, draftValues }: CreatePropertyFormP
 
         await createProperty(spaceId, {
           name: values.name || "",
-          format: values.format || PropertyFormat.Text,
+          format: values.format as PropertyFormat,
         });
 
         showToast(Toast.Style.Success, "Property created successfully");
@@ -57,23 +57,7 @@ export function CreatePropertyForm({ spaceId, draftValues }: CreatePropertyFormP
         placeholder="Enter property name"
         info="The name of the property"
       />
-      <Form.Dropdown
-        {...itemProps.format}
-        title="Format"
-        info="The format of the property"
-        onBlur={(event) => {
-          const formatValue = event.target.value as PropertyFormat;
-          itemProps.format.onChange?.(formatValue);
-        }}
-        onChange={(newValue) => {
-          const formatValue = newValue as PropertyFormat;
-          itemProps.format.onChange?.(formatValue);
-        }}
-        onFocus={(event) => {
-          const formatValue = event.target.value as PropertyFormat;
-          itemProps.format.onChange?.(formatValue);
-        }}
-      >
+      <Form.Dropdown {...itemProps.format} title="Format" info="The format of the property">
         {propertyFormatKeys.map((key) => {
           const value = PropertyFormat[key];
           return (
