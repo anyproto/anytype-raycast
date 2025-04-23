@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { ObjectActions, TemplateList, ViewType } from ".";
 import { useExport, useObject } from "../hooks";
-import { ExportFormat, Member, Property, PropertyFormat, RawProperty, Space, SpaceObject, Type } from "../models";
+import { ExportFormat, Member, Property, PropertyFormat, Space, SpaceObject, Type } from "../models";
 import { apiPropertyKeys, injectEmojiIntoHeading } from "../utils";
 
 type ObjectDetailProps = {
@@ -92,7 +92,7 @@ export function ObjectDetail({
     return a.name.localeCompare(b.name);
   });
 
-  function renderDetailMetadata(property: RawProperty) {
+  function renderDetailMetadata(property: Property) {
     const titleText = property.name || property.key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
     if (property.format === PropertyFormat.Text) {

@@ -16,7 +16,7 @@ export function mapProperty(property: RawProperty): Property {
   };
 }
 
-function getIconForProperty(format: PropertyFormat): Image.ImageLike {
+export function getIconForProperty(format: PropertyFormat): Image.ImageLike {
   const tintColor = { light: "grey", dark: "grey" };
   switch (format) {
     case PropertyFormat.Text:

@@ -1,5 +1,5 @@
 import { Image } from "@raycast/api";
-import { ObjectIcon, RawProperty, RawType, Type } from ".";
+import { ObjectIcon, Property, RawProperty, RawType, Type } from ".";
 
 export interface CreateObjectRequest {
   name: string;
@@ -29,9 +29,10 @@ export interface RawSpaceObjectWithBlocks extends RawSpaceObject {
   blocks: Block[];
 }
 
-export interface SpaceObject extends Omit<RawSpaceObject, "icon" | "type"> {
-  type: Type;
+export interface SpaceObject extends Omit<RawSpaceObject, "icon" | "type" | "properties"> {
   icon: Image.ImageLike;
+  type: Type;
+  properties: Property[];
 }
 
 export interface SpaceObjectWithBlocks extends Omit<RawSpaceObjectWithBlocks, "icon" | "type"> {
