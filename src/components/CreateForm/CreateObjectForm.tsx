@@ -4,57 +4,39 @@ import { formatRFC3339 } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { addObjectsToList, createObject } from "../../api";
 import { CreateObjectFormValues } from "../../create-object";
-import { useTagsMap } from "../../hooks";
-import { CreateObjectRequest, IconFormat, PropertyFormat, Space, SpaceObject, Template, Type } from "../../models";
+import { useCreateObjectData, useTagsMap } from "../../hooks";
+import { CreateObjectRequest, IconFormat, PropertyFormat } from "../../models";
 import { apiPropertyKeys, fetchTypeKeysForLists, isEmoji } from "../../utils";
 
 interface CreateObjectFormProps {
-  spaces: Space[];
-  types: Type[];
-  templates: Template[];
-  lists: SpaceObject[];
-  objects: SpaceObject[];
-  selectedSpace: string;
-  setSelectedSpace: (spaceId: string) => void;
-  selectedType: string;
-  setSelectedType: (type: string) => void;
-  selectedTemplate: string;
-  setSelectedTemplate: (templateId: string) => void;
-  selectedList: string;
-  setSelectedList: (listId: string) => void;
-  listSearchText: string;
-  setListSearchText: (searchText: string) => void;
-  objectSearchText: string;
-  setObjectSearchText: (searchText: string) => void;
-  isLoading: boolean;
   draftValues: CreateObjectFormValues;
   enableDrafts: boolean;
 }
 
 type FieldValue = string | boolean | string[] | Date | null | undefined;
 
-export function CreateObjectForm({
-  spaces,
-  types,
-  templates,
-  lists,
-  objects,
-  selectedSpace,
-  setSelectedSpace,
-  selectedType,
-  setSelectedType,
-  selectedTemplate,
-  setSelectedTemplate,
-  selectedList,
-  setSelectedList,
-  listSearchText,
-  setListSearchText,
-  objectSearchText,
-  setObjectSearchText,
-  isLoading,
-  draftValues,
-  enableDrafts,
-}: CreateObjectFormProps) {
+export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectFormProps) {
+  const {
+    spaces,
+    types,
+    templates,
+    lists,
+    objects,
+    selectedSpace,
+    setSelectedSpace,
+    selectedType,
+    setSelectedType,
+    selectedTemplate,
+    setSelectedTemplate,
+    selectedList,
+    setSelectedList,
+    listSearchText,
+    setListSearchText,
+    objectSearchText,
+    setObjectSearchText,
+    isLoading,
+  } = useCreateObjectData(draftValues);
+
   const [loading, setLoading] = useState(false);
   const [typeKeysForLists, setTypeKeysForLists] = useState<string[]>([]);
   const hasSelectedSpaceAndType = selectedSpace && selectedType;

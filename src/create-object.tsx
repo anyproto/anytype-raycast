@@ -1,6 +1,5 @@
 import { LaunchProps } from "@raycast/api";
 import { CreateObjectForm, EnsureAuthenticated } from "./components";
-import { useCreateObjectData } from "./hooks";
 export interface CreateObjectFormValues {
   space?: string;
   type?: string;
@@ -55,49 +54,5 @@ function CreateObject({ draftValues, launchContext }: CreateObjectProps) {
     ...draftValues, // `draftValues` takes precedence
   };
 
-  const {
-    spaces,
-    types,
-    templates,
-    lists,
-    objects,
-    selectedSpace,
-    setSelectedSpace,
-    selectedType,
-    setSelectedType,
-    selectedTemplate,
-    setSelectedTemplate,
-    selectedList,
-    setSelectedList,
-    listSearchText,
-    setListSearchText,
-    objectSearchText,
-    setObjectSearchText,
-    isLoading,
-  } = useCreateObjectData(mergedValues);
-
-  return (
-    <CreateObjectForm
-      spaces={spaces}
-      types={types}
-      templates={templates}
-      lists={lists}
-      objects={objects}
-      selectedSpace={selectedSpace}
-      setSelectedSpace={setSelectedSpace}
-      selectedType={selectedType}
-      setSelectedType={setSelectedType}
-      selectedTemplate={selectedTemplate}
-      setSelectedTemplate={setSelectedTemplate}
-      selectedList={selectedList}
-      setSelectedList={setSelectedList}
-      listSearchText={listSearchText}
-      setListSearchText={setListSearchText}
-      objectSearchText={objectSearchText}
-      setObjectSearchText={setObjectSearchText}
-      isLoading={isLoading}
-      draftValues={mergedValues}
-      enableDrafts={true}
-    />
-  );
+  return <CreateObjectForm draftValues={mergedValues} enableDrafts={true} />;
 }

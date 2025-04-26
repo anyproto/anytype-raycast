@@ -1,8 +1,6 @@
 import { Action, ActionPanel, Icon, List } from "@raycast/api";
-import { useEffect } from "react";
 import { CreateObjectForm } from "..";
 import { CreateObjectFormValues } from "../../create-object";
-import { useCreateObjectData } from "../../hooks";
 
 type EmptyViewObjectProps = {
   title: string;
@@ -21,39 +19,6 @@ export function EmptyViewObject({ title, contextValues }: EmptyViewObjectProps) 
     source: contextValues.source,
   };
 
-  const {
-    spaces,
-    types,
-    templates,
-    lists,
-    objects,
-    selectedSpace,
-    setSelectedSpace,
-    selectedType,
-    setSelectedType,
-    selectedTemplate,
-    setSelectedTemplate,
-    selectedList,
-    setSelectedList,
-    listSearchText,
-    setListSearchText,
-    objectSearchText,
-    setObjectSearchText,
-    isLoading,
-  } = useCreateObjectData(draftValues);
-
-  useEffect(() => {
-    if (spaces.length > 0 && !selectedSpace) {
-      setSelectedSpace(spaces[0].id);
-    }
-  }, [spaces]);
-
-  useEffect(() => {
-    if (types.length > 0 && !selectedType) {
-      setSelectedType(types[0].id);
-    }
-  }, [types]);
-
   return (
     <List.EmptyView
       title={title}
@@ -62,30 +27,7 @@ export function EmptyViewObject({ title, contextValues }: EmptyViewObjectProps) 
         <ActionPanel>
           <Action.Push
             title="Create Object"
-            target={
-              <CreateObjectForm
-                spaces={spaces}
-                types={types}
-                templates={templates}
-                lists={lists}
-                objects={objects}
-                selectedSpace={selectedSpace}
-                setSelectedSpace={setSelectedSpace}
-                selectedType={selectedType}
-                setSelectedType={setSelectedType}
-                selectedTemplate={selectedTemplate}
-                setSelectedTemplate={setSelectedTemplate}
-                selectedList={selectedList}
-                setSelectedList={setSelectedList}
-                listSearchText={listSearchText}
-                setListSearchText={setListSearchText}
-                objectSearchText={objectSearchText}
-                setObjectSearchText={setObjectSearchText}
-                isLoading={isLoading}
-                draftValues={draftValues}
-                enableDrafts={false}
-              />
-            }
+            target={<CreateObjectForm draftValues={draftValues} enableDrafts={false} />}
             icon={Icon.Plus}
           />
         </ActionPanel>
