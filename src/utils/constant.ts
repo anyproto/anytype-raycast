@@ -52,7 +52,7 @@ export const apiPropertyKeys = {
 export const apiTypeKeys = {};
 
 // Colors
-export const colorMap: { [key: string]: string } = {
+export const colorToHex: { [key: string]: string } = {
   grey: "#b6b6b6",
   yellow: "#ecd91b",
   orange: "#ffb522",
@@ -63,6 +63,18 @@ export const colorMap: { [key: string]: string } = {
   ice: "#2aa7ee",
   teal: "#0fc8ba",
   lime: "#5dd400",
+};
+export const hexToColor: { [key: string]: string } = {
+  "#b6b6b6": "grey",
+  "#ecd91b": "yellow",
+  "#ffb522": "orange",
+  "#f55522": "red",
+  "#e51ca0": "pink",
+  "#ab50cc": "purple",
+  "#3e58eb": "blue",
+  "#2aa7ee": "ice",
+  "#0fc8ba": "teal",
+  "#5dd400": "lime",
 };
 export const defaultTintColor = { light: "black", dark: "white" };
 

@@ -6,7 +6,6 @@ export interface CreateTagRequest {
 }
 
 export interface UpdateTagRequest {
-  id: string;
   name: string;
   color?: Color;
 }

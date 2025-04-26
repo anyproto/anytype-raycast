@@ -22,7 +22,6 @@ export interface CreatePropertyRequest {
 }
 
 export interface UpdatePropertyRequest {
-  id: string;
   name: string;
 }
 

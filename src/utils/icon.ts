@@ -1,7 +1,7 @@
 import { Icon, Image } from "@raycast/api";
 import fetch from "node-fetch";
 import { IconFormat, ObjectIcon, RawType } from "../models";
-import { colorMap, iconWidth } from "./constant";
+import { colorToHex, iconWidth } from "./constant";
 
 /**
  * Determine which icon to show for a given Object. Icon can be url or emoji.
@@ -81,8 +81,8 @@ export function getCustomTypeIcon(name: string, color?: string): Image.ImageLike
   return {
     source: `icons/type/${name}.svg`,
     tintColor: {
-      light: colorMap[color || "grey"],
-      dark: colorMap[color || "grey"],
+      light: colorToHex[color || "grey"],
+      dark: colorToHex[color || "grey"],
     },
   };
 }

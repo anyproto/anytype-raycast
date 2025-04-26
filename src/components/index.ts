@@ -17,3 +17,4 @@ export * from "./ObjectListItem";
 export * from "./SpaceListItem";
 export * from "./TagList";
 export * from "./TemplateList";
+export * from "./UpdateForm/UpdateTagForm";

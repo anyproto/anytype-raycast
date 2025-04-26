@@ -1,49 +1,47 @@
 import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
 import { showFailureToast, useForm } from "@raycast/utils";
-import { createTag } from "../../api";
-import { Color } from "../../models";
-import { colorToHex } from "../../utils";
+import { updateTag } from "../../api"; // ← use updateTag
+import { Color, Tag } from "../../models";
+import { colorToHex, hexToColor } from "../../utils";
 
-export interface CreateTagFormValues {
+export interface UpdateTagFormValues {
   name: string;
   color?: string;
 }
 
-interface CreateTagFormProps {
+interface UpdateTagFormProps {
   spaceId: string;
   propertyId: string;
-  draftValues: CreateTagFormValues;
+  tag: Tag;
 }
 
-export function CreateTagForm({ spaceId, propertyId, draftValues }: CreateTagFormProps) {
-  const { handleSubmit, itemProps } = useForm<CreateTagFormValues>({
-    initialValues: { ...draftValues, name: draftValues.name, color: draftValues.color as Color },
+export function UpdateTagForm({ spaceId, propertyId, tag }: UpdateTagFormProps) {
+  const { handleSubmit, itemProps } = useForm<UpdateTagFormValues>({
+    initialValues: {
+      name: tag.name,
+      color: hexToColor[tag.color] as Color,
+    },
     onSubmit: async (values) => {
       try {
-        await showToast({ style: Toast.Style.Animated, title: "Creating tag..." });
+        await showToast({
+          style: Toast.Style.Animated,
+          title: "Updating tag…",
+        });
 
-        await createTag(spaceId, propertyId, {
+        await updateTag(spaceId, propertyId, tag.id, {
           name: values.name || "",
           color: values.color as Color,
         });
 
-        showToast(Toast.Style.Success, "Tag created successfully");
+        showToast(Toast.Style.Success, "Tag updated successfully");
         popToRoot();
       } catch (error) {
-        await showFailureToast(error, { title: "Failed to create tag" });
+        await showFailureToast(error, { title: "Failed to update tag" });
       }
     },
     validation: {
-      name: (value) => {
-        if (!value) {
-          return "Name is required";
-        }
-      },
-      color: (value) => {
-        if (!value) {
-          return "Color is required";
-        }
-      },
+      name: (v) => (!v ? "Name is required" : undefined),
+      color: (v) => (!v ? "Color is required" : undefined),
     },
   });
 
@@ -51,10 +49,10 @@ export function CreateTagForm({ spaceId, propertyId, draftValues }: CreateTagFor
 
   return (
     <Form
-      navigationTitle="Create Tag"
+      navigationTitle="Edit Tag"
       actions={
         <ActionPanel>
-          <Action.SubmitForm title="Create Tag" icon={Icon.Plus} onSubmit={handleSubmit} />
+          <Action.SubmitForm title="Save Changes" icon={Icon.Check} onSubmit={handleSubmit} />
         </ActionPanel>
       }
     >

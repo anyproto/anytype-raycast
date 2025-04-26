@@ -1,6 +1,6 @@
 import { Image } from "@raycast/api";
 import { Property, PropertyFormat, RawProperty, RawTag, Tag } from "../models";
-import { colorMap } from "../utils";
+import { colorToHex } from "../utils";
 
 export function mapProperties(properties: RawProperty[]): Property[] {
   return properties.map((property) => {
@@ -54,6 +54,6 @@ export function mapTag(tag: RawTag): Tag {
   return {
     ...tag,
     name: tag.name || "Untitled",
-    color: colorMap[tag.color] || tag.color,
+    color: colorToHex[tag.color] || tag.color,
   };
 }

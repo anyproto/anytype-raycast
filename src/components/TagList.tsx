@@ -3,7 +3,10 @@ import { showFailureToast } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { useTags } from "../hooks/useTags";
 import { Space } from "../models";
+import { hexToColor } from "../utils";
+import { CreateTagForm } from "./CreateForm/CreateTagForm";
 import { EmptyViewTag } from "./EmptyView/EmptyViewTag";
+import { UpdateTagForm } from "./UpdateForm/UpdateTagForm";
 
 interface TagListProps {
   space: Space;
@@ -46,25 +49,29 @@ export function TagList({ space, propertyId }: TagListProps) {
       navigationTitle={`Browse ${space.name}`}
       pagination={tagsPagination}
       throttle={true}
-      actions={
-        <ActionPanel>
-          <Action
-            icon={Icon.Repeat}
-            title="Refresh Tags"
-            onAction={handleRefresh}
-            shortcut={Keyboard.Shortcut.Common.Refresh}
-          />
-        </ActionPanel>
-      }
     >
       {filteredTags && filteredTags.length > 0 ? (
         filteredTags.map((tag) => (
           <List.Item
             key={tag.id}
             title={tag.name}
-            icon={{ source: Icon.Tag, tintColor: tag.color }}
+            icon={{ source: Icon.Tag, tintColor: tag.color, tooltip: `Color: ${hexToColor[tag.color]}` }}
             actions={
               <ActionPanel>
+                <Action.Push
+                  icon={Icon.Plus}
+                  title="Create Tag"
+                  shortcut={{ modifiers: ["cmd"], key: "n" }}
+                  target={
+                    <CreateTagForm spaceId={space.id} propertyId={propertyId} draftValues={{ name: searchText }} />
+                  }
+                />
+                <Action.Push
+                  icon={Icon.Pencil}
+                  title="Edit Tag"
+                  shortcut={{ modifiers: ["cmd"], key: "e" }}
+                  target={<UpdateTagForm spaceId={space.id} propertyId={propertyId} tag={tag} />}
+                />
                 <Action
                   icon={Icon.Repeat}
                   title="Refresh Tags"
