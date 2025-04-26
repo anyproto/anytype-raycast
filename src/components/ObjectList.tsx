@@ -32,6 +32,7 @@ export enum ViewType {
   objects = "Object", // is "all" view in global search
   types = "Type",
   properties = "Property",
+  tags = "Tag",
   members = "Member",
   templates = "Template",
 

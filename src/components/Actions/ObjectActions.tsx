@@ -12,9 +12,9 @@ import {
   useNavigation,
 } from "@raycast/api";
 import { MutatePromise, showFailureToast } from "@raycast/utils";
-import { CollectionList, ListSubmenu, ObjectDetail, TagList, TemplateList, ViewType } from ".";
-import { deleteObject } from "../api";
-import { Export, Member, Property, Space, SpaceObject, Template, Type, View } from "../models";
+import { CollectionList, ListSubmenu, ObjectDetail, TagList, TemplateList, ViewType } from "..";
+import { deleteObject, deleteProperty, deleteTag } from "../../api";
+import { Export, Member, Property, Space, SpaceObject, Template, Type, View } from "../../models";
 import {
   addPinned,
   localStorageKeys,
@@ -23,7 +23,7 @@ import {
   pluralize,
   removePinned,
   typeIsList,
-} from "../utils";
+} from "../../utils";
 
 type ObjectActionsProps = {
   space: Space;
@@ -73,8 +73,9 @@ export function ObjectActions({
   const isList = typeIsList(layout);
   const isType = viewType === ViewType.types;
   const isProperty = viewType === ViewType.properties;
-  const isMember = viewType === ViewType.members;
+  const isTag = viewType === ViewType.tags;
   const hasTags = layout === "select" || layout === "multi_select";
+  const isMember = viewType === ViewType.members;
 
   const getContextLabel = (isSingular = true) => (isDetailView || isSingular ? viewType : pluralize(2, viewType));
 
@@ -99,7 +100,13 @@ export function ObjectActions({
         pop(); // pop back to list view
       }
       try {
-        await deleteObject(space.id, objectId);
+        if (isProperty) {
+          await deleteProperty(space.id, objectId);
+        } else if (isTag) {
+          await deleteTag(space.id, "", objectId); // TODO: fix property Id
+        } else {
+          await deleteObject(space.id, objectId);
+        }
         if (mutate) {
           for (const m of mutate) {
             await m();
@@ -360,15 +367,6 @@ export function ObjectActions({
           shortcut={Keyboard.Shortcut.Common.CopyDeeplink}
           onAction={handleCopyLink}
         />
-        {!isMember && (
-          <Action
-            icon={Icon.Trash}
-            title={`Delete ${getContextLabel()}`}
-            style={Action.Style.Destructive}
-            shortcut={Keyboard.Shortcut.Common.Remove}
-            onAction={handleDeleteObject}
-          />
-        )}
         {!isDetailView && !isNoPinView && (
           <>
             <Action
@@ -394,6 +392,15 @@ export function ObjectActions({
               </>
             )}
           </>
+        )}
+        {!isMember && (
+          <Action
+            icon={Icon.Trash}
+            title={`Delete ${getContextLabel()}`}
+            style={Action.Style.Destructive}
+            shortcut={Keyboard.Shortcut.Common.Remove}
+            onAction={handleDeleteObject}
+          />
         )}
       </ActionPanel.Section>
 

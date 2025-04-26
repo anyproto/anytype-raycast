@@ -1,7 +1,7 @@
 import { Action, ActionPanel, Clipboard, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise, showFailureToast } from "@raycast/utils";
-import { ObjectList } from ".";
-import { Space } from "../models";
+import { ObjectList } from "..";
+import { Space } from "../../models";
 import {
   addPinned,
   anytypeSpaceDeeplink,
@@ -9,7 +9,7 @@ import {
   moveDownInPinned,
   moveUpInPinned,
   removePinned,
-} from "../utils";
+} from "../../utils";
 
 type SpaceActionsProps = {
   space: Space;
