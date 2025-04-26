@@ -12,7 +12,7 @@ import {
   useNavigation,
 } from "@raycast/api";
 import { MutatePromise, showFailureToast } from "@raycast/utils";
-import { CollectionList, ListSubmenu, ObjectDetail, TagList, TemplateList, ViewType } from "..";
+import { CollectionList, ListSubmenu, ObjectDetail, TagList, TemplateList, UpdatePropertyForm, ViewType } from "..";
 import { deleteObject, deleteProperty, deleteTag } from "../../api";
 import { Export, Member, Property, Space, SpaceObject, Template, Type, View } from "../../models";
 import {
@@ -36,7 +36,7 @@ type ObjectActionsProps = {
   mutateExport?: MutatePromise<Export | undefined>;
   mutateViews?: MutatePromise<View[]>;
   layout: string;
-  member?: Member | undefined;
+  object?: SpaceObject | Type | Property | Member;
   viewType: ViewType;
   isGlobalSearch: boolean;
   isNoPinView: boolean;
@@ -56,6 +56,7 @@ export function ObjectActions({
   mutateExport,
   mutateViews,
   layout,
+  object,
   viewType,
   isGlobalSearch,
   isNoPinView,
@@ -353,6 +354,14 @@ export function ObjectActions({
       </ActionPanel.Section>
 
       <ActionPanel.Section>
+        {isProperty && (
+          <Action.Push
+            icon={Icon.Pencil}
+            title={"Edit Property"}
+            shortcut={{ modifiers: ["cmd"], key: "e" }}
+            target={<UpdatePropertyForm spaceId={space.id} property={object as Property} />}
+          />
+        )}
         {objectExport && (
           <Action.CopyToClipboard
             title={`Copy Markdown`}

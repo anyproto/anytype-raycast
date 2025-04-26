@@ -112,7 +112,7 @@ export function ObjectList({ space }: ObjectListProps) {
         ...(!isUserType(type.key) ? [{ icon: Icon.Lock, tooltip: "System" }] : []),
       ],
       mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>],
-      member: undefined,
+      object: type,
       layout: "",
       isPinned,
     };
@@ -133,7 +133,7 @@ export function ObjectList({ space }: ObjectListProps) {
         mutateProperties,
         mutatePinnedProperties as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>,
       ],
-      member: undefined,
+      object: property,
       layout: property.format, // hacky workaround for TagList
       isPinned,
     };
@@ -158,7 +158,7 @@ export function ObjectList({ space }: ObjectListProps) {
             },
       ],
       mutate: [mutateMembers, mutatePinnedMembers as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>],
-      member: member,
+      object: member,
       layout: "",
       isPinned,
     };
@@ -298,7 +298,7 @@ export function ObjectList({ space }: ObjectListProps) {
               subtitle={item.subtitle}
               accessories={item.accessories}
               mutate={item.mutate}
-              member={item.member}
+              object={item.object}
               layout={item.layout}
               viewType={currentView}
               isGlobalSearch={false}
@@ -323,7 +323,7 @@ export function ObjectList({ space }: ObjectListProps) {
               subtitle={item.subtitle}
               accessories={item.accessories}
               mutate={item.mutate}
-              member={item.member}
+              object={item.object}
               layout={item.layout}
               viewType={currentView}
               isGlobalSearch={false}

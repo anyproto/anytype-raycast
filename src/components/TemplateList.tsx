@@ -99,6 +99,7 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={object.mutate}
+              object={object.object}
               layout={object.layout}
               viewType={ViewType.objects}
               isGlobalSearch={isGlobalSearch}

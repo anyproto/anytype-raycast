@@ -207,6 +207,7 @@ function Search() {
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={[mutateObjects, mutatePinnedObjects]}
+              object={object.object}
               layout={object.layout}
               viewType={currentView}
               isGlobalSearch={true}
@@ -231,6 +232,7 @@ function Search() {
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={[mutateObjects, mutatePinnedObjects]}
+              object={object.object}
               layout={object.layout}
               viewType={currentView}
               isGlobalSearch={true}

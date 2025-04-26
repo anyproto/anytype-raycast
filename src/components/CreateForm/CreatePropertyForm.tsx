@@ -32,11 +32,7 @@ export function CreatePropertyForm({ spaceId, draftValues }: CreatePropertyFormP
       }
     },
     validation: {
-      name: (value) => {
-        if (!value) {
-          return "Name is required";
-        }
-      },
+      name: (v) => (!v ? "Name is required" : undefined),
     },
   });
 

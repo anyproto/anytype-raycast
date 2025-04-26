@@ -86,6 +86,7 @@ export function CollectionList({ space, listId, listName }: CollectionListProps)
               subtitle={object.subtitle}
               accessories={object.accessories}
               mutate={object.mutate}
+              object={object.object}
               mutateViews={mutateViews}
               layout={object.layout}
               viewType={ViewType.objects}

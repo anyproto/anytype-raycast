@@ -43,7 +43,7 @@ export function processObject(
     mutate: [mutateObjects, mutatePinnedObjects].filter(Boolean) as MutatePromise<
       SpaceObject[] | Type[] | Property[] | Member[]
     >[],
-    member: undefined,
+    object: object,
     layout: object.layout,
     isPinned,
   };
