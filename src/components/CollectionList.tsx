@@ -36,8 +36,8 @@ export function CollectionList({ space, listId, listName }: CollectionListProps)
       return processObject(object, false, mutateObjects);
     });
 
-  const resolveLayoutIcon = (layout: string) => {
-    switch (layout.toLowerCase()) {
+  const resolveLayoutIcon = (layout: ViewLayout) => {
+    switch (layout) {
       case ViewLayout.Grid:
         return { source: "icons/dataview/grid.svg" };
       case ViewLayout.List:

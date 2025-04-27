@@ -1,12 +1,12 @@
 import { getTemplates, getTypes } from "../api";
-import { Space, SpaceObject, Type } from "../models";
+import { ObjectLayout, Space, SpaceObject, Type } from "../models";
 import { apiKeyPrefixes, apiLimitMax } from "../utils";
 
 /**
  * Checks if a given `Type` is a list type.
  */
-export function typeIsList(layout: string): boolean {
-  return layout === "set" || layout === "collection";
+export function typeIsList(layout: ObjectLayout): boolean {
+  return layout === ObjectLayout.Set || layout === ObjectLayout.Collection;
 }
 
 /**
@@ -99,7 +99,7 @@ export async function fetchTypeKeysForPages(
  */
 export async function fetchTypesKeysForTasks(spaces: Space[]): Promise<string[]> {
   const tasksTypes = await getAllTypesFromSpaces(spaces);
-  const taskTypeKeys = new Set(tasksTypes.filter((type) => type.layout === "todo").map((type) => type.key));
+  const taskTypeKeys = new Set(tasksTypes.filter((type) => type.layout === ObjectLayout.Todo).map((type) => type.key));
   return Array.from(taskTypeKeys);
 }
 
@@ -109,7 +109,9 @@ export async function fetchTypesKeysForTasks(spaces: Space[]): Promise<string[]>
 export async function fetchTypeKeysForLists(spaces: Space[]): Promise<string[]> {
   const listsTypes = await getAllTypesFromSpaces(spaces);
   const listTypeKeys = new Set(
-    listsTypes.filter((type) => type.layout === "set" || type.layout === "collection").map((type) => type.key),
+    listsTypes
+      .filter((type) => type.layout === ObjectLayout.Set || type.layout === ObjectLayout.Collection)
+      .map((type) => type.key),
   );
   return Array.from(listTypeKeys);
 }

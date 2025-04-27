@@ -1,6 +1,6 @@
 import { Tool } from "@raycast/api";
 import { createObject, getSpace, getType } from "../api";
-import { IconFormat, PropertyEntry } from "../models";
+import { IconFormat, PropertyLinkWithValue } from "../models";
 import { apiPropertyKeys } from "../utils";
 
 type Input = {
@@ -65,7 +65,7 @@ type Input = {
  */
 export default async function tool({ spaceId, type_key, name, icon, description, body, source }: Input) {
   // TODO: implement properties key-value parsing
-  const propertyEntries: PropertyEntry[] = [];
+  const propertyEntries: PropertyLinkWithValue[] = [];
   if (description) {
     propertyEntries.push({
       key: apiPropertyKeys.description,

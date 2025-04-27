@@ -1,6 +1,6 @@
 import { Icon, Image } from "@raycast/api";
 import fetch from "node-fetch";
-import { IconFormat, ObjectIcon, RawType } from "../models";
+import { IconFormat, ObjectIcon, ObjectLayout, RawType } from "../models";
 import { colorToHex, iconWidth } from "./constant";
 
 /**
@@ -51,14 +51,14 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
  */
 async function fallbackToLayout(layout: string): Promise<Image.ImageLike> {
   switch (layout) {
-    case "todo":
+    case ObjectLayout.Todo:
       return getCustomTypeIcon("checkbox", "grey");
-    case "set":
-    case "collection":
+    case ObjectLayout.Set:
+    case ObjectLayout.Collection:
       return getCustomTypeIcon("layers", "grey");
-    case "participant":
+    case ObjectLayout.Participant:
       return getCustomTypeIcon("person", "grey");
-    case "bookmark":
+    case ObjectLayout.Bookmark:
       return getCustomTypeIcon("bookmark", "grey");
     case "type":
       return getCustomTypeIcon("extension-puzzle", "grey");
@@ -132,7 +132,7 @@ export async function fetchWithTimeout(url: string, timeout: number): Promise<st
  * @returns The mask to use for the object.
  */
 export function getMaskForObject(icon: Image.ImageLike, layout: string): Image.Mask {
-  return (layout === "participant" || layout === "profile") && icon != Icon.Document
+  return (layout === ObjectLayout.Participant || layout === ObjectLayout.Profile) && icon != Icon.Document
     ? Image.Mask.Circle
     : Image.Mask.RoundedRectangle;
 }

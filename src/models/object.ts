@@ -1,5 +1,5 @@
 import { Image } from "@raycast/api";
-import { ObjectIcon, Property, PropertyEntry, RawProperty, RawType, Type } from ".";
+import { ObjectIcon, ObjectLayout, Property, PropertyLinkWithValue, RawProperty, RawType, Type } from ".";
 
 export interface CreateObjectRequest {
   name: string;
@@ -8,13 +8,13 @@ export interface CreateObjectRequest {
   source: string;
   template_id: string;
   type_key: string;
-  properties: PropertyEntry[];
+  properties: PropertyLinkWithValue[];
 }
 
 export interface UpdateObjectRequest {
   name?: string;
   icon?: ObjectIcon;
-  properties?: PropertyEntry[];
+  properties?: PropertyLinkWithValue[];
 }
 
 export interface RawSpaceObject {
@@ -24,7 +24,7 @@ export interface RawSpaceObject {
   icon: ObjectIcon;
   type: RawType;
   snippet: string;
-  layout: string;
+  layout: ObjectLayout;
   space_id: string;
   archived: boolean;
   properties: RawProperty[];

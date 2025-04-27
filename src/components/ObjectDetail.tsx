@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { ObjectActions, TemplateList, ViewType } from ".";
 import { useExport, useObject } from "../hooks";
-import { ExportFormat, Member, Property, PropertyFormat, Space, SpaceObject, Type } from "../models";
+import { ExportFormat, Member, ObjectLayout, Property, PropertyFormat, Space, SpaceObject, Type } from "../models";
 import { apiPropertyKeys, injectEmojiIntoHeading } from "../utils";
 
 type ObjectDetailProps = {
@@ -328,7 +328,7 @@ export function ObjectDetail({
                   key={`${property.key}-${index}`}
                   text={objectItem.name || objectItem.id}
                   icon={objectItem.icon}
-                  onAction={objectItem.layout !== "participant" ? handleAction : undefined}
+                  onAction={objectItem.layout !== ObjectLayout.Participant ? handleAction : undefined}
                 />
               );
             })}

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { FieldValue } from "..";
 import { updateObject } from "../../api";
 import { useSearch, useTagsMap } from "../../hooks";
-import { IconFormat, PropertyEntry, PropertyFormat, SpaceObject, UpdateObjectRequest } from "../../models";
+import { IconFormat, PropertyFormat, PropertyLinkWithValue, SpaceObject, UpdateObjectRequest } from "../../models";
 import { apiPropertyKeys, isEmoji } from "../../utils";
 
 interface UpdateObjectFormProps {
@@ -53,11 +53,11 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
         await showToast({ style: Toast.Style.Animated, title: "Updating object…" });
 
         // Build the properties payload
-        const propertiesEntries: PropertyEntry[] = [];
+        const propertiesEntries: PropertyLinkWithValue[] = [];
         customProps.forEach((prop) => {
           const raw = itemProps[prop.key as keyof typeof itemProps]?.value;
           if (raw !== undefined && raw !== null && raw !== "" && raw !== false) {
-            const entry: PropertyEntry = { key: prop.key };
+            const entry: PropertyLinkWithValue = { key: prop.key };
             switch (prop.format) {
               case PropertyFormat.Text:
                 entry.text = String(raw);

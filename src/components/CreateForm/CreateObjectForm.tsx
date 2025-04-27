@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { addObjectsToList, createObject } from "../../api";
 import { CreateObjectFormValues } from "../../create-object";
 import { useCreateObjectData, useTagsMap } from "../../hooks";
-import { CreateObjectRequest, IconFormat, PropertyEntry, PropertyFormat } from "../../models";
+import { CreateObjectRequest, IconFormat, PropertyFormat, PropertyLinkWithValue } from "../../models";
 import { apiPropertyKeys, fetchTypeKeysForLists, isEmoji } from "../../utils";
 
 interface CreateObjectFormProps {
@@ -91,11 +91,11 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       setLoading(true);
       try {
         await showToast({ style: Toast.Style.Animated, title: "Creating object..." });
-        const propertiesEntries: PropertyEntry[] = [];
+        const propertiesEntries: PropertyLinkWithValue[] = [];
         properties.forEach((prop) => {
           const raw = itemProps[prop.key]?.value;
           if (raw !== undefined && raw !== null && raw !== "" && raw !== false) {
-            const entry: PropertyEntry = { key: prop.key };
+            const entry: PropertyLinkWithValue = { key: prop.key };
             switch (prop.format) {
               case PropertyFormat.Text:
                 entry.text = String(raw);
