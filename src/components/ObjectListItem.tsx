@@ -1,7 +1,7 @@
 import { Image, List } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { ObjectActions, ViewType } from ".";
-import { Member, Property, Space, SpaceObject, Type, View } from "../models";
+import { Member, ObjectLayout, Property, Space, SpaceObject, Type, View } from "../models";
 
 type ObjectListItemProps = {
   space: Space;
@@ -19,7 +19,7 @@ type ObjectListItemProps = {
   mutate: MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>[];
   mutateViews?: MutatePromise<View[]>;
   object: SpaceObject | Type | Property | Member;
-  layout: string;
+  layout: ObjectLayout | undefined;
   viewType: ViewType;
   isGlobalSearch: boolean;
   isNoPinView: boolean;

@@ -23,7 +23,7 @@ import {
   ViewType,
 } from "..";
 import { deleteObject, deleteProperty, deleteTag } from "../../api";
-import { Export, Member, Property, Space, SpaceObject, Type, View } from "../../models";
+import { Export, Member, ObjectLayout, Property, Space, SpaceObject, Type, View } from "../../models";
 import {
   addPinned,
   localStorageKeys,
@@ -44,7 +44,7 @@ type ObjectActionsProps = {
   mutateObject?: MutatePromise<SpaceObject | null | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;
   mutateViews?: MutatePromise<View[]>;
-  layout: string;
+  layout: ObjectLayout | undefined;
   object?: SpaceObject | Type | Property | Member;
   viewType: ViewType;
   isGlobalSearch: boolean;
@@ -88,7 +88,8 @@ export function ObjectActions({
 
   const isDetailView = objectExport !== undefined;
   const isList = typeIsList(layout);
-  const hasTags = layout === "select" || layout === "multi_select";
+  const hasTags =
+    isProperty && ((object as Property).format === "select" || (object as Property).format === "multi_select");
 
   const getContextLabel = (isSingular = true) => (isDetailView || isSingular ? viewType : pluralize(2, viewType));
 

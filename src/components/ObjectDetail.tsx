@@ -12,7 +12,7 @@ type ObjectDetailProps = {
   objectId: string;
   title: string;
   mutate?: MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>[];
-  layout: string;
+  layout: ObjectLayout | undefined;
   viewType: ViewType;
   isGlobalSearch: boolean;
   isPinned: boolean;

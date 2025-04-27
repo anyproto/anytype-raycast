@@ -5,7 +5,7 @@ import { apiKeyPrefixes, apiLimitMax } from "../utils";
 /**
  * Checks if a given `Type` is a list type.
  */
-export function typeIsList(layout: ObjectLayout): boolean {
+export function typeIsList(layout: ObjectLayout | undefined): boolean {
   return layout === ObjectLayout.Set || layout === ObjectLayout.Collection;
 }
 

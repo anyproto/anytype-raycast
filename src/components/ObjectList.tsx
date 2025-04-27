@@ -113,7 +113,7 @@ export function ObjectList({ space }: ObjectListProps) {
       ],
       mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>],
       object: type,
-      layout: "",
+      layout: type.layout,
       isPinned,
     };
   };
@@ -134,7 +134,7 @@ export function ObjectList({ space }: ObjectListProps) {
         mutatePinnedProperties as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>,
       ],
       object: property,
-      layout: property.format, // hacky workaround for TagList
+      layout: undefined,
       isPinned,
     };
   };
@@ -159,7 +159,7 @@ export function ObjectList({ space }: ObjectListProps) {
       ],
       mutate: [mutateMembers, mutatePinnedMembers as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>],
       object: member,
-      layout: "",
+      layout: undefined,
       isPinned,
     };
   };
