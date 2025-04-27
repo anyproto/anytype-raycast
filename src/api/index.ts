@@ -13,6 +13,7 @@ export * from "./objects/createObject";
 export * from "./objects/deleteObject";
 export * from "./objects/getObject";
 export * from "./objects/getObjects";
+export * from "./objects/updateObject";
 export * from "./properties/createProperty";
 export * from "./properties/deleteProperty";
 export * from "./properties/getProperties";

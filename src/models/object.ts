@@ -12,6 +12,14 @@ export interface CreateObjectRequest {
   properties: Record<string, string | number | boolean | string[]>;
 }
 
+export interface UpdateObjectRequest {
+  name: string;
+  icon: ObjectIcon;
+  Description: string;
+  Properties: Record<string, string | number | boolean | string[]>;
+  // TODO: complete
+}
+
 export interface RawSpaceObject {
   object: string;
   id: string;

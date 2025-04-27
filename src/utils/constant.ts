@@ -90,12 +90,6 @@ export const apiEndpoints = {
     method: "POST",
   }),
 
-  // export
-  getExport: (spaceId: string, objectId: string, format: string) => ({
-    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}/${format}`,
-    method: "GET",
-  }),
-
   // lists
   getListViews: (spaceId: string, listId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/lists/${listId}/views${encodeQueryParams(options)}`,
@@ -127,9 +121,17 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces/${spaceId}/objects`,
     method: "POST",
   }),
+  updateObject: (spaceId: string, objectId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
+    method: "PATCH",
+  }),
   deleteObject: (spaceId: string, objectId: string) => ({
     url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
     method: "DELETE",
+  }),
+  getExport: (spaceId: string, objectId: string, format: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}/${format}`,
+    method: "GET",
   }),
 
   // properties

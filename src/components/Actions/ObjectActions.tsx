@@ -12,7 +12,16 @@ import {
   useNavigation,
 } from "@raycast/api";
 import { MutatePromise, showFailureToast } from "@raycast/utils";
-import { CollectionList, ListSubmenu, ObjectDetail, TagList, TemplateList, UpdatePropertyForm, ViewType } from "..";
+import {
+  CollectionList,
+  ListSubmenu,
+  ObjectDetail,
+  TagList,
+  TemplateList,
+  UpdateObjectForm,
+  UpdatePropertyForm,
+  ViewType,
+} from "..";
 import { deleteObject, deleteProperty, deleteTag } from "../../api";
 import { Export, Member, Property, Space, SpaceObject, Type, View } from "../../models";
 import {
@@ -70,13 +79,16 @@ export function ObjectActions({
   const pinSuffixForView = isGlobalSearch
     ? localStorageKeys.suffixForGlobalSearch
     : localStorageKeys.suffixForViewsPerSpace(space?.id, viewType);
-  const isDetailView = objectExport !== undefined;
-  const isList = typeIsList(layout);
+
+  const isObject = viewType === ViewType.objects;
   const isType = viewType === ViewType.types;
   const isProperty = viewType === ViewType.properties;
   const isTag = viewType === ViewType.tags;
-  const hasTags = layout === "select" || layout === "multi_select";
   const isMember = viewType === ViewType.members;
+
+  const isDetailView = objectExport !== undefined;
+  const isList = typeIsList(layout);
+  const hasTags = layout === "select" || layout === "multi_select";
 
   const getContextLabel = (isSingular = true) => (isDetailView || isSingular ? viewType : pluralize(2, viewType));
 
@@ -354,6 +366,14 @@ export function ObjectActions({
       </ActionPanel.Section>
 
       <ActionPanel.Section>
+        {isObject && (
+          <Action.Push
+            icon={Icon.Pencil}
+            title={"Edit Object"}
+            shortcut={{ modifiers: ["cmd"], key: "e" }}
+            target={<UpdateObjectForm spaceId={space.id} object={object as SpaceObject} />}
+          />
+        )}
         {isProperty && (
           <Action.Push
             icon={Icon.Pencil}
