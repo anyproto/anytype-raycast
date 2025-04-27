@@ -51,7 +51,7 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
       let mappedProperty: Property = {
         id: property.id,
         key: property.key,
-        name: property.name,
+        name: property.name || "Untitled",
         format: property.format,
         icon: getIconForProperty(property.format),
       };

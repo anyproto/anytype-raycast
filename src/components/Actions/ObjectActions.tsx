@@ -14,7 +14,7 @@ import {
 import { MutatePromise, showFailureToast } from "@raycast/utils";
 import { CollectionList, ListSubmenu, ObjectDetail, TagList, TemplateList, UpdatePropertyForm, ViewType } from "..";
 import { deleteObject, deleteProperty, deleteTag } from "../../api";
-import { Export, Member, Property, Space, SpaceObject, Template, Type, View } from "../../models";
+import { Export, Member, Property, Space, SpaceObject, Type, View } from "../../models";
 import {
   addPinned,
   localStorageKeys,
@@ -31,7 +31,7 @@ type ObjectActionsProps = {
   title: string;
   objectExport?: Export;
   mutate?: MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>[];
-  mutateTemplates?: MutatePromise<Template[]>;
+  mutateTemplates?: MutatePromise<SpaceObject[]>;
   mutateObject?: MutatePromise<SpaceObject | null | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;
   mutateViews?: MutatePromise<View[]>;

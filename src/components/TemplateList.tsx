@@ -3,7 +3,7 @@ import { showFailureToast } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { EmptyViewObject, ObjectActions, ObjectListItem, ViewType } from ".";
 import { useSearch, useTemplates } from "../hooks";
-import { Space, Template } from "../models";
+import { Space, SpaceObject } from "../models";
 import { pluralize, processObject } from "../utils";
 
 type TemplatesListProps = {
@@ -37,7 +37,7 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
     }
   }, [objectsError]);
 
-  const filteredTemplates = templates?.filter((template: Template) =>
+  const filteredTemplates = templates?.filter((template: SpaceObject) =>
     template.name.toLowerCase().includes(searchText.toLowerCase()),
   );
 
@@ -61,7 +61,7 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
           title={searchText ? "Search Results" : "Templates"}
           subtitle={`${pluralize(filteredTemplates.length, "template", { withNumber: true })}`}
         >
-          {filteredTemplates.map((template: Template) => (
+          {filteredTemplates.map((template: SpaceObject) => (
             <List.Item
               key={template.id}
               title={template.name}
