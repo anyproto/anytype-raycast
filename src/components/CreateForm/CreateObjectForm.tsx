@@ -13,7 +13,7 @@ interface CreateObjectFormProps {
   enableDrafts: boolean;
 }
 
-type FieldValue = string | boolean | string[] | Date | null | undefined;
+export type FieldValue = string | boolean | string[] | Date | null | undefined;
 
 export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectFormProps) {
   const {
@@ -93,7 +93,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
         await showToast({ style: Toast.Style.Animated, title: "Creating object..." });
         const propertiesEntries: PropertyEntry[] = [];
         properties.forEach((prop) => {
-          const raw = itemProps[prop.key as keyof typeof itemProps]?.value;
+          const raw = itemProps[prop.key]?.value;
           if (raw !== undefined && raw !== null && raw !== "" && raw !== false) {
             const entry: PropertyEntry = { key: prop.key };
             switch (prop.format) {
@@ -368,7 +368,7 @@ It supports:
                 ) {
                   return (
                     <Form.TextField
-                      {...itemProps[id as keyof typeof itemProps]}
+                      {...itemProps[id]}
                       title={title}
                       placeholder="Add text"
                       value={value !== null ? String(value) : undefined}
@@ -379,7 +379,7 @@ It supports:
                 if (prop.format === PropertyFormat.Number) {
                   return (
                     <Form.TextField
-                      {...itemProps[id as keyof typeof itemProps]}
+                      {...itemProps[id]}
                       title={title}
                       placeholder="Add number"
                       value={value !== null ? String(value) : undefined}
@@ -390,7 +390,7 @@ It supports:
                 if (prop.format === PropertyFormat.Select) {
                   return (
                     <Form.Dropdown
-                      {...itemProps[id as keyof typeof itemProps]}
+                      {...itemProps[id]}
                       title={title}
                       placeholder="Select tag"
                       value={value !== undefined ? String(value) : undefined}
@@ -411,7 +411,7 @@ It supports:
                 if (prop.format === PropertyFormat.MultiSelect) {
                   return (
                     <Form.TagPicker
-                      {...itemProps[id as keyof typeof itemProps]}
+                      {...itemProps[id]}
                       title={title}
                       placeholder="Select tags"
                       value={value !== undefined ? (value as string[]) : undefined}
@@ -431,7 +431,7 @@ It supports:
                 if (prop.format === PropertyFormat.Date) {
                   return (
                     <Form.DatePicker
-                      {...itemProps[id as keyof typeof itemProps]}
+                      {...itemProps[id]}
                       title={title}
                       value={value !== undefined ? (value as Date) : undefined}
                       defaultValue={value !== undefined ? (value as Date) : undefined}
@@ -445,7 +445,7 @@ It supports:
                 if (prop.format === PropertyFormat.Checkbox) {
                   return (
                     <Form.Checkbox
-                      {...itemProps[id as keyof typeof itemProps]}
+                      {...itemProps[id]}
                       title={title}
                       label=""
                       value={Boolean(value)}
@@ -457,7 +457,7 @@ It supports:
                   return (
                     // TODO: TagPicker would be the more appropriate component, but it does not support onSearchTextChange
                     <Form.Dropdown
-                      {...itemProps[id as keyof typeof itemProps]}
+                      {...itemProps[id]}
                       title={title}
                       placeholder="Select objects"
                       value={value !== undefined ? String(value) : undefined}

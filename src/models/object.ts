@@ -12,9 +12,9 @@ export interface CreateObjectRequest {
 }
 
 export interface UpdateObjectRequest {
-  name: string;
-  icon: ObjectIcon;
-  Properties: PropertyEntry[];
+  name?: string;
+  icon?: ObjectIcon;
+  properties?: PropertyEntry[];
 }
 
 export interface RawSpaceObject {
