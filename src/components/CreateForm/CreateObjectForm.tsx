@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { addObjectsToList, createObject } from "../../api";
 import { CreateObjectFormValues } from "../../create-object";
 import { useCreateObjectData, useTagsMap } from "../../hooks";
-import { CreateObjectRequest, IconFormat, PropertyFormat } from "../../models";
+import { CreateObjectRequest, IconFormat, PropertyEntry, PropertyFormat } from "../../models";
 import { apiPropertyKeys, fetchTypeKeysForLists, isEmoji } from "../../utils";
 
 interface CreateObjectFormProps {
@@ -91,51 +91,70 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       setLoading(true);
       try {
         await showToast({ style: Toast.Style.Animated, title: "Creating object..." });
-        const propertiesObj: Record<string, string | number | boolean | string[]> = {};
+        const propertiesEntries: PropertyEntry[] = [];
         properties.forEach((prop) => {
           const propValue = itemProps[prop.key as keyof typeof itemProps]?.value;
-          if (propValue !== undefined && propValue !== null && propValue !== "") {
+          if (propValue !== undefined && propValue !== null && propValue !== "" && propValue !== false) {
+            const entry: PropertyEntry = { key: prop.key };
             switch (prop.format) {
               case PropertyFormat.Text:
+                entry.text = String(propValue);
+                break;
               case PropertyFormat.Select:
+                entry.select = String(propValue);
+                break;
               case PropertyFormat.Url:
+                entry.url = String(propValue);
+                break;
               case PropertyFormat.Email:
+                entry.email = String(propValue);
+                break;
               case PropertyFormat.Phone:
-                propertiesObj[prop.key] = String(propValue);
+                entry.phone = String(propValue);
                 break;
               case PropertyFormat.Number:
-                propertiesObj[prop.key] = Number(propValue);
+                entry.number = Number(propValue);
                 break;
               case PropertyFormat.MultiSelect:
-                propertiesObj[prop.key] = propValue as string[];
+                entry.multi_select = propValue as string[];
                 break;
               case PropertyFormat.Date:
                 if (propValue instanceof Date && !isNaN(propValue.getTime())) {
-                  propertiesObj[prop.key] = formatRFC3339(propValue);
+                  entry.date = formatRFC3339(propValue);
                 }
                 break;
               case PropertyFormat.Checkbox:
-                propertiesObj[prop.key] = Boolean(propValue);
+                entry.checkbox = Boolean(propValue);
                 break;
               case PropertyFormat.Files:
+                entry.files = Array.isArray(propValue) ? (propValue as string[]) : [String(propValue)];
+                break;
               case PropertyFormat.Objects:
-                propertiesObj[prop.key] = Array.isArray(propValue) ? propValue : ([propValue] as string[]);
+                entry.objects = Array.isArray(propValue) ? (propValue as string[]) : [String(propValue)];
                 break;
               default:
-                propertiesObj[prop.key] = String(propValue);
             }
+            propertiesEntries.push(entry);
           }
         });
+
+        // Append description to properties
+        const descriptionValue = itemProps[apiPropertyKeys.description]?.value;
+        if (descriptionValue !== undefined && descriptionValue !== null && descriptionValue !== "") {
+          propertiesEntries.push({
+            key: apiPropertyKeys.description,
+            text: String(descriptionValue),
+          });
+        }
 
         const objectData: CreateObjectRequest = {
           name: values.name || "",
           icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
-          description: values.description || "",
           body: values.body || "",
           source: values.source || "",
           template_id: values.template || "",
           type_key: selectedTypeUniqueKey,
-          properties: propertiesObj,
+          properties: propertiesEntries,
         };
 
         const response = await createObject(selectedSpace, objectData);

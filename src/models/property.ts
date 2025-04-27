@@ -48,3 +48,18 @@ export interface Property extends Omit<RawProperty, "select" | "multi_select"> {
   select?: Tag;
   multi_select?: Tag[];
 }
+
+export interface PropertyEntry {
+  key: string;
+  text?: string;
+  number?: number;
+  select?: string;
+  multi_select?: string[];
+  date?: string;
+  files?: string[];
+  checkbox?: boolean;
+  url?: string;
+  email?: string;
+  phone?: string;
+  objects?: string[];
+}

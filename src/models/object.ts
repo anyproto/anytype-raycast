@@ -1,22 +1,21 @@
 import { Image } from "@raycast/api";
-import { ObjectIcon, Property, RawProperty, RawType, Type } from ".";
+import { ObjectIcon, Property, PropertyEntry, RawProperty, RawType, Type } from ".";
 
 export interface CreateObjectRequest {
   name: string;
   icon: ObjectIcon;
-  description: string;
   body: string;
   source: string;
   template_id: string;
   type_key: string;
-  properties: Record<string, string | number | boolean | string[]>;
+  properties: PropertyEntry[];
 }
 
 export interface UpdateObjectRequest {
   name: string;
   icon: ObjectIcon;
   Description: string;
-  Properties: Record<string, string | number | boolean | string[]>;
+  Properties: PropertyEntry[];
   // TODO: complete
 }
 
