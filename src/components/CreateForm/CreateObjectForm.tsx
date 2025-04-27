@@ -93,44 +93,44 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
         await showToast({ style: Toast.Style.Animated, title: "Creating object..." });
         const propertiesEntries: PropertyEntry[] = [];
         properties.forEach((prop) => {
-          const propValue = itemProps[prop.key as keyof typeof itemProps]?.value;
-          if (propValue !== undefined && propValue !== null && propValue !== "" && propValue !== false) {
+          const raw = itemProps[prop.key as keyof typeof itemProps]?.value;
+          if (raw !== undefined && raw !== null && raw !== "" && raw !== false) {
             const entry: PropertyEntry = { key: prop.key };
             switch (prop.format) {
               case PropertyFormat.Text:
-                entry.text = String(propValue);
+                entry.text = String(raw);
                 break;
               case PropertyFormat.Select:
-                entry.select = String(propValue);
+                entry.select = String(raw);
                 break;
               case PropertyFormat.Url:
-                entry.url = String(propValue);
+                entry.url = String(raw);
                 break;
               case PropertyFormat.Email:
-                entry.email = String(propValue);
+                entry.email = String(raw);
                 break;
               case PropertyFormat.Phone:
-                entry.phone = String(propValue);
+                entry.phone = String(raw);
                 break;
               case PropertyFormat.Number:
-                entry.number = Number(propValue);
+                entry.number = Number(raw);
                 break;
               case PropertyFormat.MultiSelect:
-                entry.multi_select = propValue as string[];
+                entry.multi_select = raw as string[];
                 break;
               case PropertyFormat.Date:
-                if (propValue instanceof Date && !isNaN(propValue.getTime())) {
-                  entry.date = formatRFC3339(propValue);
+                if (raw instanceof Date && !isNaN(raw.getTime())) {
+                  entry.date = formatRFC3339(raw);
                 }
                 break;
               case PropertyFormat.Checkbox:
-                entry.checkbox = Boolean(propValue);
+                entry.checkbox = Boolean(raw);
                 break;
               case PropertyFormat.Files:
-                entry.files = Array.isArray(propValue) ? (propValue as string[]) : [String(propValue)];
+                entry.files = Array.isArray(raw) ? (raw as string[]) : [String(raw)];
                 break;
               case PropertyFormat.Objects:
-                entry.objects = Array.isArray(propValue) ? (propValue as string[]) : [String(propValue)];
+                entry.objects = Array.isArray(raw) ? (raw as string[]) : [String(raw)];
                 break;
               default:
             }
@@ -177,20 +177,20 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       }
     },
     validation: {
-      name: (value: FieldValue) => {
-        const str = typeof value === "string" ? value : undefined;
-        if (!["ot-bookmark", "ot-note"].includes(selectedTypeUniqueKey) && (!str || str.trim() === "")) {
+      name: (v: FieldValue) => {
+        const s = typeof v === "string" ? v.trim() : undefined;
+        if (!["ot-bookmark", "ot-note"].includes(selectedTypeUniqueKey) && !s) {
           return "Name is required";
         }
       },
-      icon: (value: FieldValue) => {
-        if (typeof value === "string" && value && !isEmoji(value)) {
+      icon: (v: FieldValue) => {
+        if (typeof v === "string" && v && !isEmoji(v)) {
           return "Icon must be single emoji";
         }
       },
-      source: (value: FieldValue) => {
-        const str = typeof value === "string" ? value : undefined;
-        if (selectedTypeUniqueKey === "ot-bookmark" && (!str || str.trim() === "")) {
+      source: (v: FieldValue) => {
+        const s = typeof v === "string" ? v.trim() : undefined;
+        if (selectedTypeUniqueKey === "ot-bookmark" && !s) {
           return "Source is required for Bookmarks";
         }
       },
@@ -360,6 +360,7 @@ It supports:
                 const tags = tagsMap[prop.id] ?? [];
                 const id = prop.key;
                 const title = prop.name;
+                const value = itemProps[id].value;
                 if (
                   [PropertyFormat.Text, PropertyFormat.Url, PropertyFormat.Email, PropertyFormat.Phone].includes(
                     prop.format,
@@ -370,16 +371,8 @@ It supports:
                       {...itemProps[id as keyof typeof itemProps]}
                       title={title}
                       placeholder="Add text"
-                      value={
-                        itemProps[id as keyof typeof itemProps].value !== null
-                          ? String(itemProps[id as keyof typeof itemProps].value)
-                          : undefined
-                      }
-                      defaultValue={
-                        itemProps[id as keyof typeof itemProps].value !== null
-                          ? String(itemProps[id as keyof typeof itemProps].value)
-                          : undefined
-                      }
+                      value={value !== null ? String(value) : undefined}
+                      defaultValue={value !== null ? String(value) : undefined}
                     />
                   );
                 }
@@ -389,16 +382,8 @@ It supports:
                       {...itemProps[id as keyof typeof itemProps]}
                       title={title}
                       placeholder="Add number"
-                      value={
-                        itemProps[id as keyof typeof itemProps].value !== null
-                          ? String(itemProps[id as keyof typeof itemProps].value)
-                          : undefined
-                      }
-                      defaultValue={
-                        itemProps[id as keyof typeof itemProps].value !== null
-                          ? String(itemProps[id as keyof typeof itemProps].value)
-                          : undefined
-                      }
+                      value={value !== null ? String(value) : undefined}
+                      defaultValue={value !== null ? String(value) : undefined}
                     />
                   );
                 }
@@ -408,16 +393,8 @@ It supports:
                       {...itemProps[id as keyof typeof itemProps]}
                       title={title}
                       placeholder="Select tag"
-                      value={
-                        itemProps[id as keyof typeof itemProps].value !== undefined
-                          ? String(itemProps[id as keyof typeof itemProps].value)
-                          : undefined
-                      }
-                      defaultValue={
-                        itemProps[id as keyof typeof itemProps].value !== undefined
-                          ? String(itemProps[id as keyof typeof itemProps].value)
-                          : undefined
-                      }
+                      value={value !== undefined ? String(value) : undefined}
+                      defaultValue={value !== undefined ? String(value) : undefined}
                     >
                       <Form.Dropdown.Item key="none" value="" title="No Tag" icon={Icon.Dot} />
                       {tags.map((tag) => (
@@ -437,16 +414,8 @@ It supports:
                       {...itemProps[id as keyof typeof itemProps]}
                       title={title}
                       placeholder="Select tags"
-                      value={
-                        itemProps[id as keyof typeof itemProps].value !== undefined
-                          ? (itemProps[id as keyof typeof itemProps].value as string[])
-                          : undefined
-                      }
-                      defaultValue={
-                        itemProps[id as keyof typeof itemProps].value !== undefined
-                          ? (itemProps[id as keyof typeof itemProps].value as string[])
-                          : undefined
-                      }
+                      value={value !== undefined ? (value as string[]) : undefined}
+                      defaultValue={value !== undefined ? (value as string[]) : undefined}
                     >
                       {tags.map((tag) => (
                         <Form.TagPicker.Item
@@ -464,16 +433,8 @@ It supports:
                     <Form.DatePicker
                       {...itemProps[id as keyof typeof itemProps]}
                       title={title}
-                      value={
-                        itemProps[id as keyof typeof itemProps].value !== undefined
-                          ? (itemProps[id as keyof typeof itemProps].value as Date)
-                          : undefined
-                      }
-                      defaultValue={
-                        itemProps[id as keyof typeof itemProps].value !== undefined
-                          ? (itemProps[id as keyof typeof itemProps].value as Date)
-                          : undefined
-                      }
+                      value={value !== undefined ? (value as Date) : undefined}
+                      defaultValue={value !== undefined ? (value as Date) : undefined}
                     />
                   );
                 }
@@ -487,8 +448,8 @@ It supports:
                       {...itemProps[id as keyof typeof itemProps]}
                       title={title}
                       label=""
-                      value={Boolean(itemProps[id as keyof typeof itemProps].value)}
-                      defaultValue={Boolean(itemProps[id as keyof typeof itemProps].value)}
+                      value={Boolean(value)}
+                      defaultValue={Boolean(value)}
                     />
                   );
                 }
@@ -499,16 +460,8 @@ It supports:
                       {...itemProps[id as keyof typeof itemProps]}
                       title={title}
                       placeholder="Select objects"
-                      value={
-                        itemProps[id as keyof typeof itemProps].value !== undefined
-                          ? String(itemProps[id as keyof typeof itemProps].value)
-                          : undefined
-                      }
-                      defaultValue={
-                        itemProps[id as keyof typeof itemProps].value !== undefined
-                          ? String(itemProps[id as keyof typeof itemProps].value)
-                          : undefined
-                      }
+                      value={value !== undefined ? String(value) : undefined}
+                      defaultValue={value !== undefined ? String(value) : undefined}
                       onSearchTextChange={setObjectSearchText}
                       throttle={true}
                     >

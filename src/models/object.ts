@@ -14,9 +14,7 @@ export interface CreateObjectRequest {
 export interface UpdateObjectRequest {
   name: string;
   icon: ObjectIcon;
-  Description: string;
   Properties: PropertyEntry[];
-  // TODO: complete
 }
 
 export interface RawSpaceObject {
