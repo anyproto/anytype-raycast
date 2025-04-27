@@ -45,16 +45,6 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     [types, selectedType],
   );
 
-  // Clear states when space changes to avoid inconsistent api calls
-  function handleSpaceChange(spaceId: string) {
-    setSelectedSpace(spaceId);
-    setSelectedType("");
-    setSelectedTemplate("");
-    setSelectedList("");
-    setListSearchText("");
-    setObjectSearchText("");
-  }
-
   // Fetch tags for all properties in one hook call
   const selectedTypeDef = types.find((type) => type.id === selectedType);
   const properties =
@@ -232,7 +222,14 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
         id="space"
         title="Space"
         value={selectedSpace}
-        onChange={handleSpaceChange}
+        onChange={(v) => {
+          setSelectedSpace(v);
+          setSelectedType("");
+          setSelectedTemplate("");
+          setSelectedList("");
+          setListSearchText("");
+          setObjectSearchText("");
+        }}
         storeValue={true}
         placeholder="Search spaces..."
         info="Select the space where the object will be created"
