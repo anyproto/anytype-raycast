@@ -218,7 +218,7 @@ export function ObjectDetail({
           title=""
           text={titleText}
           icon={{
-            source: property.checkbox ? "icons/property/checkbox0.svg" : "icons/property/checkbox1.svg",
+            source: property.checkbox ? "icons/property/checkbox1.svg" : "icons/property/checkbox0.svg",
           }}
         />
       );
