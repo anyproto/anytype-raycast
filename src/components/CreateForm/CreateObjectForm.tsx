@@ -398,6 +398,7 @@ It supports:
                   return (
                     <Form.TextField
                       {...restItemProps}
+                      key={prop.key}
                       title={title}
                       placeholder="Add text"
                       value={value !== null ? String(value) : undefined}
@@ -408,6 +409,7 @@ It supports:
                   return (
                     <Form.TextField
                       {...restItemProps}
+                      key={prop.key}
                       title={title}
                       placeholder="Add number"
                       value={value !== null ? String(value) : undefined}
@@ -418,6 +420,7 @@ It supports:
                   return (
                     <Form.Dropdown
                       {...restItemProps}
+                      key={prop.key}
                       title={title}
                       value={value !== undefined ? String(value) : undefined}
                       placeholder={`Select tags for '${title}'...`}
@@ -443,6 +446,7 @@ It supports:
                   return (
                     <Form.TagPicker
                       {...restItemProps}
+                      key={prop.key}
                       title={title}
                       value={value !== undefined ? (value as string[]) : undefined}
                       placeholder="Add tags"
@@ -462,6 +466,7 @@ It supports:
                   return (
                     <Form.DatePicker
                       {...restItemProps}
+                      key={prop.key}
                       title={title}
                       value={value !== undefined ? (value as Date) : undefined}
                     />
@@ -472,13 +477,16 @@ It supports:
                   return null;
                 }
                 if (prop.format === PropertyFormat.Checkbox) {
-                  return <Form.Checkbox {...restItemProps} title={title} label="" value={Boolean(value)} />;
+                  return (
+                    <Form.Checkbox key={prop.key} {...restItemProps} title={title} label="" value={Boolean(value)} />
+                  );
                 }
                 if (prop.format === PropertyFormat.Objects) {
                   return (
                     // TODO: TagPicker would be the more appropriate component, but it does not support onSearchTextChange
                     <Form.Dropdown
                       {...restItemProps}
+                      key={prop.key}
                       title={title}
                       value={value !== undefined ? String(value) : undefined}
                       onSearchTextChange={setObjectSearchText}
