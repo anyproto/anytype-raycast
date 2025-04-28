@@ -119,8 +119,13 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
                 entry.multi_select = raw as string[];
                 break;
               case PropertyFormat.Date:
-                if (raw instanceof Date && !isNaN(raw.getTime())) {
-                  entry.date = formatRFC3339(raw);
+                {
+                  const date = raw instanceof Date ? raw : new Date(String(raw));
+                  if (!isNaN(date.getTime())) {
+                    entry.date = formatRFC3339(date);
+                  } else {
+                    console.warn(`Invalid date value for property ${prop.key}:`, raw);
+                  }
                 }
                 break;
               case PropertyFormat.Checkbox:
@@ -133,6 +138,8 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
                 entry.objects = Array.isArray(raw) ? (raw as string[]) : [String(raw)];
                 break;
               default:
+                console.warn(`Unsupported property format: ${prop.format}`);
+                break;
             }
             propertiesEntries.push(entry);
           }
@@ -201,18 +208,25 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
   function getQuicklink(): { name: string; link: string } {
     const url = "raycast://extensions/any/anytype/create-object";
 
-    const launchContext = {
-      defaults: {
-        space: selectedSpace,
-        type: selectedType,
-        list: selectedList,
-        name: itemProps.name.value,
-        icon: itemProps.icon.value,
-        description: itemProps.description.value,
-        body: itemProps.body.value,
-        source: itemProps.source.value,
-      },
+    const defaults: Record<string, unknown> = {
+      space: selectedSpace,
+      type: selectedType,
+      list: selectedList,
+      name: itemProps.name.value,
+      icon: itemProps.icon.value,
+      description: itemProps.description.value,
+      body: itemProps.body.value,
+      source: itemProps.source.value,
     };
+
+    properties.forEach((prop) => {
+      const raw = itemProps[prop.key]?.value;
+      if (raw !== undefined && raw !== null && raw !== "" && raw !== false) {
+        defaults[prop.key] = raw;
+      }
+    });
+
+    const launchContext = { defaults };
 
     return {
       name: `Create ${types.find((type) => type.key === selectedTypeUniqueKey)?.name} in ${spaces.find((space) => space.id === selectedSpace)?.name}`,
@@ -372,7 +386,10 @@ It supports:
                 const tags = tagsMap[prop.id] ?? [];
                 const id = prop.key;
                 const title = prop.name;
-                const value = itemProps[id].value;
+
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const { value, defaultValue, ...restItemProps } = itemProps[id];
+
                 if (
                   [PropertyFormat.Text, PropertyFormat.Url, PropertyFormat.Email, PropertyFormat.Phone].includes(
                     prop.format,
@@ -380,32 +397,29 @@ It supports:
                 ) {
                   return (
                     <Form.TextField
-                      {...itemProps[id]}
+                      {...restItemProps}
                       title={title}
                       placeholder="Add text"
                       value={value !== null ? String(value) : undefined}
-                      defaultValue={value !== null ? String(value) : undefined}
                     />
                   );
                 }
                 if (prop.format === PropertyFormat.Number) {
                   return (
                     <Form.TextField
-                      {...itemProps[id]}
+                      {...restItemProps}
                       title={title}
                       placeholder="Add number"
                       value={value !== null ? String(value) : undefined}
-                      defaultValue={value !== null ? String(value) : undefined}
                     />
                   );
                 }
                 if (prop.format === PropertyFormat.Select) {
                   return (
                     <Form.Dropdown
-                      {...itemProps[id]}
+                      {...restItemProps}
                       title={title}
                       value={value !== undefined ? String(value) : undefined}
-                      defaultValue={value !== undefined ? String(value) : undefined}
                       placeholder={`Select tags for '${title}'...`}
                     >
                       <Form.Dropdown.Item
@@ -428,10 +442,9 @@ It supports:
                 if (prop.format === PropertyFormat.MultiSelect) {
                   return (
                     <Form.TagPicker
-                      {...itemProps[id]}
+                      {...restItemProps}
                       title={title}
                       value={value !== undefined ? (value as string[]) : undefined}
-                      defaultValue={value !== undefined ? (value as string[]) : undefined}
                       placeholder="Add tags"
                     >
                       {tags.map((tag) => (
@@ -448,10 +461,9 @@ It supports:
                 if (prop.format === PropertyFormat.Date) {
                   return (
                     <Form.DatePicker
-                      {...itemProps[id]}
+                      {...restItemProps}
                       title={title}
                       value={value !== undefined ? (value as Date) : undefined}
-                      defaultValue={value !== undefined ? (value as Date) : undefined}
                     />
                   );
                 }
@@ -460,24 +472,15 @@ It supports:
                   return null;
                 }
                 if (prop.format === PropertyFormat.Checkbox) {
-                  return (
-                    <Form.Checkbox
-                      {...itemProps[id]}
-                      title={title}
-                      label=""
-                      value={Boolean(value)}
-                      defaultValue={Boolean(value)}
-                    />
-                  );
+                  return <Form.Checkbox {...restItemProps} title={title} label="" value={Boolean(value)} />;
                 }
                 if (prop.format === PropertyFormat.Objects) {
                   return (
                     // TODO: TagPicker would be the more appropriate component, but it does not support onSearchTextChange
                     <Form.Dropdown
-                      {...itemProps[id]}
+                      {...restItemProps}
                       title={title}
                       value={value !== undefined ? String(value) : undefined}
-                      defaultValue={value !== undefined ? String(value) : undefined}
                       onSearchTextChange={setObjectSearchText}
                       throttle={true}
                       placeholder={`Search objects in '${spaces.find((space) => space.id === selectedSpace)?.name}'...`}
