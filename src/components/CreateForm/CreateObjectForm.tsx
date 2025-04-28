@@ -6,7 +6,7 @@ import { addObjectsToList, createObject } from "../../api";
 import { CreateObjectFormValues } from "../../create-object";
 import { useCreateObjectData, useTagsMap } from "../../hooks";
 import { CreateObjectRequest, IconFormat, PropertyFormat, PropertyLinkWithValue } from "../../models";
-import { apiPropertyKeys, fetchTypeKeysForLists, isEmoji } from "../../utils";
+import { apiPropertyKeys, defaultTintColor, fetchTypeKeysForLists, isEmoji } from "../../utils";
 
 interface CreateObjectFormProps {
   draftValues: CreateObjectFormValues;
@@ -281,7 +281,12 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
         placeholder={`Search templates for '${types.find((type) => type.id === selectedType)?.name}'...`}
         info="Select the template to use for the object"
       >
-        <Form.Dropdown.Item key="none" value="" title="No Template" icon={Icon.Dot} />
+        <Form.Dropdown.Item
+          key="none"
+          value=""
+          title="No Template"
+          icon={{ source: "icons/type/copy.svg", tintColor: defaultTintColor }}
+        />
         {templates.map((template) => (
           <Form.Dropdown.Item key={template.id} value={template.id} title={template.name} icon={template.icon} />
         ))}
@@ -298,7 +303,14 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
         placeholder={`Search collections in '${spaces.find((space) => space.id === selectedSpace)?.name}'...`}
         info="Select the collection where the object will be added"
       >
-        {!listSearchText && <Form.Dropdown.Item key="none" value="" title="No Collection" icon={Icon.Dot} />}
+        {!listSearchText && (
+          <Form.Dropdown.Item
+            key="none"
+            value=""
+            title="No Collection"
+            icon={{ source: "icons/type/layers.svg", tintColor: defaultTintColor }}
+          />
+        )}
         {lists.map((list) => (
           <Form.Dropdown.Item key={list.id} value={list.id} title={list.name} icon={list.icon} />
         ))}
@@ -392,17 +404,22 @@ It supports:
                     <Form.Dropdown
                       {...itemProps[id]}
                       title={title}
-                      placeholder="Select tag"
                       value={value !== undefined ? String(value) : undefined}
                       defaultValue={value !== undefined ? String(value) : undefined}
+                      placeholder={`Select tags for '${title}'...`}
                     >
-                      <Form.Dropdown.Item key="none" value="" title="No Tag" icon={Icon.Dot} />
+                      <Form.Dropdown.Item
+                        key="none"
+                        value=""
+                        title="No Tag"
+                        icon={{ source: "icons/type/pricetag.svg", tintColor: defaultTintColor }}
+                      />
                       {tags.map((tag) => (
                         <Form.Dropdown.Item
                           key={tag.id}
                           value={tag.id}
                           title={tag.name}
-                          icon={{ source: "icons/property/tag.svg", tintColor: tag.color }}
+                          icon={{ source: "icons/type/pricetag.svg", tintColor: tag.color }}
                         />
                       ))}
                     </Form.Dropdown>
@@ -413,16 +430,16 @@ It supports:
                     <Form.TagPicker
                       {...itemProps[id]}
                       title={title}
-                      placeholder="Select tags"
                       value={value !== undefined ? (value as string[]) : undefined}
                       defaultValue={value !== undefined ? (value as string[]) : undefined}
+                      placeholder="Add tags"
                     >
                       {tags.map((tag) => (
                         <Form.TagPicker.Item
                           key={tag.id}
                           value={tag.id}
                           title={tag.name}
-                          icon={{ source: "icons/property/tag.svg", tintColor: tag.color }}
+                          icon={{ source: "icons/type/pricetag.svg", tintColor: tag.color }}
                         />
                       ))}
                     </Form.TagPicker>
@@ -459,14 +476,19 @@ It supports:
                     <Form.Dropdown
                       {...itemProps[id]}
                       title={title}
-                      placeholder="Select objects"
                       value={value !== undefined ? String(value) : undefined}
                       defaultValue={value !== undefined ? String(value) : undefined}
                       onSearchTextChange={setObjectSearchText}
                       throttle={true}
+                      placeholder={`Search objects in '${spaces.find((space) => space.id === selectedSpace)?.name}'...`}
                     >
                       {!objectSearchText && (
-                        <Form.Dropdown.Item key="none" value="" title="No Object" icon={Icon.Dot} />
+                        <Form.Dropdown.Item
+                          key="none"
+                          value=""
+                          title="No Object"
+                          icon={{ source: "icons/type/document.svg", tintColor: defaultTintColor }}
+                        />
                       )}
                       {objects.map((object) => (
                         <Form.Dropdown.Item key={object.id} value={object.id} title={object.name} icon={object.icon} />

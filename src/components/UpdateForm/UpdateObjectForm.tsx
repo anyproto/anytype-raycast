@@ -187,7 +187,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
                     key={tag.id}
                     value={tag.id}
                     title={tag.name}
-                    icon={{ source: "icons/property/tag.svg", tintColor: tag.color }}
+                    icon={{ source: "icons/type/pricetag.svg", tintColor: tag.color }}
                   />
                 ))}
               </Form.Dropdown>
@@ -206,7 +206,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
                     key={tag.id}
                     value={tag.id}
                     title={tag.name}
-                    icon={{ source: "icons/property/tag.svg", tintColor: tag.color }}
+                    icon={{ source: "icons/type/pricetag.svg", tintColor: tag.color }}
                   />
                 ))}
               </Form.TagPicker>
