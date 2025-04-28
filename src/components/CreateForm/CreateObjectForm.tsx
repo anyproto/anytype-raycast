@@ -5,7 +5,14 @@ import { useEffect, useMemo, useState } from "react";
 import { addObjectsToList, createObject } from "../../api";
 import { CreateObjectFormValues } from "../../create-object";
 import { useCreateObjectData, useTagsMap } from "../../hooks";
-import { CreateObjectRequest, IconFormat, PropertyFormat, PropertyLinkWithValue } from "../../models";
+import {
+  CreateObjectRequest,
+  IconFormat,
+  Property,
+  PropertyFormat,
+  PropertyLinkWithValue,
+  RawProperty,
+} from "../../models";
 import { apiPropertyKeys, defaultTintColor, fetchTypeKeysForLists, isEmoji } from "../../utils";
 
 interface CreateObjectFormProps {
@@ -13,7 +20,26 @@ interface CreateObjectFormProps {
   enableDrafts: boolean;
 }
 
-export type FieldValue = string | boolean | string[] | Date | null | undefined;
+export type FieldValue = string | number | boolean | string[] | Date | null | undefined;
+
+export function getNumberFieldValidations(
+  properties: Property[] | RawProperty[],
+): Record<string, (value: unknown) => string | undefined> {
+  return properties
+    .filter((prop) => prop.format === PropertyFormat.Number)
+    .reduce(
+      (acc, prop) => {
+        acc[prop.key] = (value: unknown) => {
+          const str = typeof value === "string" ? value : undefined;
+          if (str && isNaN(Number(str))) {
+            return "Value must be a number";
+          }
+        };
+        return acc;
+      },
+      {} as Record<string, (value: unknown) => string | undefined>,
+    );
+}
 
 export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectFormProps) {
   const {
@@ -45,7 +71,6 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     [types, selectedType],
   );
 
-  // Fetch tags for all properties in one hook call
   const selectedTypeDef = types.find((type) => type.id === selectedType);
   const properties =
     selectedTypeDef?.properties.filter(
@@ -58,22 +83,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       .map((prop) => prop.id),
   );
 
-  const numberFieldValidations = useMemo(() => {
-    return properties
-      .filter((prop) => prop.format === PropertyFormat.Number)
-      .reduce(
-        (acc, prop) => {
-          acc[prop.key] = (value: FieldValue) => {
-            const str = typeof value === "string" ? value : undefined;
-            if (str && isNaN(Number(str))) {
-              return "Value must be a number";
-            }
-          };
-          return acc;
-        },
-        {} as Record<string, (value: FieldValue) => string | undefined>,
-      );
-  }, [properties]);
+  const numberFieldValidations = useMemo(() => getNumberFieldValidations(properties), [properties]);
 
   useEffect(() => {
     const fetchTypesForLists = async () => {
