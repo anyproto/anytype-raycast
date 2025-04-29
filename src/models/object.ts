@@ -2,9 +2,9 @@ import { Image } from "@raycast/api";
 import {
   ObjectIcon,
   ObjectLayout,
-  Property,
   PropertyLinkWithValue,
   PropertyWithValue,
+  RawProperty,
   RawPropertyWithValue,
   RawType,
   Type,
@@ -63,7 +63,7 @@ export interface Block {
   vertical_align: string;
   text: Text;
   file: File;
-  property: Property;
+  property: RawProperty;
 }
 
 export interface Text {

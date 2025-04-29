@@ -25,15 +25,17 @@ export interface UpdatePropertyRequest {
   name: string;
 }
 
-export interface Property {
+export interface RawProperty {
   object: string;
   id: string;
   key: string;
   name: string;
   format: PropertyFormat;
-  icon: Image.ImageLike; // TODO
 }
 
+export interface Property extends RawProperty {
+  icon: Image.ImageLike;
+}
 export interface RawPropertyWithValue {
   id: string;
   key: string;

@@ -1,14 +1,14 @@
 import { Image } from "@raycast/api";
-import { Property, PropertyFormat, RawTag, Tag } from "../models";
+import { Property, PropertyFormat, RawProperty, RawTag, Tag } from "../models";
 import { colorToHex } from "../utils";
 
-export function mapProperties(properties: Property[]): Property[] {
+export function mapProperties(properties: RawProperty[]): Property[] {
   return properties.map((property) => {
     return mapProperty(property);
   });
 }
 
-export function mapProperty(property: Property): Property {
+export function mapProperty(property: RawProperty): Property {
   return {
     ...property,
     name: property.name.trim() || "Untitled",

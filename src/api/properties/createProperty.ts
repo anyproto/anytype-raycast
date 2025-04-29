@@ -1,5 +1,5 @@
 import { mapProperty } from "../../mappers/properties";
-import { CreatePropertyRequest, Property } from "../../models";
+import { CreatePropertyRequest, Property, RawProperty } from "../../models";
 import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function createProperty(
@@ -8,7 +8,7 @@ export async function createProperty(
 ): Promise<{ property: Property | null }> {
   const { url, method } = apiEndpoints.createProperty(spaceId);
 
-  const response = await apiFetch<{ property: Property }>(url, {
+  const response = await apiFetch<{ property: RawProperty }>(url, {
     method: method,
     body: JSON.stringify(propertyData),
   });
