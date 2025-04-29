@@ -24,7 +24,7 @@ export async function mapMember(member: RawMember): Promise<Member> {
 
   return {
     ...member,
-    name: member.name.trim() || "Untitled", // empty string comes as \n
+    name: member.name?.trim() || "Untitled", // empty string comes as \n
     icon,
   };
 }
