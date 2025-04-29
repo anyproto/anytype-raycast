@@ -1,5 +1,5 @@
 import { mapProperty } from "../../mappers/properties";
-import { Property, RawProperty, UpdatePropertyRequest } from "../../models";
+import { Property, UpdatePropertyRequest } from "../../models";
 import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function updateProperty(
@@ -11,7 +11,7 @@ export async function updateProperty(
 }> {
   const { url, method } = apiEndpoints.updateProperty(spaceId, propertyId);
 
-  const response = await apiFetch<{ property: RawProperty }>(url, {
+  const response = await apiFetch<{ property: Property }>(url, {
     method: method,
     body: JSON.stringify(data),
   });

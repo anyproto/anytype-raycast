@@ -16,6 +16,17 @@ export async function getObject(
   };
 }
 
+export async function getRawObject(
+  spaceId: string,
+  objectId: string,
+): Promise<{
+  object: RawSpaceObjectWithBlocks;
+}> {
+  const { url, method } = apiEndpoints.getObject(spaceId, objectId);
+  const response = await apiFetch<{ object: RawSpaceObjectWithBlocks }>(url, { method });
+  return { object: response.payload.object };
+}
+
 export async function getObjectWithoutMappedProperties(spaceId: string, objectId: string): Promise<SpaceObject | null> {
   const { url, method } = apiEndpoints.getObject(spaceId, objectId);
   const response = await apiFetch<{ object: RawSpaceObjectWithBlocks }>(url, { method });

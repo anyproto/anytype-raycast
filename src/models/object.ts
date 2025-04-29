@@ -1,5 +1,14 @@
 import { Image } from "@raycast/api";
-import { ObjectIcon, ObjectLayout, Property, PropertyLinkWithValue, RawProperty, RawType, Type } from ".";
+import {
+  ObjectIcon,
+  ObjectLayout,
+  Property,
+  PropertyLinkWithValue,
+  PropertyWithValue,
+  RawPropertyWithValue,
+  RawType,
+  Type,
+} from ".";
 
 export interface CreateObjectRequest {
   name: string;
@@ -27,7 +36,7 @@ export interface RawSpaceObject {
   layout: ObjectLayout;
   space_id: string;
   archived: boolean;
-  properties: RawProperty[];
+  properties: RawPropertyWithValue[];
 }
 
 export interface RawSpaceObjectWithBlocks extends RawSpaceObject {
@@ -37,12 +46,13 @@ export interface RawSpaceObjectWithBlocks extends RawSpaceObject {
 export interface SpaceObject extends Omit<RawSpaceObject, "icon" | "type" | "properties"> {
   icon: Image.ImageLike;
   type: Type;
-  properties: Property[];
+  properties: PropertyWithValue[];
 }
 
-export interface SpaceObjectWithBlocks extends Omit<RawSpaceObjectWithBlocks, "icon" | "type"> {
+export interface SpaceObjectWithBlocks extends Omit<RawSpaceObjectWithBlocks, "icon" | "type" | "properties"> {
   type: Type;
   icon: Image.ImageLike;
+  properties: PropertyWithValue[];
 }
 
 export interface Block {
@@ -53,7 +63,7 @@ export interface Block {
   vertical_align: string;
   text: Text;
   file: File;
-  property: RawProperty;
+  property: Property;
 }
 
 export interface Text {

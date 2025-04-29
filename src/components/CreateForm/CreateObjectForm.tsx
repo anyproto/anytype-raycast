@@ -8,10 +8,9 @@ import { useCreateObjectData, useTagsMap } from "../../hooks";
 import {
   CreateObjectRequest,
   IconFormat,
-  Property,
   PropertyFormat,
   PropertyLinkWithValue,
-  RawProperty,
+  RawPropertyWithValue,
 } from "../../models";
 import { apiPropertyKeys, defaultTintColor, fetchTypeKeysForLists, isEmoji } from "../../utils";
 
@@ -23,7 +22,7 @@ interface CreateObjectFormProps {
 export type FieldValue = string | number | boolean | string[] | Date | null | undefined;
 
 export function getNumberFieldValidations(
-  properties: Property[] | RawProperty[],
+  properties: RawPropertyWithValue[],
 ): Record<string, (value: unknown) => string | undefined> {
   return properties
     .filter((prop) => prop.format === PropertyFormat.Number)

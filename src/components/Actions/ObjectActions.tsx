@@ -22,7 +22,7 @@ import {
   UpdatePropertyForm,
   ViewType,
 } from "..";
-import { deleteObject, deleteProperty, deleteTag } from "../../api";
+import { deleteObject, deleteProperty, deleteTag, getRawObject } from "../../api";
 import { Export, Member, ObjectLayout, Property, Space, SpaceObject, Type, View } from "../../models";
 import {
   addPinned,
@@ -73,7 +73,7 @@ export function ObjectActions({
   showDetails,
   onToggleDetails,
 }: ObjectActionsProps) {
-  const { pop } = useNavigation();
+  const { pop, push } = useNavigation();
   const { primaryAction } = getPreferenceValues();
   const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${space?.id}`;
   const pinSuffixForView = isGlobalSearch
@@ -368,11 +368,14 @@ export function ObjectActions({
 
       <ActionPanel.Section>
         {isObject && (
-          <Action.Push
+          <Action
             icon={Icon.Pencil}
             title={"Edit Object"}
             shortcut={{ modifiers: ["cmd"], key: "e" }}
-            target={<UpdateObjectForm spaceId={space.id} object={object as SpaceObject} />}
+            onAction={async () => {
+              const { object } = await getRawObject(space.id, objectId);
+              push(<UpdateObjectForm spaceId={space.id} object={object} />);
+            }}
           />
         )}
         {isProperty && (

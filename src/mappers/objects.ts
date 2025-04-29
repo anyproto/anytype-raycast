@@ -1,8 +1,8 @@
 import { getPreferenceValues } from "@raycast/api";
 import { getObjectWithoutMappedProperties } from "../api";
-import { Property, PropertyFormat, RawSpaceObject, SortProperty, SpaceObject } from "../models";
+import { PropertyFormat, PropertyWithValue, RawSpaceObject, SortProperty, SpaceObject } from "../models";
 import { getIconWithFallback } from "../utils";
-import { getIconForProperty, mapTag } from "./properties";
+import { mapTag } from "./properties";
 import { mapType } from "./types";
 
 /**
@@ -20,20 +20,13 @@ export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject
         name: object.name || `${object.snippet.split("\n")[0]}...` || "Untitled",
         type: await mapType(object.type),
         properties: await Promise.all(
-          object.properties
-            ?.filter((property) => {
-              if (sort === SortProperty.Name) {
-                // When sorting by name, keep the 'LastModifiedDate' property for tooltip purposes
-                return property.key === SortProperty.LastModifiedDate;
-              }
-              return property.key === sort;
-            })
-            .map(async (property) => {
-              return {
-                ...property,
-                icon: getIconForProperty(property.format),
-              };
-            }) || [],
+          (object.properties?.filter((property) => {
+            if (sort === SortProperty.Name) {
+              // When sorting by name, keep the 'LastModifiedDate' property for tooltip purposes
+              return property.key === SortProperty.LastModifiedDate;
+            }
+            return property.key === sort;
+          }) || []) as PropertyWithValue[],
         ),
       };
     }),
@@ -48,12 +41,11 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
 
   const mappedProperties = await Promise.all(
     (object.properties || []).map(async (property) => {
-      let mappedProperty: Property = {
+      let mappedProperty: PropertyWithValue = {
         id: property.id,
         key: property.key,
         name: property.name || "Untitled",
         format: property.format,
-        icon: getIconForProperty(property.format),
       };
 
       switch (property.format) {
@@ -148,7 +140,7 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
   };
 }
 
-export async function mapObjectWithoutDetails(spaceId: string, object: SpaceObject[]): Promise<SpaceObject[]> {
+export async function mapObjectWithoutDetails(spaceId: string, object: string[]): Promise<SpaceObject[]> {
   const rawItems = Array.isArray(object) ? object : [object];
   return await Promise.all(
     rawItems.map(async (item) => {

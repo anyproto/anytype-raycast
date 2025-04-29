@@ -1,5 +1,5 @@
 import { mapProperties } from "../../mappers/properties";
-import { PaginatedResponse, Pagination, Property, RawProperty } from "../../models";
+import { PaginatedResponse, Pagination, Property } from "../../models";
 import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function getProperties(
@@ -10,7 +10,7 @@ export async function getProperties(
   pagination: Pagination;
 }> {
   const { url, method } = apiEndpoints.getProperties(spaceId, options);
-  const response = await apiFetch<PaginatedResponse<RawProperty>>(url, { method: method });
+  const response = await apiFetch<PaginatedResponse<Property>>(url, { method: method });
 
   return {
     properties: response.payload.data ? mapProperties(response.payload.data) : [],

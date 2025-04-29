@@ -25,7 +25,16 @@ export interface UpdatePropertyRequest {
   name: string;
 }
 
-export interface RawProperty {
+export interface Property {
+  object: string;
+  id: string;
+  key: string;
+  name: string;
+  format: PropertyFormat;
+  icon: Image.ImageLike; // TODO
+}
+
+export interface RawPropertyWithValue {
   id: string;
   key: string;
   name: string;
@@ -35,18 +44,19 @@ export interface RawProperty {
   select?: RawTag;
   multi_select?: RawTag[];
   date?: string;
-  files?: SpaceObject[];
+  files?: string[];
   checkbox?: boolean;
   url?: string;
   email?: string;
   phone?: string;
-  objects?: SpaceObject[];
+  objects?: string[];
 }
 
-export interface Property extends Omit<RawProperty, "select" | "multi_select"> {
-  icon: Image.ImageLike;
+export interface PropertyWithValue extends Omit<RawPropertyWithValue, "select" | "multi_select" | "files" | "objects"> {
   select?: Tag;
   multi_select?: Tag[];
+  files?: SpaceObject[];
+  objects?: SpaceObject[];
 }
 
 export interface PropertyLink {

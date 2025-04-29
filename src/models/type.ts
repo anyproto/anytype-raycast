@@ -1,5 +1,5 @@
 import { Image } from "@raycast/api";
-import { ObjectIcon, PropertyLink, RawProperty } from ".";
+import { ObjectIcon, Property, PropertyLink } from ".";
 
 export enum ObjectLayout {
   Basic = "basic",
@@ -43,7 +43,7 @@ export interface RawType {
   icon: ObjectIcon;
   layout: ObjectLayout;
   archived: boolean;
-  properties: RawProperty[];
+  properties: Property[];
 }
 
 export interface Type extends Omit<RawType, "icon"> {

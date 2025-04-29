@@ -4,13 +4,19 @@ import { formatRFC3339 } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { FieldValue, getNumberFieldValidations } from "..";
 import { updateObject } from "../../api";
-import { useObject, useSearch, useTagsMap } from "../../hooks";
-import { IconFormat, PropertyFormat, PropertyLinkWithValue, SpaceObject, UpdateObjectRequest } from "../../models";
+import { useSearch, useTagsMap } from "../../hooks";
+import {
+  IconFormat,
+  PropertyFormat,
+  PropertyLinkWithValue,
+  RawSpaceObjectWithBlocks,
+  UpdateObjectRequest,
+} from "../../models";
 import { apiPropertyKeys, defaultTintColor, isEmoji } from "../../utils";
 
 interface UpdateObjectFormProps {
   spaceId: string;
-  object: SpaceObject;
+  object: RawSpaceObjectWithBlocks;
 }
 
 interface UpdateObjectFormValues {
@@ -20,19 +26,11 @@ interface UpdateObjectFormValues {
   [key: string]: FieldValue;
 }
 
-export function UpdateObjectForm({ spaceId, object: initialObject }: UpdateObjectFormProps) {
+export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
   const [objectSearchText, setObjectSearchText] = useState("");
 
-  const {
-    object: fullObject,
-    isLoadingObject: isLoadingFullObject,
-    objectError: fullObjectError,
-  } = useObject(spaceId, initialObject.id);
-
-  const sourceObject = fullObject ?? initialObject;
-
   const properties =
-    sourceObject.properties.filter((p) => ![apiPropertyKeys.description, apiPropertyKeys.type].includes(p.key)) || [];
+    object.properties.filter((p) => ![apiPropertyKeys.description, apiPropertyKeys.type].includes(p.key)) || [];
 
   const numberFieldValidations = useMemo(() => getNumberFieldValidations(properties), [properties]);
 
@@ -49,15 +47,15 @@ export function UpdateObjectForm({ spaceId, object: initialObject }: UpdateObjec
   );
 
   useEffect(() => {
-    if (fullObjectError || objectsError || tagsError) {
+    if (objectsError || tagsError) {
       showFailureToast(objectsError || tagsError, { title: "Failed to load data" });
     }
-  }, [fullObjectError, objectsError, tagsError]);
+  }, [objectsError, tagsError]);
 
   // Map existing property entries to form field values
   const initialPropertyValues: Record<string, FieldValue> = properties.reduce(
     (acc, prop) => {
-      const entry = sourceObject.properties.find((p) => p.key === prop.key);
+      const entry = object.properties.find((p) => p.key === prop.key);
       if (entry) {
         let v: FieldValue;
         switch (prop.format) {
@@ -89,10 +87,10 @@ export function UpdateObjectForm({ spaceId, object: initialObject }: UpdateObjec
             v = entry.checkbox ?? false;
             break;
           case PropertyFormat.Files:
-            v = entry.files?.map((file) => file.id) ?? [];
+            v = entry.files ?? [];
             break;
           case PropertyFormat.Objects:
-            v = entry.objects?.map((object) => object.id) ?? [];
+            v = entry.objects ?? [];
             break;
           default:
             v = undefined;
@@ -104,12 +102,11 @@ export function UpdateObjectForm({ spaceId, object: initialObject }: UpdateObjec
     {} as Record<string, FieldValue>,
   );
 
-  // Extract existing description
-  const descriptionEntry = sourceObject.properties.find((p) => p.key === apiPropertyKeys.description);
+  const descriptionEntry = object.properties.find((p) => p.key === apiPropertyKeys.description);
 
   const initialValues: UpdateObjectFormValues = {
-    name: sourceObject.name,
-    icon: sourceObject.icon?.emoji ?? "",
+    name: object.name,
+    icon: object.icon?.emoji ?? "",
     description: descriptionEntry?.text ?? "",
     ...initialPropertyValues,
   };
@@ -120,10 +117,9 @@ export function UpdateObjectForm({ spaceId, object: initialObject }: UpdateObjec
       try {
         await showToast({ style: Toast.Style.Animated, title: "Updating object…" });
 
-        // Build the properties payload
         const propertiesEntries: PropertyLinkWithValue[] = [];
         properties.forEach((prop) => {
-          const raw = itemProps[prop.key as keyof UpdateObjectFormValues]?.value;
+          const raw = itemProps[prop.key]?.value;
           if (raw !== undefined && raw !== null && raw !== "" && raw !== false) {
             const entry: PropertyLinkWithValue = { key: prop.key };
             switch (prop.format) {
@@ -188,7 +184,7 @@ export function UpdateObjectForm({ spaceId, object: initialObject }: UpdateObjec
           properties: propertiesEntries,
         };
 
-        const resp = await updateObject(spaceId, sourceObject.id, payload);
+        const resp = await updateObject(spaceId, object.id, payload);
         if (resp.object?.id) {
           await showToast(Toast.Style.Success, "Object updated");
           popToRoot();
@@ -202,7 +198,7 @@ export function UpdateObjectForm({ spaceId, object: initialObject }: UpdateObjec
     validation: {
       name: (v: FieldValue) => {
         const s = typeof v === "string" ? v.trim() : "";
-        if (!["ot-bookmark", "ot-note"].includes(sourceObject.type.key) && !s) {
+        if (!["ot-bookmark", "ot-note"].includes(object.type.key) && !s) {
           return "Name is required";
         }
       },
@@ -217,18 +213,18 @@ export function UpdateObjectForm({ spaceId, object: initialObject }: UpdateObjec
 
   return (
     <Form
-      navigationTitle={`Edit ${sourceObject.type.name}`}
-      isLoading={isLoadingObjects || isLoadingTags || isLoadingFullObject}
+      navigationTitle={`Edit ${object.type.name}`}
+      isLoading={isLoadingObjects || isLoadingTags}
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Save Changes" icon={Icon.Check} onSubmit={handleSubmit} />
         </ActionPanel>
       }
     >
-      {!["ot-note"].includes(sourceObject.type.key) && (
+      {!["ot-note"].includes(object.type.key) && (
         <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" />
       )}
-      {!["ot-task", "ot-note", "ot-profile"].includes(sourceObject.type.key) && (
+      {!["ot-task", "ot-note", "ot-profile"].includes(object.type.key) && (
         <Form.TextField {...itemProps.icon} title="Icon" />
       )}
       <Form.TextField {...itemProps.description} title="Description" placeholder="Add a brief description" />
@@ -237,7 +233,7 @@ export function UpdateObjectForm({ spaceId, object: initialObject }: UpdateObjec
 
       {properties.map((prop) => {
         const tags = tagsMap[prop.id] ?? [];
-        const id = prop.key as keyof typeof itemProps;
+        const id = prop.key;
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { value, defaultValue, ...restItemProps } = itemProps[id];
