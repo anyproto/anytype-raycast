@@ -61,7 +61,7 @@ export function TagList({ space, propertyId }: TagListProps) {
                 <Action.Push
                   icon={Icon.Plus}
                   title="Create Tag"
-                  shortcut={{ modifiers: ["cmd"], key: "n" }}
+                  shortcut={Keyboard.Shortcut.Common.New}
                   target={
                     <CreateTagForm spaceId={space.id} propertyId={propertyId} draftValues={{ name: searchText }} />
                   }
@@ -69,7 +69,7 @@ export function TagList({ space, propertyId }: TagListProps) {
                 <Action.Push
                   icon={Icon.Pencil}
                   title="Edit Tag"
-                  shortcut={{ modifiers: ["cmd"], key: "e" }}
+                  shortcut={Keyboard.Shortcut.Common.Edit}
                   target={<UpdateTagForm spaceId={space.id} propertyId={propertyId} tag={tag} />}
                 />
                 <Action

@@ -371,7 +371,7 @@ export function ObjectActions({
           <Action
             icon={Icon.Pencil}
             title={"Edit Object"}
-            shortcut={{ modifiers: ["cmd"], key: "e" }}
+            shortcut={Keyboard.Shortcut.Common.Edit}
             onAction={async () => {
               const { object } = await getRawObject(space.id, objectId);
               push(<UpdateObjectForm spaceId={space.id} object={object} />);
@@ -382,7 +382,7 @@ export function ObjectActions({
           <Action.Push
             icon={Icon.Pencil}
             title={"Edit Property"}
-            shortcut={{ modifiers: ["cmd"], key: "e" }}
+            shortcut={Keyboard.Shortcut.Common.Edit}
             target={<UpdatePropertyForm spaceId={space.id} property={object as Property} />}
           />
         )}
