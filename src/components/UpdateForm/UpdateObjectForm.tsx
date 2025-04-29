@@ -121,7 +121,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
         const propertiesEntries: PropertyLinkWithValue[] = [];
         properties.forEach((prop) => {
           const raw = itemProps[prop.key]?.value;
-          if (raw !== undefined && raw !== null && raw !== "" && raw !== false) {
+          if (raw !== undefined) {
             const entry: PropertyLinkWithValue = { key: prop.key };
             switch (prop.format) {
               case PropertyFormat.Text:
@@ -158,12 +158,30 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
               case PropertyFormat.Checkbox:
                 entry.checkbox = Boolean(raw);
                 break;
-              case PropertyFormat.Files:
-                entry.files = Array.isArray(raw) ? (raw as string[]) : [String(raw)];
+              case PropertyFormat.Files: {
+                let filesValue: string[];
+                if (Array.isArray(raw)) {
+                  filesValue = raw as string[];
+                } else if (typeof raw === "string") {
+                  filesValue = raw ? [raw] : [];
+                } else {
+                  filesValue = [];
+                }
+                entry.files = filesValue;
                 break;
-              case PropertyFormat.Objects:
-                entry.objects = Array.isArray(raw) ? (raw as string[]) : [String(raw)];
+              }
+              case PropertyFormat.Objects: {
+                let objectsValue: string[];
+                if (Array.isArray(raw)) {
+                  objectsValue = raw as string[];
+                } else if (typeof raw === "string") {
+                  objectsValue = raw ? [raw] : [];
+                } else {
+                  objectsValue = [];
+                }
+                entry.objects = objectsValue;
                 break;
+              }
               default:
                 console.warn(`Unsupported property format: ${prop.format}`);
                 break;
@@ -173,7 +191,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
         });
 
         const descriptionRaw = itemProps[apiPropertyKeys.description]?.value;
-        if (descriptionRaw !== undefined && descriptionRaw !== null && descriptionRaw !== "") {
+        if (descriptionRaw !== undefined && descriptionRaw !== null) {
           propertiesEntries.push({
             key: apiPropertyKeys.description,
             text: String(descriptionRaw),
