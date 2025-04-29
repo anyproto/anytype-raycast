@@ -26,7 +26,7 @@ export function getDateLabel(): string {
   const { sort } = getPreferenceValues();
   switch (sort) {
     case SortProperty.CreatedDate:
-      return "Created Date";
+      return "Creation Date";
     case SortProperty.LastModifiedDate:
       return "Last Modified Date";
     case SortProperty.LastOpenedDate:

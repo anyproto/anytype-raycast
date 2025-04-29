@@ -929,7 +929,7 @@
       "type": "dropdown",
       "data": [
         {
-          "title": "Created Date",
+          "title": "Creation Date",
           "value": "created_date"
         },
         {
