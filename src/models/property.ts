@@ -2,6 +2,8 @@ import { Image } from "@raycast/api";
 import { RawTag, Tag } from ".";
 import { SpaceObject } from "./object";
 
+export type PropertyFieldValue = string | number | boolean | string[] | Date | null | undefined;
+
 export enum PropertyFormat {
   Text = "text",
   Number = "number",

@@ -2,17 +2,17 @@ import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@r
 import { showFailureToast, useForm } from "@raycast/utils";
 import { formatRFC3339 } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
-import { FieldValue, getNumberFieldValidations } from "..";
 import { updateObject } from "../../api";
 import { useSearch, useTagsMap } from "../../hooks";
 import {
   IconFormat,
+  PropertyFieldValue,
   PropertyFormat,
   PropertyLinkWithValue,
   RawSpaceObjectWithBlocks,
   UpdateObjectRequest,
 } from "../../models";
-import { apiPropertyKeys, defaultTintColor, isEmoji } from "../../utils";
+import { apiPropertyKeys, defaultTintColor, getNumberFieldValidations, isEmoji } from "../../utils";
 
 interface UpdateObjectFormProps {
   spaceId: string;
@@ -23,7 +23,7 @@ interface UpdateObjectFormValues {
   name?: string;
   icon?: string;
   description?: string;
-  [key: string]: FieldValue;
+  [key: string]: PropertyFieldValue;
 }
 
 export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
@@ -53,11 +53,11 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
   }, [objectsError, tagsError]);
 
   // Map existing property entries to form field values
-  const initialPropertyValues: Record<string, FieldValue> = properties.reduce(
+  const initialPropertyValues: Record<string, PropertyFieldValue> = properties.reduce(
     (acc, prop) => {
       const entry = object.properties.find((p) => p.key === prop.key);
       if (entry) {
-        let v: FieldValue;
+        let v: PropertyFieldValue;
         switch (prop.format) {
           case PropertyFormat.Text:
             v = entry.text ?? "";
@@ -99,7 +99,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
       }
       return acc;
     },
-    {} as Record<string, FieldValue>,
+    {} as Record<string, PropertyFieldValue>,
   );
 
   const descriptionEntry = object.properties.find((p) => p.key === apiPropertyKeys.description);
@@ -170,6 +170,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
             propertiesEntries.push(entry);
           }
         });
+
         const descriptionRaw = itemProps[apiPropertyKeys.description]?.value;
         if (descriptionRaw !== undefined && descriptionRaw !== null && descriptionRaw !== "") {
           propertiesEntries.push({
@@ -196,13 +197,13 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
       }
     },
     validation: {
-      name: (v: FieldValue) => {
+      name: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : "";
         if (!["ot-bookmark", "ot-note"].includes(object.type.key) && !s) {
           return "Name is required";
         }
       },
-      icon: (v: FieldValue) => {
+      icon: (v: PropertyFieldValue) => {
         if (typeof v === "string" && v && !isEmoji(v)) {
           return "Icon must be a single emoji";
         }

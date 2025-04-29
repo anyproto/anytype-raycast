@@ -8,36 +8,21 @@ import { useCreateObjectData, useTagsMap } from "../../hooks";
 import {
   CreateObjectRequest,
   IconFormat,
+  PropertyFieldValue,
   PropertyFormat,
   PropertyLinkWithValue,
-  RawPropertyWithValue,
 } from "../../models";
-import { apiPropertyKeys, defaultTintColor, fetchTypeKeysForLists, isEmoji } from "../../utils";
+import {
+  apiPropertyKeys,
+  defaultTintColor,
+  fetchTypeKeysForLists,
+  getNumberFieldValidations,
+  isEmoji,
+} from "../../utils";
 
 interface CreateObjectFormProps {
   draftValues: CreateObjectFormValues;
   enableDrafts: boolean;
-}
-
-export type FieldValue = string | number | boolean | string[] | Date | null | undefined;
-
-export function getNumberFieldValidations(
-  properties: RawPropertyWithValue[],
-): Record<string, (value: unknown) => string | undefined> {
-  return properties
-    .filter((prop) => prop.format === PropertyFormat.Number)
-    .reduce(
-      (acc, prop) => {
-        acc[prop.key] = (value: unknown) => {
-          const str = typeof value === "string" ? value : undefined;
-          if (str && isNaN(Number(str))) {
-            return "Value must be a number";
-          }
-        };
-        return acc;
-      },
-      {} as Record<string, (value: unknown) => string | undefined>,
-    );
 }
 
 export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectFormProps) {
@@ -154,7 +139,6 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
           }
         });
 
-        // Append description to properties
         const descriptionValue = itemProps[apiPropertyKeys.description]?.value;
         if (descriptionValue !== undefined && descriptionValue !== null && descriptionValue !== "") {
           propertiesEntries.push({
@@ -193,18 +177,18 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       }
     },
     validation: {
-      name: (v: FieldValue) => {
+      name: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : undefined;
         if (!["ot-bookmark", "ot-note"].includes(selectedTypeUniqueKey) && !s) {
           return "Name is required";
         }
       },
-      icon: (v: FieldValue) => {
+      icon: (v: PropertyFieldValue) => {
         if (typeof v === "string" && v && !isEmoji(v)) {
           return "Icon must be single emoji";
         }
       },
-      source: (v: FieldValue) => {
+      source: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : undefined;
         if (selectedTypeUniqueKey === "ot-bookmark" && !s) {
           return "Source is required for Bookmarks";
@@ -399,124 +383,124 @@ It supports:
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 const { value, defaultValue, ...restItemProps } = itemProps[id];
 
-                if (
-                  [PropertyFormat.Text, PropertyFormat.Url, PropertyFormat.Email, PropertyFormat.Phone].includes(
-                    prop.format,
-                  )
-                ) {
-                  return (
-                    <Form.TextField
-                      {...restItemProps}
-                      key={prop.key}
-                      title={title}
-                      placeholder="Add text"
-                      value={value !== null ? String(value) : undefined}
-                    />
-                  );
-                }
-                if (prop.format === PropertyFormat.Number) {
-                  return (
-                    <Form.TextField
-                      {...restItemProps}
-                      key={prop.key}
-                      title={title}
-                      placeholder="Add number"
-                      value={value !== null ? String(value) : undefined}
-                    />
-                  );
-                }
-                if (prop.format === PropertyFormat.Select) {
-                  return (
-                    <Form.Dropdown
-                      {...restItemProps}
-                      key={prop.key}
-                      title={title}
-                      value={value !== undefined ? String(value) : undefined}
-                      placeholder={`Select tags for '${title}'...`}
-                    >
-                      <Form.Dropdown.Item
-                        key="none"
-                        value=""
-                        title="No Tag"
-                        icon={{ source: "icons/type/pricetag.svg", tintColor: defaultTintColor }}
+                switch (prop.format) {
+                  case PropertyFormat.Text:
+                  case PropertyFormat.Url:
+                  case PropertyFormat.Email:
+                  case PropertyFormat.Phone:
+                    return (
+                      <Form.TextField
+                        key={prop.key}
+                        {...restItemProps}
+                        title={title}
+                        placeholder="Add text"
+                        value={value !== null ? String(value) : undefined}
                       />
-                      {tags.map((tag) => (
-                        <Form.Dropdown.Item
-                          key={tag.id}
-                          value={tag.id}
-                          title={tag.name}
-                          icon={{ source: "icons/type/pricetag.svg", tintColor: tag.color }}
-                        />
-                      ))}
-                    </Form.Dropdown>
-                  );
-                }
-                if (prop.format === PropertyFormat.MultiSelect) {
-                  return (
-                    <Form.TagPicker
-                      {...restItemProps}
-                      key={prop.key}
-                      title={title}
-                      value={value !== undefined ? (value as string[]) : undefined}
-                      placeholder="Add tags"
-                    >
-                      {tags.map((tag) => (
-                        <Form.TagPicker.Item
-                          key={tag.id}
-                          value={tag.id}
-                          title={tag.name}
-                          icon={{ source: "icons/type/pricetag.svg", tintColor: tag.color }}
-                        />
-                      ))}
-                    </Form.TagPicker>
-                  );
-                }
-                if (prop.format === PropertyFormat.Date) {
-                  return (
-                    <Form.DatePicker
-                      {...restItemProps}
-                      key={prop.key}
-                      title={title}
-                      value={value !== undefined ? (value as Date) : undefined}
-                    />
-                  );
-                }
-                if (prop.format === PropertyFormat.Files) {
-                  // TODO: implement
-                  return null;
-                }
-                if (prop.format === PropertyFormat.Checkbox) {
-                  return (
-                    <Form.Checkbox key={prop.key} {...restItemProps} title={title} label="" value={Boolean(value)} />
-                  );
-                }
-                if (prop.format === PropertyFormat.Objects) {
-                  return (
-                    // TODO: TagPicker would be the more appropriate component, but it does not support onSearchTextChange
-                    <Form.Dropdown
-                      {...restItemProps}
-                      key={prop.key}
-                      title={title}
-                      value={value !== undefined ? String(value) : undefined}
-                      onSearchTextChange={setObjectSearchText}
-                      throttle={true}
-                      placeholder={`Search objects in '${spaces.find((space) => space.id === selectedSpace)?.name}'...`}
-                    >
-                      {!objectSearchText && (
+                    );
+                  case PropertyFormat.Number:
+                    return (
+                      <Form.TextField
+                        key={prop.key}
+                        {...restItemProps}
+                        title={title}
+                        placeholder="Add number"
+                        value={value !== null ? String(value) : undefined}
+                      />
+                    );
+                  case PropertyFormat.Select:
+                    return (
+                      <Form.Dropdown
+                        key={prop.key}
+                        {...restItemProps}
+                        title={title}
+                        value={value !== undefined ? String(value) : undefined}
+                        placeholder={`Select tags for '${title}'...`}
+                      >
                         <Form.Dropdown.Item
                           key="none"
                           value=""
-                          title="No Object"
-                          icon={{ source: "icons/type/document.svg", tintColor: defaultTintColor }}
+                          title="No Tag"
+                          icon={{ source: "icons/type/pricetag.svg", tintColor: defaultTintColor }}
                         />
-                      )}
-                      {objects.map((object) => (
-                        <Form.Dropdown.Item key={object.id} value={object.id} title={object.name} icon={object.icon} />
-                      ))}
-                    </Form.Dropdown>
-                  );
+                        {tags.map((tag) => (
+                          <Form.Dropdown.Item
+                            key={tag.id}
+                            value={tag.id}
+                            title={tag.name}
+                            icon={{ source: "icons/type/pricetag.svg", tintColor: tag.color }}
+                          />
+                        ))}
+                      </Form.Dropdown>
+                    );
+                  case PropertyFormat.MultiSelect:
+                    return (
+                      <Form.TagPicker
+                        {...restItemProps}
+                        key={prop.key}
+                        title={title}
+                        value={value !== undefined ? (value as string[]) : undefined}
+                        placeholder="Add tags"
+                      >
+                        {tags.map((tag) => (
+                          <Form.TagPicker.Item
+                            key={tag.id}
+                            value={tag.id}
+                            title={tag.name}
+                            icon={{ source: "icons/type/pricetag.svg", tintColor: tag.color }}
+                          />
+                        ))}
+                      </Form.TagPicker>
+                    );
+                  case PropertyFormat.Date:
+                    return (
+                      <Form.DatePicker
+                        {...restItemProps}
+                        key={prop.key}
+                        title={title}
+                        value={value !== undefined ? (value as Date) : undefined}
+                      />
+                    );
+                  case PropertyFormat.Files:
+                    // TODO: implement
+                    return null;
+                  case PropertyFormat.Checkbox:
+                    return (
+                      <Form.Checkbox key={prop.key} {...restItemProps} title={title} label="" value={Boolean(value)} />
+                    );
+                  case PropertyFormat.Objects:
+                    return (
+                      // TODO: TagPicker would be the more appropriate component, but it does not support onSearchTextChange
+                      <Form.Dropdown
+                        {...restItemProps}
+                        key={prop.key}
+                        title={title}
+                        value={value !== undefined ? String(value) : undefined}
+                        onSearchTextChange={setObjectSearchText}
+                        throttle={true}
+                        placeholder={`Search objects in '${spaces.find((space) => space.id === selectedSpace)?.name}'...`}
+                      >
+                        {!objectSearchText && (
+                          <Form.Dropdown.Item
+                            key="none"
+                            value=""
+                            title="No Object"
+                            icon={{ source: "icons/type/document.svg", tintColor: defaultTintColor }}
+                          />
+                        )}
+                        {objects.map((object) => (
+                          <Form.Dropdown.Item
+                            key={object.id}
+                            value={object.id}
+                            title={object.name}
+                            icon={object.icon}
+                          />
+                        ))}
+                      </Form.Dropdown>
+                    );
+                  default:
+                    console.warn(`Unsupported property format: ${prop.format}`);
+                    return null;
                 }
-                return null;
               })}
             </>
           )}
