@@ -142,7 +142,7 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
   return {
     ...object,
     icon,
-    name: object.name || `${object.snippet.split("\n")[0]}...` || "Untitled",
+    name: object.name.trim() || `${object.snippet.split("\n")[0]}...` || "Untitled",
     type: await mapType(object.type),
     properties: mappedProperties,
   };

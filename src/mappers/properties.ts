@@ -11,7 +11,7 @@ export function mapProperties(properties: RawProperty[]): Property[] {
 export function mapProperty(property: RawProperty): Property {
   return {
     ...property,
-    name: property.name || "Untitled",
+    name: property.name.trim() || "Untitled",
     icon: getIconForProperty(property.format),
   };
 }
@@ -53,7 +53,7 @@ export function mapTags(tags: RawTag[]): Tag[] {
 export function mapTag(tag: RawTag): Tag {
   return {
     ...tag,
-    name: tag.name || "Untitled",
+    name: tag.name.trim() || "Untitled",
     color: colorToHex[tag.color] || tag.color,
   };
 }

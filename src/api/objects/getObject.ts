@@ -29,7 +29,7 @@ export async function getObjectWithoutMappedProperties(spaceId: string, objectId
   return {
     ...object,
     icon,
-    name: object.name || "Untitled",
+    name: object.name.trim() || "Untitled",
     type: await mapType(object.type),
     properties: [],
   };

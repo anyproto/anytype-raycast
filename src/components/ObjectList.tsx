@@ -145,7 +145,7 @@ export function ObjectList({ space }: ObjectListProps) {
       id: member.id,
       icon: member.icon,
       title: member.name,
-      subtitle: { value: member.global_name, tooltip: `Global Name: ${member.global_name}` },
+      subtitle: { value: member.global_name, tooltip: `ANY Name: ${member.global_name}` },
       accessories: [
         ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
         member.status === MemberStatus.Joining
