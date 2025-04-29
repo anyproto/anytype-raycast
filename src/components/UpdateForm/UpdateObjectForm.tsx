@@ -29,8 +29,9 @@ interface UpdateObjectFormValues {
 export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
   const [objectSearchText, setObjectSearchText] = useState("");
 
-  const properties =
-    object.properties.filter((p) => ![apiPropertyKeys.description, apiPropertyKeys.type].includes(p.key)) || [];
+  const properties = object.type.properties.filter(
+    (p) => ![apiPropertyKeys.description, apiPropertyKeys.type].includes(p.key),
+  );
 
   const numberFieldValidations = useMemo(() => getNumberFieldValidations(properties), [properties]);
 
