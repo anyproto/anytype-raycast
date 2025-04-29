@@ -4,10 +4,10 @@ import { apiEndpoints, apiFetch } from "../../utils";
 
 export async function createTag(
   spaceId: string,
-  propertyIdId: string,
+  propertyId: string,
   tagData: CreateTagRequest,
 ): Promise<{ tag: Tag | null }> {
-  const { url, method } = apiEndpoints.createTag(spaceId, propertyIdId);
+  const { url, method } = apiEndpoints.createTag(spaceId, propertyId);
 
   const response = await apiFetch<{ tag: RawTag }>(url, {
     method: method,
