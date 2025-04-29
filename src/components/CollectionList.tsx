@@ -5,7 +5,7 @@ import { EmptyViewObject, ObjectListItem, ViewType } from ".";
 import { useObjectsInList } from "../hooks";
 import { useListViews } from "../hooks/useListViews";
 import { Space, ViewLayout } from "../models";
-import { pluralize, processObject } from "../utils";
+import { isEmoji, pluralize, processObject } from "../utils";
 import { defaultTintColor } from "../utils/constant";
 
 type CollectionListProps = {
@@ -66,7 +66,12 @@ export function CollectionList({ space, listId, listName }: CollectionListProps)
       searchBarAccessory={
         <List.Dropdown tooltip="Change view" onChange={(newValue) => setViewId(newValue)}>
           {views.map((view) => (
-            <List.Dropdown.Item key={view.id} value={view.id} title={view.name} icon={resolveLayoutIcon(view.layout)} />
+            <List.Dropdown.Item
+              key={view.id}
+              value={view.id}
+              title={view.name}
+              icon={!isEmoji(view.name.split(" ")[0]) ? resolveLayoutIcon(view.layout) : undefined}
+            />
           ))}
         </List.Dropdown>
       }
