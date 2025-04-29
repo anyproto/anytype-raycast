@@ -1,12 +1,12 @@
 import { Icon, List } from "@raycast/api";
 import { showFailureToast } from "@raycast/utils";
 import { useEffect, useState } from "react";
-import { EmptyViewObject, ObjectListItem, ViewType } from ".";
-import { useObjectsInList } from "../hooks";
-import { useListViews } from "../hooks/useListViews";
-import { Space, ViewLayout } from "../models";
-import { isEmoji, pluralize, processObject } from "../utils";
-import { defaultTintColor } from "../utils/constant";
+import { EmptyViewObject, ObjectListItem, ViewType } from "..";
+import { useObjectsInList } from "../../hooks";
+import { useListViews } from "../../hooks/useListViews";
+import { Space, ViewLayout } from "../../models";
+import { isEmoji, pluralize, processObject } from "../../utils";
+import { defaultTintColor } from "../../utils/constant";
 
 type CollectionListProps = {
   space: Space;

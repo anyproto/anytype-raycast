@@ -1,12 +1,12 @@
 import { Action, ActionPanel, Icon, Keyboard, List, showToast, Toast } from "@raycast/api";
 import { showFailureToast } from "@raycast/utils";
 import { useEffect, useState } from "react";
-import { useTags } from "../hooks/useTags";
-import { Space } from "../models";
-import { hexToColor } from "../utils";
-import { CreateTagForm } from "./CreateForm/CreateTagForm";
-import { EmptyViewTag } from "./EmptyView/EmptyViewTag";
-import { UpdateTagForm } from "./UpdateForm/UpdateTagForm";
+import { useTags } from "../../hooks/useTags";
+import { Space } from "../../models";
+import { hexToColor } from "../../utils";
+import { CreateTagForm } from "../CreateForm/CreateTagForm";
+import { EmptyViewTag } from "../EmptyView/EmptyViewTag";
+import { UpdateTagForm } from "../UpdateForm/UpdateTagForm";
 
 interface TagListProps {
   space: Space;
