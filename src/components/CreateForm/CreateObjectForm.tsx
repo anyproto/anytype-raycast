@@ -394,7 +394,7 @@ It supports:
                         {...restItemProps}
                         title={title}
                         placeholder="Add text"
-                        value={value !== null ? String(value) : undefined}
+                        value={String(value ?? "")}
                       />
                     );
                   case PropertyFormat.Number:
@@ -404,7 +404,7 @@ It supports:
                         {...restItemProps}
                         title={title}
                         placeholder="Add number"
-                        value={value !== null ? String(value) : undefined}
+                        value={String(value ?? "")}
                       />
                     );
                   case PropertyFormat.Select:
@@ -413,7 +413,7 @@ It supports:
                         key={prop.key}
                         {...restItemProps}
                         title={title}
-                        value={value !== undefined ? String(value) : undefined}
+                        value={String(value ?? "")}
                         placeholder={`Select tags for '${title}'...`}
                       >
                         <Form.Dropdown.Item
@@ -438,7 +438,7 @@ It supports:
                         {...restItemProps}
                         key={prop.key}
                         title={title}
-                        value={value !== undefined ? (value as string[]) : undefined}
+                        value={Array.isArray(value) ? (value as string[]) : []}
                         placeholder="Add tags"
                       >
                         {tags.map((tag) => (
@@ -457,7 +457,7 @@ It supports:
                         {...restItemProps}
                         key={prop.key}
                         title={title}
-                        value={value !== undefined ? (value as Date) : undefined}
+                        defaultValue={value as Date | undefined}
                       />
                     );
                   case PropertyFormat.Files:
@@ -474,7 +474,7 @@ It supports:
                         {...restItemProps}
                         key={prop.key}
                         title={title}
-                        value={value !== undefined ? String(value) : undefined}
+                        value={String(value ?? "")}
                         onSearchTextChange={setObjectSearchText}
                         throttle={true}
                         placeholder={`Search objects in '${spaces.find((space) => space.id === selectedSpace)?.name}'...`}

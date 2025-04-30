@@ -244,7 +244,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
                 {...restItemProps}
                 title={prop.name}
                 placeholder="Add text"
-                value={value != null ? String(value) : undefined}
+                value={String(value ?? "")}
               />
             );
           case PropertyFormat.Number:
@@ -254,7 +254,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
                 {...restItemProps}
                 title={prop.name}
                 placeholder="Add number"
-                value={value != null ? String(value) : undefined}
+                value={String(value ?? "")}
               />
             );
           case PropertyFormat.Select:
@@ -263,7 +263,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
                 key={prop.key}
                 {...restItemProps}
                 title={prop.name}
-                value={value !== undefined ? String(value) : undefined}
+                value={String(value ?? "")}
                 placeholder={`Select tags for ${prop.name}`}
               >
                 <Form.Dropdown.Item
@@ -288,7 +288,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
                 key={prop.key}
                 {...restItemProps}
                 title={prop.name}
-                value={value !== undefined ? (value as string[]) : undefined}
+                value={Array.isArray(value) ? (value as string[]) : []}
                 placeholder="Add tags"
               >
                 {tags.map((tag) => (
@@ -307,7 +307,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
                 key={prop.key}
                 {...restItemProps}
                 title={prop.name}
-                value={value !== undefined ? (value as Date) : undefined}
+                defaultValue={value as Date | undefined}
               />
             );
           case PropertyFormat.Files:
@@ -323,7 +323,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
                 key={prop.key}
                 {...restItemProps}
                 title={prop.name}
-                value={value !== undefined ? String(value) : undefined}
+                value={String(value ?? "")}
                 onSearchTextChange={setObjectSearchText}
                 throttle={true}
                 placeholder="Select object"
