@@ -1,5 +1,6 @@
 import { LaunchProps } from "@raycast/api";
-import { CreateObjectForm, EnsureAuthenticated, FieldValue } from "./components";
+import { CreateObjectForm, EnsureAuthenticated } from "./components";
+import { PropertyFieldValue } from "./models";
 export interface CreateObjectFormValues {
   space?: string;
   type?: string;
@@ -20,7 +21,7 @@ export interface CreateObjectFormValues {
    * - "multi_select"     -> string[]
    * - "checkbox"         -> boolean
    */
-  [key: string]: FieldValue;
+  [key: string]: PropertyFieldValue;
 }
 
 interface LaunchContext {

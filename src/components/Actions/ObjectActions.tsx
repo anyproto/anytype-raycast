@@ -114,7 +114,12 @@ export function ObjectActions({
         pop(); // pop back to list view
       }
       try {
-        if (isProperty) {
+        if (isObject) {
+          await deleteObject(space.id, objectId);
+          // TODO: implement
+          // } else if (isType) {
+          //   await deleteType(space.id, objectId);
+        } else if (isProperty) {
           await deleteProperty(space.id, objectId);
         } else if (isTag) {
           await deleteTag(space.id, "", objectId); // TODO: fix property Id
