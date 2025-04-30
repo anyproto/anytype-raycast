@@ -1,7 +1,7 @@
 import { MutatePromise, useCachedPromise } from "@raycast/utils";
 import { getObject } from "../api";
 import { Member, Property, SpaceObject, Type } from "../models";
-import { ErrorWithStatus, getPinned, removePinned } from "../utils";
+import { errorConnectionMessage, ErrorWithStatus, getPinned, removePinned } from "../utils";
 
 export function usePinnedObjects(key: string) {
   const { data, error, isLoading, mutate } = useCachedPromise(
@@ -18,10 +18,12 @@ export function usePinnedObjects(key: string) {
             return response.object;
           } catch (error) {
             const typedError = error as ErrorWithStatus;
-            if (typedError.status === 404 || typedError.status === 410) {
+            if (typedError.message === errorConnectionMessage) {
+              throw error;
+            } else if (typedError.status === 404 || typedError.status === 410) {
               await removePinned(pinned.spaceId, pinned.objectId, key);
+              return null;
             }
-            return null;
           }
         }),
       );

@@ -1,6 +1,6 @@
 import { useCachedPromise } from "@raycast/utils";
 import { getProperty } from "../api";
-import { ErrorWithStatus, getPinned, removePinned } from "../utils";
+import { errorConnectionMessage, ErrorWithStatus, getPinned, removePinned } from "../utils";
 
 export function usePinnedProperties(key: string) {
   const { data, error, isLoading, mutate } = useCachedPromise(
@@ -18,10 +18,12 @@ export function usePinnedProperties(key: string) {
             return response.property;
           } catch (error) {
             const typedError = error as ErrorWithStatus;
-            if (typedError.status === 404 || typedError.status === 410) {
+            if (typedError.message === errorConnectionMessage) {
+              throw error;
+            } else if (typedError.status === 404 || typedError.status === 410) {
               await removePinned(pinned.spaceId, pinned.objectId, key);
+              return null;
             }
-            return null;
           }
         }),
       );
