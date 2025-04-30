@@ -73,9 +73,9 @@ export interface PropertyLinkWithValue {
   key: string;
   text?: string;
   number?: number;
-  select?: string;
+  select?: string | null;
   multi_select?: string[];
-  date?: string;
+  date?: string | null;
   files?: string[];
   checkbox?: boolean;
   url?: string;

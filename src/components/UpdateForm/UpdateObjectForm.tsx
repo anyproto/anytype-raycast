@@ -29,9 +29,7 @@ interface UpdateObjectFormValues {
 export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
   const [objectSearchText, setObjectSearchText] = useState("");
 
-  const properties = object.type.properties.filter(
-    (p) => ![apiPropertyKeys.description, apiPropertyKeys.type].includes(p.key),
-  );
+  const properties = object.type.properties.filter((p) => !Object.values(apiPropertyKeys).includes(p.key));
 
   const numberFieldValidations = useMemo(() => getNumberFieldValidations(properties), [properties]);
 
@@ -121,73 +119,50 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
         const propertiesEntries: PropertyLinkWithValue[] = [];
         properties.forEach((prop) => {
           const raw = itemProps[prop.key]?.value;
-          if (raw !== undefined) {
-            const entry: PropertyLinkWithValue = { key: prop.key };
-            switch (prop.format) {
-              case PropertyFormat.Text:
-                entry.text = String(raw);
-                break;
-              case PropertyFormat.Select:
-                entry.select = String(raw);
-                break;
-              case PropertyFormat.Url:
-                entry.url = String(raw);
-                break;
-              case PropertyFormat.Email:
-                entry.email = String(raw);
-                break;
-              case PropertyFormat.Phone:
-                entry.phone = String(raw);
-                break;
-              case PropertyFormat.Number:
-                entry.number = Number(raw);
-                break;
-              case PropertyFormat.MultiSelect:
-                entry.multi_select = raw as string[];
-                break;
-              case PropertyFormat.Date:
-                {
-                  const date = raw instanceof Date ? raw : new Date(String(raw));
-                  if (!isNaN(date.getTime())) {
-                    entry.date = formatRFC3339(date);
-                  } else {
-                    console.warn(`Invalid date value for property ${prop.key}:`, raw);
-                  }
-                }
-                break;
-              case PropertyFormat.Checkbox:
-                entry.checkbox = Boolean(raw);
-                break;
-              case PropertyFormat.Files: {
-                let filesValue: string[];
-                if (Array.isArray(raw)) {
-                  filesValue = raw as string[];
-                } else if (typeof raw === "string") {
-                  filesValue = raw ? [raw] : [];
-                } else {
-                  filesValue = [];
-                }
-                entry.files = filesValue;
-                break;
+          const entry: PropertyLinkWithValue = { key: prop.key };
+          switch (prop.format) {
+            case PropertyFormat.Text:
+              entry.text = String(raw);
+              break;
+            case PropertyFormat.Select:
+              entry.select = raw != null && raw !== "" ? String(raw) : null;
+              break;
+            case PropertyFormat.Url:
+              entry.url = String(raw);
+              break;
+            case PropertyFormat.Email:
+              entry.email = String(raw);
+              break;
+            case PropertyFormat.Phone:
+              entry.phone = String(raw);
+              break;
+            case PropertyFormat.Number:
+              entry.number = Number(raw);
+              break;
+            case PropertyFormat.MultiSelect:
+              entry.multi_select = Array.isArray(raw) ? (raw as string[]) : [];
+              break;
+            case PropertyFormat.Date:
+              if (raw instanceof Date) {
+                entry.date = formatRFC3339(raw);
+              } else {
+                entry.date = null;
               }
-              case PropertyFormat.Objects: {
-                let objectsValue: string[];
-                if (Array.isArray(raw)) {
-                  objectsValue = raw as string[];
-                } else if (typeof raw === "string") {
-                  objectsValue = raw ? [raw] : [];
-                } else {
-                  objectsValue = [];
-                }
-                entry.objects = objectsValue;
-                break;
-              }
-              default:
-                console.warn(`Unsupported property format: ${prop.format}`);
-                break;
-            }
-            propertiesEntries.push(entry);
+              break;
+            case PropertyFormat.Checkbox:
+              entry.checkbox = Boolean(raw);
+              break;
+            case PropertyFormat.Files:
+              entry.files = Array.isArray(raw) ? raw : typeof raw === "string" && raw ? [raw] : [];
+              break;
+            case PropertyFormat.Objects:
+              entry.objects = Array.isArray(raw) ? raw : typeof raw === "string" && raw ? [raw] : [];
+              break;
+            default:
+              console.warn(`Unsupported property format: ${prop.format}`);
+              break;
           }
+          propertiesEntries.push(entry);
         });
 
         const descriptionRaw = itemProps[apiPropertyKeys.description]?.value;

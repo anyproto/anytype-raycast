@@ -54,6 +54,7 @@ export function ObjectDetail({
     apiPropertyKeys.lastModifiedDate,
     apiPropertyKeys.lastOpenedDate,
     apiPropertyKeys.lastModifiedBy,
+    apiPropertyKeys.links,
   ]);
   const additionalProperties = properties.filter((property) => !excludedPropertyKeys.has(property.key));
 

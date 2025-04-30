@@ -42,11 +42,14 @@ export const apiKeyPrefixes = {
 export const apiPropertyKeys = {
   description: `${apiKeyPrefixes.properties}description`,
   type: `${apiKeyPrefixes.properties}type`,
-  createdDate: `${apiKeyPrefixes.properties}created_date`,
-  lastModifiedDate: `${apiKeyPrefixes.properties}last_modified_date`,
-  lastOpenedDate: `${apiKeyPrefixes.properties}last_opened_date`,
   addedDate: `${apiKeyPrefixes.properties}added_date`,
+  createdDate: `${apiKeyPrefixes.properties}created_date`,
+  createdBy: `${apiKeyPrefixes.properties}creator`,
+  lastModifiedDate: `${apiKeyPrefixes.properties}last_modified_date`,
   lastModifiedBy: `${apiKeyPrefixes.properties}last_modified_by`,
+  lastOpenedDate: `${apiKeyPrefixes.properties}last_opened_date`,
+  links: `${apiKeyPrefixes.properties}links`,
+  backlinks: `${apiKeyPrefixes.properties}backlinks`,
 };
 
 export const apiTypeKeys = {};
