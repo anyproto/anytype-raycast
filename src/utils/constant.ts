@@ -196,10 +196,6 @@ export const apiEndpoints = {
   }),
 
   // spaces
-  createSpace: {
-    url: `${apiUrl}/spaces`,
-    method: "POST",
-  },
   getSpace: (spaceId: string) => ({
     url: `${apiUrl}/spaces/${spaceId}`,
     method: "GET",
@@ -207,6 +203,14 @@ export const apiEndpoints = {
   getSpaces: (options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces${encodeQueryParams(options)}`,
     method: "GET",
+  }),
+  createSpace: {
+    url: `${apiUrl}/spaces`,
+    method: "POST",
+  },
+  updateSpace: (spaceId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}`,
+    method: "PATCH",
   }),
 
   // members

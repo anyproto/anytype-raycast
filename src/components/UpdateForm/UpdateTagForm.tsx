@@ -1,12 +1,12 @@
 import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
 import { showFailureToast, useForm } from "@raycast/utils";
-import { updateTag } from "../../api"; // ← use updateTag
+import { updateTag } from "../../api";
 import { Color, Tag } from "../../models";
 import { colorToHex, hexToColor } from "../../utils";
 
 export interface UpdateTagFormValues {
   name: string;
-  color?: string;
+  color: string;
 }
 
 interface UpdateTagFormProps {

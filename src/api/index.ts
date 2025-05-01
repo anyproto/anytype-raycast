@@ -24,6 +24,7 @@ export * from "./search/search";
 export * from "./spaces/createSpace";
 export * from "./spaces/getSpace";
 export * from "./spaces/getSpaces";
+export * from "./spaces/updateSpace";
 export * from "./tags/createTag";
 export * from "./tags/deleteTag";
 export * from "./tags/getTag";

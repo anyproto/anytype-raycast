@@ -1,6 +1,6 @@
 import { Action, ActionPanel, Clipboard, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise, showFailureToast } from "@raycast/utils";
-import { ObjectList } from "..";
+import { ObjectList, UpdateSpaceForm } from "..";
 import { Space } from "../../models";
 import {
   addPinned,
@@ -79,6 +79,13 @@ export function SpaceActions({ space, mutate, isPinned }: SpaceActionsProps) {
           url={spaceDeeplink}
         />
       </ActionPanel.Section>
+
+      <Action.Push
+        icon={Icon.Pencil}
+        title="Edit Space"
+        shortcut={Keyboard.Shortcut.Common.Edit}
+        target={<UpdateSpaceForm space={space} />}
+      />
 
       <Action
         icon={Icon.Link}

@@ -20,4 +20,5 @@ export * from "./ObjectListItem";
 export * from "./SpaceListItem";
 export * from "./UpdateForm/UpdateObjectForm";
 export * from "./UpdateForm/UpdatePropertyForm";
+export * from "./UpdateForm/UpdateSpaceForm";
 export * from "./UpdateForm/UpdateTagForm";
