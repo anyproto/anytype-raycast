@@ -17,8 +17,8 @@ export function usePinnedMembers(key: string) {
               throw error;
             } else if (typedError.status === 404 || typedError.status === 410) {
               await removePinned(pinned.spaceId, pinned.objectId, key);
-              return null;
             }
+            return null;
           }
         }),
       );
