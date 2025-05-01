@@ -24,6 +24,7 @@ type ObjectListItemProps = {
   isGlobalSearch: boolean;
   isNoPinView: boolean;
   isPinned: boolean;
+  searchText: string;
 };
 
 export function ObjectListItem({
@@ -41,6 +42,7 @@ export function ObjectListItem({
   isGlobalSearch,
   isNoPinView,
   isPinned,
+  searchText,
 }: ObjectListItemProps) {
   return (
     <List.Item
@@ -80,6 +82,7 @@ export function ObjectListItem({
           isGlobalSearch={isGlobalSearch}
           isNoPinView={isNoPinView}
           isPinned={isPinned}
+          searchText={searchText}
         />
       }
     />

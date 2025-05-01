@@ -15,6 +15,8 @@ import {
 import { MutatePromise, showFailureToast } from "@raycast/utils";
 import {
   CollectionList,
+  CreateObjectForm,
+  CreatePropertyForm,
   ListSubmenu,
   ObjectDetail,
   TagList,
@@ -53,6 +55,7 @@ type ObjectActionsProps = {
   isPinned: boolean;
   showDetails?: boolean;
   onToggleDetails?: () => void;
+  searchText?: string;
 };
 
 export function ObjectActions({
@@ -73,6 +76,7 @@ export function ObjectActions({
   isPinned,
   showDetails,
   onToggleDetails,
+  searchText,
 }: ObjectActionsProps) {
   const { pop, push } = useNavigation();
   const { primaryAction } = getPreferenceValues();
@@ -392,7 +396,7 @@ export function ObjectActions({
       </ActionPanel.Section>
 
       <ActionPanel.Section>
-        {isObject && (
+        {!isType && !isProperty && !isTag && !isMember && (
           <Action
             icon={Icon.Pencil}
             title={"Edit Object"}
@@ -463,6 +467,20 @@ export function ObjectActions({
       </ActionPanel.Section>
 
       <ActionPanel.Section>
+        <Action
+          icon={Icon.Plus}
+          title={`Create ${getContextLabel()}`}
+          shortcut={Keyboard.Shortcut.Common.New}
+          onAction={() => {
+            if (isObject) {
+              push(<CreateObjectForm draftValues={{ spaceId: space.id, name: searchText }} enableDrafts={false} />);
+            } else if (isType) {
+              // TODO
+            } else if (isProperty) {
+              push(<CreatePropertyForm spaceId={space.id} draftValues={{ name: searchText || "" }} />);
+            }
+          }}
+        />
         {isDetailView && (
           <Action
             icon={showDetails ? Icon.EyeDisabled : Icon.Eye}

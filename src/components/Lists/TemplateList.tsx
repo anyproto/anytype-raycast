@@ -77,6 +77,7 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
                   isGlobalSearch={isGlobalSearch}
                   isNoPinView={true}
                   isPinned={isPinned}
+                  searchText={searchText}
                 />
               }
             />
@@ -105,6 +106,7 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
               isGlobalSearch={isGlobalSearch}
               isNoPinView={true}
               isPinned={object.isPinned}
+              searchText={searchText}
             />
           ))}
         </List.Section>

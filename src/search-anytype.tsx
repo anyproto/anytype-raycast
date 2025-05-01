@@ -213,6 +213,7 @@ function Search() {
               isGlobalSearch={true}
               isNoPinView={false}
               isPinned={object.isPinned}
+              searchText={searchText}
             />
           ))}
         </List.Section>
@@ -238,6 +239,7 @@ function Search() {
               isGlobalSearch={true}
               isNoPinView={false}
               isPinned={object.isPinned}
+              searchText={searchText}
             />
           ))}
         </List.Section>

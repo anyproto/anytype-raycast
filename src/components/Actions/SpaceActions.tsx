@@ -121,7 +121,7 @@ export function SpaceActions({ space, mutate, isPinned, searchText }: SpaceActio
       <ActionPanel.Section>
         <Action.Push
           icon={Icon.Plus}
-          title="Create New Space"
+          title="Create Space"
           shortcut={Keyboard.Shortcut.Common.New}
           target={<CreateSpaceForm draftValues={{ name: searchText }} />}
         />

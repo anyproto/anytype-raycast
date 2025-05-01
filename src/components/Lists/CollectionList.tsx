@@ -98,6 +98,7 @@ export function CollectionList({ space, listId, listName }: CollectionListProps)
               isGlobalSearch={false}
               isNoPinView={true}
               isPinned={object.isPinned}
+              searchText={searchText}
             />
           ))}
         </List.Section>

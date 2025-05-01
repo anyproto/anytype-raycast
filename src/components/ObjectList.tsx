@@ -304,6 +304,7 @@ export function ObjectList({ space }: ObjectListProps) {
               isGlobalSearch={false}
               isNoPinView={false}
               isPinned={item.isPinned}
+              searchText={searchText}
             />
           ))}
         </List.Section>
@@ -329,6 +330,7 @@ export function ObjectList({ space }: ObjectListProps) {
               isGlobalSearch={false}
               isNoPinView={false}
               isPinned={item.isPinned}
+              searchText={searchText}
             />
           ))}
         </List.Section>
