@@ -3,13 +3,6 @@ import { ObjectLayout, Space, SpaceObject, Type } from "../models";
 import { apiKeyPrefixes, apiLimitMax } from "../utils";
 
 /**
- * Checks if a given `Type` is a list type.
- */
-export function typeIsList(layout: ObjectLayout | undefined): boolean {
-  return layout === ObjectLayout.Set || layout === ObjectLayout.Collection;
-}
-
-/**
  * Fetches all `Type`s from a single space, doing pagination if necessary.
  */
 export async function fetchAllTypesForSpace(spaceId: string): Promise<Type[]> {

@@ -7,6 +7,7 @@ import {
   getPreferenceValues,
   Icon,
   Keyboard,
+  open,
   showToast,
   Toast,
   useNavigation,
@@ -30,8 +31,8 @@ import {
   moveDownInPinned,
   moveUpInPinned,
   pluralize,
+  propKeys,
   removePinned,
-  typeIsList,
 } from "../../utils";
 
 type ObjectActionsProps = {
@@ -87,7 +88,8 @@ export function ObjectActions({
   const isMember = viewType === ViewType.members;
 
   const isDetailView = objectExport !== undefined;
-  const isList = typeIsList(layout);
+  const isList = layout === ObjectLayout.Set || layout === ObjectLayout.Collection;
+  const isBookmark = layout === ObjectLayout.Bookmark;
   const hasTags =
     isProperty && ((object as Property).format === "select" || (object as Property).format === "multi_select");
 
@@ -314,7 +316,7 @@ export function ObjectActions({
   //     }
   //   }
 
-  const canShowDetails = !isType && !isProperty && !isList && !isDetailView;
+  const canShowDetails = !isType && !isProperty && !isList && !isBookmark && !isDetailView;
   const showDetailsAction = canShowDetails && (
     <Action.Push
       icon={{ source: Icon.Sidebar }}
@@ -367,6 +369,24 @@ export function ObjectActions({
         )}
         {hasTags && (
           <Action.Push icon={Icon.Tag} title="Show Tags" target={<TagList space={space} propertyId={objectId} />} />
+        )}
+        {isBookmark && (
+          <Action
+            icon={Icon.Bookmark}
+            title="Open Bookmark in Browser"
+            onAction={async () => {
+              const url = (object as SpaceObject).properties.find((p) => p.key === propKeys.source)?.url;
+              if (url) {
+                open(url);
+              } else {
+                await showToast({
+                  title: "Missing URL",
+                  message: "Cannot open bookmark without a source URL.",
+                  style: Toast.Style.Failure,
+                });
+              }
+            }}
+          />
         )}
         {secondPrimaryAction}
       </ActionPanel.Section>
