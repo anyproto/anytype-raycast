@@ -124,7 +124,7 @@ export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
           }
           break;
         default:
-          console.warn(`Unknown property format: ${property.format}`);
+          console.warn(`Unknown property format: '${property.format}' for property '${property.key}'`);
       }
 
       return mappedProperty;

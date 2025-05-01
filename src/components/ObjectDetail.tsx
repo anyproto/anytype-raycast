@@ -15,7 +15,7 @@ import {
   SpaceObject,
   Type,
 } from "../models";
-import { apiPropertyKeys, injectEmojiIntoHeading } from "../utils";
+import { bundledPropKeys, injectEmojiIntoHeading } from "../utils";
 
 type ObjectDetailProps = {
   space: Space;
@@ -50,11 +50,11 @@ export function ObjectDetail({
   const [showDetails, setShowDetails] = useState(true);
   const properties = object?.properties || [];
   const excludedPropertyKeys = new Set([
-    apiPropertyKeys.addedDate,
-    apiPropertyKeys.lastModifiedDate,
-    apiPropertyKeys.lastOpenedDate,
-    apiPropertyKeys.lastModifiedBy,
-    apiPropertyKeys.links,
+    bundledPropKeys.addedDate,
+    bundledPropKeys.lastModifiedDate,
+    bundledPropKeys.lastOpenedDate,
+    bundledPropKeys.lastModifiedBy,
+    bundledPropKeys.links,
   ]);
   const additionalProperties = properties.filter((property) => !excludedPropertyKeys.has(property.key));
 
@@ -96,8 +96,8 @@ export function ObjectDetail({
 
     // For properties in the 'text' group, ensure that 'description' comes first
     if (aGroup === PropertyFormat.Text && bGroup === PropertyFormat.Text) {
-      if (a.key === apiPropertyKeys.description && b.key !== apiPropertyKeys.description) return -1;
-      if (b.key === apiPropertyKeys.description && a.key !== apiPropertyKeys.description) return 1;
+      if (a.key === bundledPropKeys.description && b.key !== bundledPropKeys.description) return -1;
+      if (b.key === bundledPropKeys.description && a.key !== bundledPropKeys.description) return 1;
     }
 
     return a.name.localeCompare(b.name);
@@ -114,14 +114,14 @@ export function ObjectDetail({
           text={{
             value: property.text
               ? property.text
-              : property.key === apiPropertyKeys.description
+              : property.key === bundledPropKeys.description
                 ? "No description"
                 : "No text",
             color: property.text ? Color.PrimaryText : Color.SecondaryText,
           }}
           icon={{
             source:
-              property.key === apiPropertyKeys.description
+              property.key === bundledPropKeys.description
                 ? "icons/property/description.svg"
                 : "icons/property/text.svg",
             tintColor: { light: "grey", dark: "grey" },
@@ -394,7 +394,7 @@ export function ObjectDetail({
       </Detail.Metadata.TagList>
     );
 
-    const descIndex = renderedDetailComponents.findIndex((el) => el.key === apiPropertyKeys.description);
+    const descIndex = renderedDetailComponents.findIndex((el) => el.key === bundledPropKeys.description);
     if (descIndex >= 0) {
       renderedDetailComponents.splice(descIndex + 1, 0, typeTag);
     } else {

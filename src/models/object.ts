@@ -14,7 +14,6 @@ export interface CreateObjectRequest {
   name: string;
   icon: ObjectIcon;
   body: string;
-  source: string;
   template_id: string;
   type_key: string;
   properties: PropertyLinkWithValue[];

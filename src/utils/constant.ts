@@ -39,7 +39,7 @@ export const apiKeyPrefixes = {
 };
 
 // API Property/Type Keys
-export const apiPropertyKeys = {
+export const bundledPropKeys = {
   description: `${apiKeyPrefixes.properties}description`,
   type: `${apiKeyPrefixes.properties}type`,
   addedDate: `${apiKeyPrefixes.properties}added_date`,
@@ -50,6 +50,10 @@ export const apiPropertyKeys = {
   lastOpenedDate: `${apiKeyPrefixes.properties}last_opened_date`,
   links: `${apiKeyPrefixes.properties}links`,
   backlinks: `${apiKeyPrefixes.properties}backlinks`,
+};
+
+export const propKeys = {
+  source: `${apiKeyPrefixes.properties}source`,
 };
 
 export const apiTypeKeys = {};

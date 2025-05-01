@@ -1,7 +1,7 @@
 import { Tool } from "@raycast/api";
 import { createObject, getSpace, getType } from "../api";
 import { IconFormat, PropertyLinkWithValue } from "../models";
-import { apiPropertyKeys } from "../utils";
+import { bundledPropKeys, propKeys } from "../utils";
 
 type Input = {
   /**
@@ -68,8 +68,15 @@ export default async function tool({ spaceId, type_key, name, icon, description,
   const propertyEntries: PropertyLinkWithValue[] = [];
   if (description) {
     propertyEntries.push({
-      key: apiPropertyKeys.description,
+      key: bundledPropKeys.description,
       text: description,
+    });
+  }
+
+  if (source) {
+    propertyEntries.push({
+      key: propKeys.source,
+      url: source,
     });
   }
 
@@ -77,7 +84,6 @@ export default async function tool({ spaceId, type_key, name, icon, description,
     name: name || "",
     icon: { format: IconFormat.Emoji, emoji: icon || "" },
     body: body || "",
-    source: source || "",
     template_id: "", // not supported here
     type_key: type_key,
     properties: propertyEntries,

@@ -13,11 +13,12 @@ import {
   PropertyLinkWithValue,
 } from "../../models";
 import {
-  apiPropertyKeys,
+  bundledPropKeys,
   defaultTintColor,
   fetchTypeKeysForLists,
   getNumberFieldValidations,
   isEmoji,
+  propKeys,
 } from "../../utils";
 
 interface CreateObjectFormProps {
@@ -58,7 +59,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
   const selectedTypeDef = types.find((type) => type.id === selectedType);
   const properties =
     selectedTypeDef?.properties.filter(
-      (prop) => ![apiPropertyKeys.description, apiPropertyKeys.type].includes(prop.key),
+      (prop) => ![bundledPropKeys.description, bundledPropKeys.type].includes(prop.key),
     ) || []; // handle description and type separately
   const { tagsMap = {} } = useTagsMap(
     selectedSpace,
@@ -139,11 +140,19 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
           }
         });
 
-        const descriptionValue = itemProps[apiPropertyKeys.description]?.value;
+        const descriptionValue = itemProps[bundledPropKeys.description]?.value;
         if (descriptionValue !== undefined && descriptionValue !== null && descriptionValue !== "") {
           propertiesEntries.push({
-            key: apiPropertyKeys.description,
+            key: bundledPropKeys.description,
             text: String(descriptionValue),
+          });
+        }
+
+        const sourceValue = itemProps[propKeys.source]?.value;
+        if (sourceValue !== undefined && sourceValue !== null && sourceValue !== "") {
+          propertiesEntries.push({
+            key: propKeys.source,
+            url: String(sourceValue),
           });
         }
 
@@ -151,7 +160,6 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
           name: values.name || "",
           icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
           body: values.body || "",
-          source: values.source || "",
           template_id: values.template || "",
           type_key: selectedTypeUniqueKey,
           properties: propertiesEntries,

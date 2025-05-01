@@ -12,7 +12,7 @@ import {
   RawSpaceObjectWithBlocks,
   UpdateObjectRequest,
 } from "../../models";
-import { apiPropertyKeys, defaultTintColor, getNumberFieldValidations, isEmoji } from "../../utils";
+import { bundledPropKeys, defaultTintColor, getNumberFieldValidations, isEmoji } from "../../utils";
 
 interface UpdateObjectFormProps {
   spaceId: string;
@@ -29,7 +29,7 @@ interface UpdateObjectFormValues {
 export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
   const [objectSearchText, setObjectSearchText] = useState("");
 
-  const properties = object.type.properties.filter((p) => !Object.values(apiPropertyKeys).includes(p.key));
+  const properties = object.type.properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key));
 
   const numberFieldValidations = useMemo(() => getNumberFieldValidations(properties), [properties]);
 
@@ -101,7 +101,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
     {} as Record<string, PropertyFieldValue>,
   );
 
-  const descriptionEntry = object.properties.find((p) => p.key === apiPropertyKeys.description);
+  const descriptionEntry = object.properties.find((p) => p.key === bundledPropKeys.description);
 
   const initialValues: UpdateObjectFormValues = {
     name: object.name,
@@ -165,10 +165,10 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
           propertiesEntries.push(entry);
         });
 
-        const descriptionRaw = itemProps[apiPropertyKeys.description]?.value;
+        const descriptionRaw = itemProps[bundledPropKeys.description]?.value;
         if (descriptionRaw !== undefined && descriptionRaw !== null) {
           propertiesEntries.push({
-            key: apiPropertyKeys.description,
+            key: bundledPropKeys.description,
             text: String(descriptionRaw),
           });
         }
