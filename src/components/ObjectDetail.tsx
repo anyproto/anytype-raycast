@@ -2,6 +2,7 @@ import { Color, Detail, getPreferenceValues, useNavigation } from "@raycast/api"
 import { MutatePromise, showFailureToast } from "@raycast/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import removeMd from "remove-markdown";
 import { ObjectActions, TemplateList, ViewType } from ".";
 import { useExport, useObject } from "../hooks";
 import {
@@ -404,6 +405,15 @@ export function ObjectDetail({
 
   const markdown = objectExport?.markdown ?? "";
   const updatedMarkdown = injectEmojiIntoHeading(markdown, object?.icon);
+
+  const plainText = removeMd(updatedMarkdown);
+  const wordCount = plainText.split(/\s+/).filter((word) => word).length;
+  const charCount = plainText.replace(/\s+/g, "").length;
+  renderedDetailComponents.push(<Detail.Metadata.Separator key="separator-wordcount" />);
+  renderedDetailComponents.push(<Detail.Metadata.Label key="word-count" title="Word Count" text={String(wordCount)} />);
+  renderedDetailComponents.push(
+    <Detail.Metadata.Label key="char-count" title="Character Count" text={String(charCount)} />,
+  );
 
   return (
     <Detail
