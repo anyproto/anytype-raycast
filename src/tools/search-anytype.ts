@@ -1,5 +1,5 @@
 import { globalSearch } from "../api";
-import { SortDirection, SortProperty } from "../models";
+import { SortDirection, SortOptions, SortProperty } from "../models";
 import { apiLimit } from "../utils";
 
 type Input = {
@@ -34,7 +34,7 @@ type Input = {
      * This value can be "last_modified_date", "last_opened_date", "created_date" or "name".
      * Default value is "last_modified_date".
      */
-    property?: SortProperty;
+    propertyKey?: SortProperty;
   };
 };
 
@@ -46,8 +46,8 @@ type Input = {
  */
 export default async function tool({ query, types, sort }: Input) {
   types = types ?? [];
-  const sortOptions = {
-    property: sort?.property ?? SortProperty.LastModifiedDate,
+  const sortOptions: SortOptions = {
+    property_key: sort?.propertyKey ?? SortProperty.LastModifiedDate,
     direction: sort?.direction ?? SortDirection.Descending,
   };
 

@@ -14,7 +14,7 @@ export function useSearch(spaceId: string, query: string, types: string[], confi
 
       const response = await search(
         spaceId,
-        { query, types, sort: { property: sortPreference, direction: sortDirection } },
+        { query, types, sort: { property_key: sortPreference, direction: sortDirection } },
         { offset, limit: apiLimit },
       );
 
