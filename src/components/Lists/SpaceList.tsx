@@ -89,6 +89,7 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
                 ]}
                 mutate={[mutateSpaces, mutatePinnedSpaces]}
                 isPinned={true}
+                searchText={searchText}
               />
             );
           })}
@@ -115,6 +116,7 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
                 ]}
                 mutate={[mutateSpaces, mutatePinnedSpaces]}
                 isPinned={false}
+                searchText={searchText}
               />
             );
           })}

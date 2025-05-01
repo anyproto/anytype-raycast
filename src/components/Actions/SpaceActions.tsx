@@ -1,6 +1,6 @@
 import { Action, ActionPanel, Clipboard, Icon, Keyboard, showToast, Toast } from "@raycast/api";
 import { MutatePromise, showFailureToast } from "@raycast/utils";
-import { ObjectList, UpdateSpaceForm } from "..";
+import { CreateSpaceForm, ObjectList, UpdateSpaceForm } from "..";
 import { Space } from "../../models";
 import {
   addPinned,
@@ -15,9 +15,10 @@ type SpaceActionsProps = {
   space: Space;
   mutate: MutatePromise<Space[]>[];
   isPinned: boolean;
+  searchText: string;
 };
 
-export function SpaceActions({ space, mutate, isPinned }: SpaceActionsProps) {
+export function SpaceActions({ space, mutate, isPinned, searchText }: SpaceActionsProps) {
   const spaceDeeplink = anytypeSpaceDeeplink(space.id);
   const pinSuffix = localStorageKeys.suffixForSpaces;
 
@@ -118,6 +119,12 @@ export function SpaceActions({ space, mutate, isPinned }: SpaceActionsProps) {
       )}
 
       <ActionPanel.Section>
+        <Action.Push
+          icon={Icon.Plus}
+          title="Create New Space"
+          shortcut={Keyboard.Shortcut.Common.New}
+          target={<CreateSpaceForm draftValues={{ name: searchText }} />}
+        />
         <Action
           icon={Icon.RotateClockwise}
           title="Refresh Spaces"
