@@ -1,5 +1,4 @@
-import { showToast, Toast } from "@raycast/api";
-import { useCachedPromise } from "@raycast/utils";
+import { showFailureToast, useCachedPromise } from "@raycast/utils";
 import { useEffect, useMemo, useState } from "react";
 import { CreateObjectFormValues } from "../create-object";
 import { fetchAllTemplatesForSpace, fetchAllTypesForSpace } from "../utils";
@@ -12,6 +11,7 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
   const [selectedTemplate, setSelectedTemplate] = useState(initialValues?.template || "");
   const [selectedList, setSelectedList] = useState(initialValues?.list || "");
   const [listSearchText, setListSearchText] = useState("");
+  const [objectSearchText, setObjectSearchText] = useState("");
 
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
   const {
@@ -52,23 +52,24 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
     initialData: [],
   });
 
+  const { objects, objectsError, isLoadingObjects } = useSearch(selectedSpace, objectSearchText, []);
+
   useEffect(() => {
-    if (spacesError || typesError || templatesError || listsError) {
-      showToast(
-        Toast.Style.Failure,
-        "Failed to fetch latest data",
-        spacesError?.message || typesError?.message || templatesError?.message || listsError?.message,
-      );
+    if (spacesError || typesError || templatesError || listsError || objectsError) {
+      showFailureToast(spacesError || typesError || templatesError || listsError || objectsError, {
+        title: "Failed to fetch latest data",
+      });
     }
   }, [spacesError, typesError, templatesError, listsError]);
 
-  const isLoading = isLoadingSpaces || isLoadingTypes || isLoadingTemplates || isLoadingLists;
+  const isLoading = isLoadingSpaces || isLoadingTypes || isLoadingTemplates || isLoadingLists || isLoadingObjects;
 
   return {
     spaces,
     types,
     templates,
     lists,
+    objects,
     selectedSpace,
     setSelectedSpace,
     selectedType,
@@ -79,6 +80,8 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
     setSelectedList,
     listSearchText,
     setListSearchText,
+    objectSearchText,
+    setObjectSearchText,
     isLoading,
   };
 }

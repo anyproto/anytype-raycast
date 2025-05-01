@@ -13,7 +13,7 @@ export const downloadUrl = "https://download.anytype.io/";
 export const anytypeSpaceDeeplink = (spaceId: string) => `anytype://main/object/_blank_/space.id/${spaceId}`;
 
 // Numbers
-export const currentApiVersion = "2025-03-17";
+export const currentApiVersion = "2025-04-22";
 export const apiLimit = getPreferenceValues().limit;
 export const apiLimitMax = 1000;
 export const iconWidth = 64;
@@ -32,8 +32,34 @@ export const localStorageKeys = {
   },
 };
 
+export const apiKeyPrefixes = {
+  properties: "",
+  types: "ot-", // TODO: change to "type_" when API is updated
+  tags: "",
+};
+
+// API Property/Type Keys
+export const bundledPropKeys = {
+  description: `${apiKeyPrefixes.properties}description`,
+  type: `${apiKeyPrefixes.properties}type`,
+  addedDate: `${apiKeyPrefixes.properties}added_date`,
+  createdDate: `${apiKeyPrefixes.properties}created_date`,
+  createdBy: `${apiKeyPrefixes.properties}creator`,
+  lastModifiedDate: `${apiKeyPrefixes.properties}last_modified_date`,
+  lastModifiedBy: `${apiKeyPrefixes.properties}last_modified_by`,
+  lastOpenedDate: `${apiKeyPrefixes.properties}last_opened_date`,
+  links: `${apiKeyPrefixes.properties}links`,
+  backlinks: `${apiKeyPrefixes.properties}backlinks`,
+};
+
+export const propKeys = {
+  source: `${apiKeyPrefixes.properties}source`,
+};
+
+export const apiTypeKeys = {};
+
 // Colors
-export const colorMap: { [key: string]: string } = {
+export const colorToHex: { [key: string]: string } = {
   grey: "#b6b6b6",
   yellow: "#ecd91b",
   orange: "#ffb522",
@@ -44,6 +70,18 @@ export const colorMap: { [key: string]: string } = {
   ice: "#2aa7ee",
   teal: "#0fc8ba",
   lime: "#5dd400",
+};
+export const hexToColor: { [key: string]: string } = {
+  "#b6b6b6": "grey",
+  "#ecd91b": "yellow",
+  "#ffb522": "orange",
+  "#f55522": "red",
+  "#e51ca0": "pink",
+  "#ab50cc": "purple",
+  "#3e58eb": "blue",
+  "#2aa7ee": "ice",
+  "#0fc8ba": "teal",
+  "#5dd400": "lime",
 };
 export const defaultTintColor = { light: "black", dark: "white" };
 
@@ -57,12 +95,6 @@ export const apiEndpoints = {
   getToken: (challengeId: string, code: string) => ({
     url: `${apiUrl}/auth/token?challenge_id=${challengeId}&code=${code}`,
     method: "POST",
-  }),
-
-  // export
-  getExport: (spaceId: string, objectId: string, format: string) => ({
-    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}/${format}`,
-    method: "GET",
   }),
 
   // lists
@@ -84,14 +116,6 @@ export const apiEndpoints = {
   }),
 
   // objects
-  createObject: (spaceId: string) => ({
-    url: `${apiUrl}/spaces/${spaceId}/objects`,
-    method: "POST",
-  }),
-  deleteObject: (spaceId: string, objectId: string) => ({
-    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
-    method: "DELETE",
-  }),
   getObject: (spaceId: string, objectId: string) => ({
     url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
     method: "GET",
@@ -99,6 +123,66 @@ export const apiEndpoints = {
   getObjects: (spaceId: string, options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces/${spaceId}/objects${encodeQueryParams(options)}`,
     method: "GET",
+  }),
+  createObject: (spaceId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects`,
+    method: "POST",
+  }),
+  updateObject: (spaceId: string, objectId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
+    method: "PATCH",
+  }),
+  deleteObject: (spaceId: string, objectId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
+    method: "DELETE",
+  }),
+  getExport: (spaceId: string, objectId: string, format: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}/${format}`,
+    method: "GET",
+  }),
+
+  // properties
+  getProperties: (spaceId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties${encodeQueryParams(options)}`,
+    method: "GET",
+  }),
+  getProperty: (spaceId: string, propertyId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}`,
+    method: "GET",
+  }),
+  createProperty: (spaceId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties`,
+    method: "POST",
+  }),
+  updateProperty: (spaceId: string, propertyId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}`,
+    method: "PATCH",
+  }),
+  deleteProperty: (spaceId: string, propertyId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}`,
+    method: "DELETE",
+  }),
+
+  // tags
+  getTags: (spaceId: string, propertyId: string, options: { offset: number; limit: number }) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/tags${encodeQueryParams(options)}`,
+    method: "GET",
+  }),
+  getTag: (spaceId: string, propertyId: string, tagId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/tags/${tagId}`,
+    method: "GET",
+  }),
+  createTag: (spaceId: string, propertyId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/tags`,
+    method: "POST",
+  }),
+  updateTag: (spaceId: string, propertyId: string, tagId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/tags/${tagId}`,
+    method: "PATCH",
+  }),
+  deleteTag: (spaceId: string, propertyId: string, tagId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/properties/${propertyId}/tags/${tagId}`,
+    method: "DELETE",
   }),
 
   // search
@@ -112,10 +196,6 @@ export const apiEndpoints = {
   }),
 
   // spaces
-  createSpace: {
-    url: `${apiUrl}/spaces`,
-    method: "POST",
-  },
   getSpace: (spaceId: string) => ({
     url: `${apiUrl}/spaces/${spaceId}`,
     method: "GET",
@@ -123,6 +203,14 @@ export const apiEndpoints = {
   getSpaces: (options: { offset: number; limit: number }) => ({
     url: `${apiUrl}/spaces${encodeQueryParams(options)}`,
     method: "GET",
+  }),
+  createSpace: {
+    url: `${apiUrl}/spaces`,
+    method: "POST",
+  },
+  updateSpace: (spaceId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}`,
+    method: "PATCH",
   }),
 
   // members

@@ -1,6 +1,7 @@
 import { Tool } from "@raycast/api";
 import { createObject, getSpace, getType } from "../api";
-import { IconFormat } from "../models";
+import { IconFormat, PropertyLinkWithValue } from "../models";
+import { bundledPropKeys, propKeys } from "../utils";
 
 type Input = {
   /**
@@ -63,14 +64,29 @@ type Input = {
  * When creating objects of type 'ot-bookmark', ensure the source URL is provided. The icon, name, and description should not be manually set, as they will be automatically populated upon fetching the URL.
  */
 export default async function tool({ spaceId, type_key, name, icon, description, body, source }: Input) {
+  // TODO: implement properties key-value parsing
+  const propertyEntries: PropertyLinkWithValue[] = [];
+  if (description) {
+    propertyEntries.push({
+      key: bundledPropKeys.description,
+      text: description,
+    });
+  }
+
+  if (source) {
+    propertyEntries.push({
+      key: propKeys.source,
+      url: source,
+    });
+  }
+
   const { object } = await createObject(spaceId, {
     name: name || "",
     icon: { format: IconFormat.Emoji, emoji: icon || "" },
-    description: description || "",
     body: body || "",
-    source: source || "",
     template_id: "", // not supported here
     type_key: type_key,
+    properties: propertyEntries,
   });
 
   if (!object) {
