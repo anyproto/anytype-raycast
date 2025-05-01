@@ -30,15 +30,10 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
   const [objectSearchText, setObjectSearchText] = useState("");
 
   const properties = object.type.properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key));
-
   const numberFieldValidations = useMemo(() => getNumberFieldValidations(properties), [properties]);
 
   const { objects, objectsError, isLoadingObjects } = useSearch(spaceId, objectSearchText, []);
-  const {
-    tagsMap = {},
-    tagsError,
-    isLoadingTags,
-  } = useTagsMap(
+  const { tagsMap, tagsError, isLoadingTags } = useTagsMap(
     spaceId,
     properties
       .filter((prop) => prop.format === PropertyFormat.Select || prop.format === PropertyFormat.MultiSelect)
@@ -227,7 +222,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
       <Form.Separator />
 
       {properties.map((prop) => {
-        const tags = tagsMap[prop.id] ?? [];
+        const tags = (tagsMap && tagsMap[prop.id]) ?? [];
         const id = prop.key;
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

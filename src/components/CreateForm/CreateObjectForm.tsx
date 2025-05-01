@@ -57,11 +57,8 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
   );
 
   const selectedTypeDef = types.find((type) => type.id === selectedType);
-  const properties =
-    selectedTypeDef?.properties.filter(
-      (prop) => ![bundledPropKeys.description, bundledPropKeys.type].includes(prop.key),
-    ) || []; // handle description and type separately
-  const { tagsMap = {} } = useTagsMap(
+  const properties = selectedTypeDef?.properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key)) || [];
+  const { tagsMap } = useTagsMap(
     selectedSpace,
     properties
       .filter((prop) => prop.format === PropertyFormat.Select || prop.format === PropertyFormat.MultiSelect)
@@ -384,7 +381,7 @@ It supports:
               <Form.Separator />
 
               {properties.map((prop) => {
-                const tags = tagsMap[prop.id] ?? [];
+                const tags = (tagsMap && tagsMap[prop.id]) ?? [];
                 const id = prop.key;
                 const title = prop.name;
 
