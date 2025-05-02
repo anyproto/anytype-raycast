@@ -27,7 +27,7 @@ import {
   UpdateTypeForm,
   ViewType,
 } from "..";
-import { deleteObject, deleteProperty, deleteTag, getRawObject, getRawType } from "../../api";
+import { deleteObject, deleteProperty, deleteTag, deleteType, getRawObject, getRawType } from "../../api";
 import { Export, Member, ObjectLayout, Property, Space, SpaceObject, Type, View } from "../../models";
 import {
   addPinned,
@@ -124,9 +124,8 @@ export function ObjectActions({
       try {
         if (isObject) {
           await deleteObject(space.id, objectId);
-          // TODO: implement
-          // } else if (isType) {
-          //   await deleteType(space.id, objectId);
+        } else if (isType) {
+          await deleteType(space.id, objectId);
         } else if (isProperty) {
           await deleteProperty(space.id, objectId);
         } else if (isTag) {
