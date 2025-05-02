@@ -46,7 +46,7 @@ type ObjectActionsProps = {
   objectExport?: Export;
   mutate?: MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>[];
   mutateTemplates?: MutatePromise<SpaceObject[]>;
-  mutateObject?: MutatePromise<SpaceObject | null | undefined>;
+  mutateObject?: MutatePromise<SpaceObject | undefined>;
   mutateExport?: MutatePromise<Export | undefined>;
   mutateViews?: MutatePromise<View[]>;
   layout: ObjectLayout | undefined;

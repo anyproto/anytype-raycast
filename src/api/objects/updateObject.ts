@@ -6,9 +6,7 @@ export async function updateObject(
   spaceId: string,
   objectId: string,
   data: UpdateObjectRequest,
-): Promise<{
-  object: SpaceObject | null;
-}> {
+): Promise<{ object: SpaceObject }> {
   const { url, method } = apiEndpoints.updateObject(spaceId, objectId);
 
   const response = await apiFetch<{ object: RawSpaceObject }>(url, {
@@ -16,7 +14,5 @@ export async function updateObject(
     body: JSON.stringify(data),
   });
 
-  return {
-    object: response ? await mapObject(response.payload.object) : null,
-  };
+  return { object: await mapObject(response.payload.object) };
 }

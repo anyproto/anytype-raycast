@@ -24,12 +24,6 @@ export default async function tool({ spaceId, objectId }: Input) {
   const { object } = await getObject(spaceId, objectId);
   const { markdown } = await getExport(spaceId, objectId, ExportFormat.Markdown);
 
-  if (!object) {
-    return {
-      markdown,
-    };
-  }
-
   const results = {
     object: object.object,
     name: object.name,

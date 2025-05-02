@@ -2,12 +2,12 @@ import { mapType } from "../../mappers/types";
 import { RawType, Type } from "../../models";
 import { apiEndpoints, apiFetch } from "../../utils";
 
-export async function deleteType(spaceId: string, typeId: string): Promise<Type | null> {
+export async function deleteType(spaceId: string, typeId: string): Promise<Type> {
   const { url, method } = apiEndpoints.deleteType(spaceId, typeId);
 
   const response = await apiFetch<{ type: RawType }>(url, {
     method: method,
   });
 
-  return response ? mapType(response.payload.type) : null;
+  return mapType(response.payload.type);
 }

@@ -174,13 +174,10 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
           properties: propertiesEntries,
         };
 
-        const resp = await updateObject(spaceId, object.id, payload);
-        if (resp.object?.id) {
-          await showToast(Toast.Style.Success, "Object updated");
-          popToRoot();
-        } else {
-          await showToast(Toast.Style.Failure, "Update failed");
-        }
+        await updateObject(spaceId, object.id, payload);
+
+        await showToast(Toast.Style.Success, "Object updated");
+        popToRoot();
       } catch (error) {
         await showFailureToast(error, { title: "Failed to update object" });
       }

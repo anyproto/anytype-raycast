@@ -11,7 +11,7 @@ export function usePinnedObjects(key: string) {
         pinnedObjects.map(async (pinned) => {
           try {
             const response = await getObject(pinned.spaceId, pinned.objectId);
-            if (response.object?.archived) {
+            if (response.object.archived) {
               await removePinned(pinned.spaceId, pinned.objectId, key);
               return null;
             }

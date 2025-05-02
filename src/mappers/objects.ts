@@ -145,11 +145,7 @@ export async function mapObjectWithoutDetails(spaceId: string, object: string[])
   return await Promise.all(
     rawItems.map(async (item) => {
       if (typeof item === "string") {
-        const fetched = await getObjectWithoutMappedProperties(spaceId, item);
-        if (!fetched) {
-          throw new Error(`getRawObject returned null for item ${item}`);
-        }
-        return fetched;
+        return await getObjectWithoutMappedProperties(spaceId, item);
       } else {
         return item;
       }
