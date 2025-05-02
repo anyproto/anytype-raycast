@@ -468,20 +468,22 @@ export function ObjectActions({
       </ActionPanel.Section>
 
       <ActionPanel.Section>
-        <Action
-          icon={Icon.Plus}
-          title={`Create ${getContextLabel()}`}
-          shortcut={Keyboard.Shortcut.Common.New}
-          onAction={() => {
-            if (isObject) {
-              push(<CreateObjectForm draftValues={{ spaceId: space.id, name: searchText }} enableDrafts={false} />);
-            } else if (isType) {
-              push(<CreateTypeForm draftValues={{ space: space.id, name: searchText || "" }} />);
-            } else if (isProperty) {
-              push(<CreatePropertyForm spaceId={space.id} draftValues={{ name: searchText || "" }} />);
-            }
-          }}
-        />
+        {!isMember && (
+          <Action
+            icon={Icon.Plus}
+            title={`Create ${getContextLabel()}`}
+            shortcut={Keyboard.Shortcut.Common.New}
+            onAction={() => {
+              if (isType) {
+                push(<CreateTypeForm draftValues={{ space: space.id, name: searchText || "" }} />);
+              } else if (isProperty) {
+                push(<CreatePropertyForm spaceId={space.id} draftValues={{ name: searchText || "" }} />);
+              } else {
+                push(<CreateObjectForm draftValues={{ spaceId: space.id, name: searchText }} enableDrafts={false} />);
+              }
+            }}
+          />
+        )}
         {isDetailView && (
           <Action
             icon={showDetails ? Icon.EyeDisabled : Icon.Eye}
