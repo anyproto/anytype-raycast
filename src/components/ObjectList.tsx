@@ -1,7 +1,7 @@
 import { Icon, List } from "@raycast/api";
 import { MutatePromise, showFailureToast } from "@raycast/utils";
 import { useEffect, useState } from "react";
-import { EmptyViewObject, EmptyViewProperty, ObjectListItem } from ".";
+import { EmptyViewObject, EmptyViewProperty, EmptyViewType, ObjectListItem } from ".";
 import {
   useMembers,
   usePinnedMembers,
@@ -337,6 +337,16 @@ export function ObjectList({ space }: ObjectListProps) {
       ) : (
         (() => {
           switch (currentView) {
+            case ViewType.types:
+              return (
+                <EmptyViewType
+                  title={`No ${currentView.charAt(0).toUpperCase() + currentView.slice(1)} Found`}
+                  contextValues={{
+                    space: space.id,
+                    name: searchText,
+                  }}
+                />
+              );
             case ViewType.properties:
               return (
                 <EmptyViewProperty

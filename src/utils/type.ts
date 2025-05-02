@@ -92,7 +92,9 @@ export async function fetchTypeKeysForPages(
  */
 export async function fetchTypesKeysForTasks(spaces: Space[]): Promise<string[]> {
   const tasksTypes = await getAllTypesFromSpaces(spaces);
-  const taskTypeKeys = new Set(tasksTypes.filter((type) => type.layout === ObjectLayout.Todo).map((type) => type.key));
+  const taskTypeKeys = new Set(
+    tasksTypes.filter((type) => type.layout === ObjectLayout.Action).map((type) => type.key),
+  );
   return Array.from(taskTypeKeys);
 }
 

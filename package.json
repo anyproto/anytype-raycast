@@ -122,7 +122,7 @@
               "name": "Task",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1mm",
               "type_key": "ot-task",
-              "recommended_layout": "todo"
+              "layout": "action"
             }
           ],
           "search-space": [
@@ -233,7 +233,7 @@
               "name": "Page",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1pp",
               "type_key": "ot-page",
-              "recommended_layout": "basic"
+              "layout": "basic"
             }
           ],
           "create-object": [
@@ -489,7 +489,7 @@
               "name": "Page",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1pp",
               "type_key": "ot-page",
-              "recommended_layout": "basic"
+              "layout": "basic"
             }
           ]
         },

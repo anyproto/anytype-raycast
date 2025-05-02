@@ -51,7 +51,7 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
  */
 async function fallbackToLayout(layout: string): Promise<Image.ImageLike> {
   switch (layout) {
-    case ObjectLayout.Todo:
+    case ObjectLayout.Action:
       return getCustomTypeIcon("checkbox", "grey");
     case ObjectLayout.Set:
     case ObjectLayout.Collection:

@@ -31,5 +31,8 @@ export * from "./tags/getTag";
 export * from "./tags/getTags";
 export * from "./tags/updateTag";
 export * from "./templates/getTemplates";
+export * from "./types/createType";
+export * from "./types/deleteType";
 export * from "./types/getType";
 export * from "./types/getTypes";
+export * from "./types/updateType";

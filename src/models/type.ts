@@ -1,10 +1,17 @@
 import { Image } from "@raycast/api";
 import { ObjectIcon, PropertyLink, RawProperty } from ".";
 
+export enum TypeLayout {
+  Basic = "basic",
+  Profile = "profile",
+  Action = "action",
+  Note = "note",
+}
+
 export enum ObjectLayout {
   Basic = "basic",
   Profile = "profile",
-  Todo = "todo",
+  Action = "action",
   Note = "note",
   Bookmark = "bookmark",
   Set = "set",
@@ -12,17 +19,10 @@ export enum ObjectLayout {
   Participant = "participant",
 }
 
-export enum TypeLayout {
-  Basic = "basic",
-  Profile = "profile",
-  Todo = "todo",
-  Note = "note",
-}
-
 export interface CreateTypeRequest {
   name: string;
   plural_name: string;
-  icon: string;
+  icon: ObjectIcon;
   Layout: TypeLayout;
   Properties: PropertyLink[];
 }

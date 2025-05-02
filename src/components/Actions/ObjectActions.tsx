@@ -17,6 +17,7 @@ import {
   CollectionList,
   CreateObjectForm,
   CreatePropertyForm,
+  CreateTypeForm,
   ListSubmenu,
   ObjectDetail,
   TagList,
@@ -475,7 +476,7 @@ export function ObjectActions({
             if (isObject) {
               push(<CreateObjectForm draftValues={{ spaceId: space.id, name: searchText }} enableDrafts={false} />);
             } else if (isType) {
-              // TODO
+              push(<CreateTypeForm draftValues={{ space: space.id, name: searchText || "" }} />);
             } else if (isProperty) {
               push(<CreatePropertyForm spaceId={space.id} draftValues={{ name: searchText || "" }} />);
             }

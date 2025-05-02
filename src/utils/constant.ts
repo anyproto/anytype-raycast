@@ -237,6 +237,18 @@ export const apiEndpoints = {
     url: `${apiUrl}/spaces/${spaceId}/types${encodeQueryParams(options)}`,
     method: "GET",
   }),
+  createType: (spaceId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/types`,
+    method: "POST",
+  }),
+  updateType: (spaceId: string, typeId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/types/${typeId}`,
+    method: "PATCH",
+  }),
+  deleteType: (spaceId: string, typeId: string) => ({
+    url: `${apiUrl}/spaces/${spaceId}/types/${typeId}`,
+    method: "DELETE",
+  }),
 
   // templates
   getTemplate: (spaceId: string, typeId: string, templateId: string) => ({
