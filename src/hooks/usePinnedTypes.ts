@@ -10,7 +10,7 @@ export function usePinnedTypes(key: string) {
         pinnedTypes.map(async (pinned) => {
           try {
             const response = await getType(pinned.spaceId, pinned.objectId);
-            if (response.type?.archived) {
+            if (response.type.archived) {
               await removePinned(pinned.spaceId, pinned.objectId, key);
               return null;
             }

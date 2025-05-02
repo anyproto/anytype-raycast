@@ -85,7 +85,7 @@ export function CreateTypeForm({ draftValues }: CreateTypeFormProps) {
       </Form.Dropdown>
       <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" />
       <Form.TextField {...itemProps.plural_name} title="Plural Name" placeholder="Add plural name" />
-      <Form.TextField {...itemProps.icon} title="Icon" placeholder="Add an emoji" />
+      <Form.TextField {...itemProps.icon} title="Icon" placeholder="Add emoji" />
       <Form.Dropdown id={itemProps.layout.id} title="Layout">
         {layoutKeys.map((layout) => {
           const value = TypeLayout[layout];

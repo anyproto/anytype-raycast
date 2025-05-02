@@ -14,16 +14,16 @@ import {
 } from "../../models";
 import { bundledPropKeys, defaultTintColor, getNumberFieldValidations, isEmoji } from "../../utils";
 
-interface UpdateObjectFormProps {
-  spaceId: string;
-  object: RawSpaceObjectWithBlocks;
-}
-
 interface UpdateObjectFormValues {
   name?: string;
   icon?: string;
   description?: string;
   [key: string]: PropertyFieldValue;
+}
+
+interface UpdateObjectFormProps {
+  spaceId: string;
+  object: RawSpaceObjectWithBlocks;
 }
 
 export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
@@ -217,7 +217,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
       {!["ot-task", "ot-note", "ot-profile"].includes(object.type.key) && (
         <Form.TextField {...itemProps.icon} title="Icon" />
       )}
-      <Form.TextField {...itemProps.description} title="Description" placeholder="Add a brief description" />
+      <Form.TextField {...itemProps.description} title="Description" placeholder="Add description" />
 
       <Form.Separator />
 

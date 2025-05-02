@@ -345,7 +345,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
                 <Form.TextField
                   {...itemProps.name}
                   title="Name"
-                  placeholder="Add a name"
+                  placeholder="Add name"
                   info="Enter the name of the object"
                 />
               )}
@@ -353,14 +353,14 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
                 <Form.TextField
                   {...itemProps.icon}
                   title="Icon"
-                  placeholder="Add an emoji"
+                  placeholder="Add emoji"
                   info="Enter a single emoji character to represent the object"
                 />
               )}
               <Form.TextField
                 {...itemProps.description}
                 title="Description"
-                placeholder="Add a description"
+                placeholder="Add description"
                 info="Provide a brief description of the object"
               />
               {!typeKeysForLists.includes(selectedTypeUniqueKey) && (

@@ -30,7 +30,7 @@ export interface CreateTypeRequest {
 export interface UpdateTypeRequest {
   name?: string;
   plural_name?: string;
-  icon?: string;
+  icon?: ObjectIcon;
   layout?: TypeLayout;
   properties?: PropertyLink[];
 }
@@ -40,6 +40,7 @@ export interface RawType {
   id: string;
   key: string;
   name: string;
+  plural_name: string;
   icon: ObjectIcon;
   layout: ObjectLayout;
   archived: boolean;

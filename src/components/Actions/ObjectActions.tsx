@@ -24,9 +24,10 @@ import {
   TemplateList,
   UpdateObjectForm,
   UpdatePropertyForm,
+  UpdateTypeForm,
   ViewType,
 } from "..";
-import { deleteObject, deleteProperty, deleteTag, getRawObject } from "../../api";
+import { deleteObject, deleteProperty, deleteTag, getRawObject, getRawType } from "../../api";
 import { Export, Member, ObjectLayout, Property, Space, SpaceObject, Type, View } from "../../models";
 import {
   addPinned,
@@ -405,6 +406,17 @@ export function ObjectActions({
             onAction={async () => {
               const { object } = await getRawObject(space.id, objectId);
               push(<UpdateObjectForm spaceId={space.id} object={object} />);
+            }}
+          />
+        )}
+        {isType && (
+          <Action
+            icon={Icon.Pencil}
+            title={"Edit Type"}
+            shortcut={Keyboard.Shortcut.Common.Edit}
+            onAction={async () => {
+              const { type } = await getRawType(space.id, objectId);
+              push(<UpdateTypeForm spaceId={space.id} type={type} />);
             }}
           />
         )}
