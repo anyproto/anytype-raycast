@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { addObjectsToList } from "./api";
 import { EnsureAuthenticated } from "./components/EnsureAuthenticated";
 import { useObjectsInList, useSearch, useSpaces } from "./hooks";
+import { bundledTypeKeys } from "./utils";
 
 export interface AddToListValues {
   space: string;
@@ -32,7 +33,7 @@ export function AddToList() {
     objects: lists,
     objectsError: listsError,
     isLoadingObjects: isLoadingLists,
-  } = useSearch(selectedSpace, listSearchText, ["ot-collection"]);
+  } = useSearch(selectedSpace, listSearchText, [bundledTypeKeys.collection]);
   const { objects, objectsError, isLoadingObjects } = useSearch(selectedSpace, objectSearchText, []);
   const {
     objects: listItems,

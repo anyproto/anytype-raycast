@@ -12,7 +12,7 @@ type Input = {
   /**
    * The types of objects to search for, identified by their type_key or id.
    * This value can be obtained from the `getTypes` tool.
-   * When user asks for 'list' objects, search for 'ot-set' and 'ot-collection' types.
+   * When user asks for 'list' objects, search for 'set' and 'collection' types.
    * If no types are specified, the search will include all types of objects.
    */
   types?: string[];

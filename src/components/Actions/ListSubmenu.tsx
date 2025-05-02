@@ -3,6 +3,7 @@ import { showFailureToast } from "@raycast/utils";
 import { useState } from "react";
 import { addObjectsToList } from "../../api";
 import { useSearch } from "../../hooks";
+import { bundledTypeKeys } from "../../utils";
 
 interface ListSubmenuProps {
   spaceId: string;
@@ -11,7 +12,7 @@ interface ListSubmenuProps {
 
 export function ListSubmenu({ spaceId, objectId }: ListSubmenuProps) {
   const [load, setLoad] = useState(false);
-  const { objects: lists, isLoadingObjects } = useSearch(spaceId, "", ["ot-collection"], { execute: load });
+  const { objects: lists, isLoadingObjects } = useSearch(spaceId, "", [bundledTypeKeys.collection], { execute: load });
   const filteredLists = lists.filter((list) => list.id !== objectId);
 
   async function handleAddToList(listId: string) {

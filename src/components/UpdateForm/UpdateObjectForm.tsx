@@ -12,7 +12,7 @@ import {
   RawSpaceObjectWithBlocks,
   UpdateObjectRequest,
 } from "../../models";
-import { bundledPropKeys, defaultTintColor, getNumberFieldValidations, isEmoji } from "../../utils";
+import { bundledPropKeys, bundledTypeKeys, defaultTintColor, getNumberFieldValidations, isEmoji } from "../../utils";
 
 interface UpdateObjectFormValues {
   name?: string;
@@ -185,7 +185,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
     validation: {
       name: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : "";
-        if (!["ot-bookmark", "ot-note"].includes(object.type.key) && !s) {
+        if (![bundledTypeKeys.bookmark, bundledTypeKeys.note].includes(object.type.key) && !s) {
           return "Name is required";
         }
       },
@@ -208,10 +208,10 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
         </ActionPanel>
       }
     >
-      {!["ot-note"].includes(object.type.key) && (
+      {![bundledTypeKeys.note].includes(object.type.key) && (
         <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" />
       )}
-      {!["ot-task", "ot-note", "ot-profile"].includes(object.type.key) && (
+      {![bundledTypeKeys.task, bundledTypeKeys.note, bundledTypeKeys.profile].includes(object.type.key) && (
         <Form.TextField {...itemProps.icon} title="Icon" />
       )}
       <Form.TextField {...itemProps.description} title="Description" placeholder="Add description" />

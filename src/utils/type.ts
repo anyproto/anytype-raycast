@@ -1,6 +1,6 @@
 import { getTemplates, getTypes } from "../api";
 import { ObjectLayout, Space, SpaceObject, Type } from "../models";
-import { apiKeyPrefixes, apiLimitMax } from "../utils";
+import { apiKeyPrefixes, apiLimitMax, bundledTypeKeys } from "../utils";
 
 /**
  * Fetches all `Type`s from a single space, doing pagination if necessary.
@@ -64,20 +64,20 @@ export async function fetchTypeKeysForPages(
 ): Promise<string[]> {
   const excludedKeysForPages = new Set([
     // not shown anywhere
-    "ot-audio",
-    "ot-chat",
-    "ot-file",
-    "ot-image",
-    "ot-objectType",
-    "ot-tag",
-    "ot-template",
-    "ot-video",
+    bundledTypeKeys.audio,
+    bundledTypeKeys.chat,
+    bundledTypeKeys.file,
+    bundledTypeKeys.image,
+    bundledTypeKeys.object_type,
+    bundledTypeKeys.tag,
+    bundledTypeKeys.template,
+    bundledTypeKeys.video,
 
     // shown in other views
-    "ot-set",
-    "ot-collection",
-    "ot-bookmark",
-    "ot-participant",
+    bundledTypeKeys.set,
+    bundledTypeKeys.collection,
+    bundledTypeKeys.bookmark,
+    bundledTypeKeys.participant,
     ...typeKeysForTasks,
     ...typeKeysForLists,
   ]);

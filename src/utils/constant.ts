@@ -34,7 +34,7 @@ export const localStorageKeys = {
 
 export const apiKeyPrefixes = {
   properties: "",
-  types: "ot-", // TODO: remove when API is updated
+  types: "",
   tags: "",
 };
 
@@ -56,7 +56,24 @@ export const propKeys = {
   source: `${apiKeyPrefixes.properties}source`,
 };
 
-export const apiTypeKeys = {};
+export const bundledTypeKeys = {
+  audio: `${apiKeyPrefixes.types}audio`,
+  bookmark: `${apiKeyPrefixes.types}bookmark`,
+  chat: `${apiKeyPrefixes.types}chat`,
+  collection: `${apiKeyPrefixes.types}collection`,
+  file: `${apiKeyPrefixes.types}file`,
+  note: `${apiKeyPrefixes.types}note`,
+  image: `${apiKeyPrefixes.types}image`,
+  object_type: `${apiKeyPrefixes.types}object_type`,
+  page: `${apiKeyPrefixes.types}page`,
+  participant: `${apiKeyPrefixes.types}participant`,
+  profile: `${apiKeyPrefixes.types}profile`,
+  set: `${apiKeyPrefixes.types}set`,
+  tag: `${apiKeyPrefixes.types}tag`,
+  task: `${apiKeyPrefixes.types}task`,
+  template: `${apiKeyPrefixes.types}template`,
+  video: `${apiKeyPrefixes.types}video`,
+};
 
 // Colors
 export const colorToHex: { [key: string]: string } = {

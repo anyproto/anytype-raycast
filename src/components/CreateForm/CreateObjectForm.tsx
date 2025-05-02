@@ -14,6 +14,7 @@ import {
 } from "../../models";
 import {
   bundledPropKeys,
+  bundledTypeKeys,
   defaultTintColor,
   fetchTypeKeysForLists,
   getNumberFieldValidations,
@@ -184,7 +185,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     validation: {
       name: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : undefined;
-        if (!["ot-bookmark", "ot-note"].includes(selectedTypeUniqueKey) && !s) {
+        if (![bundledTypeKeys.bookmark, bundledTypeKeys.note].includes(selectedTypeUniqueKey) && !s) {
           return "Name is required";
         }
       },
@@ -195,7 +196,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       },
       source: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : undefined;
-        if (selectedTypeUniqueKey === "ot-bookmark" && !s) {
+        if (selectedTypeUniqueKey === bundledTypeKeys.bookmark && !s) {
           return "Source is required for Bookmarks";
         }
       },
@@ -332,7 +333,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
 
       {hasSelectedSpaceAndType && (
         <>
-          {selectedTypeUniqueKey === "ot-bookmark" ? (
+          {selectedTypeUniqueKey === bundledTypeKeys.bookmark ? (
             <Form.TextField
               {...itemProps.source}
               title="URL"
@@ -341,7 +342,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
             />
           ) : (
             <>
-              {!["ot-note"].includes(selectedTypeUniqueKey) && (
+              {![bundledTypeKeys.note].includes(selectedTypeUniqueKey) && (
                 <Form.TextField
                   {...itemProps.name}
                   title="Name"
@@ -349,7 +350,9 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
                   info="Enter the name of the object"
                 />
               )}
-              {!["ot-task", "ot-note", "ot-profile"].includes(selectedTypeUniqueKey) && (
+              {![bundledTypeKeys.task, bundledTypeKeys.note, bundledTypeKeys.profile].includes(
+                selectedTypeUniqueKey,
+              ) && (
                 <Form.TextField
                   {...itemProps.icon}
                   title="Icon"

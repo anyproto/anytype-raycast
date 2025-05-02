@@ -1,7 +1,7 @@
 import { showFailureToast, useCachedPromise } from "@raycast/utils";
 import { useEffect, useMemo, useState } from "react";
 import { CreateObjectFormValues } from "../create-object";
-import { fetchAllTemplatesForSpace, fetchAllTypesForSpace } from "../utils";
+import { bundledTypeKeys, fetchAllTemplatesForSpace, fetchAllTypesForSpace } from "../utils";
 import { useSearch } from "./useSearch";
 import { useSpaces } from "./useSpaces";
 
@@ -18,18 +18,18 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
     objects: lists,
     objectsError: listsError,
     isLoadingObjects: isLoadingLists,
-  } = useSearch(selectedSpace, listSearchText, ["ot-collection"]);
+  } = useSearch(selectedSpace, listSearchText, [bundledTypeKeys.collection]);
 
   const restrictedTypes = [
-    "ot-audio",
-    "ot-chat",
-    "ot-file",
-    "ot-image",
-    "ot-objectType",
-    "ot-tag",
-    "ot-template",
-    "ot-video",
-    "ot-participant",
+    bundledTypeKeys.audio,
+    bundledTypeKeys.chat,
+    bundledTypeKeys.file,
+    bundledTypeKeys.image,
+    bundledTypeKeys.object_type,
+    bundledTypeKeys.tag,
+    bundledTypeKeys.template,
+    bundledTypeKeys.video,
+    bundledTypeKeys.participant,
   ];
 
   const {

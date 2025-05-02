@@ -5,6 +5,7 @@ import { EmptyViewObject, EnsureAuthenticated, ObjectListItem, ViewType } from "
 import { useGlobalSearch, usePinnedObjects, useSpaces } from "./hooks";
 import { SpaceObject } from "./models";
 import {
+  bundledTypeKeys,
   defaultTintColor,
   fetchTypeKeysForLists,
   fetchTypeKeysForPages,
@@ -90,7 +91,7 @@ function Search() {
       [ViewType.pages]: typeKeysForPages,
       [ViewType.tasks]: typeKeysForTasks,
       [ViewType.lists]: typeKeysForLists,
-      [ViewType.bookmarks]: ["ot-bookmark"],
+      [ViewType.bookmarks]: [bundledTypeKeys.bookmark],
     };
     setTypes(viewToType[currentView] ?? []);
   }, [currentView, typeKeysForPages, typeKeysForTasks]);

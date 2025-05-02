@@ -121,7 +121,7 @@
               "object": "type",
               "name": "Task",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1mm",
-              "type_key": "ot-task",
+              "type_key": "task",
               "layout": "action"
             }
           ],
@@ -180,15 +180,15 @@
                 "types": {
                   "or": [
                     {
-                      "includes": "ot-task"
+                      "includes": "task"
                     },
                     {
                       "includes": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1mm"
                     },
                     {
                       "includes": [
-                        "ot-collection",
-                        "ot-set"
+                        "collection",
+                        "set"
                       ]
                     }
                   ]
@@ -232,7 +232,7 @@
               "object": "type",
               "name": "Page",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1pp",
-              "type_key": "ot-page",
+              "type_key": "page",
               "layout": "basic"
             }
           ],
@@ -245,7 +245,7 @@
               "type": {
                 "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1mm",
                 "name": "Page",
-                "type_key": "ot-page"
+                "type_key": "page"
               },
               "snippet": "This is the snippet of the object."
             }
@@ -271,7 +271,7 @@
               "name": "create-object",
               "arguments": {
                 "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
-                "type_key": "ot-page",
+                "type_key": "page",
                 "name": {
                   "includes": "Privacy"
                 }
@@ -488,7 +488,7 @@
               "object": "type",
               "name": "Page",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1pp",
-              "type_key": "ot-page",
+              "type_key": "page",
               "layout": "basic"
             }
           ]
