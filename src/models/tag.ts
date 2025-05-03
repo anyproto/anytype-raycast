@@ -12,6 +12,7 @@ export interface UpdateTagRequest {
 
 export interface RawTag {
   id: string;
+  key: string;
   name: string;
   color: Color;
 }
