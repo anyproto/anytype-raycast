@@ -71,8 +71,9 @@ export interface PropertyLink {
 
 export interface PropertyLinkWithValue {
   key: string;
+  format: PropertyFormat;
   text?: string;
-  number?: number;
+  number?: number | null;
   select?: string | null;
   multi_select?: string[];
   date?: string | null;

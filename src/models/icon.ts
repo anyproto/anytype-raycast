@@ -17,10 +17,20 @@ export enum Color {
   Lime = "lime",
 }
 
-export interface ObjectIcon {
-  format: IconFormat;
-  emoji?: string;
-  file?: string;
-  name?: string;
+export interface EmojiIcon {
+  format: IconFormat.Emoji;
+  emoji: string;
+}
+
+export interface FileIcon {
+  format: IconFormat.File;
+  file: string;
+}
+
+export interface NamedIcon {
+  format: IconFormat.Icon;
+  name: string;
   color?: Color | string;
 }
+
+export type ObjectIcon = EmojiIcon | FileIcon | NamedIcon;

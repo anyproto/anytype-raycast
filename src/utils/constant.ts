@@ -50,9 +50,6 @@ export const bundledPropKeys = {
   lastOpenedDate: `${apiKeyPrefixes.properties}last_opened_date`,
   links: `${apiKeyPrefixes.properties}links`,
   backlinks: `${apiKeyPrefixes.properties}backlinks`,
-};
-
-export const propKeys = {
   source: `${apiKeyPrefixes.properties}source`,
 };
 

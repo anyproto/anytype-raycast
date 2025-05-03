@@ -1,7 +1,7 @@
 import { Tool } from "@raycast/api";
 import { createObject, getSpace, getType } from "../api";
-import { IconFormat, PropertyLinkWithValue } from "../models";
-import { bundledPropKeys, propKeys } from "../utils";
+import { IconFormat, PropertyFormat, PropertyLinkWithValue } from "../models";
+import { bundledPropKeys } from "../utils";
 
 type Input = {
   /**
@@ -69,13 +69,15 @@ export default async function tool({ spaceId, type_key, name, icon, description,
   if (description) {
     propertyEntries.push({
       key: bundledPropKeys.description,
+      format: PropertyFormat.Text,
       text: description,
     });
   }
 
   if (source) {
     propertyEntries.push({
-      key: propKeys.source,
+      key: bundledPropKeys.source,
+      format: PropertyFormat.Url,
       url: source,
     });
   }

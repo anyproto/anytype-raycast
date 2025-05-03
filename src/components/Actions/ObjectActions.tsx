@@ -31,11 +31,11 @@ import { deleteObject, deleteProperty, deleteTag, deleteType, getRawObject, getR
 import { Export, Member, ObjectLayout, Property, Space, SpaceObject, Type, View } from "../../models";
 import {
   addPinned,
+  bundledPropKeys,
   localStorageKeys,
   moveDownInPinned,
   moveUpInPinned,
   pluralize,
-  propKeys,
   removePinned,
 } from "../../utils";
 
@@ -380,7 +380,7 @@ export function ObjectActions({
             icon={Icon.Bookmark}
             title="Open Bookmark in Browser"
             onAction={async () => {
-              const url = (object as SpaceObject).properties.find((p) => p.key === propKeys.source)?.url;
+              const url = (object as SpaceObject).properties.find((p) => p.key === bundledPropKeys.source)?.url;
               if (url) {
                 open(url);
               } else {

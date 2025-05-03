@@ -100,7 +100,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
 
   const initialValues: UpdateObjectFormValues = {
     name: object.name,
-    icon: object.icon?.emoji ?? "",
+    icon: object.icon.format === IconFormat.Emoji ? object.icon.emoji : "",
     description: descriptionEntry?.text ?? "",
     ...initialPropertyValues,
   };
@@ -114,7 +114,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
         const propertiesEntries: PropertyLinkWithValue[] = [];
         properties.forEach((prop) => {
           const raw = itemProps[prop.key]?.value;
-          const entry: PropertyLinkWithValue = { key: prop.key };
+          const entry: PropertyLinkWithValue = { key: prop.key, format: prop.format };
           switch (prop.format) {
             case PropertyFormat.Text:
               entry.text = String(raw);
@@ -132,7 +132,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
               entry.phone = String(raw);
               break;
             case PropertyFormat.Number:
-              entry.number = Number(raw);
+              entry.number = raw != null && raw !== "" ? Number(raw) : null;
               break;
             case PropertyFormat.MultiSelect:
               entry.multi_select = Array.isArray(raw) ? (raw as string[]) : [];
@@ -164,6 +164,7 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
         if (descriptionRaw !== undefined && descriptionRaw !== null) {
           propertiesEntries.push({
             key: bundledPropKeys.description,
+            format: PropertyFormat.Text,
             text: String(descriptionRaw),
           });
         }

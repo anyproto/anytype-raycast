@@ -1,7 +1,7 @@
 import { getPreferenceValues } from "@raycast/api";
 import { getObjectWithoutMappedProperties } from "../api";
 import { PropertyFormat, PropertyWithValue, RawSpaceObject, SortProperty, SpaceObject } from "../models";
-import { getIconWithFallback, propKeys } from "../utils";
+import { bundledPropKeys, getIconWithFallback } from "../utils";
 import { mapTag } from "./properties";
 import { mapType } from "./types";
 
@@ -25,7 +25,7 @@ export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject
               // When sorting by name, keep the 'LastModifiedDate' property for tooltip purposes
               return property.key === SortProperty.LastModifiedDate;
             }
-            return property.key === sort || property.key === propKeys.source;
+            return property.key === sort || property.key === bundledPropKeys.source; // keep source to open bookmarks in browser
           }) || []) as PropertyWithValue[],
         ),
       };
