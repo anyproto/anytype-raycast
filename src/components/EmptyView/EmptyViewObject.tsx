@@ -9,9 +9,9 @@ type EmptyViewObjectProps = {
 
 export function EmptyViewObject({ title, contextValues }: EmptyViewObjectProps) {
   const draftValues: CreateObjectFormValues = {
-    space: contextValues.space,
-    type: contextValues.type,
-    list: contextValues.list,
+    spaceId: contextValues.spaceId,
+    typeId: contextValues.typeId,
+    listId: contextValues.listId,
     name: contextValues.name,
     icon: contextValues.icon,
     description: contextValues.description,

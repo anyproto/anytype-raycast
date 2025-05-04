@@ -116,8 +116,8 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
         <EmptyViewObject
           title="No templates or objects found"
           contextValues={{
-            space: space.id,
-            type: typeId,
+            spaceId: space.id,
+            typeId: typeId,
             name: searchText,
           }}
         />

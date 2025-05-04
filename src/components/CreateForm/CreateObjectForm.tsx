@@ -33,14 +33,14 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     templates,
     lists,
     objects,
-    selectedSpace,
-    setSelectedSpace,
-    selectedType,
-    setSelectedType,
-    selectedTemplate,
-    setSelectedTemplate,
-    selectedList,
-    setSelectedList,
+    selectedSpaceId,
+    setSelectedSpaceId,
+    selectedTypeId,
+    setSelectedTypeId,
+    selectedTemplateId,
+    setSelectedTemplateId,
+    selectedListId,
+    setSelectedListId,
     listSearchText,
     setListSearchText,
     objectSearchText,
@@ -50,16 +50,14 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
 
   const [loading, setLoading] = useState(false);
   const [typeKeysForLists, setTypeKeysForLists] = useState<string[]>([]);
-  const hasSelectedSpaceAndType = selectedSpace && selectedType;
-  const selectedTypeUniqueKey = useMemo(
-    () => types.reduce((acc, type) => (type.id === selectedType ? type.key : acc), ""),
-    [types, selectedType],
-  );
 
-  const selectedTypeDef = types.find((type) => type.id === selectedType);
+  const selectedTypeDef = types.find((type) => type.id === selectedTypeId);
+  const selectedTypeKey = selectedTypeDef?.key ?? "";
+  const hasselectedSpaceIdAndType = Boolean(selectedSpaceId && selectedTypeKey);
+
   const properties = selectedTypeDef?.properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key)) || [];
   const { tagsMap } = useTagsMap(
-    selectedSpace,
+    selectedSpaceId,
     properties
       .filter((prop) => prop.format === PropertyFormat.Select || prop.format === PropertyFormat.MultiSelect)
       .map((prop) => prop.id),
@@ -159,16 +157,16 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
           name: values.name || "",
           icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
           body: values.body || "",
-          template_id: values.template || "",
-          type_key: selectedTypeUniqueKey,
+          template_id: values.templateId || "",
+          type_key: selectedTypeKey,
           properties: propertiesEntries,
         };
 
-        const response = await createObject(selectedSpace, objectData);
+        const response = await createObject(selectedSpaceId, objectData);
 
         if (response.object?.id) {
-          if (selectedList) {
-            await addObjectsToList(selectedSpace, selectedList, [response.object.id]);
+          if (selectedListId) {
+            await addObjectsToList(selectedSpaceId, selectedListId, [response.object.id]);
             await showToast(Toast.Style.Success, "Object created and added to collection");
           } else {
             await showToast(Toast.Style.Success, "Object created successfully");
@@ -186,7 +184,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     validation: {
       name: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : undefined;
-        if (![bundledTypeKeys.bookmark, bundledTypeKeys.note].includes(selectedTypeUniqueKey) && !s) {
+        if (![bundledTypeKeys.bookmark, bundledTypeKeys.note].includes(selectedTypeKey) && !s) {
           return "Name is required";
         }
       },
@@ -197,7 +195,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       },
       source: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : undefined;
-        if (selectedTypeUniqueKey === bundledTypeKeys.bookmark && !s) {
+        if (selectedTypeId === bundledTypeKeys.bookmark && !s) {
           return "Source is required for Bookmarks";
         }
       },
@@ -209,9 +207,9 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     const url = "raycast://extensions/any/anytype/create-object";
 
     const defaults: Record<string, unknown> = {
-      space: selectedSpace,
-      type: selectedType,
-      list: selectedList,
+      space: selectedSpaceId,
+      type: selectedTypeId,
+      list: selectedListId,
       name: itemProps.name.value,
       icon: itemProps.icon.value,
       description: itemProps.description.value,
@@ -229,7 +227,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     const launchContext = { defaults };
 
     return {
-      name: `Create ${types.find((type) => type.key === selectedTypeUniqueKey)?.name} in ${spaces.find((space) => space.id === selectedSpace)?.name}`,
+      name: `Create ${types.find((type) => type.id === selectedTypeId)?.name} in ${spaces.find((space) => space.id === selectedSpaceId)?.name}`,
       link: url + "?launchContext=" + encodeURIComponent(JSON.stringify(launchContext)),
     };
   }
@@ -249,9 +247,9 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Create Object" icon={Icon.Plus} onSubmit={handleSubmit} />
-          {hasSelectedSpaceAndType && (
+          {hasselectedSpaceIdAndType && (
             <Action.CreateQuicklink
-              title={`Create Quicklink: ${types.find((type) => type.key === selectedTypeUniqueKey)?.name}`}
+              title={`Create Quicklink: ${types.find((type) => type.id === selectedTypeId)?.name}`}
               quicklink={getQuicklink()}
             />
           )}
@@ -261,12 +259,12 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       <Form.Dropdown
         id="space"
         title="Space"
-        value={selectedSpace}
+        value={selectedSpaceId}
         onChange={(v) => {
-          setSelectedSpace(v);
-          setSelectedType("");
-          setSelectedTemplate("");
-          setSelectedList("");
+          setSelectedSpaceId(v);
+          setSelectedTypeId("");
+          setSelectedTemplateId("");
+          setSelectedListId("");
           setListSearchText("");
           setObjectSearchText("");
         }}
@@ -282,10 +280,10 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       <Form.Dropdown
         id="type"
         title="Type"
-        value={selectedType}
-        onChange={setSelectedType}
+        value={selectedTypeId}
+        onChange={setSelectedTypeId}
         storeValue={true} // TODO: storeValue does not work here
-        placeholder={`Search types in '${spaces.find((space) => space.id === selectedSpace)?.name}'...`}
+        placeholder={`Search types in '${spaces.find((space) => space.id === selectedSpaceId)?.name}'...`}
         info="Select the type of object to create"
       >
         {types.map((type) => (
@@ -296,10 +294,10 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       <Form.Dropdown
         id="template"
         title="Template"
-        value={selectedTemplate}
-        onChange={setSelectedTemplate}
+        value={selectedTemplateId}
+        onChange={setSelectedTemplateId}
         storeValue={true}
-        placeholder={`Search templates for '${types.find((type) => type.id === selectedType)?.name}'...`}
+        placeholder={`Search templates for '${types.find((type) => type.id === selectedTypeId)?.name}'...`}
         info="Select the template to use for the object"
       >
         <Form.Dropdown.Item
@@ -316,12 +314,12 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       <Form.Dropdown
         id="list"
         title="Collection"
-        value={selectedList}
-        onChange={setSelectedList}
+        value={selectedListId}
+        onChange={setSelectedListId}
         onSearchTextChange={setListSearchText}
         throttle={true}
         storeValue={true}
-        placeholder={`Search collections in '${spaces.find((space) => space.id === selectedSpace)?.name}'...`}
+        placeholder={`Search collections in '${spaces.find((space) => space.id === selectedSpaceId)?.name}'...`}
         info="Select the collection where the object will be added"
       >
         {!listSearchText && (
@@ -339,9 +337,9 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
 
       <Form.Separator />
 
-      {hasSelectedSpaceAndType && (
+      {hasselectedSpaceIdAndType && (
         <>
-          {![bundledTypeKeys.bookmark, bundledTypeKeys.note].includes(selectedTypeUniqueKey) && (
+          {![bundledTypeKeys.bookmark, bundledTypeKeys.note].includes(selectedTypeKey) && (
             <Form.TextField
               {...itemProps.name}
               title="Name"
@@ -350,7 +348,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
             />
           )}
           {![bundledTypeKeys.bookmark, bundledTypeKeys.task, bundledTypeKeys.note, bundledTypeKeys.profile].includes(
-            selectedTypeUniqueKey,
+            selectedTypeKey,
           ) && (
             <Form.TextField
               {...itemProps.icon}
@@ -359,7 +357,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
               info="Enter a single emoji character to represent the object"
             />
           )}
-          {!bundledTypeKeys.bookmark.includes(selectedTypeUniqueKey) ? (
+          {!bundledTypeKeys.bookmark.includes(selectedTypeKey) ? (
             <>
               <Form.TextField
                 {...itemProps.description}
@@ -367,7 +365,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
                 placeholder="Add description"
                 info="Provide a brief description of the object"
               />
-              {!typeKeysForLists.includes(selectedTypeUniqueKey) && (
+              {!typeKeysForLists.includes(selectedTypeKey) && (
                 <Form.TextArea
                   {...itemProps.body}
                   title="Body"
@@ -494,7 +492,7 @@ It supports:
                     value={String(value ?? "")}
                     onSearchTextChange={setObjectSearchText}
                     throttle={true}
-                    placeholder={`Search objects in '${spaces.find((space) => space.id === selectedSpace)?.name}'...`}
+                    placeholder={`Search objects in '${spaces.find((space) => space.id === selectedSpaceId)?.name}'...`}
                   >
                     {!objectSearchText && (
                       <Form.Dropdown.Item

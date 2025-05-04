@@ -2,10 +2,10 @@ import { LaunchProps } from "@raycast/api";
 import { CreateObjectForm, EnsureAuthenticated } from "./components";
 import { PropertyFieldValue } from "./models";
 export interface CreateObjectFormValues {
-  space?: string;
-  type?: string;
-  template?: string;
-  list?: string;
+  spaceId?: string;
+  typeId?: string;
+  templateId?: string;
+  listId?: string;
   name?: string;
   icon?: string;
   description?: string;
