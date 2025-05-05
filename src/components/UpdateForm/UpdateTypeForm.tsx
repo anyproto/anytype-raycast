@@ -54,7 +54,7 @@ export function UpdateTypeForm({ spaceId, type, mutateTypes }: UpdateTypeFormPro
           properties: propertyLinks,
         };
 
-        await updateType(spaceId, type.key, request);
+        await updateType(spaceId, type.id, request);
 
         await showToast(Toast.Style.Success, "Type updated successfully");
         mutateTypes.forEach((mutate) => mutate());
