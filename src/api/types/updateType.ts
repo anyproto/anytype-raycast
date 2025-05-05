@@ -2,13 +2,7 @@ import { mapType } from "../../mappers/types";
 import { RawType, Type, UpdateTypeRequest } from "../../models";
 import { apiEndpoints, apiFetch } from "../../utils";
 
-export async function updateType(
-  spaceId: string,
-  typeId: string,
-  data: UpdateTypeRequest,
-): Promise<{
-  type: Type | null;
-}> {
+export async function updateType(spaceId: string, typeId: string, data: UpdateTypeRequest): Promise<{ type: Type }> {
   const { url, method } = apiEndpoints.updateType(spaceId, typeId);
 
   const response = await apiFetch<{ type: RawType }>(url, {
@@ -16,7 +10,5 @@ export async function updateType(
     body: JSON.stringify(data),
   });
 
-  return {
-    type: response ? await mapType(response.payload.type) : null,
-  };
+  return { type: await mapType(response.payload.type) };
 }

@@ -7,9 +7,7 @@ export async function updateTag(
   propertyId: string,
   tagId: string,
   data: UpdateTagRequest,
-): Promise<{
-  tag: Tag | null;
-}> {
+): Promise<{ tag: Tag }> {
   const { url, method } = apiEndpoints.updateTag(spaceId, propertyId, tagId);
 
   const response = await apiFetch<{ tag: RawTag }>(url, {
@@ -17,7 +15,5 @@ export async function updateTag(
     body: JSON.stringify(data),
   });
 
-  return {
-    tag: response ? mapTag(response.payload.tag) : null,
-  };
+  return { tag: mapTag(response.payload.tag) };
 }
