@@ -409,6 +409,8 @@ export function ObjectActions({
                   spaceId={space.id}
                   object={object}
                   mutateObjects={mutate as MutatePromise<SpaceObject[]>[]}
+                  mutateObject={mutateObject}
+                  mutateExport={mutateExport}
                 />,
               );
             }}

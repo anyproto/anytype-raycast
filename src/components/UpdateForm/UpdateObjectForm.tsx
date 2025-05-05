@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { updateObject } from "../../api";
 import { useSearch, useTagsMap } from "../../hooks";
 import {
+  Export,
   IconFormat,
   PropertyFieldValue,
   PropertyFormat,
@@ -26,9 +27,17 @@ interface UpdateObjectFormProps {
   spaceId: string;
   object: RawSpaceObjectWithBlocks;
   mutateObjects: MutatePromise<SpaceObject[]>[];
+  mutateObject?: MutatePromise<SpaceObject | undefined>;
+  mutateExport?: MutatePromise<Export | undefined>;
 }
 
-export function UpdateObjectForm({ spaceId, object, mutateObjects }: UpdateObjectFormProps) {
+export function UpdateObjectForm({
+  spaceId,
+  object,
+  mutateObjects,
+  mutateObject,
+  mutateExport,
+}: UpdateObjectFormProps) {
   const { pop } = useNavigation();
   const [objectSearchText, setObjectSearchText] = useState("");
 
@@ -182,6 +191,12 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects }: UpdateObjec
 
         await showToast(Toast.Style.Success, "Object updated");
         mutateObjects.forEach((mutate) => mutate());
+        if (mutateObject) {
+          mutateObject();
+        }
+        if (mutateExport) {
+          mutateExport();
+        }
         pop();
       } catch (error) {
         await showFailureToast(error, { title: "Failed to update object" });
