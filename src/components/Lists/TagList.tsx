@@ -70,7 +70,9 @@ export function TagList({ space, propertyId }: TagListProps) {
                   icon={Icon.Pencil}
                   title="Edit Tag"
                   shortcut={Keyboard.Shortcut.Common.Edit}
-                  target={<UpdateTagForm spaceId={space.id} propertyId={propertyId} tag={tag} />}
+                  target={
+                    <UpdateTagForm spaceId={space.id} propertyId={propertyId} tag={tag} mutateTags={mutateTags} />
+                  }
                 />
                 <Action
                   icon={Icon.Repeat}

@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Form, Icon, showToast, Toast, useNavigation } from "@raycast/api";
 import { showFailureToast, useForm } from "@raycast/utils";
 import { updateTag } from "../../api";
 import { Color, Tag } from "../../models";
@@ -13,9 +13,12 @@ interface UpdateTagFormProps {
   spaceId: string;
   propertyId: string;
   tag: Tag;
+  mutateTags: () => void;
 }
 
-export function UpdateTagForm({ spaceId, propertyId, tag }: UpdateTagFormProps) {
+export function UpdateTagForm({ spaceId, propertyId, tag, mutateTags }: UpdateTagFormProps) {
+  const { pop } = useNavigation();
+
   const { handleSubmit, itemProps } = useForm<UpdateTagFormValues>({
     initialValues: {
       name: tag.name,
@@ -34,7 +37,8 @@ export function UpdateTagForm({ spaceId, propertyId, tag }: UpdateTagFormProps) 
         });
 
         showToast(Toast.Style.Success, "Tag updated successfully");
-        popToRoot();
+        mutateTags();
+        pop();
       } catch (error) {
         await showFailureToast(error, { title: "Failed to update tag" });
       }

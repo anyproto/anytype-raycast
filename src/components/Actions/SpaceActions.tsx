@@ -85,7 +85,7 @@ export function SpaceActions({ space, mutate, isPinned, searchText }: SpaceActio
         icon={Icon.Pencil}
         title="Edit Space"
         shortcut={Keyboard.Shortcut.Common.Edit}
-        target={<UpdateSpaceForm space={space} />}
+        target={<UpdateSpaceForm space={space} mutateSpaces={mutate} />}
       />
 
       <Action

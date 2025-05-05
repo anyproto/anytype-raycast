@@ -1,5 +1,5 @@
-import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
-import { showFailureToast, useForm } from "@raycast/utils";
+import { Action, ActionPanel, Form, Icon, showToast, Toast, useNavigation } from "@raycast/api";
+import { MutatePromise, showFailureToast, useForm } from "@raycast/utils";
 import { updateProperty } from "../../api"; // ← import your new helper
 import { Property, PropertyFormat } from "../../models";
 
@@ -11,9 +11,11 @@ export interface UpdatePropertyFormValues {
 interface UpdatePropertyFormProps {
   spaceId: string;
   property: Property;
+  mutateProperties: MutatePromise<Property[]>[];
 }
 
-export function UpdatePropertyForm({ spaceId, property }: UpdatePropertyFormProps) {
+export function UpdatePropertyForm({ spaceId, property, mutateProperties }: UpdatePropertyFormProps) {
+  const { pop } = useNavigation();
   const { handleSubmit, itemProps } = useForm<UpdatePropertyFormValues>({
     initialValues: {
       name: property.name,
@@ -25,7 +27,8 @@ export function UpdatePropertyForm({ spaceId, property }: UpdatePropertyFormProp
         await updateProperty(spaceId, property.id, { name: values.name || "" });
 
         showToast(Toast.Style.Success, "Property updated successfully");
-        popToRoot();
+        mutateProperties.forEach((mutate) => mutate());
+        pop();
       } catch (error) {
         await showFailureToast(error, { title: "Failed to update property" });
       }

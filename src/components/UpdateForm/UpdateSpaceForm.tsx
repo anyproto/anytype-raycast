@@ -1,5 +1,5 @@
-import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
-import { showFailureToast, useForm } from "@raycast/utils";
+import { Action, ActionPanel, Form, Icon, showToast, Toast, useNavigation } from "@raycast/api";
+import { MutatePromise, showFailureToast, useForm } from "@raycast/utils";
 import { updateSpace } from "../../api";
 import { Space } from "../../models";
 
@@ -10,9 +10,12 @@ export interface UpdateSpaceFormValues {
 
 interface UpdateSpaceFormProps {
   space: Space;
+  mutateSpaces: MutatePromise<Space[]>[];
 }
 
-export function UpdateSpaceForm({ space }: UpdateSpaceFormProps) {
+export function UpdateSpaceForm({ space, mutateSpaces }: UpdateSpaceFormProps) {
+  const { pop } = useNavigation();
+
   const { handleSubmit, itemProps } = useForm<UpdateSpaceFormValues>({
     initialValues: {
       name: space.name,
@@ -31,7 +34,8 @@ export function UpdateSpaceForm({ space }: UpdateSpaceFormProps) {
         });
 
         showToast(Toast.Style.Success, "Space updated successfully");
-        popToRoot();
+        mutateSpaces.forEach((mutate) => mutate());
+        pop();
       } catch (error) {
         await showFailureToast(error, { title: "Failed to update space" });
       }

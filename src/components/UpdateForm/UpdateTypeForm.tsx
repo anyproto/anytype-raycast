@@ -1,9 +1,9 @@
-import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
-import { showFailureToast, useForm } from "@raycast/utils";
+import { Action, ActionPanel, Form, Icon, showToast, Toast, useNavigation } from "@raycast/api";
+import { MutatePromise, showFailureToast, useForm } from "@raycast/utils";
 import { useState } from "react";
 import { updateType } from "../../api";
 import { useProperties } from "../../hooks";
-import { IconFormat, ObjectLayout, PropertyLink, RawType, TypeLayout, UpdateTypeRequest } from "../../models";
+import { IconFormat, ObjectLayout, PropertyLink, RawType, Type, TypeLayout, UpdateTypeRequest } from "../../models";
 import { isEmoji } from "../../utils";
 
 export interface UpdateTypeFormValues {
@@ -17,9 +17,11 @@ export interface UpdateTypeFormValues {
 interface UpdateTypeFormProps {
   spaceId: string;
   type: RawType;
+  mutateTypes: MutatePromise<Type[]>[];
 }
 
-export function UpdateTypeForm({ spaceId, type }: UpdateTypeFormProps) {
+export function UpdateTypeForm({ spaceId, type, mutateTypes }: UpdateTypeFormProps) {
+  const { pop } = useNavigation();
   const [loading, setLoading] = useState(false);
   const { properties } = useProperties(spaceId);
 
@@ -55,7 +57,8 @@ export function UpdateTypeForm({ spaceId, type }: UpdateTypeFormProps) {
         await updateType(spaceId, type.key, request);
 
         await showToast(Toast.Style.Success, "Type updated successfully");
-        popToRoot();
+        mutateTypes.forEach((mutate) => mutate());
+        pop();
       } catch (error) {
         await showFailureToast(error, { title: "Failed to update type" });
       } finally {

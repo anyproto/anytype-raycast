@@ -404,7 +404,13 @@ export function ObjectActions({
             shortcut={Keyboard.Shortcut.Common.Edit}
             onAction={async () => {
               const { object } = await getRawObject(space.id, objectId);
-              push(<UpdateObjectForm spaceId={space.id} object={object} />);
+              push(
+                <UpdateObjectForm
+                  spaceId={space.id}
+                  object={object}
+                  mutateObjects={mutate as MutatePromise<SpaceObject[]>[]}
+                />,
+              );
             }}
           />
         )}
@@ -415,7 +421,7 @@ export function ObjectActions({
             shortcut={Keyboard.Shortcut.Common.Edit}
             onAction={async () => {
               const { type } = await getRawType(space.id, objectId);
-              push(<UpdateTypeForm spaceId={space.id} type={type} />);
+              push(<UpdateTypeForm spaceId={space.id} type={type} mutateTypes={mutate as MutatePromise<Type[]>[]} />);
             }}
           />
         )}
@@ -424,7 +430,13 @@ export function ObjectActions({
             icon={Icon.Pencil}
             title={"Edit Property"}
             shortcut={Keyboard.Shortcut.Common.Edit}
-            target={<UpdatePropertyForm spaceId={space.id} property={object as Property} />}
+            target={
+              <UpdatePropertyForm
+                spaceId={space.id}
+                property={object as Property}
+                mutateProperties={mutate as MutatePromise<Property[]>[]}
+              />
+            }
           />
         )}
         {objectExport && (

@@ -1,5 +1,5 @@
-import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
-import { showFailureToast, useForm } from "@raycast/utils";
+import { Action, ActionPanel, Form, Icon, showToast, Toast, useNavigation } from "@raycast/api";
+import { MutatePromise, showFailureToast, useForm } from "@raycast/utils";
 import { formatRFC3339 } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { updateObject } from "../../api";
@@ -10,6 +10,7 @@ import {
   PropertyFormat,
   PropertyLinkWithValue,
   RawSpaceObjectWithBlocks,
+  SpaceObject,
   UpdateObjectRequest,
 } from "../../models";
 import { bundledPropKeys, bundledTypeKeys, defaultTintColor, getNumberFieldValidations, isEmoji } from "../../utils";
@@ -24,9 +25,11 @@ interface UpdateObjectFormValues {
 interface UpdateObjectFormProps {
   spaceId: string;
   object: RawSpaceObjectWithBlocks;
+  mutateObjects: MutatePromise<SpaceObject[]>[];
 }
 
-export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
+export function UpdateObjectForm({ spaceId, object, mutateObjects }: UpdateObjectFormProps) {
+  const { pop } = useNavigation();
   const [objectSearchText, setObjectSearchText] = useState("");
 
   const properties = object.type.properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key));
@@ -178,7 +181,8 @@ export function UpdateObjectForm({ spaceId, object }: UpdateObjectFormProps) {
         await updateObject(spaceId, object.id, payload);
 
         await showToast(Toast.Style.Success, "Object updated");
-        popToRoot();
+        mutateObjects.forEach((mutate) => mutate());
+        pop();
       } catch (error) {
         await showFailureToast(error, { title: "Failed to update object" });
       }
