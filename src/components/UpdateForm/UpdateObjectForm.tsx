@@ -5,13 +5,13 @@ import { useEffect, useMemo, useState } from "react";
 import { updateObject } from "../../api";
 import { useSearch, useTagsMap } from "../../hooks";
 import {
-  Export,
   IconFormat,
   PropertyFieldValue,
   PropertyFormat,
   PropertyLinkWithValue,
-  RawSpaceObjectWithBlocks,
+  RawSpaceObjectWithBody,
   SpaceObject,
+  SpaceObjectWithBody,
   UpdateObjectRequest,
 } from "../../models";
 import { bundledPropKeys, bundledTypeKeys, defaultTintColor, getNumberFieldValidations, isEmoji } from "../../utils";
@@ -25,19 +25,12 @@ interface UpdateObjectFormValues {
 
 interface UpdateObjectFormProps {
   spaceId: string;
-  object: RawSpaceObjectWithBlocks;
+  object: RawSpaceObjectWithBody;
   mutateObjects: MutatePromise<SpaceObject[]>[];
-  mutateObject?: MutatePromise<SpaceObject | undefined>;
-  mutateExport?: MutatePromise<Export | undefined>;
+  mutateObject?: MutatePromise<SpaceObjectWithBody | undefined>;
 }
 
-export function UpdateObjectForm({
-  spaceId,
-  object,
-  mutateObjects,
-  mutateObject,
-  mutateExport,
-}: UpdateObjectFormProps) {
+export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject }: UpdateObjectFormProps) {
   const { pop } = useNavigation();
   const [objectSearchText, setObjectSearchText] = useState("");
 
@@ -193,9 +186,6 @@ export function UpdateObjectForm({
         mutateObjects.forEach((mutate) => mutate());
         if (mutateObject) {
           mutateObject();
-        }
-        if (mutateExport) {
-          mutateExport();
         }
         pop();
       } catch (error) {
