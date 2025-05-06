@@ -39,6 +39,7 @@ export async function getObjectWithoutMappedProperties(
     icon,
     name: object.name?.trim() || "Untitled",
     type: await mapType(object.type),
-    properties: [],
+    properties: [], // performance optimization
+    markdown: "", // performance optimization
   };
 }
