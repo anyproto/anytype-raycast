@@ -59,14 +59,6 @@ export function TagList({ space, propertyId }: TagListProps) {
             actions={
               <ActionPanel>
                 <Action.Push
-                  icon={Icon.Plus}
-                  title="Create Tag"
-                  shortcut={Keyboard.Shortcut.Common.New}
-                  target={
-                    <CreateTagForm spaceId={space.id} propertyId={propertyId} draftValues={{ name: searchText }} />
-                  }
-                />
-                <Action.Push
                   icon={Icon.Pencil}
                   title="Edit Tag"
                   shortcut={Keyboard.Shortcut.Common.Edit}
@@ -74,12 +66,22 @@ export function TagList({ space, propertyId }: TagListProps) {
                     <UpdateTagForm spaceId={space.id} propertyId={propertyId} tag={tag} mutateTags={mutateTags} />
                   }
                 />
-                <Action
-                  icon={Icon.Repeat}
-                  title="Refresh Tags"
-                  onAction={handleRefresh}
-                  shortcut={Keyboard.Shortcut.Common.Refresh}
-                />
+                <ActionPanel.Section>
+                  <Action.Push
+                    icon={Icon.Plus}
+                    title="Create Tag"
+                    shortcut={Keyboard.Shortcut.Common.New}
+                    target={
+                      <CreateTagForm spaceId={space.id} propertyId={propertyId} draftValues={{ name: searchText }} />
+                    }
+                  />
+                  <Action
+                    icon={Icon.RotateClockwise}
+                    title="Refresh Tags"
+                    onAction={handleRefresh}
+                    shortcut={Keyboard.Shortcut.Common.Refresh}
+                  />
+                </ActionPanel.Section>
               </ActionPanel>
             }
           />
