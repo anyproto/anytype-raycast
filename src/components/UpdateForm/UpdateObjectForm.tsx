@@ -6,6 +6,7 @@ import { updateObject } from "../../api";
 import { useSearch, useTagsMap } from "../../hooks";
 import {
   IconFormat,
+  ObjectIcon,
   PropertyFieldValue,
   PropertyFormat,
   PropertyLinkWithValue,
@@ -102,10 +103,11 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
   );
 
   const descriptionEntry = object.properties.find((p) => p.key === bundledPropKeys.description);
+  const initialIconValue = object.icon.format === IconFormat.Emoji ? (object.icon.emoji ?? "") : "";
 
   const initialValues: UpdateObjectFormValues = {
     name: object.name,
-    icon: object.icon.format === IconFormat.Emoji ? object.icon.emoji : "",
+    icon: initialIconValue,
     description: descriptionEntry?.text ?? "",
     ...initialPropertyValues,
   };
@@ -174,9 +176,15 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
           });
         }
 
+        const iconField = values.icon as string;
+        let iconPayload: ObjectIcon | undefined;
+        if (iconField !== initialIconValue) {
+          iconPayload = { format: IconFormat.Emoji, emoji: iconField };
+        }
+
         const payload: UpdateObjectRequest = {
           name: values.name || "",
-          icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
+          ...(iconPayload !== undefined && { icon: iconPayload }),
           properties: propertiesEntries,
         };
 
@@ -222,7 +230,18 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
         <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" />
       )}
       {![bundledTypeKeys.task, bundledTypeKeys.note, bundledTypeKeys.profile].includes(object.type.key) && (
-        <Form.TextField {...itemProps.icon} title="Icon" />
+        <Form.TextField
+          {...itemProps.icon}
+          title="Icon"
+          placeholder="Add emoji"
+          info={
+            object.icon.format === IconFormat.File
+              ? "Current icon is a file. Enter an emoji to replace it."
+              : object.icon.format === IconFormat.Icon
+                ? "Current icon is a built-in icon. Enter an emoji to replace it."
+                : "Add an emoji to change the icon"
+          }
+        />
       )}
       <Form.TextField {...itemProps.description} title="Description" placeholder="Add description" />
 
