@@ -348,9 +348,11 @@ export function UpdateObjectForm({
                     icon={{ source: "icons/type/document.svg", tintColor: defaultTintColor }}
                   />
                 )}
-                {objects.map((object) => (
-                  <Form.Dropdown.Item key={object.id} value={object.id} title={object.name} icon={object.icon} />
-                ))}
+                {objects
+                  .filter((candidate) => candidate.id !== object.id)
+                  .map((object) => (
+                    <Form.Dropdown.Item key={object.id} value={object.id} title={object.name} icon={object.icon} />
+                  ))}
               </Form.Dropdown>
             );
 
