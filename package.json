@@ -647,7 +647,7 @@
               "arguments": {
                 "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
                 "query": "",
-                "sort.property": "last_modified_date",
+                "sort.propertyKey": "last_modified_date",
                 "sort.direction": "desc"
               }
             }
