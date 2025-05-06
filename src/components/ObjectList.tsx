@@ -278,7 +278,7 @@ export function ObjectList({ space }: ObjectListProps) {
           <List.Dropdown.Item
             title="Members"
             value={ViewType.members}
-            icon={{ source: "icons/type/person.svg", tintColor: defaultTintColor }}
+            icon={{ source: "icons/type/people.svg", tintColor: defaultTintColor }}
           />
         </List.Dropdown>
       }

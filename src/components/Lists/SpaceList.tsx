@@ -82,9 +82,12 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
                 accessories={[
                   { icon: Icon.Star, tooltip: "Pinned" },
                   {
-                    icon: { source: "icons/type/person.svg", tintColor: defaultTintColor },
+                    icon: {
+                      source: memberCount === 1 ? "icons/type/person.svg" : "icons/type/people.svg",
+                      tintColor: defaultTintColor,
+                    },
                     text: memberCount.toString(),
-                    tooltip: `Members: ${memberCount}`,
+                    tooltip: `${pluralize(memberCount, "Member")}: ${memberCount}`,
                   },
                 ]}
                 mutate={[mutateSpaces, mutatePinnedSpaces]}
@@ -109,9 +112,12 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
                 icon={space.icon}
                 accessories={[
                   {
-                    icon: { source: "icons/type/person.svg", tintColor: defaultTintColor },
+                    icon: {
+                      source: memberCount === 1 ? "icons/type/person.svg" : "icons/type/people.svg",
+                      tintColor: defaultTintColor,
+                    },
                     text: memberCount.toString(),
-                    tooltip: `Members: ${memberCount}`,
+                    tooltip: `${pluralize(memberCount, "Member")}: ${memberCount}`,
                   },
                 ]}
                 mutate={[mutateSpaces, mutatePinnedSpaces]}
