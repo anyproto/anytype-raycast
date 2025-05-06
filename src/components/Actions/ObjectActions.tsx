@@ -28,7 +28,17 @@ import {
   ViewType,
 } from "..";
 import { deleteObject, deleteProperty, deleteTag, deleteType, getRawObject, getRawType } from "../../api";
-import { Export, Member, ObjectLayout, Property, Space, SpaceObject, Type, View } from "../../models";
+import {
+  BodyFormat,
+  Member,
+  ObjectLayout,
+  Property,
+  Space,
+  SpaceObject,
+  SpaceObjectWithBody,
+  Type,
+  View,
+} from "../../models";
 import {
   addPinned,
   bundledPropKeys,
@@ -43,18 +53,17 @@ type ObjectActionsProps = {
   space: Space;
   objectId: string;
   title: string;
-  objectExport?: Export;
   mutate?: MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>[];
   mutateTemplates?: MutatePromise<SpaceObject[]>;
-  mutateObject?: MutatePromise<SpaceObject | undefined>;
-  mutateExport?: MutatePromise<Export | undefined>;
+  mutateObject?: MutatePromise<SpaceObjectWithBody | undefined>;
   mutateViews?: MutatePromise<View[]>;
   layout: ObjectLayout | undefined;
-  object?: SpaceObject | Type | Property | Member;
+  object?: SpaceObject | SpaceObjectWithBody | Type | Property | Member;
   viewType: ViewType;
   isGlobalSearch: boolean;
   isNoPinView: boolean;
   isPinned: boolean;
+  isDetailView?: boolean;
   showDetails?: boolean;
   onToggleDetails?: () => void;
   searchText?: string;
@@ -65,10 +74,8 @@ export function ObjectActions({
   objectId,
   title,
   mutate,
-  objectExport,
   mutateTemplates,
   mutateObject,
-  mutateExport,
   mutateViews,
   layout,
   object,
@@ -76,6 +83,7 @@ export function ObjectActions({
   isGlobalSearch,
   isNoPinView,
   isPinned,
+  isDetailView,
   showDetails,
   onToggleDetails,
   searchText,
@@ -93,7 +101,6 @@ export function ObjectActions({
   const isTag = viewType === ViewType.tags;
   const isMember = viewType === ViewType.members;
 
-  const isDetailView = objectExport !== undefined;
   const isList = layout === ObjectLayout.Set || layout === ObjectLayout.Collection;
   const isBookmark = layout === ObjectLayout.Bookmark;
   const hasTags =
@@ -143,9 +150,6 @@ export function ObjectActions({
         }
         if (mutateObject) {
           await mutateObject();
-        }
-        if (mutateExport) {
-          await mutateExport();
         }
         if (mutateViews) {
           await mutateViews();
@@ -218,9 +222,6 @@ export function ObjectActions({
       }
       if (mutateObject) {
         await mutateObject();
-      }
-      if (mutateExport) {
-        await mutateExport();
       }
 
       await showToast({
@@ -403,14 +404,13 @@ export function ObjectActions({
             title={"Edit Object"}
             shortcut={Keyboard.Shortcut.Common.Edit}
             onAction={async () => {
-              const { object } = await getRawObject(space.id, objectId);
+              const { object } = await getRawObject(space.id, objectId, BodyFormat.Markdown);
               push(
                 <UpdateObjectForm
                   spaceId={space.id}
                   object={object}
                   mutateObjects={mutate as MutatePromise<SpaceObject[]>[]}
                   mutateObject={mutateObject}
-                  mutateExport={mutateExport}
                 />,
               );
             }}
@@ -441,11 +441,11 @@ export function ObjectActions({
             }
           />
         )}
-        {objectExport && (
+        {isDetailView && (
           <Action.CopyToClipboard
             title={`Copy Markdown`}
             shortcut={{ modifiers: ["cmd"], key: "c" }}
-            content={objectExport.markdown}
+            content={(object as SpaceObjectWithBody)?.markdown}
           />
         )}
         {!isType && !isProperty && <ListSubmenu spaceId={space.id} objectId={objectId} />}

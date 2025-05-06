@@ -1,5 +1,6 @@
 import { getPreferenceValues } from "@raycast/api";
 import { ViewType } from "../components";
+import { BodyFormat } from "../models";
 import { encodeQueryParams } from "./query";
 
 // Strings
@@ -130,8 +131,8 @@ export const apiEndpoints = {
   }),
 
   // objects
-  getObject: (spaceId: string, objectId: string) => ({
-    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}`,
+  getObject: (spaceId: string, objectId: string, format: BodyFormat) => ({
+    url: `${apiUrl}/spaces/${spaceId}/objects/${objectId}${encodeQueryParams({ format })}`,
     method: "GET",
   }),
   getObjects: (spaceId: string, options: { offset: number; limit: number }) => ({

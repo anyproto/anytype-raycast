@@ -1,6 +1,15 @@
 import { getPreferenceValues } from "@raycast/api";
 import { getObjectWithoutMappedProperties } from "../api";
-import { PropertyFormat, PropertyWithValue, RawSpaceObject, SortProperty, SpaceObject } from "../models";
+import {
+  BodyFormat,
+  PropertyFormat,
+  PropertyWithValue,
+  RawSpaceObject,
+  RawSpaceObjectWithBody,
+  SortProperty,
+  SpaceObject,
+  SpaceObjectWithBody,
+} from "../models";
 import { bundledPropKeys, getIconWithFallback } from "../utils";
 import { mapTag } from "./properties";
 import { mapType } from "./types";
@@ -36,7 +45,9 @@ export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject
 /**
  * Map raw `SpaceObject` item into display-ready data, including details, icons, etc.
  */
-export async function mapObject(object: RawSpaceObject): Promise<SpaceObject> {
+export async function mapObject(
+  object: RawSpaceObject | RawSpaceObjectWithBody,
+): Promise<SpaceObject | SpaceObjectWithBody> {
   const icon = await getIconWithFallback(object.icon, object.layout, object.type);
 
   const mappedProperties = await Promise.all(
@@ -145,7 +156,7 @@ export async function mapObjectWithoutDetails(spaceId: string, object: string[])
   return await Promise.all(
     rawItems.map(async (item) => {
       if (typeof item === "string") {
-        return await getObjectWithoutMappedProperties(spaceId, item);
+        return await getObjectWithoutMappedProperties(spaceId, item, BodyFormat.Markdown);
       } else {
         return item;
       }

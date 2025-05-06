@@ -3,9 +3,9 @@ import { MutatePromise, showFailureToast } from "@raycast/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { ObjectActions, TemplateList, ViewType } from ".";
-import { useExport, useObject } from "../hooks";
+import { useObject } from "../hooks";
 import {
-  ExportFormat,
+  BodyFormat,
   Member,
   ObjectLayout,
   Property,
@@ -40,12 +40,7 @@ export function ObjectDetail({
 }: ObjectDetailProps) {
   const { push } = useNavigation();
   const { linkDisplay } = getPreferenceValues();
-  const { object, objectError, isLoadingObject, mutateObject } = useObject(space.id, objectId);
-  const { objectExport, objectExportError, isLoadingObjectExport, mutateObjectExport } = useExport(
-    space.id,
-    objectId,
-    ExportFormat.Markdown,
-  );
+  const { object, objectError, isLoadingObject, mutateObject } = useObject(space.id, objectId, BodyFormat.Markdown);
 
   const [showDetails, setShowDetails] = useState(true);
   const properties = object?.properties || [];
@@ -63,12 +58,6 @@ export function ObjectDetail({
       showFailureToast(objectError, { title: "Failed to fetch object" });
     }
   }, [objectError]);
-
-  useEffect(() => {
-    if (objectExportError) {
-      showFailureToast(objectExportError, { title: "Failed to fetch object export" });
-    }
-  }, [objectExportError]);
 
   const formatOrder: { [key: string]: number } = {
     text: 0,
@@ -402,13 +391,13 @@ export function ObjectDetail({
     }
   }
 
-  const markdown = objectExport?.markdown ?? "";
+  const markdown = object?.markdown ?? "";
   const updatedMarkdown = injectEmojiIntoHeading(markdown, object?.icon);
 
   return (
     <Detail
       markdown={updatedMarkdown}
-      isLoading={isLoadingObject || isLoadingObjectExport}
+      isLoading={isLoadingObject}
       navigationTitle={!isGlobalSearch ? `Browse ${space.name}` : undefined}
       metadata={
         showDetails && renderedDetailComponents.length > 0 ? (
@@ -422,13 +411,13 @@ export function ObjectDetail({
           title={title}
           mutate={mutate}
           mutateObject={mutateObject}
-          mutateExport={mutateObjectExport}
-          objectExport={objectExport}
           layout={layout}
+          object={object}
           viewType={viewType}
           isGlobalSearch={isGlobalSearch}
           isNoPinView={false}
           isPinned={isPinned}
+          isDetailView={true}
           showDetails={showDetails}
           onToggleDetails={() => setShowDetails((prev) => !prev)}
         />
