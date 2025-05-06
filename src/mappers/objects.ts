@@ -98,7 +98,7 @@ export async function mapObject(
           if (property.files) {
             mappedProperty = {
               ...mappedProperty,
-              files: await mapObjectWithoutDetails(object.space_id, property.files),
+              files: await mapObjectWithoutProperties(object.space_id, property.files),
             };
           }
           break;
@@ -130,7 +130,7 @@ export async function mapObject(
           if (property.objects) {
             mappedProperty = {
               ...mappedProperty,
-              objects: await mapObjectWithoutDetails(object.space_id, property.objects),
+              objects: await mapObjectWithoutProperties(object.space_id, property.objects),
             };
           }
           break;
@@ -151,7 +151,7 @@ export async function mapObject(
   };
 }
 
-export async function mapObjectWithoutDetails(spaceId: string, object: string[]): Promise<SpaceObject[]> {
+export async function mapObjectWithoutProperties(spaceId: string, object: string[]): Promise<SpaceObject[]> {
   const rawItems = Array.isArray(object) ? object : [object];
   return await Promise.all(
     rawItems.map(async (item) => {
