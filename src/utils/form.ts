@@ -11,10 +11,11 @@ export function getNumberFieldValidations(
     .reduce(
       (acc, prop) => {
         acc[prop.key] = (value: unknown) => {
-          const str = typeof value === "string" ? value : undefined;
-          if (str && isNaN(Number(str))) {
+          const str = typeof value === "string" ? value.trim() : undefined;
+          if (str === "" || (str && isNaN(Number(str)))) {
             return "Value must be a number";
           }
+          return undefined;
         };
         return acc;
       },
