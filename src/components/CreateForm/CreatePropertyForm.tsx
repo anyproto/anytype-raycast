@@ -21,7 +21,7 @@ export function CreatePropertyForm({ spaceId, draftValues }: CreatePropertyFormP
         await showToast({ style: Toast.Style.Animated, title: "Creating property..." });
 
         await createProperty(spaceId, {
-          name: values.name || "",
+          name: values.name,
           format: values.format as PropertyFormat,
         });
 

@@ -22,7 +22,7 @@ export function CreateSpaceForm({ draftValues }: CreateSpaceFormProps) {
           description: values.description || "",
         });
 
-        showToast(Toast.Style.Success, "Space created successfully");
+        await showToast(Toast.Style.Success, "Space created successfully");
         popToRoot();
       } catch (error) {
         await showFailureToast(error, { title: "Failed to create space" });

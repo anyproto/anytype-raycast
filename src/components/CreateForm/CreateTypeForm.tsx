@@ -40,11 +40,11 @@ export function CreateTypeForm({ draftValues }: CreateTypeFormProps) {
           }) || [];
 
         const request: CreateTypeRequest = {
-          name: values.name || "",
+          name: values.name,
           plural_name: values.plural_name || "",
           icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
-          Layout: values.layout || TypeLayout.Basic,
-          Properties: propertyLinks,
+          layout: values.layout || TypeLayout.Basic,
+          properties: propertyLinks,
         };
         const response = await createType(selectedSpace, request);
         if (response.type?.key) {

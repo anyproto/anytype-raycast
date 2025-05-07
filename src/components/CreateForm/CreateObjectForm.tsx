@@ -53,7 +53,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
 
   const selectedTypeDef = types.find((type) => type.id === selectedTypeId);
   const selectedTypeKey = selectedTypeDef?.key ?? "";
-  const hasselectedSpaceIdAndType = Boolean(selectedSpaceId && selectedTypeKey);
+  const hasSelectedSpaceIdAndType = Boolean(selectedSpaceId && selectedTypeKey);
 
   const properties = selectedTypeDef?.properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key)) || [];
   const { tagsMap } = useTagsMap(
@@ -247,7 +247,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Create Object" icon={Icon.Plus} onSubmit={handleSubmit} />
-          {hasselectedSpaceIdAndType && (
+          {hasSelectedSpaceIdAndType && (
             <Action.CreateQuicklink
               title={`Create Quicklink: ${types.find((type) => type.id === selectedTypeId)?.name}`}
               quicklink={getQuicklink()}
@@ -337,7 +337,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
 
       <Form.Separator />
 
-      {hasselectedSpaceIdAndType && (
+      {hasSelectedSpaceIdAndType && (
         <>
           {![bundledTypeKeys.bookmark, bundledTypeKeys.note].includes(selectedTypeKey) && (
             <Form.TextField
@@ -357,7 +357,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
               info="Enter a single emoji character to represent the object"
             />
           )}
-          {!bundledTypeKeys.bookmark.includes(selectedTypeKey) ? (
+          {selectedTypeKey !== bundledTypeKeys.bookmark ? (
             <>
               <Form.TextField
                 {...itemProps.description}

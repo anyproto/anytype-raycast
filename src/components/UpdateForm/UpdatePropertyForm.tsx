@@ -5,7 +5,7 @@ import { Property, PropertyFormat } from "../../models";
 
 export interface UpdatePropertyFormValues {
   name: string;
-  format?: string;
+  format: string;
 }
 
 interface UpdatePropertyFormProps {
@@ -24,7 +24,7 @@ export function UpdatePropertyForm({ spaceId, property, mutateProperties }: Upda
       try {
         await showToast({ style: Toast.Style.Animated, title: "Updating property..." });
 
-        await updateProperty(spaceId, property.id, { name: values.name || "" });
+        await updateProperty(spaceId, property.id, { name: values.name });
 
         showToast(Toast.Style.Success, "Property updated successfully");
         mutateProperties.forEach((mutate) => mutate());
@@ -49,14 +49,7 @@ export function UpdatePropertyForm({ spaceId, property, mutateProperties }: Upda
         </ActionPanel>
       }
     >
-      <Form.Dropdown
-        {...itemProps.format}
-        title="Format"
-        value={property.format}
-        onChange={() => {}}
-        onFocus={() => {}}
-        info="Format is read-only"
-      >
+      <Form.Dropdown {...itemProps.format} title="Format" value={property.format} info="Format is read-only">
         <Form.Dropdown.Item
           value={property.format}
           title={propertyFormatKeys.find((key) => PropertyFormat[key] === property.format) || property.format}

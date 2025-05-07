@@ -47,7 +47,7 @@ export function AddToList() {
         title: "Failed to fetch latest data",
       });
     }
-  }, [spacesError, objectsError, listsError]);
+  }, [spacesError, objectsError, listsError, listItemsError]);
 
   const { handleSubmit, itemProps } = useForm<AddToListValues>({
     onSubmit: async (values) => {

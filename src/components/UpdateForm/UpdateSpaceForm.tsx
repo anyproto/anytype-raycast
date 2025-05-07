@@ -29,11 +29,11 @@ export function UpdateSpaceForm({ space, mutateSpaces }: UpdateSpaceFormProps) {
         });
 
         await updateSpace(space.id, {
-          name: values.name || "",
-          description: values.description || "",
+          name: values.name,
+          description: values.description,
         });
 
-        showToast(Toast.Style.Success, "Space updated successfully");
+        await showToast(Toast.Style.Success, "Space updated successfully");
         mutateSpaces.forEach((mutate) => mutate());
         pop();
       } catch (error) {

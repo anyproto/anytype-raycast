@@ -17,7 +17,7 @@ interface CreateTagFormProps {
 
 export function CreateTagForm({ spaceId, propertyId, draftValues }: CreateTagFormProps) {
   const { handleSubmit, itemProps } = useForm<CreateTagFormValues>({
-    initialValues: { ...draftValues, name: draftValues.name, color: draftValues.color as Color },
+    initialValues: { name: draftValues.name, color: draftValues.color as Color },
     onSubmit: async (values) => {
       try {
         await showToast({ style: Toast.Style.Animated, title: "Creating tag..." });

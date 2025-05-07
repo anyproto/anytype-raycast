@@ -60,7 +60,7 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
         title: "Failed to fetch latest data",
       });
     }
-  }, [spacesError, typesError, templatesError, listsError]);
+  }, [spacesError, typesError, templatesError, listsError, objectsError]);
 
   const isLoading = isLoadingSpaces || isLoadingTypes || isLoadingTemplates || isLoadingLists || isLoadingObjects;
 

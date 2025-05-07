@@ -32,11 +32,11 @@ export function UpdateTagForm({ spaceId, propertyId, tag, mutateTags }: UpdateTa
         });
 
         await updateTag(spaceId, propertyId, tag.id, {
-          name: values.name || "",
+          name: values.name,
           color: values.color as Color,
         });
 
-        showToast(Toast.Style.Success, "Tag updated successfully");
+        await showToast(Toast.Style.Success, "Tag updated successfully");
         mutateTags();
         pop();
       } catch (error) {

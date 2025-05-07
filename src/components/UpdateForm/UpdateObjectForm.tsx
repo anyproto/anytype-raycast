@@ -183,7 +183,7 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
         }
 
         const payload: UpdateObjectRequest = {
-          name: values.name || "",
+          name: values.name,
           ...(iconPayload !== undefined && { icon: iconPayload }),
           properties: propertiesEntries,
         };
