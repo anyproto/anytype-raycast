@@ -42,7 +42,10 @@ export function UpdateTypeForm({ spaceId, type, mutateTypes }: UpdateTypeFormPro
 
         const propertyLinks: PropertyLink[] =
           values.properties?.map((key) => {
-            const prop = properties.find((p) => p.key === key)!;
+            const prop = properties.find((p) => p.key === key);
+            if (!prop) {
+              throw new Error(`Property with key "${key}" not found`);
+            }
             return { key: prop.key, format: prop.format, name: prop.name };
           }) || [];
 
@@ -94,11 +97,12 @@ export function UpdateTypeForm({ spaceId, type, mutateTypes }: UpdateTypeFormPro
           <Form.Dropdown.Item
             key={initialValues.layout}
             value={initialValues.layout}
-            title={
-              (Object.keys(ObjectLayout) as Array<keyof typeof TypeLayout>).find(
+            title={(() => {
+              const layoutKey = (Object.keys(ObjectLayout) as Array<keyof typeof TypeLayout>).find(
                 (k) => ObjectLayout[k] === initialValues.layout,
-              )!
-            }
+              );
+              return layoutKey ? layoutKey : "Unknown Layout";
+            })()}
           />
         </Form.Dropdown>
       ) : (

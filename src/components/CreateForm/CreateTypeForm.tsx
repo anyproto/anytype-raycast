@@ -35,7 +35,10 @@ export function CreateTypeForm({ draftValues }: CreateTypeFormProps) {
 
         const propertyLinks: PropertyLink[] =
           values.properties?.map((key) => {
-            const prop = properties.find((p) => p.key === key)!;
+            const prop = properties.find((p) => p.key === key);
+            if (!prop) {
+              throw new Error(`Property with key "${key}" not found`);
+            }
             return { key: prop.key, format: prop.format, name: prop.name };
           }) || [];
 
