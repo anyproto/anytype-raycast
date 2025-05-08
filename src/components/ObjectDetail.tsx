@@ -42,7 +42,7 @@ export function ObjectDetail({
   const { linkDisplay } = getPreferenceValues();
   const { object, objectError, isLoadingObject, mutateObject } = useObject(space.id, objectId, BodyFormat.Markdown);
 
-  const [showDetails, setShowDetails] = useState(true);
+  const [shouldShowSidebar, setShouldShowSidebar] = useState(true);
   const properties = object?.properties || [];
   const excludedPropertyKeys = new Set([
     bundledPropKeys.addedDate,
@@ -400,7 +400,7 @@ export function ObjectDetail({
       isLoading={isLoadingObject}
       navigationTitle={!isGlobalSearch ? `Browse ${space.name}` : undefined}
       metadata={
-        showDetails && renderedDetailComponents.length > 0 ? (
+        shouldShowSidebar && renderedDetailComponents.length > 0 ? (
           <Detail.Metadata>{renderedDetailComponents}</Detail.Metadata>
         ) : undefined
       }
@@ -418,8 +418,8 @@ export function ObjectDetail({
           isNoPinView={false}
           isPinned={isPinned}
           isDetailView={true}
-          showDetails={showDetails}
-          onToggleDetails={() => setShowDetails((prev) => !prev)}
+          shouldShowSidebar={shouldShowSidebar}
+          onToggleSidebar={() => setShouldShowSidebar((prev) => !prev)}
         />
       }
     />

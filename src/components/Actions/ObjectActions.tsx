@@ -64,8 +64,8 @@ type ObjectActionsProps = {
   isNoPinView: boolean;
   isPinned: boolean;
   isDetailView?: boolean;
-  showDetails?: boolean;
-  onToggleDetails?: () => void;
+  shouldShowSidebar?: boolean;
+  onToggleSidebar?: () => void;
   searchText?: string;
 };
 
@@ -84,8 +84,8 @@ export function ObjectActions({
   isNoPinView,
   isPinned,
   isDetailView,
-  showDetails,
-  onToggleDetails,
+  shouldShowSidebar,
+  onToggleSidebar,
   searchText,
 }: ObjectActionsProps) {
   const { pop, push } = useNavigation();
@@ -322,7 +322,7 @@ export function ObjectActions({
   //     }
   //   }
 
-  const canShowDetails = !isType && !isProperty && !isList && !isBookmark && !isDetailView;
+  const canShowDetails = !isType && !isProperty && !isList && !isBookmark && !isDetailView && !isMember;
   const showDetailsAction = canShowDetails && (
     <Action.Push
       icon={{ source: Icon.Sidebar }}
@@ -511,10 +511,10 @@ export function ObjectActions({
         )}
         {isDetailView && (
           <Action
-            icon={showDetails ? Icon.EyeDisabled : Icon.Eye}
-            title={showDetails ? "Hide Sidebar" : "Show Sidebar"}
+            icon={shouldShowSidebar ? Icon.EyeDisabled : Icon.Eye}
+            title={shouldShowSidebar ? "Hide Sidebar" : "Show Sidebar"}
             shortcut={{ modifiers: ["cmd"], key: "d" }}
-            onAction={onToggleDetails}
+            onAction={onToggleSidebar}
           />
         )}
         <Action
