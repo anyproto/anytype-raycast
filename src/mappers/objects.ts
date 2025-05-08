@@ -26,7 +26,7 @@ export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject
       return {
         ...object,
         icon: await getIconWithFallback(object.icon, object.layout, object.type),
-        name: object.name || `${object.snippet.split("\n")[0]}...` || "Untitled",
+        name: object.name || (object.snippet ? `${object.snippet.split("\n")[0]}...` : "Untitled"),
         type: await mapType(object.type),
         properties: await Promise.all(
           (object.properties?.filter((property) => {
