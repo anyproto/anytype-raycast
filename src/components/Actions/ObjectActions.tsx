@@ -137,9 +137,7 @@ export function ObjectActions({
           await deleteObject(space.id, objectId);
         }
         if (mutate) {
-          for (const m of mutate) {
-            await m();
-          }
+          await Promise.all(mutate.map((m) => m()));
         }
         if (mutateObject) {
           await mutateObject();
@@ -161,10 +159,9 @@ export function ObjectActions({
   async function handleMoveUpInFavorites() {
     await moveUpInPinned(space.id, objectId, pinSuffixForView);
     if (mutate) {
-      for (const m of mutate) {
-        await m();
-      }
+      await Promise.all(mutate.map((m) => m()));
     }
+
     await showToast({
       style: Toast.Style.Success,
       title: "Moved Up in Pinned",
@@ -174,9 +171,7 @@ export function ObjectActions({
   async function handleMoveDownInFavorites() {
     await moveDownInPinned(space.id, objectId, pinSuffixForView);
     if (mutate) {
-      for (const m of mutate) {
-        await m();
-      }
+      await Promise.all(mutate.map((m) => m()));
     }
 
     await showToast({
@@ -192,9 +187,7 @@ export function ObjectActions({
       await addPinned(space.id, objectId, pinSuffixForView, title, getContextLabel());
     }
     if (mutate) {
-      for (const m of mutate) {
-        await m();
-      }
+      await Promise.all(mutate.map((m) => m()));
     }
   }
 
@@ -206,9 +199,7 @@ export function ObjectActions({
     });
     try {
       if (mutate) {
-        for (const m of mutate) {
-          await m();
-        }
+        await Promise.all(mutate.map((m) => m()));
       }
       if (mutateObject) {
         await mutateObject();
