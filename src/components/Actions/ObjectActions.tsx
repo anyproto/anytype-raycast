@@ -509,20 +509,20 @@ export function ObjectActions({
             }}
           />
         )}
-        {isDetailView && (
-          <Action
-            icon={shouldShowSidebar ? Icon.EyeDisabled : Icon.Eye}
-            title={shouldShowSidebar ? "Hide Sidebar" : "Show Sidebar"}
-            shortcut={{ modifiers: ["cmd"], key: "d" }}
-            onAction={onToggleSidebar}
-          />
-        )}
         <Action
           icon={Icon.RotateClockwise}
           title={`Refresh ${getContextLabel(false)}`}
           shortcut={Keyboard.Shortcut.Common.Refresh}
           onAction={handleRefresh}
         />
+        {isDetailView && (
+          <Action
+            icon={shouldShowSidebar ? Icon.EyeDisabled : Icon.Eye}
+            title={shouldShowSidebar ? "Hide Sidebar" : "Show Sidebar"}
+            shortcut={{ modifiers: ["cmd", "shift"], key: "d" }}
+            onAction={onToggleSidebar}
+          />
+        )}
       </ActionPanel.Section>
     </ActionPanel>
   );
