@@ -213,6 +213,9 @@ export function ObjectActions({
       if (mutateObject) {
         await mutateObject();
       }
+      if (mutateViews) {
+        await mutateViews();
+      }
 
       await showToast({
         style: Toast.Style.Success,
