@@ -10,7 +10,7 @@ import {
   SpaceObject,
   SpaceObjectWithBody,
 } from "../models";
-import { bundledPropKeys, getIconWithFallback } from "../utils";
+import { bundledPropKeys, getIconWithFallback, propKeys } from "../utils";
 import { mapTag } from "./properties";
 import { mapType } from "./types";
 
@@ -34,7 +34,7 @@ export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject
               // When sorting by name, keep the 'LastModifiedDate' property for tooltip purposes
               return property.key === SortProperty.LastModifiedDate;
             }
-            return property.key === sort || property.key === bundledPropKeys.source; // keep source to open bookmarks in browser
+            return property.key === sort || property.key === bundledPropKeys.source || property.key === propKeys.tag; // keep source to open bookmarks in browser, and tags for submenu
           }) || []) as PropertyWithValue[],
         ),
       };

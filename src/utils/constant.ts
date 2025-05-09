@@ -54,6 +54,10 @@ export const bundledPropKeys = {
   source: `${apiKeyPrefixes.properties}source`,
 };
 
+export const propKeys = {
+  tag: `${apiKeyPrefixes.properties}tag`,
+};
+
 export const bundledTypeKeys = {
   audio: `${apiKeyPrefixes.types}audio`,
   bookmark: `${apiKeyPrefixes.types}bookmark`,

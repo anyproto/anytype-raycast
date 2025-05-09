@@ -21,13 +21,14 @@ import {
   ListSubmenu,
   ObjectDetail,
   TagList,
+  TagSubmenu,
   TemplateList,
   UpdateObjectForm,
   UpdatePropertyForm,
   UpdateTypeForm,
   ViewType,
 } from "..";
-import { deleteObject, deleteProperty, deleteTag, deleteType, getRawObject, getRawType } from "../../api";
+import { deleteObject, deleteProperty, deleteType, getRawObject, getRawType } from "../../api";
 import {
   BodyFormat,
   Member,
@@ -98,7 +99,6 @@ export function ObjectActions({
   const isObject = viewType === ViewType.objects;
   const isType = viewType === ViewType.types;
   const isProperty = viewType === ViewType.properties;
-  const isTag = viewType === ViewType.tags;
   const isMember = viewType === ViewType.members;
 
   const isList = layout === ObjectLayout.Set || layout === ObjectLayout.Collection;
@@ -135,8 +135,6 @@ export function ObjectActions({
           await deleteType(space.id, objectId);
         } else if (isProperty) {
           await deleteProperty(space.id, objectId);
-        } else if (isTag) {
-          await deleteTag(space.id, "", objectId); // TODO: fix property Id
         } else {
           await deleteObject(space.id, objectId);
         }
@@ -398,7 +396,7 @@ export function ObjectActions({
       </ActionPanel.Section>
 
       <ActionPanel.Section>
-        {!isType && !isProperty && !isTag && !isMember && (
+        {!isType && !isProperty && !isMember && (
           <Action
             icon={Icon.Pencil}
             title={"Edit Object"}
@@ -448,7 +446,17 @@ export function ObjectActions({
             content={(object as SpaceObjectWithBody)?.markdown}
           />
         )}
-        {!isType && !isProperty && <ListSubmenu spaceId={space.id} objectId={objectId} />}
+        {!isType && !isProperty && !isMember && (
+          <>
+            <ListSubmenu spaceId={space.id} objectId={objectId} />
+            <TagSubmenu
+              spaceId={space.id}
+              object={object as SpaceObject | SpaceObjectWithBody}
+              mutate={mutate}
+              mutateObject={mutateObject}
+            />
+          </>
+        )}
         <Action
           icon={Icon.Link}
           title="Copy Link"
