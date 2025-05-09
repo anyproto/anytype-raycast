@@ -55,7 +55,6 @@ type ObjectActionsProps = {
   objectId: string;
   title: string;
   mutate?: MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>[];
-  mutateTemplates?: MutatePromise<SpaceObject[]>;
   mutateObject?: MutatePromise<SpaceObjectWithBody | undefined>;
   mutateViews?: MutatePromise<View[]>;
   layout: ObjectLayout | undefined;
@@ -75,7 +74,6 @@ export function ObjectActions({
   objectId,
   title,
   mutate,
-  mutateTemplates,
   mutateObject,
   mutateViews,
   layout,
@@ -142,9 +140,6 @@ export function ObjectActions({
           for (const m of mutate) {
             await m();
           }
-        }
-        if (mutateTemplates) {
-          await mutateTemplates();
         }
         if (mutateObject) {
           await mutateObject();
@@ -214,9 +209,6 @@ export function ObjectActions({
         for (const m of mutate) {
           await m();
         }
-      }
-      if (mutateTemplates) {
-        await mutateTemplates();
       }
       if (mutateObject) {
         await mutateObject();
