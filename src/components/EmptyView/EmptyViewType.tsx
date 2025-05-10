@@ -13,7 +13,11 @@ export function EmptyViewType({ title, contextValues }: EmptyViewTypeProps) {
       description="Create a new type by pressing ⏎"
       actions={
         <ActionPanel>
-          <Action.Push title="Create Type" target={<CreateTypeForm draftValues={contextValues} />} icon={Icon.Plus} />
+          <Action.Push
+            title="Create Type"
+            target={<CreateTypeForm draftValues={contextValues} enableDrafts={false} />}
+            icon={Icon.Plus}
+          />
         </ActionPanel>
       }
     />

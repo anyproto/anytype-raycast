@@ -42,7 +42,7 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
         setIsLoading(true);
         const { app_key } = await getToken(challengeId, values.userCode);
         await LocalStorage.setItem(localStorageKeys.appKey, app_key);
-        showToast({ style: Toast.Style.Success, title: "Successfully paired" });
+        await showToast({ style: Toast.Style.Success, title: "Successfully paired" });
         setHasToken(true);
         setTokenIsValid(true);
       } catch (error) {
@@ -83,13 +83,13 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
       setChallengeId(challenge_id);
 
       // Prevent window from closing
-      showToast({
+      await showToast({
         style: Toast.Style.Animated,
         title: "Pairing started",
         message: "Check the app for the 4-digit code.",
       });
     } catch (error) {
-      showToast({
+      await showToast({
         style: Toast.Style.Failure,
         title: "Failed to start pairing",
         message: error instanceof Error ? error.message : "An unknown error occurred.",

@@ -1,14 +1,14 @@
 import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
 import { showFailureToast, useForm } from "@raycast/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createType } from "../../api";
 import { useProperties, useSpaces } from "../../hooks";
 import { CreateTypeRequest, IconFormat, PropertyLink, TypeLayout } from "../../models";
 import { isEmoji } from "../../utils";
 
 export interface CreateTypeFormValues {
-  space: string;
-  name: string;
+  spaceId?: string;
+  name?: string;
   plural_name?: string;
   icon?: string;
   layout?: TypeLayout;
@@ -17,14 +17,21 @@ export interface CreateTypeFormValues {
 
 export interface CreateTypeFormProps {
   draftValues: CreateTypeFormValues;
+  enableDrafts: boolean;
 }
 
-export function CreateTypeForm({ draftValues }: CreateTypeFormProps) {
+export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProps) {
   const [loading, setLoading] = useState(false);
-  const [selectedSpace, setSelectedSpace] = useState<string>(draftValues.space);
+  const [selectedSpaceId, setSelectedSpace] = useState<string>(draftValues.spaceId || "");
 
-  const { spaces } = useSpaces();
-  const { properties } = useProperties(selectedSpace);
+  const { spaces, isLoadingSpaces, spacesError } = useSpaces();
+  const { properties, isLoadingProperties, propertiesError } = useProperties(selectedSpaceId);
+
+  useEffect(() => {
+    if (spacesError || propertiesError) {
+      showFailureToast(spacesError || propertiesError, { title: "Failed to load spaces or properties" });
+    }
+  }, [spacesError, propertiesError]);
 
   const { handleSubmit, itemProps } = useForm<CreateTypeFormValues>({
     initialValues: draftValues,
@@ -43,13 +50,13 @@ export function CreateTypeForm({ draftValues }: CreateTypeFormProps) {
           }) || [];
 
         const request: CreateTypeRequest = {
-          name: values.name,
+          name: values.name || "",
           plural_name: values.plural_name || "",
           icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
           layout: values.layout || TypeLayout.Basic,
           properties: propertyLinks,
         };
-        const response = await createType(selectedSpace, request);
+        const response = await createType(selectedSpaceId, request);
         if (response.type?.key) {
           await showToast(Toast.Style.Success, "Type created successfully");
           popToRoot();
@@ -74,14 +81,15 @@ export function CreateTypeForm({ draftValues }: CreateTypeFormProps) {
   return (
     <Form
       navigationTitle="Create Type"
-      isLoading={loading}
+      isLoading={loading || isLoadingSpaces || isLoadingProperties}
+      enableDrafts={enableDrafts}
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Create Type" icon={Icon.Plus} onSubmit={handleSubmit} />
         </ActionPanel>
       }
     >
-      <Form.Dropdown {...itemProps.space} title="Space" onChange={setSelectedSpace} value={selectedSpace}>
+      <Form.Dropdown {...itemProps.spaceId} title="Space" onChange={setSelectedSpace} value={selectedSpaceId}>
         {spaces.map((space) => (
           <Form.Dropdown.Item key={space.id} value={space.id} title={space.name} icon={space.icon} />
         ))}

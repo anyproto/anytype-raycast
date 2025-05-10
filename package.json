@@ -40,6 +40,13 @@
       "subtitle": "Anytype",
       "description": "Add an existing object to a list.",
       "mode": "view"
+    },
+    {
+      "name": "create-type",
+      "title": "Create Type",
+      "subtitle": "Anytype",
+      "description": "Create a new type.",
+      "mode": "view"
     }
   ],
   "tools": [

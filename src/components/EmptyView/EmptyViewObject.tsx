@@ -1,6 +1,5 @@
 import { Action, ActionPanel, Icon, List } from "@raycast/api";
-import { CreateObjectForm } from "..";
-import { CreateObjectFormValues } from "../../create-object";
+import { CreateObjectForm, CreateObjectFormValues } from "..";
 
 type EmptyViewObjectProps = {
   title: string;
