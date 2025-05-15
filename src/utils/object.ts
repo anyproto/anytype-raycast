@@ -32,12 +32,9 @@ export function processObject(
     id: object.id,
     icon: object.icon,
     title: object.name,
-    subtitle: {
-      value: object.type.name,
-      tooltip: `Type: ${object.type.name}`,
-    },
     accessories: [
       ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
+      ...(tags ? [{ icon: Icon.Tag, tooltip: `Tags: ${tags}` }] : []),
       {
         date: hasValidDate ? new Date(date) : undefined,
         tooltip: hasValidDate
@@ -45,7 +42,6 @@ export function processObject(
           : `Never ${shortLabel}`,
         text: hasValidDate ? undefined : "—",
       },
-      ...(tags ? [{ icon: Icon.Tag, tooltip: `Tags: ${tags}` }] : []),
       {
         icon: object.type.icon,
         tooltip: `Type: ${object.type.name}`,

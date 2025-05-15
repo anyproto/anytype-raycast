@@ -39,8 +39,7 @@ export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject
             return (
               property.key === sort ||
               property.key === bundledPropKeys.source || // keep source to open bookmarks in browser
-              property.key === propKeys.tag || // keep tags for submenu and accessories
-              property.key === bundledPropKeys.description // keep description for subtitle
+              property.key === propKeys.tag // keep tags for submenu and accessories
             );
           }) || []) as PropertyWithValue[],
         ),
