@@ -494,7 +494,7 @@ export function ObjectActions({
             shortcut={Keyboard.Shortcut.Common.New}
             onAction={() => {
               if (isType) {
-                push(<CreateTypeForm draftValues={{ space: space.id, name: searchText || "" }} />);
+                push(<CreateTypeForm draftValues={{ spaceId: space.id, name: searchText }} enableDrafts={false} />);
               } else if (isProperty) {
                 push(<CreatePropertyForm spaceId={space.id} draftValues={{ name: searchText || "" }} />);
               } else {

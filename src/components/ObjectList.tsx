@@ -342,7 +342,7 @@ export function ObjectList({ space }: ObjectListProps) {
                 <EmptyViewType
                   title={`No ${currentView.charAt(0).toUpperCase() + currentView.slice(1)} Found`}
                   contextValues={{
-                    space: space.id,
+                    spaceId: space.id,
                     name: searchText,
                   }}
                 />
