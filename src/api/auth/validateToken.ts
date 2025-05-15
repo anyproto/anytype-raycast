@@ -15,7 +15,6 @@ export async function checkApiTokenValidity(): Promise<boolean> {
         "App Update Required",
         `Please update the Anytype app to match the extension's API version ${currentApiVersion}.`,
       );
-      return false;
     } else if (apiVersion > currentApiVersion) {
       await showToast(
         Toast.Style.Failure,
