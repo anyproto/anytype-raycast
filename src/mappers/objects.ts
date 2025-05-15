@@ -36,7 +36,12 @@ export async function mapObjects(objects: RawSpaceObject[]): Promise<SpaceObject
               // When sorting by name, keep the 'LastModifiedDate' property for tooltip purposes
               return property.key === SortProperty.LastModifiedDate;
             }
-            return property.key === sort || property.key === bundledPropKeys.source || property.key === propKeys.tag; // keep source to open bookmarks in browser, and tags for submenu
+            return (
+              property.key === sort ||
+              property.key === bundledPropKeys.source || // keep source to open bookmarks in browser
+              property.key === propKeys.tag || // keep tags for submenu and accessories
+              property.key === bundledPropKeys.description // keep description for subtitle
+            );
           }) || []) as PropertyWithValue[],
         ),
       };
