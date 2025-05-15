@@ -32,6 +32,7 @@ export function processObject(
     id: object.id,
     icon: object.icon,
     title: object.name,
+    subtitle: undefined,
     accessories: [
       ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
       ...(tags ? [{ icon: Icon.Tag, tooltip: `Tags: ${tags}` }] : []),
