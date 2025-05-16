@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { addObjectsToList, createObject } from "../../api";
 import { useCreateObjectData, useTagsMap } from "../../hooks";
 import {
+  AddObjectsToListRequest,
   CreateObjectRequest,
   IconFormat,
   PropertyFieldValue,
@@ -175,7 +176,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
           });
         }
 
-        const objectData: CreateObjectRequest = {
+        const request: CreateObjectRequest = {
           name: values.name || "",
           icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
           body: values.body || "",
@@ -184,11 +185,12 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
           properties: propertiesEntries,
         };
 
-        const response = await createObject(selectedSpaceId, objectData);
+        const response = await createObject(selectedSpaceId, request);
 
         if (response.object?.id) {
           if (selectedListId) {
-            await addObjectsToList(selectedSpaceId, selectedListId, [response.object.id]);
+            const request: AddObjectsToListRequest = { objects: [response.object.id] };
+            await addObjectsToList(selectedSpaceId, selectedListId, request);
             await showToast(Toast.Style.Success, "Object created and added to collection");
           } else {
             await showToast(Toast.Style.Success, "Object created successfully");

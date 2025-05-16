@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { addObjectsToList } from "./api";
 import { EnsureAuthenticated } from "./components/EnsureAuthenticated";
 import { useObjectsInList, useSearch, useSpaces } from "./hooks";
+import { AddObjectsToListRequest } from "./models";
 import { bundledTypeKeys } from "./utils";
 
 export interface AddToListValues {
@@ -54,7 +55,8 @@ export function AddToList() {
       setLoading(true);
       try {
         await showToast(Toast.Style.Animated, "Adding object to list...");
-        const response = await addObjectsToList(values.space, values.list, [values.object]);
+        const request: AddObjectsToListRequest = { objects: [values.object] };
+        const response = await addObjectsToList(values.space, values.list, request);
         if (response.payload) {
           await showToast(Toast.Style.Success, "Object added to list successfully", response.payload);
           popToRoot();

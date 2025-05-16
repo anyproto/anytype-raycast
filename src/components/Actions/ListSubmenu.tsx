@@ -3,6 +3,7 @@ import { showFailureToast } from "@raycast/utils";
 import { useState } from "react";
 import { addObjectsToList } from "../../api";
 import { useSearch } from "../../hooks";
+import { AddObjectsToListRequest } from "../../models";
 import { bundledTypeKeys } from "../../utils";
 
 interface ListSubmenuProps {
@@ -21,7 +22,8 @@ export function ListSubmenu({ spaceId, objectId }: ListSubmenuProps) {
   async function handleAddToList(listId: string) {
     await showToast({ style: Toast.Style.Animated, title: `Adding to list…` });
     try {
-      await addObjectsToList(spaceId, listId, [objectId]);
+      const request: AddObjectsToListRequest = { objects: [objectId] };
+      await addObjectsToList(spaceId, listId, request);
       await showToast({ style: Toast.Style.Success, title: "Added to list" });
     } catch (error) {
       await showFailureToast(error, { title: "Failed to add to list" });
