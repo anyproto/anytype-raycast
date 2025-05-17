@@ -108,7 +108,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
         properties.forEach((prop) => {
           const raw = itemProps[prop.key]?.value;
           if (raw !== undefined && raw !== null && raw !== "" && raw !== false) {
-            const entry: PropertyLinkWithValue = { key: prop.key, format: prop.format };
+            const entry: PropertyLinkWithValue = { key: prop.key };
             switch (prop.format) {
               case PropertyFormat.Text:
                 entry.text = String(raw);
@@ -162,7 +162,6 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
         if (descriptionValue !== undefined && descriptionValue !== null && descriptionValue !== "") {
           propertiesEntries.push({
             key: bundledPropKeys.description,
-            format: PropertyFormat.Text,
             text: String(descriptionValue),
           });
         }
@@ -171,7 +170,6 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
         if (sourceValue !== undefined && sourceValue !== null && sourceValue !== "") {
           propertiesEntries.push({
             key: bundledPropKeys.source,
-            format: PropertyFormat.Url,
             url: String(sourceValue),
           });
         }

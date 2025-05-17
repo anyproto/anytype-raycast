@@ -121,7 +121,7 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
         const propertiesEntries: PropertyLinkWithValue[] = [];
         properties.forEach((prop) => {
           const raw = itemProps[prop.key]?.value;
-          const entry: PropertyLinkWithValue = { key: prop.key, format: prop.format };
+          const entry: PropertyLinkWithValue = { key: prop.key };
           switch (prop.format) {
             case PropertyFormat.Text:
               entry.text = String(raw);
@@ -171,7 +171,6 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
         if (descriptionRaw !== undefined && descriptionRaw !== null) {
           propertiesEntries.push({
             key: bundledPropKeys.description,
-            format: PropertyFormat.Text,
             text: String(descriptionRaw),
           });
         }

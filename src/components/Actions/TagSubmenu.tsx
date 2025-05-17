@@ -7,7 +7,6 @@ import { useProperties, useTags } from "../../hooks";
 import {
   Member,
   Property,
-  PropertyFormat,
   PropertyLinkWithValue,
   PropertyWithValue,
   SpaceObject,
@@ -44,7 +43,6 @@ export function TagSubmenu({ spaceId, object, mutate, mutateObject }: TagSubmenu
 
       const propertyUpdate: PropertyLinkWithValue = {
         key: propKeys.tag,
-        format: PropertyFormat.MultiSelect,
         multi_select: newTagIds,
       };
 
@@ -71,7 +69,6 @@ export function TagSubmenu({ spaceId, object, mutate, mutateObject }: TagSubmenu
 
       const propertyUpdate: PropertyLinkWithValue = {
         key: propKeys.tag,
-        format: PropertyFormat.MultiSelect,
         multi_select: newTagIds,
       };
 
