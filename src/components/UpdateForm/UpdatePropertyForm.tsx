@@ -1,11 +1,12 @@
 import { Action, ActionPanel, Form, Icon, showToast, Toast, useNavigation } from "@raycast/api";
 import { MutatePromise, showFailureToast, useForm } from "@raycast/utils";
-import { updateProperty } from "../../api"; // ← import your new helper
+import { updateProperty } from "../../api";
 import { Property, PropertyFormat } from "../../models";
 
 export interface UpdatePropertyFormValues {
   name: string;
   format: string;
+  key: string;
 }
 
 interface UpdatePropertyFormProps {
@@ -19,12 +20,13 @@ export function UpdatePropertyForm({ spaceId, property, mutateProperties }: Upda
   const { handleSubmit, itemProps } = useForm<UpdatePropertyFormValues>({
     initialValues: {
       name: property.name,
+      key: property.key,
     },
     onSubmit: async (values) => {
       try {
         await showToast({ style: Toast.Style.Animated, title: "Updating property..." });
 
-        await updateProperty(spaceId, property.id, { name: values.name });
+        await updateProperty(spaceId, property.id, { name: values.name, key: values.key });
 
         showToast(Toast.Style.Success, "Property updated successfully");
         mutateProperties.forEach((mutate) => mutate());
@@ -63,6 +65,7 @@ export function UpdatePropertyForm({ spaceId, property, mutateProperties }: Upda
         autoFocus={true}
         info="The name of the property"
       />
+      <Form.TextField {...itemProps.key} title="Key" placeholder="Enter property key" info="The key of the property" />
     </Form>
   );
 }

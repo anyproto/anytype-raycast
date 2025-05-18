@@ -21,10 +21,12 @@ export enum PropertyFormat {
 export interface CreatePropertyRequest {
   name: string;
   format: PropertyFormat;
+  key?: string;
 }
 
 export interface UpdatePropertyRequest {
-  name: string;
+  name?: string;
+  key?: string;
 }
 
 export interface RawProperty {

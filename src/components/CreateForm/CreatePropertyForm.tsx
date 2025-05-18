@@ -6,6 +6,7 @@ import { PropertyFormat } from "../../models";
 export interface CreatePropertyFormValues {
   name: string;
   format?: string;
+  key?: string;
 }
 
 interface CreatePropertyFormProps {
@@ -23,6 +24,7 @@ export function CreatePropertyForm({ spaceId, draftValues }: CreatePropertyFormP
         await createProperty(spaceId, {
           name: values.name,
           format: values.format as PropertyFormat,
+          key: values.key,
         });
 
         showToast(Toast.Style.Success, "Property created successfully");
@@ -61,6 +63,7 @@ export function CreatePropertyForm({ spaceId, draftValues }: CreatePropertyFormP
           );
         })}
       </Form.Dropdown>
+      <Form.TextField {...itemProps.key} title="Key" placeholder="Enter property key" info="The key of the property" />
     </Form>
   );
 }
