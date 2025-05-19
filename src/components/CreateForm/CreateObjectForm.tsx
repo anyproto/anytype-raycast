@@ -412,32 +412,31 @@ It supports:
           )}
           <Form.Separator />
 
-          {properties.map((prop) => {
-            const tags = (tagsMap && tagsMap[prop.id]) ?? [];
-            const id = prop.key;
-            const title = prop.name;
+          {properties.map((property) => {
+            const tags = (tagsMap && tagsMap[property.id]) ?? [];
+            const title = property.name;
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { value, defaultValue, ...restItemProps } = itemProps[id];
+            const { value, defaultValue, ...restItemProps } = itemProps[property.key];
 
-            switch (prop.format) {
+            switch (property.format) {
               case PropertyFormat.Text:
               case PropertyFormat.Url:
               case PropertyFormat.Email:
               case PropertyFormat.Phone:
                 return (
                   <Form.TextField
-                    key={prop.key}
+                    key={property.id}
                     {...restItemProps}
                     title={title}
-                    placeholder={textFieldPlaceholderMap[prop.format]}
+                    placeholder={textFieldPlaceholderMap[property.format]}
                     value={String(value ?? "")}
                   />
                 );
               case PropertyFormat.Number:
                 return (
                   <Form.TextField
-                    key={prop.key}
+                    key={property.id}
                     {...restItemProps}
                     title={title}
                     placeholder="Add number"
@@ -447,7 +446,7 @@ It supports:
               case PropertyFormat.Select:
                 return (
                   <Form.Dropdown
-                    key={prop.key}
+                    key={property.id}
                     {...restItemProps}
                     title={title}
                     value={String(value ?? "")}
@@ -473,7 +472,7 @@ It supports:
                 return (
                   <Form.TagPicker
                     {...restItemProps}
-                    key={prop.key}
+                    key={property.id}
                     title={title}
                     value={Array.isArray(value) ? (value as string[]) : []}
                     placeholder="Add tags"
@@ -492,7 +491,7 @@ It supports:
                 return (
                   <Form.DatePicker
                     {...restItemProps}
-                    key={prop.key}
+                    key={property.id}
                     title={title}
                     defaultValue={value as Date | undefined}
                   />
@@ -502,14 +501,14 @@ It supports:
                 return null;
               case PropertyFormat.Checkbox:
                 return (
-                  <Form.Checkbox key={prop.key} {...restItemProps} title={title} label="" value={Boolean(value)} />
+                  <Form.Checkbox key={property.id} {...restItemProps} title={title} label="" value={Boolean(value)} />
                 );
               case PropertyFormat.Objects:
                 return (
                   // TODO: TagPicker would be the more appropriate component, but it does not support onSearchTextChange
                   <Form.Dropdown
                     {...restItemProps}
-                    key={prop.key}
+                    key={property.id}
                     title={title}
                     value={String(value ?? "")}
                     onSearchTextChange={setObjectSearchText}
@@ -530,7 +529,7 @@ It supports:
                   </Form.Dropdown>
                 );
               default:
-                console.warn(`Unsupported property format: ${prop.format}`);
+                console.warn(`Unsupported property format: ${property.format}`);
                 return null;
             }
           })}

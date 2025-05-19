@@ -246,23 +246,22 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
 
       <Form.Separator />
 
-      {properties.map((prop) => {
-        const tags = (tagsMap && tagsMap[prop.id]) ?? [];
-        const id = prop.key;
+      {properties.map((property) => {
+        const tags = (tagsMap && tagsMap[property.id]) ?? [];
 
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { value, defaultValue, ...restItemProps } = itemProps[id];
+        const { value, defaultValue, ...restItemProps } = itemProps[property.key];
 
-        switch (prop.format) {
+        switch (property.format) {
           case PropertyFormat.Text:
           case PropertyFormat.Url:
           case PropertyFormat.Email:
           case PropertyFormat.Phone:
             return (
               <Form.TextField
-                key={prop.key}
+                key={property.id}
                 {...restItemProps}
-                title={prop.name}
+                title={property.name}
                 placeholder="Add text"
                 value={String(value ?? "")}
               />
@@ -270,9 +269,9 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
           case PropertyFormat.Number:
             return (
               <Form.TextField
-                key={prop.key}
+                key={property.id}
                 {...restItemProps}
-                title={prop.name}
+                title={property.name}
                 placeholder="Add number"
                 value={String(value ?? "")}
               />
@@ -280,11 +279,11 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
           case PropertyFormat.Select:
             return (
               <Form.Dropdown
-                key={prop.key}
+                key={property.id}
                 {...restItemProps}
-                title={prop.name}
+                title={property.name}
                 value={String(value ?? "")}
-                placeholder={`Select tags for ${prop.name}`}
+                placeholder={`Select tags for ${property.name}`}
               >
                 <Form.Dropdown.Item
                   key="none"
@@ -305,9 +304,9 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
           case PropertyFormat.MultiSelect:
             return (
               <Form.TagPicker
-                key={prop.key}
+                key={property.id}
                 {...restItemProps}
-                title={prop.name}
+                title={property.name}
                 value={Array.isArray(value) ? (value as string[]) : []}
                 placeholder="Add tags"
               >
@@ -324,9 +323,9 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
           case PropertyFormat.Date:
             return (
               <Form.DatePicker
-                key={prop.key}
+                key={property.id}
                 {...restItemProps}
-                title={prop.name}
+                title={property.name}
                 defaultValue={value as Date | undefined}
               />
             );
@@ -335,14 +334,20 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
             return null;
           case PropertyFormat.Checkbox:
             return (
-              <Form.Checkbox key={prop.key} {...restItemProps} label="" title={prop.name} value={Boolean(value)} />
+              <Form.Checkbox
+                key={property.id}
+                {...restItemProps}
+                label=""
+                title={property.name}
+                value={Boolean(value)}
+              />
             );
           case PropertyFormat.Objects:
             return (
               <Form.Dropdown
-                key={prop.key}
+                key={property.id}
                 {...restItemProps}
-                title={prop.name}
+                title={property.name}
                 value={String(value ?? "")}
                 onSearchTextChange={setObjectSearchText}
                 throttle={true}

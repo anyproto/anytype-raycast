@@ -115,7 +115,7 @@ export function UpdateTypeForm({ spaceId, type, mutateTypes }: UpdateTypeFormPro
       )}
       <Form.TagPicker {...itemProps.properties} title="Properties" placeholder="Select properties">
         {properties.map((prop) => (
-          <Form.TagPicker.Item key={prop.key} value={prop.key} title={prop.name} icon={prop.icon} />
+          <Form.TagPicker.Item key={prop.id} value={prop.key} title={prop.name} icon={prop.icon} />
         ))}
       </Form.TagPicker>
     </Form>
