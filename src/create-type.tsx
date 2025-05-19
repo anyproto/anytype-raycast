@@ -3,6 +3,7 @@ import { TypeLayout } from "./models";
 
 export default function Command({ draftValues }: CreateTypeFormProps) {
   const defaultValues = {
+    key: "",
     spaceId: "",
     name: "",
     plural_name: "",

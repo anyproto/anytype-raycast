@@ -7,6 +7,7 @@ import { CreateTypeRequest, IconFormat, PropertyLink, TypeLayout } from "../../m
 import { isEmoji } from "../../utils";
 
 export interface CreateTypeFormValues {
+  key?: string;
   spaceId?: string;
   name?: string;
   plural_name?: string;
@@ -50,6 +51,7 @@ export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProp
           }) || [];
 
         const request: CreateTypeRequest = {
+          key: values.key || "",
           name: values.name || "",
           plural_name: values.plural_name || "",
           icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
@@ -108,6 +110,7 @@ export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProp
           <Form.TagPicker.Item key={prop.key} value={prop.key} title={prop.name} icon={prop.icon} />
         ))}
       </Form.TagPicker>
+      <Form.TextField {...itemProps.key} title="Key" placeholder="Add key" />
     </Form>
   );
 }

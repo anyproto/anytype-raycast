@@ -4,9 +4,9 @@ import { updateProperty } from "../../api";
 import { Property, PropertyFormat } from "../../models";
 
 export interface UpdatePropertyFormValues {
+  key: string;
   name: string;
   format: string;
-  key: string;
 }
 
 interface UpdatePropertyFormProps {
@@ -19,14 +19,14 @@ export function UpdatePropertyForm({ spaceId, property, mutateProperties }: Upda
   const { pop } = useNavigation();
   const { handleSubmit, itemProps } = useForm<UpdatePropertyFormValues>({
     initialValues: {
-      name: property.name,
       key: property.key,
+      name: property.name,
     },
     onSubmit: async (values) => {
       try {
         await showToast({ style: Toast.Style.Animated, title: "Updating property..." });
 
-        await updateProperty(spaceId, property.id, { name: values.name, key: values.key });
+        await updateProperty(spaceId, property.id, { key: values.key, name: values.name });
 
         showToast(Toast.Style.Success, "Property updated successfully");
         mutateProperties.forEach((mutate) => mutate());

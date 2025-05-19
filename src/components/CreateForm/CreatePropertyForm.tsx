@@ -4,9 +4,9 @@ import { createProperty } from "../../api";
 import { PropertyFormat } from "../../models";
 
 export interface CreatePropertyFormValues {
+  key?: string;
   name: string;
   format?: string;
-  key?: string;
 }
 
 interface CreatePropertyFormProps {

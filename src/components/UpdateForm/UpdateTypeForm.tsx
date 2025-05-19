@@ -7,6 +7,7 @@ import { IconFormat, ObjectLayout, PropertyLink, RawType, Type, TypeLayout, Upda
 import { isEmoji } from "../../utils";
 
 export interface UpdateTypeFormValues {
+  key: string;
   name: string;
   plural_name: string;
   icon?: string;
@@ -31,6 +32,7 @@ export function UpdateTypeForm({ spaceId, type, mutateTypes }: UpdateTypeFormPro
     icon: type.icon.format === IconFormat.Emoji ? type.icon.emoji : undefined,
     layout: type.layout,
     properties: type.properties?.map((p) => p.key) || [],
+    key: type.key,
   };
 
   const { handleSubmit, itemProps } = useForm<UpdateTypeFormValues>({
@@ -50,6 +52,7 @@ export function UpdateTypeForm({ spaceId, type, mutateTypes }: UpdateTypeFormPro
           }) || [];
 
         const request: UpdateTypeRequest = {
+          key: values.key,
           name: values.name,
           plural_name: values.plural_name,
           icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
@@ -118,6 +121,7 @@ export function UpdateTypeForm({ spaceId, type, mutateTypes }: UpdateTypeFormPro
           <Form.TagPicker.Item key={prop.id} value={prop.key} title={prop.name} icon={prop.icon} />
         ))}
       </Form.TagPicker>
+      <Form.TextField {...itemProps.key} title="Key" placeholder="Add key" />
     </Form>
   );
 }

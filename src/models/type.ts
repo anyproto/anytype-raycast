@@ -20,6 +20,7 @@ export enum ObjectLayout {
 }
 
 export interface CreateTypeRequest {
+  key?: string;
   name: string;
   plural_name: string;
   icon: ObjectIcon;
@@ -28,6 +29,7 @@ export interface CreateTypeRequest {
 }
 
 export interface UpdateTypeRequest {
+  key?: string;
   name?: string;
   plural_name?: string;
   icon?: ObjectIcon;
