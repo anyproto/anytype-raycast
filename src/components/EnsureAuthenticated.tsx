@@ -13,7 +13,7 @@ import {
 } from "@raycast/api";
 import { showFailureToast, useForm } from "@raycast/utils";
 import { useEffect, useState } from "react";
-import { checkApiTokenValidity, displayCode, getToken } from "../api";
+import { checkApiTokenValidity, createApiKey, createChallenge } from "../api";
 import { apiAppName, downloadUrl, localStorageKeys } from "../utils";
 
 type EnsureAuthenticatedProps = {
@@ -40,8 +40,8 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
 
       try {
         setIsLoading(true);
-        const { app_key } = await getToken(challengeId, values.userCode);
-        await LocalStorage.setItem(localStorageKeys.appKey, app_key);
+        const { api_key } = await createApiKey({ challenge_id: challengeId, code: values.userCode });
+        await LocalStorage.setItem(localStorageKeys.appKey, api_key);
         await showToast({ style: Toast.Style.Success, title: "Successfully paired" });
         setHasToken(true);
         setTokenIsValid(true);
@@ -79,7 +79,7 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
   async function startChallenge() {
     try {
       setIsLoading(true);
-      const { challenge_id } = await displayCode(apiAppName);
+      const { challenge_id } = await createChallenge({ app_name: apiAppName });
       setChallengeId(challenge_id);
 
       // Prevent window from closing
