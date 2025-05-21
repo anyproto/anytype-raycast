@@ -16,6 +16,7 @@ import {
   Type,
 } from "../models";
 import { bundledPropKeys, injectEmojiIntoHeading } from "../utils";
+import { CollectionList } from "./Lists/CollectionList";
 
 type ObjectDetailProps = {
   space: Space;
@@ -310,17 +311,21 @@ export function ObjectDetail({
           <Detail.Metadata.TagList key={property.id} title={titleText}>
             {property.objects.map((objectItem, index) => {
               const handleAction = () => {
-                push(
-                  <ObjectDetail
-                    space={space}
-                    objectId={objectItem.id}
-                    title={objectItem.name}
-                    layout={objectItem.layout}
-                    viewType={viewType}
-                    isGlobalSearch={isGlobalSearch}
-                    isPinned={isPinned}
-                  />,
-                );
+                if (objectItem.layout === ObjectLayout.Collection || objectItem.layout === ObjectLayout.Set) {
+                  push(<CollectionList space={space} listId={objectItem.id} listName={objectItem.name} />);
+                } else {
+                  push(
+                    <ObjectDetail
+                      space={space}
+                      objectId={objectItem.id}
+                      title={objectItem.name}
+                      layout={objectItem.layout}
+                      viewType={viewType}
+                      isGlobalSearch={isGlobalSearch}
+                      isPinned={isPinned}
+                    />,
+                  );
+                }
               };
 
               return (
