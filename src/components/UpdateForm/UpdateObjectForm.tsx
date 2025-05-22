@@ -7,6 +7,7 @@ import { useSearch, useTagsMap } from "../../hooks";
 import {
   IconFormat,
   ObjectIcon,
+  ObjectLayout,
   PropertyFieldValue,
   PropertyFormat,
   PropertyLinkWithValue,
@@ -15,7 +16,7 @@ import {
   SpaceObjectWithBody,
   UpdateObjectRequest,
 } from "../../models";
-import { bundledPropKeys, bundledTypeKeys, defaultTintColor, getNumberFieldValidations, isEmoji } from "../../utils";
+import { bundledPropKeys, defaultTintColor, getNumberFieldValidations, isEmoji } from "../../utils";
 
 interface UpdateObjectFormValues {
   name?: string;
@@ -202,7 +203,7 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
     validation: {
       name: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : "";
-        if (![bundledTypeKeys.bookmark, bundledTypeKeys.note].includes(object.type.key) && !s) {
+        if (object.layout !== ObjectLayout.Note && object.layout !== ObjectLayout.Bookmark && !s) {
           return "Name is required";
         }
       },
@@ -225,23 +226,26 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
         </ActionPanel>
       }
     >
-      {![bundledTypeKeys.note].includes(object.type.key) && (
+      {object.layout !== ObjectLayout.Note && (
         <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" info="Enter the name of the object" />
       )}
-      {![bundledTypeKeys.task, bundledTypeKeys.note, bundledTypeKeys.profile].includes(object.type.key) && (
-        <Form.TextField
-          {...itemProps.icon}
-          title="Icon"
-          placeholder="Add emoji"
-          info={
-            object.icon.format === IconFormat.File
-              ? "Current icon is a file. Enter an emoji to replace it."
-              : object.icon.format === IconFormat.Icon
-                ? "Current icon is a built-in icon. Enter an emoji to replace it."
-                : "Add an emoji to change the icon"
-          }
-        />
-      )}
+      {object.layout !== ObjectLayout.Note &&
+        object.layout !== ObjectLayout.Bookmark &&
+        object.layout !== ObjectLayout.Action &&
+        object.layout !== ObjectLayout.Profile && (
+          <Form.TextField
+            {...itemProps.icon}
+            title="Icon"
+            placeholder="Add emoji"
+            info={
+              object.icon.format === IconFormat.File
+                ? "Current icon is a file. Enter an emoji to replace it."
+                : object.icon.format === IconFormat.Icon
+                  ? "Current icon is a built-in icon. Enter an emoji to replace it."
+                  : "Add an emoji to change the icon"
+            }
+          />
+        )}
       <Form.TextField
         {...itemProps.description}
         title="Description"

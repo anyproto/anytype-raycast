@@ -8,13 +8,13 @@ import {
   AddObjectsToListRequest,
   CreateObjectRequest,
   IconFormat,
+  ObjectLayout,
   PropertyFieldValue,
   PropertyFormat,
   PropertyLinkWithValue,
 } from "../../models";
 import {
   bundledPropKeys,
-  bundledTypeKeys,
   defaultTintColor,
   fetchTypeKeysForLists,
   getNumberFieldValidations,
@@ -206,7 +206,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     validation: {
       name: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : undefined;
-        if (![bundledTypeKeys.bookmark, bundledTypeKeys.note].includes(selectedTypeKey) && !s) {
+        if (selectedTypeDef?.layout !== ObjectLayout.Note && selectedTypeDef?.layout !== ObjectLayout.Bookmark && !s) {
           return "Name is required";
         }
       },
@@ -217,7 +217,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       },
       source: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : undefined;
-        if (selectedTypeId === bundledTypeKeys.bookmark && !s) {
+        if (selectedTypeDef?.layout === ObjectLayout.Bookmark && !s) {
           return "Source is required for Bookmarks";
         }
       },
@@ -361,7 +361,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
 
       {hasSelectedSpaceIdAndType && (
         <>
-          {![bundledTypeKeys.bookmark, bundledTypeKeys.note].includes(selectedTypeKey) && (
+          {selectedTypeDef?.layout !== ObjectLayout.Note && selectedTypeDef?.layout !== ObjectLayout.Bookmark && (
             <Form.TextField
               {...itemProps.name}
               title="Name"
@@ -369,17 +369,18 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
               info="Enter the name of the object"
             />
           )}
-          {![bundledTypeKeys.bookmark, bundledTypeKeys.task, bundledTypeKeys.note, bundledTypeKeys.profile].includes(
-            selectedTypeKey,
-          ) && (
-            <Form.TextField
-              {...itemProps.icon}
-              title="Icon"
-              placeholder="Add emoji"
-              info="Enter a single emoji character to represent the object"
-            />
-          )}
-          {selectedTypeKey !== bundledTypeKeys.bookmark ? (
+          {selectedTypeDef?.layout !== ObjectLayout.Bookmark &&
+            selectedTypeDef?.layout !== ObjectLayout.Note &&
+            selectedTypeDef?.layout !== ObjectLayout.Action &&
+            selectedTypeDef?.layout !== ObjectLayout.Profile && (
+              <Form.TextField
+                {...itemProps.icon}
+                title="Icon"
+                placeholder="Add emoji"
+                info="Enter a single emoji character to represent the object"
+              />
+            )}
+          {selectedTypeDef?.layout !== ObjectLayout.Bookmark ? (
             <>
               <Form.TextField
                 {...itemProps.description}
