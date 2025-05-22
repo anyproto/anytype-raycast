@@ -3,14 +3,25 @@ import { MutatePromise, showFailureToast, useForm } from "@raycast/utils";
 import { useState } from "react";
 import { updateType } from "../../api";
 import { useProperties } from "../../hooks";
-import { IconFormat, ObjectLayout, PropertyLink, RawType, Type, TypeLayout, UpdateTypeRequest } from "../../models";
-import { isEmoji } from "../../utils";
+import {
+  Color,
+  IconFormat,
+  IconName,
+  ObjectLayout,
+  PropertyLink,
+  RawType,
+  Type,
+  TypeLayout,
+  UpdateTypeRequest,
+} from "../../models";
+import { colorToHex, getCustomTypeIcon } from "../../utils";
 
 export interface UpdateTypeFormValues {
   key: string;
   name: string;
   plural_name: string;
-  icon?: string;
+  iconName?: string;
+  iconColor?: string;
   layout: string;
   properties?: string[];
 }
@@ -29,7 +40,8 @@ export function UpdateTypeForm({ spaceId, type, mutateTypes }: UpdateTypeFormPro
   const initialValues: UpdateTypeFormValues = {
     name: type.name,
     plural_name: type.plural_name,
-    icon: type.icon.format === IconFormat.Emoji ? type.icon.emoji : undefined,
+    iconName: type.icon.format === IconFormat.Icon ? type.icon.name : IconName.Document,
+    iconColor: type.icon.format === IconFormat.Icon ? type.icon.color : Color.Grey,
     layout: type.layout,
     properties: type.properties?.map((p) => p.key) || [],
     key: type.key,
@@ -55,7 +67,11 @@ export function UpdateTypeForm({ spaceId, type, mutateTypes }: UpdateTypeFormPro
           key: values.key,
           name: values.name,
           plural_name: values.plural_name,
-          icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
+          icon: {
+            format: IconFormat.Icon,
+            name: values.iconName || IconName.Document,
+            color: values.iconColor || Color.Grey,
+          },
           ...(availableLayouts.includes(values.layout as TypeLayout) ? { layout: values.layout as TypeLayout } : {}),
           properties: propertyLinks,
         };
@@ -74,11 +90,12 @@ export function UpdateTypeForm({ spaceId, type, mutateTypes }: UpdateTypeFormPro
     validation: {
       name: (v) => (!v ? "Name is required" : undefined),
       plural_name: (v) => (!v ? "Plural name is required" : undefined),
-      icon: (v) => (v && !isEmoji(v) ? "Icon must be a single emoji" : undefined),
     },
   });
 
   const layoutKeys = Object.keys(TypeLayout) as Array<keyof typeof TypeLayout>;
+  const colorKeys = Object.keys(Color) as Array<keyof typeof Color>;
+  const iconKeys = Object.keys(IconName) as Array<keyof typeof IconName>;
   const availableLayouts = Object.values(TypeLayout);
   const isFixedLayout = !availableLayouts.includes(type.layout as unknown as TypeLayout);
 
@@ -99,12 +116,36 @@ export function UpdateTypeForm({ spaceId, type, mutateTypes }: UpdateTypeFormPro
         placeholder="Add plural name"
         info="The plural name of the type"
       />
-      <Form.TextField
-        {...itemProps.icon}
+      <Form.Dropdown
+        {...itemProps.iconName}
         title="Icon"
-        placeholder="Add emoji"
-        info="Enter a single emoji character to represent the type"
-      />
+        placeholder="Select an icon"
+        info="Choose an icon for the type"
+      >
+        {iconKeys.map((name) => (
+          <Form.Dropdown.Item
+            key={name}
+            value={IconName[name]}
+            title={name}
+            icon={getCustomTypeIcon(IconName[name], itemProps.iconColor?.value || Color.Grey)}
+          />
+        ))}
+      </Form.Dropdown>
+      <Form.Dropdown
+        {...itemProps.iconColor}
+        title="Icon Color"
+        placeholder="Select a color"
+        info="Choose a color for the icon"
+      >
+        {colorKeys.map((color) => (
+          <Form.Dropdown.Item
+            key={color}
+            value={Color[color]}
+            title={color}
+            icon={{ source: Icon.Dot, tintColor: { light: colorToHex[Color[color]], dark: colorToHex[Color[color]] } }}
+          />
+        ))}
+      </Form.Dropdown>
       {isFixedLayout ? (
         <Form.Dropdown id={itemProps.layout.id} title="Layout" info="Layout of system types cannot be changed">
           <Form.Dropdown.Item

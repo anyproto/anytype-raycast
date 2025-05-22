@@ -3,15 +3,16 @@ import { showFailureToast, useForm } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { createType } from "../../api";
 import { useProperties, useSpaces } from "../../hooks";
-import { CreateTypeRequest, IconFormat, PropertyLink, TypeLayout } from "../../models";
-import { isEmoji } from "../../utils";
+import { Color, CreateTypeRequest, IconFormat, IconName, PropertyLink, TypeLayout } from "../../models";
+import { colorToHex, getCustomTypeIcon } from "../../utils";
 
 export interface CreateTypeFormValues {
   key?: string;
   spaceId?: string;
   name?: string;
   plural_name?: string;
-  icon?: string;
+  iconName?: string;
+  iconColor?: string;
   layout?: TypeLayout;
   properties?: string[];
 }
@@ -54,7 +55,11 @@ export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProp
           key: values.key || "",
           name: values.name || "",
           plural_name: values.plural_name || "",
-          icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
+          icon: {
+            format: IconFormat.Icon,
+            name: values.iconName || IconName.Document,
+            color: values.iconColor || Color.Grey,
+          },
           layout: values.layout || TypeLayout.Basic,
           properties: propertyLinks,
         };
@@ -74,11 +79,12 @@ export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProp
     validation: {
       name: (v) => (!v ? "Name is required" : undefined),
       plural_name: (v) => (!v ? "Plural name is required" : undefined),
-      icon: (v) => (typeof v === "string" && v && !isEmoji(v) ? "Icon must be a single emoji" : undefined),
     },
   });
 
   const layoutKeys = Object.keys(TypeLayout) as Array<keyof typeof TypeLayout>;
+  const colorKeys = Object.keys(Color) as Array<keyof typeof Color>;
+  const iconKeys = Object.keys(IconName) as Array<keyof typeof IconName>;
 
   return (
     <Form
@@ -110,12 +116,36 @@ export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProp
         placeholder="Add plural name"
         info="The plural name of the type"
       />
-      <Form.TextField
-        {...itemProps.icon}
+      <Form.Dropdown
+        {...itemProps.iconName}
         title="Icon"
-        placeholder="Add emoji"
-        info="Enter a single emoji character to represent the type"
-      />
+        placeholder="Select an icon"
+        info="Choose an icon for the type"
+      >
+        {iconKeys.map((name) => (
+          <Form.Dropdown.Item
+            key={name}
+            value={IconName[name]}
+            title={name}
+            icon={getCustomTypeIcon(IconName[name], itemProps.iconColor?.value || Color.Grey)}
+          />
+        ))}
+      </Form.Dropdown>
+      <Form.Dropdown
+        {...itemProps.iconColor}
+        title="Icon Color"
+        placeholder="Select a color"
+        info="Choose a color for the icon"
+      >
+        {colorKeys.map((color) => (
+          <Form.Dropdown.Item
+            key={color}
+            value={Color[color]}
+            title={color}
+            icon={{ source: Icon.Dot, tintColor: { light: colorToHex[Color[color]], dark: colorToHex[Color[color]] } }}
+          />
+        ))}
+      </Form.Dropdown>
       <Form.Dropdown
         id={itemProps.layout.id}
         title="Layout"
