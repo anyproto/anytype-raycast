@@ -226,7 +226,7 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
       }
     >
       {![bundledTypeKeys.note].includes(object.type.key) && (
-        <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" />
+        <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" info="Enter the name of the object" />
       )}
       {![bundledTypeKeys.task, bundledTypeKeys.note, bundledTypeKeys.profile].includes(object.type.key) && (
         <Form.TextField
@@ -242,7 +242,12 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
           }
         />
       )}
-      <Form.TextField {...itemProps.description} title="Description" placeholder="Add description" />
+      <Form.TextField
+        {...itemProps.description}
+        title="Description"
+        placeholder="Add description"
+        info="Provide a brief description of the object"
+      />
 
       <Form.Separator />
 

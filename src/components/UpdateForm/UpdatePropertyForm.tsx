@@ -61,11 +61,16 @@ export function UpdatePropertyForm({ spaceId, property, mutateProperties }: Upda
       <Form.TextField
         {...itemProps.name}
         title="Name"
-        placeholder="Enter property name"
+        placeholder="Add name"
         autoFocus={true}
         info="The name of the property"
       />
-      <Form.TextField {...itemProps.key} title="Key" placeholder="Enter property key" info="The key of the property" />
+      <Form.TextField
+        {...itemProps.key}
+        title="Key"
+        placeholder="Add key"
+        info="The key for the property must be unique and in snake_case format"
+      />
     </Form>
   );
 }

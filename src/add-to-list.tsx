@@ -136,6 +136,7 @@ export function AddToList() {
           onSearchTextChange={setObjectSearchText}
           throttle={true}
           storeValue={true}
+          placeholder="Search objects..."
           info="The object to add to the list"
         >
           {objects

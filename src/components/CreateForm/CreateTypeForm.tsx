@@ -91,15 +91,37 @@ export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProp
         </ActionPanel>
       }
     >
-      <Form.Dropdown {...itemProps.spaceId} title="Space" onChange={setSelectedSpace} value={selectedSpaceId}>
+      <Form.Dropdown
+        {...itemProps.spaceId}
+        title="Space"
+        onChange={setSelectedSpace}
+        value={selectedSpaceId}
+        placeholder="Search spaces..."
+        info="Select the space where the type will be created"
+      >
         {spaces.map((space) => (
           <Form.Dropdown.Item key={space.id} value={space.id} title={space.name} icon={space.icon} />
         ))}
       </Form.Dropdown>
-      <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" />
-      <Form.TextField {...itemProps.plural_name} title="Plural Name" placeholder="Add plural name" />
-      <Form.TextField {...itemProps.icon} title="Icon" placeholder="Add emoji" />
-      <Form.Dropdown id={itemProps.layout.id} title="Layout">
+      <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" info="The name of the type" />
+      <Form.TextField
+        {...itemProps.plural_name}
+        title="Plural Name"
+        placeholder="Add plural name"
+        info="The plural name of the type"
+      />
+      <Form.TextField
+        {...itemProps.icon}
+        title="Icon"
+        placeholder="Add emoji"
+        info="Enter a single emoji character to represent the type"
+      />
+      <Form.Dropdown
+        id={itemProps.layout.id}
+        title="Layout"
+        placeholder="Select layout"
+        info="Select the layout for the type"
+      >
         {layoutKeys.map((layout) => {
           const value = TypeLayout[layout];
           return <Form.Dropdown.Item key={layout} value={value} title={layout} icon={`icons/object/${layout}.svg`} />;
@@ -110,7 +132,12 @@ export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProp
           <Form.TagPicker.Item key={prop.key} value={prop.key} title={prop.name} icon={prop.icon} />
         ))}
       </Form.TagPicker>
-      <Form.TextField {...itemProps.key} title="Key" placeholder="Add key" />
+      <Form.TextField
+        {...itemProps.key}
+        title="Key"
+        placeholder="Add key"
+        info="The key for the type must be unique and in snake_case format"
+      />
     </Form>
   );
 }

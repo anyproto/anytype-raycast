@@ -49,12 +49,7 @@ export function CreatePropertyForm({ spaceId, draftValues }: CreatePropertyFormP
         </ActionPanel>
       }
     >
-      <Form.TextField
-        {...itemProps.name}
-        title="Name"
-        placeholder="Enter property name"
-        info="The name of the property"
-      />
+      <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" info="The name of the property" />
       <Form.Dropdown {...itemProps.format} title="Format" info="The format of the property">
         {propertyFormatKeys.map((key) => {
           const value = PropertyFormat[key];
@@ -63,7 +58,12 @@ export function CreatePropertyForm({ spaceId, draftValues }: CreatePropertyFormP
           );
         })}
       </Form.Dropdown>
-      <Form.TextField {...itemProps.key} title="Key" placeholder="Enter property key" info="The key of the property" />
+      <Form.TextField
+        {...itemProps.key}
+        title="Key"
+        placeholder="Add key"
+        info="The key for the property must be unique and in snake_case format"
+      />
     </Form>
   );
 }
