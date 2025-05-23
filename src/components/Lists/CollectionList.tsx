@@ -31,11 +31,9 @@ export function CollectionList({ space, listId, listName }: CollectionListProps)
     }
   }, [viewsError, objectsError]);
 
-  const filteredObjects = objects
-    ?.filter((object) => object.name.toLowerCase().includes(searchText.toLowerCase()))
-    .map((object) => {
-      return processObject(object, false, mutateObjects);
-    });
+  const filteredObjects = objects.map((object) => {
+    return processObject(object, false, mutateObjects);
+  });
 
   const resolveLayoutIcon = (layout: ViewLayout) => {
     switch (layout) {

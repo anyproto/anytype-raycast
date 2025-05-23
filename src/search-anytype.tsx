@@ -125,21 +125,10 @@ function Search() {
     };
   };
 
-  // Helper to filter objects by the search term
-  const filterObjectsBySearchTerm = (objects: SpaceObject[], searchTerm: string) => {
-    const lowerCaseSearchTerm = searchTerm.toLowerCase();
-    return objects.filter(
-      (object) =>
-        object.name.toLowerCase().includes(lowerCaseSearchTerm) ||
-        object.snippet.toLowerCase().includes(lowerCaseSearchTerm),
-    );
-  };
-
-  // Process pinned objects and filter by search term
+  // Process pinned objects
   const processedPinnedObjects = pinnedObjects?.length
     ? pinnedObjects
         .filter((object) => types.length === 0 || types.includes(object.type.key))
-        .filter((object) => filterObjectsBySearchTerm([object], searchText).length > 0)
         .map((object) => processObjectWithSpaceIcon(object, true))
     : [];
 

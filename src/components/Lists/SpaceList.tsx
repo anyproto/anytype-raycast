@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { getMembers } from "../../api";
 import { EmptyViewSpace, SpaceListItem } from "../../components";
 import { usePinnedSpaces, useSpaces } from "../../hooks";
-import { Space } from "../../models";
 import { defaultTintColor, pluralize } from "../../utils";
 
 type SpacesListProps = {
@@ -57,11 +56,7 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
     }
   }, [pinnedSpacesError]);
 
-  const filteredSpaces = spaces?.filter((space) => space.name.toLowerCase().includes(searchText.toLowerCase()));
-  const pinnedFiltered = pinnedSpaces
-    ?.map((pin) => filteredSpaces.find((space) => space.id === pin.id))
-    .filter(Boolean) as Space[];
-  const regularFiltered = filteredSpaces?.filter((space) => !pinnedFiltered?.includes(space));
+  const regularSpaces = spaces?.filter((space) => !pinnedSpaces.some((pinned) => pinned.id === space.id));
 
   return (
     <List
@@ -71,9 +66,9 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
       pagination={spacesPagination}
       throttle={true}
     >
-      {pinnedFiltered.length > 0 && (
-        <List.Section title="Pinned" subtitle={pluralize(pinnedFiltered.length, "space", { withNumber: true })}>
-          {pinnedFiltered.map((space) => {
+      {pinnedSpaces.length > 0 && (
+        <List.Section title="Pinned" subtitle={pluralize(pinnedSpaces.length, "space", { withNumber: true })}>
+          {pinnedSpaces.map((space) => {
             const memberCount = membersData[space.id] || 0;
             return (
               <SpaceListItem
@@ -99,12 +94,12 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
           })}
         </List.Section>
       )}
-      {regularFiltered.length > 0 ? (
+      {regularSpaces.length > 0 ? (
         <List.Section
           title={searchText ? "Search Results" : "All Spaces"}
-          subtitle={pluralize(regularFiltered.length, "space", { withNumber: true })}
+          subtitle={pluralize(regularSpaces.length, "space", { withNumber: true })}
         >
-          {regularFiltered.map((space) => {
+          {regularSpaces.map((space) => {
             const memberCount = membersData[space.id] || 0;
             return (
               <SpaceListItem
