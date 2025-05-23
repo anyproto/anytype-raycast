@@ -22,6 +22,7 @@ export function CollectionList({ space, listId, listName }: CollectionListProps)
     space.id,
     listId,
     viewId,
+    searchText,
   );
 
   useEffect(() => {

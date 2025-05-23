@@ -12,10 +12,10 @@ type SpacesListProps = {
 };
 
 export function SpaceList({ searchPlaceholder }: SpacesListProps) {
-  const { spaces, spacesError, mutateSpaces, isLoadingSpaces, spacesPagination } = useSpaces();
-  const { pinnedSpaces, pinnedSpacesError, isLoadingPinnedSpaces, mutatePinnedSpaces } = usePinnedSpaces();
   const [searchText, setSearchText] = useState("");
   const [membersData, setMembersData] = useState<{ [spaceId: string]: number }>({});
+  const { spaces, spacesError, mutateSpaces, isLoadingSpaces, spacesPagination } = useSpaces(searchText);
+  const { pinnedSpaces, pinnedSpacesError, isLoadingPinnedSpaces, mutatePinnedSpaces } = usePinnedSpaces();
 
   useEffect(() => {
     if (!spaces) return;
@@ -69,6 +69,7 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
       onSearchTextChange={setSearchText}
       searchBarPlaceholder={searchPlaceholder}
       pagination={spacesPagination}
+      throttle={true}
     >
       {pinnedFiltered.length > 0 && (
         <List.Section title="Pinned" subtitle={pluralize(pinnedFiltered.length, "space", { withNumber: true })}>
