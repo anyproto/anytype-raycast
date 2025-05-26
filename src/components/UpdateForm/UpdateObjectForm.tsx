@@ -104,7 +104,7 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
   );
 
   const descriptionEntry = object.properties.find((p) => p.key === bundledPropKeys.description);
-  const initialIconValue = object.icon.format === IconFormat.Emoji ? (object.icon.emoji ?? "") : "";
+  const initialIconValue = object.icon?.format === IconFormat.Emoji ? (object.icon.emoji ?? "") : "";
 
   const initialValues: UpdateObjectFormValues = {
     name: object.name,
@@ -238,9 +238,9 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
             title="Icon"
             placeholder="Add emoji"
             info={
-              object.icon.format === IconFormat.File
+              object.icon?.format === IconFormat.File
                 ? "Current icon is a file. Enter an emoji to replace it."
-                : object.icon.format === IconFormat.Icon
+                : object.icon?.format === IconFormat.Icon
                   ? "Current icon is a built-in icon. Enter an emoji to replace it."
                   : "Add an emoji to change the icon"
             }
