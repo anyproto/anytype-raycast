@@ -17,13 +17,13 @@ export interface CreateTypeFormValues {
 }
 
 export interface CreateTypeFormProps {
-  draftValues: CreateTypeFormValues;
+  draftValues?: CreateTypeFormValues;
   enableDrafts: boolean;
 }
 
 export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProps) {
   const [loading, setLoading] = useState(false);
-  const [selectedSpaceId, setSelectedSpace] = useState<string>(draftValues.spaceId || "");
+  const [selectedSpaceId, setSelectedSpace] = useState<string>(draftValues?.spaceId || "");
 
   const { spaces, isLoadingSpaces, spacesError } = useSpaces();
   const { properties, isLoadingProperties, propertiesError } = useProperties(selectedSpaceId);
