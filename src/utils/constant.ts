@@ -4,7 +4,7 @@ import { BodyFormat } from "../models";
 import { encodeQueryParams } from "./query";
 
 // Strings
-export const apiAppName = "raycast_v3_0425";
+export const apiAppName = "raycast_v4_0525";
 export const anytypeNetwork = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU";
 export const errorConnectionMessage = "Can't connect to API. Please ensure Anytype is running and reachable.";
 
