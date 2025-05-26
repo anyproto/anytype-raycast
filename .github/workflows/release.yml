@@ -8,8 +8,6 @@ on:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
-    env:
-      BUILD_DIR: "/root/.config/raycast/extensions/anytype"
 
     steps:
       - name: Checkout tag
@@ -34,6 +32,9 @@ jobs:
 
       - name: Build extension
         run: npm run build
+
+      - name: Compute BUILD_DIR
+        run: echo "BUILD_DIR=$HOME/.config/raycast/extensions/anytype" >> $GITHUB_ENV
 
       - name: Verify build output
         run: |
