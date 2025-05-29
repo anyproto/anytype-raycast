@@ -78,7 +78,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
   const selectedTypeKey = selectedTypeDef?.key ?? "";
   const hasSelectedSpaceIdAndType = Boolean(selectedSpaceId && selectedTypeKey);
 
-  const properties = selectedTypeDef?.properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key)) || [];
+  const properties = selectedTypeDef?.properties?.filter((p) => !Object.values(bundledPropKeys).includes(p.key)) || [];
   const { tagsMap } = useTagsMap(
     selectedSpaceId,
     properties
