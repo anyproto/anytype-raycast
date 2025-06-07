@@ -5,6 +5,10 @@ on:
     tags:
       - "v*.*.*"
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
@@ -48,7 +52,7 @@ jobs:
           TAR_NAME="anytype-raycast-${{ github.ref_name }}.tar.gz"
           tar czf "${GITHUB_WORKSPACE}/${TAR_NAME}" --transform "s,^,anytype-raycast-${{ github.ref_name }}/," -C "${BUILD_DIR}" .
 
-      - name: Create GitHub Release & Upload Asset
+      - name: Create Release & Upload Asset
         uses: softprops/action-gh-release@v2
         with:
           name: ${{ github.ref_name }}
