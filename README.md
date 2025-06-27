@@ -1,6 +1,6 @@
 # Anytype for Raycast
 
-Create, browse and search in Anytype - right at your fingertips, anywhere on your Mac.
+Create, browse, search and edit within Anytype - right at your fingertips, anywhere on your Mac.
 
 ## Setup
 
