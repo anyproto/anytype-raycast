@@ -185,7 +185,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
 
         const response = await createObject(selectedSpaceId, request);
 
-        if (response.object?.id) {
+        if (response.object.id) {
           if (selectedListId) {
             const request: AddObjectsToListRequest = { objects: [response.object.id] };
             await addObjectsToList(selectedSpaceId, selectedListId, request);
