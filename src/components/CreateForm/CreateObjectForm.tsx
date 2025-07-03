@@ -279,7 +279,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       }
     >
       <Form.Dropdown
-        id="space"
+        id="spaceId"
         title="Space"
         value={selectedSpaceId}
         onChange={(v) => {
@@ -300,7 +300,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       </Form.Dropdown>
 
       <Form.Dropdown
-        id="type"
+        id="typeId"
         title="Type"
         value={selectedTypeId}
         onChange={setSelectedTypeId}
@@ -314,7 +314,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       </Form.Dropdown>
 
       <Form.Dropdown
-        id="template"
+        id="templateId"
         title="Template"
         value={selectedTemplateId}
         onChange={setSelectedTemplateId}
@@ -334,7 +334,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       </Form.Dropdown>
 
       <Form.Dropdown
-        id="list"
+        id="listId"
         title="Collection"
         value={selectedListId}
         onChange={setSelectedListId}
