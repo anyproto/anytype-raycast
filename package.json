@@ -758,11 +758,11 @@
       "required": false
     },
     {
-      "name": "port",
-      "title": "Port",
-      "description": "The port number the Anytype API is running on.",
+      "name": "apiUrl",
+      "title": "API URL",
+      "description": "The base URL of the Anytype API (default: http://127.0.0.1:31009).",
       "type": "textfield",
-      "default": "31009",
+      "default": "http://127.0.0.1:31009",
       "required": false
     }
   ],
