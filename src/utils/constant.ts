@@ -121,7 +121,12 @@ export const apiEndpoints = {
     url: `${apiUrl}/v1/spaces/${spaceId}/lists/${listId}/views${encodeQueryParams(options)}`,
     method: "GET",
   }),
-  getObjectsInList: (spaceId: string, listId: string, viewId: string, options: { offset: number; limit: number }) => ({
+  getObjectsInList: (
+    spaceId: string,
+    listId: string,
+    viewId: string,
+    options: { offset: number; limit: number; name?: string },
+  ) => ({
     url: `${apiUrl}/v1/spaces/${spaceId}/lists/${listId}/views/${viewId}/objects${encodeQueryParams(options)}`,
     method: "GET",
   }),
@@ -139,7 +144,7 @@ export const apiEndpoints = {
     url: `${apiUrl}/v1/spaces/${spaceId}/objects/${objectId}${encodeQueryParams({ format })}`,
     method: "GET",
   }),
-  getObjects: (spaceId: string, options: { offset: number; limit: number }) => ({
+  getObjects: (spaceId: string, options: { offset: number; limit: number; name?: string }) => ({
     url: `${apiUrl}/v1/spaces/${spaceId}/objects${encodeQueryParams(options)}`,
     method: "GET",
   }),
@@ -161,7 +166,7 @@ export const apiEndpoints = {
   }),
 
   // properties
-  getProperties: (spaceId: string, options: { offset: number; limit: number }) => ({
+  getProperties: (spaceId: string, options: { offset: number; limit: number; name?: string }) => ({
     url: `${apiUrl}/v1/spaces/${spaceId}/properties${encodeQueryParams(options)}`,
     method: "GET",
   }),
@@ -183,7 +188,7 @@ export const apiEndpoints = {
   }),
 
   // tags
-  getTags: (spaceId: string, propertyId: string, options: { offset: number; limit: number }) => ({
+  getTags: (spaceId: string, propertyId: string, options: { offset: number; limit: number; name?: string }) => ({
     url: `${apiUrl}/v1/spaces/${spaceId}/properties/${propertyId}/tags${encodeQueryParams(options)}`,
     method: "GET",
   }),
@@ -219,7 +224,7 @@ export const apiEndpoints = {
     url: `${apiUrl}/v1/spaces/${spaceId}`,
     method: "GET",
   }),
-  getSpaces: (options: { offset: number; limit: number }) => ({
+  getSpaces: (options: { offset: number; limit: number; name?: string }) => ({
     url: `${apiUrl}/v1/spaces${encodeQueryParams(options)}`,
     method: "GET",
   }),
@@ -237,7 +242,7 @@ export const apiEndpoints = {
     url: `${apiUrl}/v1/spaces/${spaceId}/members/${objectId}`,
     method: "GET",
   }),
-  getMembers: (spaceId: string, options: { offset: number; limit: number }) => ({
+  getMembers: (spaceId: string, options: { offset: number; limit: number; name?: string }) => ({
     url: `${apiUrl}/v1/spaces/${spaceId}/members${encodeQueryParams(options)}`,
     method: "GET",
   }),
@@ -252,7 +257,7 @@ export const apiEndpoints = {
     url: `${apiUrl}/v1/spaces/${spaceId}/types/${typeId}`,
     method: "GET",
   }),
-  getTypes: (spaceId: string, options: { offset: number; limit: number }) => ({
+  getTypes: (spaceId: string, options: { offset: number; limit: number; name?: string }) => ({
     url: `${apiUrl}/v1/spaces/${spaceId}/types${encodeQueryParams(options)}`,
     method: "GET",
   }),
@@ -274,7 +279,7 @@ export const apiEndpoints = {
     url: `${apiUrl}/v1/spaces/${spaceId}/types/${typeId}/templates/${templateId}`,
     method: "GET",
   }),
-  getTemplates: (spaceId: string, typeId: string, options: { offset: number; limit: number }) => ({
+  getTemplates: (spaceId: string, typeId: string, options: { offset: number; limit: number; name?: string }) => ({
     url: `${apiUrl}/v1/spaces/${spaceId}/types/${typeId}/templates${encodeQueryParams(options)}`,
     method: "GET",
   }),
