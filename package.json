@@ -756,6 +756,21 @@
       ],
       "default": "text",
       "required": false
+    },
+    {
+      "name": "apiUrl",
+      "title": "API URL",
+      "description": "The base URL of the Anytype API (default: http://127.0.0.1:31009).",
+      "type": "textfield",
+      "default": "http://127.0.0.1:31009",
+      "required": false
+    },
+    {
+      "name": "apiKey",
+      "title": "API Key",
+      "description": "Optional API key for the Anytype API. Leave empty to use the built-in authentication flow with your Anytype desktop app, or enter an API key (e.g., from a headless Anytype instance) to use manual authentication.",
+      "type": "password",
+      "required": false
     }
   ],
   "dependencies": {

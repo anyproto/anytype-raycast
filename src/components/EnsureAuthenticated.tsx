@@ -64,7 +64,7 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
 
   useEffect(() => {
     const retrieveAndValidateToken = async () => {
-      const token = await LocalStorage.getItem<string>(localStorageKeys.appKey);
+      const token = getPreferenceValues().apiKey || (await LocalStorage.getItem(localStorageKeys.appKey));
       if (token) {
         const isValid = await checkApiTokenValidity();
         setHasToken(true);
@@ -123,6 +123,20 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
 
   if (hasToken && tokenIsValid) {
     return <>{children}</>;
+  }
+
+  // If API key is set in settings, no need for pairing flow
+  const settingsApiKey = getPreferenceValues().apiKey;
+  if (settingsApiKey) {
+    return (
+      <List searchBarPlaceholder="Invalid API Key">
+        <List.EmptyView
+          icon={Icon.XMarkCircle}
+          title="Invalid API Key"
+          description="The API key provided in settings is invalid. Please check your settings."
+        />
+      </List>
+    );
   }
 
   return challengeId ? (
