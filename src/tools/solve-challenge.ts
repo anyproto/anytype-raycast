@@ -22,6 +22,6 @@ type Input = {
  */
 export default async function tool({ challengeId, code }: Input) {
   const { api_key } = await createApiKey({ challenge_id: challengeId, code });
-  await LocalStorage.setItem(localStorageKeys.appKey, api_key);
+  await LocalStorage.setItem(localStorageKeys.apiKey, api_key);
   return "Challenge solved successfully!";
 }

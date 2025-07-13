@@ -15,6 +15,7 @@ import { showFailureToast, useForm } from "@raycast/utils";
 import { useEffect, useState } from "react";
 import { checkApiTokenValidity, createApiKey, createChallenge } from "../api";
 import { apiAppName, downloadUrl, localStorageKeys } from "../utils";
+import { migrateAuthKey } from "../utils/migrateAuthKey";
 
 type EnsureAuthenticatedProps = {
   placeholder?: string;
@@ -41,7 +42,7 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
       try {
         setIsLoading(true);
         const { api_key } = await createApiKey({ challenge_id: challengeId, code: values.code });
-        await LocalStorage.setItem(localStorageKeys.appKey, api_key);
+        await LocalStorage.setItem(localStorageKeys.apiKey, api_key);
         await showToast({ style: Toast.Style.Success, title: "Successfully paired" });
         setHasToken(true);
         setTokenIsValid(true);
@@ -64,7 +65,9 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
 
   useEffect(() => {
     const retrieveAndValidateToken = async () => {
-      const token = getPreferenceValues().apiKey || (await LocalStorage.getItem(localStorageKeys.appKey));
+      await migrateAuthKey();
+
+      const token = getPreferenceValues().apiKey || (await LocalStorage.getItem(localStorageKeys.apiKey));
       if (token) {
         const isValid = await checkApiTokenValidity();
         setHasToken(true);
