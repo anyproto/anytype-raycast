@@ -3,8 +3,7 @@ import { LocalStorage } from "@raycast/api";
 const OLD_KEY = "app_key";
 const NEW_KEY = "api_key";
 
-// Cache the migration promise to ensure it only runs once per session
-let migrationPromise: Promise<boolean> | null = null;
+let migrateAuthKeyPromise: Promise<boolean> | null = null;
 
 /**
  * Migrates authentication key from old localStorage key (app_key) to new key (api_key).
@@ -13,12 +12,12 @@ let migrationPromise: Promise<boolean> | null = null;
  * @returns {Promise<boolean>} True if migration was performed, false if not needed
  */
 export async function migrateAuthKey(): Promise<boolean> {
-  if (migrationPromise !== null) {
-    return migrationPromise;
+  if (migrateAuthKeyPromise !== null) {
+    return migrateAuthKeyPromise;
   }
 
-  migrationPromise = performMigration();
-  return migrationPromise;
+  migrateAuthKeyPromise = performMigration();
+  return migrateAuthKeyPromise;
 }
 
 async function performMigration(): Promise<boolean> {
