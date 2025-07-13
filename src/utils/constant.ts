@@ -23,6 +23,7 @@ export const maxPinnedObjects = 5;
 // Local Storage Keys
 export const localStorageKeys = {
   apiKey: "api_key",
+  authTs: "auth_ts",
   suffixForSpaces: "spaces",
   suffixForGlobalSearch: "global_search",
   suffixForViewsPerSpace(spaceId: string, viewType: ViewType): string {

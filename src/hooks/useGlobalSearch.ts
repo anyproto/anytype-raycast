@@ -3,12 +3,15 @@ import { useCachedPromise } from "@raycast/utils";
 import { useMemo } from "react";
 import { globalSearch } from "../api";
 import { SortDirection } from "../models";
-import { apiLimit } from "../utils";
+import { apiLimit, useAuthTs } from "../utils";
 
 export function useGlobalSearch(query: string, types: string[], config?: { execute?: boolean }) {
   const shouldExecute = config?.execute !== false;
+  const authTs = useAuthTs();
+
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(
-    (query: string, types: string[], shouldExecute: boolean) => async (options: { page: number }) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (query: string, types: string[], shouldExecute: boolean, authTs: string) => async (options: { page: number }) => {
       if (!shouldExecute) {
         return {
           data: [],
@@ -30,7 +33,7 @@ export function useGlobalSearch(query: string, types: string[], config?: { execu
         hasMore: response.pagination.has_more,
       };
     },
-    [query, types, shouldExecute],
+    [query, types, shouldExecute, authTs],
     {
       keepPreviousData: true,
     },

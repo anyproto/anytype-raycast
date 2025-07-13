@@ -43,6 +43,7 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
         setIsLoading(true);
         const { api_key } = await createApiKey({ challenge_id: challengeId, code: values.code });
         await LocalStorage.setItem(localStorageKeys.apiKey, api_key);
+        await LocalStorage.setItem(localStorageKeys.authTs, Date.now().toString());
         await showToast({ style: Toast.Style.Success, title: "Successfully paired" });
         setHasToken(true);
         setTokenIsValid(true);

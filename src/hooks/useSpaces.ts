@@ -1,11 +1,14 @@
 import { useCachedPromise } from "@raycast/utils";
 import { useMemo } from "react";
 import { getSpaces } from "../api";
-import { apiLimit } from "../utils";
+import { apiLimit, useAuthTs } from "../utils";
 
 export function useSpaces() {
+  const authTs = useAuthTs();
+
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(
-    () => async (options: { page: number }) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (authTs: string) => async (options: { page: number }) => {
       const offset = options.page * apiLimit;
       const response = await getSpaces({ offset, limit: apiLimit });
 
@@ -14,7 +17,7 @@ export function useSpaces() {
         hasMore: response.pagination.has_more,
       };
     },
-    [],
+    [authTs],
     {
       keepPreviousData: true,
     },

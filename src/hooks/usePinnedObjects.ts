@@ -1,11 +1,14 @@
 import { MutatePromise, useCachedPromise } from "@raycast/utils";
 import { getObject } from "../api";
 import { BodyFormat, Member, Property, SpaceObject, Type } from "../models";
-import { errorConnectionMessage, ErrorWithStatus, getPinned, removePinned } from "../utils";
+import { errorConnectionMessage, ErrorWithStatus, getPinned, removePinned, useAuthTs } from "../utils";
 
 export function usePinnedObjects(key: string) {
+  const authTs = useAuthTs();
+
   const { data, error, isLoading, mutate } = useCachedPromise(
-    async (key) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async (key, authTs) => {
       const pinnedObjects = await getPinned(key);
       const objects = await Promise.all(
         pinnedObjects.map(async (pinned) => {
@@ -29,7 +32,7 @@ export function usePinnedObjects(key: string) {
       );
       return objects.filter((object) => object !== null);
     },
-    [key],
+    [key, authTs],
     {
       keepPreviousData: true,
     },

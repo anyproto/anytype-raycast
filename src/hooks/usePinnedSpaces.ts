@@ -1,10 +1,20 @@
 import { useCachedPromise } from "@raycast/utils";
 import { getSpace } from "../api";
-import { errorConnectionMessage, ErrorWithStatus, getPinned, localStorageKeys, removePinned } from "../utils";
+import {
+  errorConnectionMessage,
+  ErrorWithStatus,
+  getPinned,
+  localStorageKeys,
+  removePinned,
+  useAuthTs,
+} from "../utils";
 
 export function usePinnedSpaces() {
+  const authTs = useAuthTs();
+
   const { data, error, isLoading, mutate } = useCachedPromise(
-    async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async (authTs) => {
       const key = localStorageKeys.suffixForSpaces;
       const pinnedSpaces = await getPinned(key);
       const spaces = await Promise.all(
@@ -25,7 +35,7 @@ export function usePinnedSpaces() {
       );
       return spaces.filter((space) => space !== null);
     },
-    [],
+    [authTs],
     {
       keepPreviousData: true,
       initialData: [],
