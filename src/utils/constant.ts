@@ -4,12 +4,12 @@ import { BodyFormat } from "../models";
 import { encodeQueryParams } from "./query";
 
 // Strings
-export const apiAppName = "raycast_v3_0425";
+export const apiAppName = "raycast_v4_0525";
 export const anytypeNetwork = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU";
 export const errorConnectionMessage = "Can't connect to API. Please ensure Anytype is running and reachable.";
 
 // URLs
-export const apiUrl = "http://localhost:31009";
+export const apiUrl = getPreferenceValues().apiUrl || "http://127.0.0.1:31009";
 export const downloadUrl = "https://download.anytype.io/";
 export const anytypeSpaceDeeplink = (spaceId: string) => `anytype://main/object/_blank_/space.id/${spaceId}`;
 
@@ -22,7 +22,7 @@ export const maxPinnedObjects = 5;
 
 // Local Storage Keys
 export const localStorageKeys = {
-  appKey: "app_key",
+  apiKey: "api_key",
   suffixForSpaces: "spaces",
   suffixForGlobalSearch: "global_search",
   suffixForViewsPerSpace(spaceId: string, viewType: ViewType): string {
@@ -107,12 +107,12 @@ export const defaultTintColor = { light: "black", dark: "white" };
 // API Endpoints
 export const apiEndpoints = {
   // auth
-  displayCode: (appName: string) => ({
-    url: `${apiUrl}/v1/auth/display_code?app_name=${appName}`,
+  createChallenge: () => ({
+    url: `${apiUrl}/v1/auth/challenges`,
     method: "POST",
   }),
-  getToken: (challengeId: string, code: string) => ({
-    url: `${apiUrl}/v1/auth/token?challenge_id=${challengeId}&code=${code}`,
+  createApiKey: () => ({
+    url: `${apiUrl}/v1/auth/api_keys`,
     method: "POST",
   }),
 

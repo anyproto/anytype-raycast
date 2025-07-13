@@ -69,6 +69,7 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
                   title={template.name}
                   mutate={[mutateTemplates]}
                   layout={template.layout}
+                  object={template}
                   viewType={ViewType.templates}
                   isGlobalSearch={isGlobalSearch}
                   isNoPinView={true}

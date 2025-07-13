@@ -94,7 +94,6 @@ export function ObjectActions({
     ? localStorageKeys.suffixForGlobalSearch
     : localStorageKeys.suffixForViewsPerSpace(space?.id, viewType);
 
-  const isObject = viewType === ViewType.objects;
   const isType = viewType === ViewType.types;
   const isProperty = viewType === ViewType.properties;
   const isMember = viewType === ViewType.members;
@@ -127,9 +126,7 @@ export function ObjectActions({
         pop(); // pop back to list view
       }
       try {
-        if (isObject) {
-          await deleteObject(space.id, objectId);
-        } else if (isType) {
+        if (isType) {
           await deleteType(space.id, objectId);
         } else if (isProperty) {
           await deleteProperty(space.id, objectId);
@@ -306,7 +303,8 @@ export function ObjectActions({
   //     }
   //   }
 
-  const canShowDetails = !isType && !isProperty && !isList && !isBookmark && !isDetailView && !isMember;
+  const canShowDetails =
+    !isType && !isProperty && !isList && !isDetailView && !isMember && (!isBookmark || viewType === ViewType.templates);
   const showDetailsAction = canShowDetails && (
     <Action.Push
       icon={{ source: Icon.Sidebar }}
@@ -360,7 +358,7 @@ export function ObjectActions({
         {hasTags && (
           <Action.Push icon={Icon.Tag} title="Show Tags" target={<TagList space={space} propertyId={objectId} />} />
         )}
-        {isBookmark && (
+        {isBookmark && viewType !== ViewType.templates && (
           <Action
             icon={Icon.Bookmark}
             title="Open Bookmark in Browser"
