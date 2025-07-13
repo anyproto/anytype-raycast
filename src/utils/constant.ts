@@ -9,7 +9,7 @@ export const anytypeNetwork = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU"
 export const errorConnectionMessage = "Can't connect to API. Please ensure Anytype is running and reachable.";
 
 // URLs
-export const apiUrl = getPreferenceValues().apiUrl;
+export const apiUrl = getPreferenceValues().apiUrl || "http://127.0.0.1:31009";
 export const downloadUrl = "https://download.anytype.io/";
 export const anytypeSpaceDeeplink = (spaceId: string) => `anytype://main/object/_blank_/space.id/${spaceId}`;
 
