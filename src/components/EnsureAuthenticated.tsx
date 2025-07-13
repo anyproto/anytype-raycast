@@ -28,7 +28,7 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
   const [challengeId, setChallengeId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const { handleSubmit, itemProps } = useForm<{ userCode: string }>({
+  const { handleSubmit, itemProps } = useForm<{ code: string }>({
     onSubmit: async (values) => {
       if (!challengeId) {
         await showFailureToast({
@@ -40,7 +40,7 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
 
       try {
         setIsLoading(true);
-        const { api_key } = await createApiKey({ challenge_id: challengeId, code: values.userCode });
+        const { api_key } = await createApiKey({ challenge_id: challengeId, code: values.code });
         await LocalStorage.setItem(localStorageKeys.appKey, api_key);
         await showToast({ style: Toast.Style.Success, title: "Successfully paired" });
         setHasToken(true);
@@ -52,7 +52,7 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
       }
     },
     validation: {
-      userCode: (value) => {
+      code: (value) => {
         if (!value) {
           return "The code is required.";
         } else if (!/^\d{4}$/.test(value)) {
@@ -64,7 +64,7 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
 
   useEffect(() => {
     const retrieveAndValidateToken = async () => {
-      const token = await LocalStorage.getItem<string>(localStorageKeys.appKey);
+      const token = getPreferenceValues().apiKey || (await LocalStorage.getItem(localStorageKeys.appKey));
       if (token) {
         const isValid = await checkApiTokenValidity();
         setHasToken(true);
@@ -125,6 +125,20 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
     return <>{children}</>;
   }
 
+  // If API key is set in settings, no need for pairing flow
+  const settingsApiKey = getPreferenceValues().apiKey;
+  if (settingsApiKey) {
+    return (
+      <List searchBarPlaceholder="Invalid API Key">
+        <List.EmptyView
+          icon={Icon.XMarkCircle}
+          title="Invalid API Key"
+          description="The API key provided in settings is invalid. Please check your settings."
+        />
+      </List>
+    );
+  }
+
   return challengeId ? (
     <Form
       isLoading={isLoading}
@@ -134,12 +148,7 @@ export function EnsureAuthenticated({ placeholder, viewType, children }: EnsureA
         </ActionPanel>
       }
     >
-      <Form.TextField
-        {...itemProps.userCode}
-        id="userCode"
-        title="Verification Code"
-        placeholder="Enter the 4-digit code from popup"
-      />
+      <Form.TextField {...itemProps.code} id="code" title="Code" placeholder="Enter 4-digit code from popup" />
     </Form>
   ) : (
     <List

@@ -58,8 +58,8 @@ export function CreateTagForm({ spaceId, propertyId, draftValues }: CreateTagFor
         </ActionPanel>
       }
     >
-      <Form.TextField {...itemProps.name} title="Name" placeholder="Enter tag name" info="The name of the tag" />
-      <Form.Dropdown {...itemProps.color} title="Color" info="The color of the tag">
+      <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" info="The name of the tag" />
+      <Form.Dropdown {...itemProps.color} title="Color" placeholder="Select color" info="The color of the tag">
         {tagColorKeys.map((key) => {
           const value = Color[key];
           return (

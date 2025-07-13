@@ -4,12 +4,12 @@ import { BodyFormat } from "../models";
 import { encodeQueryParams } from "./query";
 
 // Strings
-export const apiAppName = "raycast_v3_0425";
+export const apiAppName = "raycast_v4_0525";
 export const anytypeNetwork = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU";
 export const errorConnectionMessage = "Can't connect to API. Please ensure Anytype is running and reachable.";
 
 // URLs
-export const apiUrl = "http://localhost:31009";
+export const apiUrl = getPreferenceValues().apiUrl || "http://127.0.0.1:31009";
 export const downloadUrl = "https://download.anytype.io/";
 export const anytypeSpaceDeeplink = (spaceId: string) => `anytype://main/object/_blank_/space.id/${spaceId}`;
 

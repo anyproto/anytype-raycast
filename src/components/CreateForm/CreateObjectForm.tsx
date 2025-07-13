@@ -8,13 +8,13 @@ import {
   AddObjectsToListRequest,
   CreateObjectRequest,
   IconFormat,
+  ObjectLayout,
   PropertyFieldValue,
   PropertyFormat,
   PropertyLinkWithValue,
 } from "../../models";
 import {
   bundledPropKeys,
-  bundledTypeKeys,
   defaultTintColor,
   fetchTypeKeysForLists,
   getNumberFieldValidations,
@@ -78,7 +78,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
   const selectedTypeKey = selectedTypeDef?.key ?? "";
   const hasSelectedSpaceIdAndType = Boolean(selectedSpaceId && selectedTypeKey);
 
-  const properties = selectedTypeDef?.properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key)) || [];
+  const properties = selectedTypeDef?.properties?.filter((p) => !Object.values(bundledPropKeys).includes(p.key)) || [];
   const { tagsMap } = useTagsMap(
     selectedSpaceId,
     properties
@@ -185,7 +185,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
 
         const response = await createObject(selectedSpaceId, request);
 
-        if (response.object?.id) {
+        if (response.object.id) {
           if (selectedListId) {
             const request: AddObjectsToListRequest = { objects: [response.object.id] };
             await addObjectsToList(selectedSpaceId, selectedListId, request);
@@ -206,7 +206,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     validation: {
       name: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : undefined;
-        if (![bundledTypeKeys.bookmark, bundledTypeKeys.note].includes(selectedTypeKey) && !s) {
+        if (selectedTypeDef?.layout !== ObjectLayout.Note && selectedTypeDef?.layout !== ObjectLayout.Bookmark && !s) {
           return "Name is required";
         }
       },
@@ -217,7 +217,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       },
       source: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : undefined;
-        if (selectedTypeId === bundledTypeKeys.bookmark && !s) {
+        if (selectedTypeDef?.layout === ObjectLayout.Bookmark && !s) {
           return "Source is required for Bookmarks";
         }
       },
@@ -279,7 +279,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       }
     >
       <Form.Dropdown
-        id="space"
+        id="spaceId"
         title="Space"
         value={selectedSpaceId}
         onChange={(v) => {
@@ -300,7 +300,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       </Form.Dropdown>
 
       <Form.Dropdown
-        id="type"
+        id="typeId"
         title="Type"
         value={selectedTypeId}
         onChange={setSelectedTypeId}
@@ -314,7 +314,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       </Form.Dropdown>
 
       <Form.Dropdown
-        id="template"
+        id="templateId"
         title="Template"
         value={selectedTemplateId}
         onChange={setSelectedTemplateId}
@@ -334,7 +334,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       </Form.Dropdown>
 
       <Form.Dropdown
-        id="list"
+        id="listId"
         title="Collection"
         value={selectedListId}
         onChange={setSelectedListId}
@@ -361,7 +361,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
 
       {hasSelectedSpaceIdAndType && (
         <>
-          {![bundledTypeKeys.bookmark, bundledTypeKeys.note].includes(selectedTypeKey) && (
+          {selectedTypeDef?.layout !== ObjectLayout.Note && selectedTypeDef?.layout !== ObjectLayout.Bookmark && (
             <Form.TextField
               {...itemProps.name}
               title="Name"
@@ -369,17 +369,18 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
               info="Enter the name of the object"
             />
           )}
-          {![bundledTypeKeys.bookmark, bundledTypeKeys.task, bundledTypeKeys.note, bundledTypeKeys.profile].includes(
-            selectedTypeKey,
-          ) && (
-            <Form.TextField
-              {...itemProps.icon}
-              title="Icon"
-              placeholder="Add emoji"
-              info="Enter a single emoji character to represent the object"
-            />
-          )}
-          {selectedTypeKey !== bundledTypeKeys.bookmark ? (
+          {selectedTypeDef?.layout !== ObjectLayout.Bookmark &&
+            selectedTypeDef?.layout !== ObjectLayout.Note &&
+            selectedTypeDef?.layout !== ObjectLayout.Action &&
+            selectedTypeDef?.layout !== ObjectLayout.Profile && (
+              <Form.TextField
+                {...itemProps.icon}
+                title="Icon"
+                placeholder="Add emoji"
+                info="Enter a single emoji character to represent the object"
+              />
+            )}
+          {selectedTypeDef?.layout !== ObjectLayout.Bookmark ? (
             <>
               <Form.TextField
                 {...itemProps.description}
@@ -412,32 +413,31 @@ It supports:
           )}
           <Form.Separator />
 
-          {properties.map((prop) => {
-            const tags = (tagsMap && tagsMap[prop.id]) ?? [];
-            const id = prop.key;
-            const title = prop.name;
+          {properties.map((property) => {
+            const tags = (tagsMap && tagsMap[property.id]) ?? [];
+            const title = property.name;
 
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { value, defaultValue, ...restItemProps } = itemProps[id];
+            const { value, defaultValue, ...restItemProps } = itemProps[property.key];
 
-            switch (prop.format) {
+            switch (property.format) {
               case PropertyFormat.Text:
               case PropertyFormat.Url:
               case PropertyFormat.Email:
               case PropertyFormat.Phone:
                 return (
                   <Form.TextField
-                    key={prop.key}
+                    key={property.id}
                     {...restItemProps}
                     title={title}
-                    placeholder={textFieldPlaceholderMap[prop.format]}
+                    placeholder={textFieldPlaceholderMap[property.format]}
                     value={String(value ?? "")}
                   />
                 );
               case PropertyFormat.Number:
                 return (
                   <Form.TextField
-                    key={prop.key}
+                    key={property.id}
                     {...restItemProps}
                     title={title}
                     placeholder="Add number"
@@ -447,7 +447,7 @@ It supports:
               case PropertyFormat.Select:
                 return (
                   <Form.Dropdown
-                    key={prop.key}
+                    key={property.id}
                     {...restItemProps}
                     title={title}
                     value={String(value ?? "")}
@@ -473,7 +473,7 @@ It supports:
                 return (
                   <Form.TagPicker
                     {...restItemProps}
-                    key={prop.key}
+                    key={property.id}
                     title={title}
                     value={Array.isArray(value) ? (value as string[]) : []}
                     placeholder="Add tags"
@@ -492,7 +492,7 @@ It supports:
                 return (
                   <Form.DatePicker
                     {...restItemProps}
-                    key={prop.key}
+                    key={property.id}
                     title={title}
                     defaultValue={value as Date | undefined}
                   />
@@ -502,14 +502,14 @@ It supports:
                 return null;
               case PropertyFormat.Checkbox:
                 return (
-                  <Form.Checkbox key={prop.key} {...restItemProps} title={title} label="" value={Boolean(value)} />
+                  <Form.Checkbox key={property.id} {...restItemProps} title={title} label="" value={Boolean(value)} />
                 );
               case PropertyFormat.Objects:
                 return (
                   // TODO: TagPicker would be the more appropriate component, but it does not support onSearchTextChange
                   <Form.Dropdown
                     {...restItemProps}
-                    key={prop.key}
+                    key={property.id}
                     title={title}
                     value={String(value ?? "")}
                     onSearchTextChange={setObjectSearchText}
@@ -530,7 +530,7 @@ It supports:
                   </Form.Dropdown>
                 );
               default:
-                console.warn(`Unsupported property format: ${prop.format}`);
+                console.warn(`Unsupported property format: ${property.format}`);
                 return null;
             }
           })}

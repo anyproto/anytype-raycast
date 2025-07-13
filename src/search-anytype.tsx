@@ -38,6 +38,7 @@ function Search() {
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useGlobalSearch(
     searchText,
     types,
+    { execute: currentView === ViewType.objects || types.length > 0 }, // only execute search when viewing all objects or when specific types selected
   );
   const { spaces, spacesError, isLoadingSpaces } = useSpaces();
   const { pinnedObjects, pinnedObjectsError, isLoadingPinnedObjects, mutatePinnedObjects } = usePinnedObjects(

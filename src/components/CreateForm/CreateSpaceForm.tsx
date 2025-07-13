@@ -46,11 +46,11 @@ export function CreateSpaceForm({ draftValues }: CreateSpaceFormProps) {
         </ActionPanel>
       }
     >
-      <Form.TextField {...itemProps.name} title="Name" placeholder="Enter space name" info="The name of the space" />
+      <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" info="The name of the space" />
       <Form.TextField
         {...itemProps.description}
         title="Description"
-        placeholder="Enter space description"
+        placeholder="Add description"
         info="The description of the space"
       />
     </Form>
