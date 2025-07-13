@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.76% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/34</span>
+                <span class='fraction'>34/34</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.76% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/34</span>
+                <span class='fraction'>34/34</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -140,39 +140,39 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getPreferenceValues, LocalStorage } from "@raycast/api";
 import fetch, { Headers as FetchHeaders } from "node-fetch";
 import { currentApiVersion, errorConnectionMessage, localStorageKeys } from "./constant";
@@ -195,39 +195,39 @@ export interface ApiResponse&lt;T&gt; {
  * @param options The fetch options.
  * @returns The API response.
  */
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function apiFetch&lt;T&gt;(url: string, options: FetchOptions): Promise&lt;ApiResponse&lt;T&gt;&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >  try {</span>
-<span class="cstat-no" title="statement not covered" >    const token = getPreferenceValues().apiKey || (await LocalStorage.getItem(localStorageKeys.appKey));</span>
+export async function apiFetch&lt;T&gt;(url: string, options: FetchOptions): Promise&lt;ApiResponse&lt;T&gt;&gt; {
+  try {
+    const token = getPreferenceValues().apiKey || (await LocalStorage.getItem(localStorageKeys.appKey));
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    const response = await fetch(url, {</span>
-<span class="cstat-no" title="statement not covered" >      method: options.method,</span>
-<span class="cstat-no" title="statement not covered" >      headers: {</span>
-<span class="cstat-no" title="statement not covered" >        ...(token ? { Authorization: `Bearer ${token}` } : {}),</span>
-<span class="cstat-no" title="statement not covered" >        "Content-Type": "application/json",</span>
-<span class="cstat-no" title="statement not covered" >        "Anytype-Version": currentApiVersion,</span>
-<span class="cstat-no" title="statement not covered" >        ...options.headers,</span>
-<span class="cstat-no" title="statement not covered" >      },</span>
-<span class="cstat-no" title="statement not covered" >      body: options.body,</span>
-<span class="cstat-no" title="statement not covered" >    });</span>
+    const response = await fetch(url, {
+      method: options.method,
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        "Content-Type": "application/json",
+        "Anytype-Version": currentApiVersion,
+        ...options.headers,
+      },
+      body: options.body,
+    });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    await checkResponseError(response);</span>
+    await checkResponseError(response);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      const json = (await response.json()) as T;</span>
-<span class="cstat-no" title="statement not covered" >      return {</span>
-<span class="cstat-no" title="statement not covered" >        payload: json,</span>
-<span class="cstat-no" title="statement not covered" >        headers: response.headers,</span>
-<span class="cstat-no" title="statement not covered" >      };</span>
-<span class="cstat-no" title="statement not covered" >    } catch (jsonError) {</span>
-<span class="cstat-no" title="statement not covered" >      throw new Error("Failed to parse JSON response");</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    if (error instanceof Error &amp;&amp; (error as { code?: string }).code === "ECONNREFUSED") {</span>
-<span class="cstat-no" title="statement not covered" >      throw new Error(errorConnectionMessage);</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    throw error;</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+    try {
+      const json = (await response.json()) as T;
+      return {
+        payload: json,
+        headers: response.headers,
+      };
+    } catch (jsonError) {
+      throw new Error("Failed to parse JSON response");
+    }
+  } catch (error) {
+    if (error instanceof Error &amp;&amp; (error as { code?: string }).code === "ECONNREFUSED") {
+      throw new Error(errorConnectionMessage);
+    }
+    throw error;
+  }
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -235,7 +235,7 @@ export interface ApiResponse&lt;T&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-13T12:54:22.051Z
+                at 2025-07-13T13:21:01.815Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

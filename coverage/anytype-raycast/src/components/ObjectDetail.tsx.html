@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">2.77% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/360</span>
+                <span class='fraction'>10/360</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">2.77% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/360</span>
+                <span class='fraction'>10/360</span>
             </div>
         
             
@@ -495,13 +495,13 @@
 <a name='L430'></a><a href='#L430'>430</a>
 <a name='L431'></a><a href='#L431'>431</a>
 <a name='L432'></a><a href='#L432'>432</a>
-<a name='L433'></a><a href='#L433'>433</a></td><td class="line-coverage quiet"><span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<a name='L433'></a><a href='#L433'>433</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -512,8 +512,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -526,7 +526,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -927,13 +927,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js"><span class="cstat-no" title="statement not covered" >import { Color, Detail, getPreferenceValues, useNavigation } from "@raycast/api";<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ></span></span></span>
-<span class="cstat-no" title="statement not covered" >import { MutatePromise, showFailureToast } from "@raycast/utils";</span>
-<span class="cstat-no" title="statement not covered" >import { format } from "date-fns";</span>
-<span class="cstat-no" title="statement not covered" >import { useEffect, useState } from "react";</span>
-<span class="cstat-no" title="statement not covered" >import { ObjectActions, TemplateList, ViewType } from ".";</span>
-<span class="cstat-no" title="statement not covered" >import { useObject } from "../hooks";</span>
-<span class="cstat-no" title="statement not covered" >import {</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Color, Detail, getPreferenceValues, useNavigation } from "@raycast/api";
+import { MutatePromise, showFailureToast } from "@raycast/utils";
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { ObjectActions, TemplateList, ViewType } from ".";
+import { useObject } from "../hooks";
+import {
   BodyFormat,
   Member,
   ObjectLayout,
@@ -944,8 +944,8 @@
   SpaceObject,
   Type,
 } from "../models";
-<span class="cstat-no" title="statement not covered" >import { bundledPropKeys, injectEmojiIntoHeading } from "../utils";</span>
-<span class="cstat-no" title="statement not covered" >import { CollectionList } from "./Lists/CollectionList";</span>
+import { bundledPropKeys, injectEmojiIntoHeading } from "../utils";
+import { CollectionList } from "./Lists/CollectionList";
 &nbsp;
 type ObjectDetailProps = {
   space: Space;
@@ -958,7 +958,7 @@ type ObjectDetailProps = {
   isPinned: boolean;
 };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export function ObjectDetail({</span>
+export <span class="fstat-no" title="function not covered" >function ObjectDetail({</span>
 <span class="cstat-no" title="statement not covered" >  space,</span>
 <span class="cstat-no" title="statement not covered" >  objectId,</span>
 <span class="cstat-no" title="statement not covered" >  title,</span>
@@ -1366,7 +1366,7 @@ type ObjectDetailProps = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-13T12:54:22.051Z
+                at 2025-07-13T13:21:01.815Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
