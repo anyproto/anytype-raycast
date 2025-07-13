@@ -106,8 +106,8 @@ export function CollectionList({ space, listId, listName }: CollectionListProps)
         <EmptyViewObject
           title="No objects found"
           contextValues={{
-            space: space.id,
-            list: listId,
+            spaceId: space.id,
+            listId: listId,
             name: searchText,
           }}
         />

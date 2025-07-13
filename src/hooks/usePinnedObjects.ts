@@ -1,6 +1,6 @@
 import { MutatePromise, useCachedPromise } from "@raycast/utils";
 import { getObject } from "../api";
-import { Member, Property, SpaceObject, Type } from "../models";
+import { BodyFormat, Member, Property, SpaceObject, Type } from "../models";
 import { errorConnectionMessage, ErrorWithStatus, getPinned, removePinned } from "../utils";
 
 export function usePinnedObjects(key: string) {
@@ -10,12 +10,12 @@ export function usePinnedObjects(key: string) {
       const objects = await Promise.all(
         pinnedObjects.map(async (pinned) => {
           try {
-            const response = await getObject(pinned.spaceId, pinned.objectId);
-            if (response.object?.archived) {
+            const response = await getObject(pinned.spaceId, pinned.objectId, BodyFormat.Markdown);
+            if (response.object.archived) {
               await removePinned(pinned.spaceId, pinned.objectId, key);
               return null;
             }
-            return response.object;
+            return response.object as SpaceObject;
           } catch (error) {
             const typedError = error as ErrorWithStatus;
             if (typedError.message === errorConnectionMessage) {

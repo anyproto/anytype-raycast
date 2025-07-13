@@ -1,7 +1,7 @@
 import { Tool } from "@raycast/api";
 import { createObject, getSpace, getType } from "../api";
-import { IconFormat, PropertyLinkWithValue } from "../models";
-import { bundledPropKeys, propKeys } from "../utils";
+import { CreateObjectRequest, IconFormat, PropertyLinkWithValue } from "../models";
+import { bundledPropKeys } from "../utils";
 
 type Input = {
   /**
@@ -50,7 +50,7 @@ type Input = {
   body?: string;
 
   /**
-   * The URL of the bookmark, applicable when creating an object with type_key='ot-bookmark'.
+   * The URL of the bookmark, applicable when creating an object with type_key='bookmark'.
    * This value should be chosen based on the user's input.
    * If not given, set as an empty string.
    */
@@ -61,7 +61,7 @@ type Input = {
  * Create a new object in the specified space.
  * This function creates an object with the specified details in the specified space.
  * The object is created with the specified name, icon, description, body.
- * When creating objects of type 'ot-bookmark', ensure the source URL is provided. The icon, name, and description should not be manually set, as they will be automatically populated upon fetching the URL.
+ * When creating objects of type 'bookmark', ensure the source URL is provided. The icon, name, and description should not be manually set, as they will be automatically populated upon fetching the URL.
  */
 export default async function tool({ spaceId, type_key, name, icon, description, body, source }: Input) {
   // TODO: implement properties key-value parsing
@@ -75,19 +75,21 @@ export default async function tool({ spaceId, type_key, name, icon, description,
 
   if (source) {
     propertyEntries.push({
-      key: propKeys.source,
+      key: bundledPropKeys.source,
       url: source,
     });
   }
 
-  const { object } = await createObject(spaceId, {
+  const request: CreateObjectRequest = {
     name: name || "",
     icon: { format: IconFormat.Emoji, emoji: icon || "" },
     body: body || "",
     template_id: "", // not supported here
     type_key: type_key,
     properties: propertyEntries,
-  });
+  };
+
+  const { object } = await createObject(spaceId, request);
 
   if (!object) {
     throw new Error("Failed to create object");
@@ -116,11 +118,11 @@ export const confirmation: Tool.Confirmation<Input> = async (input) => {
     info: [
       {
         name: "Space",
-        value: s.space?.name,
+        value: s.space.name,
       },
       {
         name: "Type",
-        value: t.type?.name || "",
+        value: t.type.name || "",
       },
       {
         name: "Name",

@@ -17,23 +17,36 @@ import {
   CollectionList,
   CreateObjectForm,
   CreatePropertyForm,
+  CreateTypeForm,
   ListSubmenu,
   ObjectDetail,
   TagList,
+  TagSubmenu,
   TemplateList,
   UpdateObjectForm,
   UpdatePropertyForm,
+  UpdateTypeForm,
   ViewType,
 } from "..";
-import { deleteObject, deleteProperty, deleteTag, getRawObject } from "../../api";
-import { Export, Member, ObjectLayout, Property, Space, SpaceObject, Type, View } from "../../models";
+import { deleteObject, deleteProperty, deleteType, getRawObject, getRawType } from "../../api";
+import {
+  BodyFormat,
+  Member,
+  ObjectLayout,
+  Property,
+  Space,
+  SpaceObject,
+  SpaceObjectWithBody,
+  Type,
+  View,
+} from "../../models";
 import {
   addPinned,
+  bundledPropKeys,
   localStorageKeys,
   moveDownInPinned,
   moveUpInPinned,
   pluralize,
-  propKeys,
   removePinned,
 } from "../../utils";
 
@@ -41,20 +54,18 @@ type ObjectActionsProps = {
   space: Space;
   objectId: string;
   title: string;
-  objectExport?: Export;
   mutate?: MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>[];
-  mutateTemplates?: MutatePromise<SpaceObject[]>;
-  mutateObject?: MutatePromise<SpaceObject | null | undefined>;
-  mutateExport?: MutatePromise<Export | undefined>;
+  mutateObject?: MutatePromise<SpaceObjectWithBody | undefined>;
   mutateViews?: MutatePromise<View[]>;
   layout: ObjectLayout | undefined;
-  object?: SpaceObject | Type | Property | Member;
+  object?: SpaceObject | SpaceObjectWithBody | Type | Property | Member;
   viewType: ViewType;
   isGlobalSearch: boolean;
   isNoPinView: boolean;
   isPinned: boolean;
-  showDetails?: boolean;
-  onToggleDetails?: () => void;
+  isDetailView?: boolean;
+  shouldShowSidebar?: boolean;
+  onToggleSidebar?: () => void;
   searchText?: string;
 };
 
@@ -63,10 +74,7 @@ export function ObjectActions({
   objectId,
   title,
   mutate,
-  objectExport,
-  mutateTemplates,
   mutateObject,
-  mutateExport,
   mutateViews,
   layout,
   object,
@@ -74,8 +82,9 @@ export function ObjectActions({
   isGlobalSearch,
   isNoPinView,
   isPinned,
-  showDetails,
-  onToggleDetails,
+  isDetailView,
+  shouldShowSidebar,
+  onToggleSidebar,
   searchText,
 }: ObjectActionsProps) {
   const { pop, push } = useNavigation();
@@ -85,13 +94,10 @@ export function ObjectActions({
     ? localStorageKeys.suffixForGlobalSearch
     : localStorageKeys.suffixForViewsPerSpace(space?.id, viewType);
 
-  const isObject = viewType === ViewType.objects;
   const isType = viewType === ViewType.types;
   const isProperty = viewType === ViewType.properties;
-  const isTag = viewType === ViewType.tags;
   const isMember = viewType === ViewType.members;
 
-  const isDetailView = objectExport !== undefined;
   const isList = layout === ObjectLayout.Set || layout === ObjectLayout.Collection;
   const isBookmark = layout === ObjectLayout.Bookmark;
   const hasTags =
@@ -120,31 +126,18 @@ export function ObjectActions({
         pop(); // pop back to list view
       }
       try {
-        if (isObject) {
-          await deleteObject(space.id, objectId);
-          // TODO: implement
-          // } else if (isType) {
-          //   await deleteType(space.id, objectId);
+        if (isType) {
+          await deleteType(space.id, objectId);
         } else if (isProperty) {
           await deleteProperty(space.id, objectId);
-        } else if (isTag) {
-          await deleteTag(space.id, "", objectId); // TODO: fix property Id
         } else {
           await deleteObject(space.id, objectId);
         }
         if (mutate) {
-          for (const m of mutate) {
-            await m();
-          }
-        }
-        if (mutateTemplates) {
-          await mutateTemplates();
+          await Promise.all(mutate.map((m) => m()));
         }
         if (mutateObject) {
           await mutateObject();
-        }
-        if (mutateExport) {
-          await mutateExport();
         }
         if (mutateViews) {
           await mutateViews();
@@ -163,10 +156,9 @@ export function ObjectActions({
   async function handleMoveUpInFavorites() {
     await moveUpInPinned(space.id, objectId, pinSuffixForView);
     if (mutate) {
-      for (const m of mutate) {
-        await m();
-      }
+      await Promise.all(mutate.map((m) => m()));
     }
+
     await showToast({
       style: Toast.Style.Success,
       title: "Moved Up in Pinned",
@@ -176,9 +168,7 @@ export function ObjectActions({
   async function handleMoveDownInFavorites() {
     await moveDownInPinned(space.id, objectId, pinSuffixForView);
     if (mutate) {
-      for (const m of mutate) {
-        await m();
-      }
+      await Promise.all(mutate.map((m) => m()));
     }
 
     await showToast({
@@ -194,9 +184,7 @@ export function ObjectActions({
       await addPinned(space.id, objectId, pinSuffixForView, title, getContextLabel());
     }
     if (mutate) {
-      for (const m of mutate) {
-        await m();
-      }
+      await Promise.all(mutate.map((m) => m()));
     }
   }
 
@@ -208,18 +196,13 @@ export function ObjectActions({
     });
     try {
       if (mutate) {
-        for (const m of mutate) {
-          await m();
-        }
-      }
-      if (mutateTemplates) {
-        await mutateTemplates();
+        await Promise.all(mutate.map((m) => m()));
       }
       if (mutateObject) {
         await mutateObject();
       }
-      if (mutateExport) {
-        await mutateExport();
+      if (mutateViews) {
+        await mutateViews();
       }
 
       await showToast({
@@ -320,7 +303,8 @@ export function ObjectActions({
   //     }
   //   }
 
-  const canShowDetails = !isType && !isProperty && !isList && !isBookmark && !isDetailView;
+  const canShowDetails =
+    !isType && !isProperty && !isList && !isDetailView && !isMember && (!isBookmark || viewType === ViewType.templates);
   const showDetailsAction = canShowDetails && (
     <Action.Push
       icon={{ source: Icon.Sidebar }}
@@ -374,12 +358,12 @@ export function ObjectActions({
         {hasTags && (
           <Action.Push icon={Icon.Tag} title="Show Tags" target={<TagList space={space} propertyId={objectId} />} />
         )}
-        {isBookmark && (
+        {isBookmark && viewType !== ViewType.templates && (
           <Action
             icon={Icon.Bookmark}
             title="Open Bookmark in Browser"
             onAction={async () => {
-              const url = (object as SpaceObject).properties.find((p) => p.key === propKeys.source)?.url;
+              const url = (object as SpaceObject).properties.find((p) => p.key === bundledPropKeys.source)?.url;
               if (url) {
                 open(url);
               } else {
@@ -396,14 +380,32 @@ export function ObjectActions({
       </ActionPanel.Section>
 
       <ActionPanel.Section>
-        {!isType && !isProperty && !isTag && !isMember && (
+        {!isType && !isProperty && !isMember && (
           <Action
             icon={Icon.Pencil}
             title={"Edit Object"}
             shortcut={Keyboard.Shortcut.Common.Edit}
             onAction={async () => {
-              const { object } = await getRawObject(space.id, objectId);
-              push(<UpdateObjectForm spaceId={space.id} object={object} />);
+              const { object } = await getRawObject(space.id, objectId, BodyFormat.Markdown);
+              push(
+                <UpdateObjectForm
+                  spaceId={space.id}
+                  object={object}
+                  mutateObjects={mutate as MutatePromise<SpaceObject[]>[]}
+                  mutateObject={mutateObject}
+                />,
+              );
+            }}
+          />
+        )}
+        {isType && (
+          <Action
+            icon={Icon.Pencil}
+            title={"Edit Type"}
+            shortcut={Keyboard.Shortcut.Common.Edit}
+            onAction={async () => {
+              const { type } = await getRawType(space.id, objectId);
+              push(<UpdateTypeForm spaceId={space.id} type={type} mutateTypes={mutate as MutatePromise<Type[]>[]} />);
             }}
           />
         )}
@@ -412,17 +414,33 @@ export function ObjectActions({
             icon={Icon.Pencil}
             title={"Edit Property"}
             shortcut={Keyboard.Shortcut.Common.Edit}
-            target={<UpdatePropertyForm spaceId={space.id} property={object as Property} />}
+            target={
+              <UpdatePropertyForm
+                spaceId={space.id}
+                property={object as Property}
+                mutateProperties={mutate as MutatePromise<Property[]>[]}
+              />
+            }
           />
         )}
-        {objectExport && (
+        {isDetailView && (
           <Action.CopyToClipboard
             title={`Copy Markdown`}
             shortcut={{ modifiers: ["cmd"], key: "c" }}
-            content={objectExport.markdown}
+            content={(object as SpaceObjectWithBody)?.markdown}
           />
         )}
-        {!isType && !isProperty && <ListSubmenu spaceId={space.id} objectId={objectId} />}
+        {!isType && !isProperty && !isMember && (
+          <>
+            <ListSubmenu spaceId={space.id} objectId={objectId} />
+            <TagSubmenu
+              spaceId={space.id}
+              object={object as SpaceObject | SpaceObjectWithBody}
+              mutate={mutate}
+              mutateObject={mutateObject}
+            />
+          </>
+        )}
         <Action
           icon={Icon.Link}
           title="Copy Link"
@@ -467,26 +485,20 @@ export function ObjectActions({
       </ActionPanel.Section>
 
       <ActionPanel.Section>
-        <Action
-          icon={Icon.Plus}
-          title={`Create ${getContextLabel()}`}
-          shortcut={Keyboard.Shortcut.Common.New}
-          onAction={() => {
-            if (isObject) {
-              push(<CreateObjectForm draftValues={{ spaceId: space.id, name: searchText }} enableDrafts={false} />);
-            } else if (isType) {
-              // TODO
-            } else if (isProperty) {
-              push(<CreatePropertyForm spaceId={space.id} draftValues={{ name: searchText || "" }} />);
-            }
-          }}
-        />
-        {isDetailView && (
+        {!isMember && (
           <Action
-            icon={showDetails ? Icon.EyeDisabled : Icon.Eye}
-            title={showDetails ? "Hide Sidebar" : "Show Sidebar"}
-            shortcut={{ modifiers: ["cmd"], key: "d" }}
-            onAction={onToggleDetails}
+            icon={Icon.Plus}
+            title={`Create ${getContextLabel()}`}
+            shortcut={Keyboard.Shortcut.Common.New}
+            onAction={() => {
+              if (isType) {
+                push(<CreateTypeForm draftValues={{ spaceId: space.id, name: searchText }} enableDrafts={false} />);
+              } else if (isProperty) {
+                push(<CreatePropertyForm spaceId={space.id} draftValues={{ name: searchText || "" }} />);
+              } else {
+                push(<CreateObjectForm draftValues={{ spaceId: space.id, name: searchText }} enableDrafts={false} />);
+              }
+            }}
           />
         )}
         <Action
@@ -495,6 +507,14 @@ export function ObjectActions({
           shortcut={Keyboard.Shortcut.Common.Refresh}
           onAction={handleRefresh}
         />
+        {isDetailView && (
+          <Action
+            icon={shouldShowSidebar ? Icon.EyeDisabled : Icon.Eye}
+            title={shouldShowSidebar ? "Hide Sidebar" : "Show Sidebar"}
+            shortcut={{ modifiers: ["cmd", "shift"], key: "d" }}
+            onAction={onToggleSidebar}
+          />
+        )}
       </ActionPanel.Section>
     </ActionPanel>
   );

@@ -1,7 +1,7 @@
 import { Icon, List } from "@raycast/api";
 import { MutatePromise, showFailureToast } from "@raycast/utils";
 import { useEffect, useState } from "react";
-import { EmptyViewObject, EmptyViewProperty, ObjectListItem } from ".";
+import { EmptyViewObject, EmptyViewProperty, EmptyViewType, ObjectListItem } from ".";
 import {
   useMembers,
   usePinnedMembers,
@@ -13,15 +13,7 @@ import {
   useTypes,
 } from "../hooks";
 import { Member, MemberStatus, Property, Space, SpaceObject, Type } from "../models";
-import {
-  defaultTintColor,
-  formatMemberRole,
-  isUserProperty,
-  isUserType,
-  localStorageKeys,
-  pluralize,
-  processObject,
-} from "../utils";
+import { defaultTintColor, formatMemberRole, localStorageKeys, pluralize, processObject } from "../utils";
 
 type ObjectListProps = {
   space: Space;
@@ -86,7 +78,7 @@ export function ObjectList({ space }: ObjectListProps) {
         title: "Failed to fetch latest data",
       });
     }
-  }, [objectsError, typesError, membersError]);
+  }, [objectsError, typesError, propertiesError, membersError]);
 
   useEffect(() => {
     if (pinnedObjectsError || pinnedTypesError || pinnedPropertiesError || pinnedMembersError) {
@@ -94,7 +86,7 @@ export function ObjectList({ space }: ObjectListProps) {
         title: "Failed to fetch pinned data",
       });
     }
-  }, [pinnedObjectsError, pinnedTypesError, pinnedMembersError]);
+  }, [pinnedObjectsError, pinnedTypesError, pinnedPropertiesError, pinnedMembersError]);
 
   const filterItems = <T extends { name: string }>(items: T[], searchText: string): T[] => {
     return items?.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
@@ -107,10 +99,7 @@ export function ObjectList({ space }: ObjectListProps) {
       icon: type.icon,
       title: type.name,
       subtitle: { value: "", tooltip: "" },
-      accessories: [
-        ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
-        ...(!isUserType(type.key) ? [{ icon: Icon.Lock, tooltip: "System" }] : []),
-      ],
+      accessories: [...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : [])],
       mutate: [mutateTypes, mutatePinnedTypes as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>],
       object: type,
       layout: type.layout,
@@ -125,10 +114,7 @@ export function ObjectList({ space }: ObjectListProps) {
       icon: property.icon,
       title: property.name,
       subtitle: { value: "", tooltip: "" },
-      accessories: [
-        ...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : []),
-        ...(!isUserProperty(property.key) ? [{ icon: Icon.Lock, tooltip: "System" }] : []),
-      ],
+      accessories: [...(isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : [])],
       mutate: [
         mutateProperties,
         mutatePinnedProperties as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>,
@@ -273,12 +259,12 @@ export function ObjectList({ space }: ObjectListProps) {
           <List.Dropdown.Item
             title="Properties"
             value={ViewType.properties}
-            icon={{ source: "icons/type/pricetags.svg", tintColor: defaultTintColor }}
+            icon={{ source: "icons/type/list.svg", tintColor: defaultTintColor }}
           />
           <List.Dropdown.Item
             title="Members"
             value={ViewType.members}
-            icon={{ source: "icons/type/person.svg", tintColor: defaultTintColor }}
+            icon={{ source: "icons/type/people.svg", tintColor: defaultTintColor }}
           />
         </List.Dropdown>
       }
@@ -337,6 +323,16 @@ export function ObjectList({ space }: ObjectListProps) {
       ) : (
         (() => {
           switch (currentView) {
+            case ViewType.types:
+              return (
+                <EmptyViewType
+                  title={`No ${currentView.charAt(0).toUpperCase() + currentView.slice(1)} Found`}
+                  contextValues={{
+                    spaceId: space.id,
+                    name: searchText,
+                  }}
+                />
+              );
             case ViewType.properties:
               return (
                 <EmptyViewProperty
@@ -352,7 +348,7 @@ export function ObjectList({ space }: ObjectListProps) {
                 <EmptyViewObject
                   title={`No ${currentView.charAt(0).toUpperCase() + currentView.slice(1)} Found`}
                   contextValues={{
-                    space: space.id,
+                    spaceId: space.id,
                     name: searchText,
                   }}
                 />

@@ -1,4 +1,4 @@
-import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
+import { Action, ActionPanel, Form, Icon, showToast, Toast, useNavigation } from "@raycast/api";
 import { showFailureToast, useForm } from "@raycast/utils";
 import { updateTag } from "../../api";
 import { Color, Tag } from "../../models";
@@ -13,9 +13,12 @@ interface UpdateTagFormProps {
   spaceId: string;
   propertyId: string;
   tag: Tag;
+  mutateTags: () => void;
 }
 
-export function UpdateTagForm({ spaceId, propertyId, tag }: UpdateTagFormProps) {
+export function UpdateTagForm({ spaceId, propertyId, tag, mutateTags }: UpdateTagFormProps) {
+  const { pop } = useNavigation();
+
   const { handleSubmit, itemProps } = useForm<UpdateTagFormValues>({
     initialValues: {
       name: tag.name,
@@ -29,12 +32,13 @@ export function UpdateTagForm({ spaceId, propertyId, tag }: UpdateTagFormProps) 
         });
 
         await updateTag(spaceId, propertyId, tag.id, {
-          name: values.name || "",
+          name: values.name,
           color: values.color as Color,
         });
 
-        showToast(Toast.Style.Success, "Tag updated successfully");
-        popToRoot();
+        await showToast(Toast.Style.Success, "Tag updated successfully");
+        mutateTags();
+        pop();
       } catch (error) {
         await showFailureToast(error, { title: "Failed to update tag" });
       }
@@ -56,8 +60,8 @@ export function UpdateTagForm({ spaceId, propertyId, tag }: UpdateTagFormProps) 
         </ActionPanel>
       }
     >
-      <Form.TextField {...itemProps.name} title="Name" placeholder="Enter tag name" info="The name of the tag" />
-      <Form.Dropdown {...itemProps.color} title="Color" info="The color of the tag">
+      <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" info="The name of the tag" />
+      <Form.Dropdown {...itemProps.color} title="Color" placeholder="Select color" info="The color of the tag">
         {tagColorKeys.map((key) => {
           const value = Color[key];
           return (

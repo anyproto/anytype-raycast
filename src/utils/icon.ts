@@ -23,10 +23,6 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
       if (fileSource) {
         return { source: fileSource, mask: getMaskForObject(icon.file, layout) };
       }
-      if (type?.icon.format === IconFormat.Icon && type?.icon.name) {
-        return getCustomTypeIcon(type.icon.name, "grey");
-      }
-      return await fallbackToLayout(layout);
     }
 
     // regular emoji
@@ -37,7 +33,7 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
 
   // fallback to grey version of type built-in icon
   if (type?.icon && type.icon.format === IconFormat.Icon && type.icon.name) {
-    return getCustomTypeIcon(type?.icon.name, "grey");
+    return getCustomTypeIcon(type.icon.name, "grey");
   }
 
   // fallback to layout
@@ -51,7 +47,7 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
  */
 async function fallbackToLayout(layout: string): Promise<Image.ImageLike> {
   switch (layout) {
-    case ObjectLayout.Todo:
+    case ObjectLayout.Action:
       return getCustomTypeIcon("checkbox", "grey");
     case ObjectLayout.Set:
     case ObjectLayout.Collection:

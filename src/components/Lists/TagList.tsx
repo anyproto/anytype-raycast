@@ -30,10 +30,7 @@ export function TagList({ space, propertyId }: TagListProps) {
     });
     try {
       await mutateTags();
-      await showToast({
-        style: Toast.Style.Success,
-        title: "Tags refreshed",
-      });
+      await showToast({ style: Toast.Style.Success, title: "Tags refreshed" });
     } catch (error) {
       await showFailureToast(error, { title: "Failed to refresh tags" });
     }
@@ -59,25 +56,29 @@ export function TagList({ space, propertyId }: TagListProps) {
             actions={
               <ActionPanel>
                 <Action.Push
-                  icon={Icon.Plus}
-                  title="Create Tag"
-                  shortcut={Keyboard.Shortcut.Common.New}
-                  target={
-                    <CreateTagForm spaceId={space.id} propertyId={propertyId} draftValues={{ name: searchText }} />
-                  }
-                />
-                <Action.Push
                   icon={Icon.Pencil}
                   title="Edit Tag"
                   shortcut={Keyboard.Shortcut.Common.Edit}
-                  target={<UpdateTagForm spaceId={space.id} propertyId={propertyId} tag={tag} />}
+                  target={
+                    <UpdateTagForm spaceId={space.id} propertyId={propertyId} tag={tag} mutateTags={mutateTags} />
+                  }
                 />
-                <Action
-                  icon={Icon.Repeat}
-                  title="Refresh Tags"
-                  onAction={handleRefresh}
-                  shortcut={Keyboard.Shortcut.Common.Refresh}
-                />
+                <ActionPanel.Section>
+                  <Action.Push
+                    icon={Icon.Plus}
+                    title="Create Tag"
+                    shortcut={Keyboard.Shortcut.Common.New}
+                    target={
+                      <CreateTagForm spaceId={space.id} propertyId={propertyId} draftValues={{ name: searchText }} />
+                    }
+                  />
+                  <Action
+                    icon={Icon.RotateClockwise}
+                    title="Refresh Tags"
+                    onAction={handleRefresh}
+                    shortcut={Keyboard.Shortcut.Common.Refresh}
+                  />
+                </ActionPanel.Section>
               </ActionPanel>
             }
           />

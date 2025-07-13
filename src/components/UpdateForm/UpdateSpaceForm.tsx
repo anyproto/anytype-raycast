@@ -1,5 +1,5 @@
-import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
-import { showFailureToast, useForm } from "@raycast/utils";
+import { Action, ActionPanel, Form, Icon, showToast, Toast, useNavigation } from "@raycast/api";
+import { MutatePromise, showFailureToast, useForm } from "@raycast/utils";
 import { updateSpace } from "../../api";
 import { Space } from "../../models";
 
@@ -10,9 +10,12 @@ export interface UpdateSpaceFormValues {
 
 interface UpdateSpaceFormProps {
   space: Space;
+  mutateSpaces: MutatePromise<Space[]>[];
 }
 
-export function UpdateSpaceForm({ space }: UpdateSpaceFormProps) {
+export function UpdateSpaceForm({ space, mutateSpaces }: UpdateSpaceFormProps) {
+  const { pop } = useNavigation();
+
   const { handleSubmit, itemProps } = useForm<UpdateSpaceFormValues>({
     initialValues: {
       name: space.name,
@@ -26,12 +29,13 @@ export function UpdateSpaceForm({ space }: UpdateSpaceFormProps) {
         });
 
         await updateSpace(space.id, {
-          name: values.name || "",
-          description: values.description || "",
+          name: values.name,
+          description: values.description,
         });
 
-        showToast(Toast.Style.Success, "Space updated successfully");
-        popToRoot();
+        await showToast(Toast.Style.Success, "Space updated successfully");
+        await Promise.all(mutateSpaces.map((mutate) => mutate()));
+        pop();
       } catch (error) {
         await showFailureToast(error, { title: "Failed to update space" });
       }
@@ -50,11 +54,11 @@ export function UpdateSpaceForm({ space }: UpdateSpaceFormProps) {
         </ActionPanel>
       }
     >
-      <Form.TextField {...itemProps.name} title="Name" placeholder="Enter name" info="The name of the space" />
+      <Form.TextField {...itemProps.name} title="Name" placeholder="Add name" info="The name of the space" />
       <Form.TextField
         {...itemProps.description}
         title="Description"
-        placeholder="Enter description"
+        placeholder="Add description"
         info="The description of the space"
       />
     </Form>

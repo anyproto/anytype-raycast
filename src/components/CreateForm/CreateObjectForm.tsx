@@ -3,11 +3,12 @@ import { showFailureToast, useForm } from "@raycast/utils";
 import { formatRFC3339 } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { addObjectsToList, createObject } from "../../api";
-import { CreateObjectFormValues } from "../../create-object";
 import { useCreateObjectData, useTagsMap } from "../../hooks";
 import {
+  AddObjectsToListRequest,
   CreateObjectRequest,
   IconFormat,
+  ObjectLayout,
   PropertyFieldValue,
   PropertyFormat,
   PropertyLinkWithValue,
@@ -18,8 +19,30 @@ import {
   fetchTypeKeysForLists,
   getNumberFieldValidations,
   isEmoji,
-  propKeys,
 } from "../../utils";
+
+export interface CreateObjectFormValues {
+  spaceId?: string;
+  typeId?: string;
+  templateId?: string;
+  listId?: string;
+  name?: string;
+  icon?: string;
+  description?: string;
+  body?: string;
+  source?: string;
+
+  /**
+   * Dynamic property values coming from the selected Type definition.
+   * Keys are the property `key` strings and values depend on the property format:
+   * - "text" & "select"  -> string
+   * - "number"           -> string (raw text input before cast)
+   * - "date"             -> Date | null (Raycast DatePicker returns a Date object)
+   * - "multi_select"     -> string[]
+   * - "checkbox"         -> boolean
+   */
+  [key: string]: PropertyFieldValue;
+}
 
 interface CreateObjectFormProps {
   draftValues: CreateObjectFormValues;
@@ -33,14 +56,14 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     templates,
     lists,
     objects,
-    selectedSpace,
-    setSelectedSpace,
-    selectedType,
-    setSelectedType,
-    selectedTemplate,
-    setSelectedTemplate,
-    selectedList,
-    setSelectedList,
+    selectedSpaceId,
+    setSelectedSpaceId,
+    selectedTypeId,
+    setSelectedTypeId,
+    selectedTemplateId,
+    setSelectedTemplateId,
+    selectedListId,
+    setSelectedListId,
     listSearchText,
     setListSearchText,
     objectSearchText,
@@ -50,16 +73,14 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
 
   const [loading, setLoading] = useState(false);
   const [typeKeysForLists, setTypeKeysForLists] = useState<string[]>([]);
-  const hasSelectedSpaceAndType = selectedSpace && selectedType;
-  const selectedTypeUniqueKey = useMemo(
-    () => types.reduce((acc, type) => (type.id === selectedType ? type.key : acc), ""),
-    [types, selectedType],
-  );
 
-  const selectedTypeDef = types.find((type) => type.id === selectedType);
-  const properties = selectedTypeDef?.properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key)) || [];
+  const selectedTypeDef = types.find((type) => type.id === selectedTypeId);
+  const selectedTypeKey = selectedTypeDef?.key ?? "";
+  const hasSelectedSpaceIdAndType = Boolean(selectedSpaceId && selectedTypeKey);
+
+  const properties = selectedTypeDef?.properties?.filter((p) => !Object.values(bundledPropKeys).includes(p.key)) || [];
   const { tagsMap } = useTagsMap(
-    selectedSpace,
+    selectedSpaceId,
     properties
       .filter((prop) => prop.format === PropertyFormat.Select || prop.format === PropertyFormat.MultiSelect)
       .map((prop) => prop.id),
@@ -145,28 +166,29 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
           });
         }
 
-        const sourceValue = itemProps[propKeys.source]?.value;
+        const sourceValue = itemProps[bundledPropKeys.source]?.value;
         if (sourceValue !== undefined && sourceValue !== null && sourceValue !== "") {
           propertiesEntries.push({
-            key: propKeys.source,
+            key: bundledPropKeys.source,
             url: String(sourceValue),
           });
         }
 
-        const objectData: CreateObjectRequest = {
+        const request: CreateObjectRequest = {
           name: values.name || "",
           icon: { format: IconFormat.Emoji, emoji: values.icon || "" },
           body: values.body || "",
-          template_id: values.template || "",
-          type_key: selectedTypeUniqueKey,
+          template_id: values.templateId || "",
+          type_key: selectedTypeKey,
           properties: propertiesEntries,
         };
 
-        const response = await createObject(selectedSpace, objectData);
+        const response = await createObject(selectedSpaceId, request);
 
-        if (response.object?.id) {
-          if (selectedList) {
-            await addObjectsToList(selectedSpace, selectedList, [response.object.id]);
+        if (response.object.id) {
+          if (selectedListId) {
+            const request: AddObjectsToListRequest = { objects: [response.object.id] };
+            await addObjectsToList(selectedSpaceId, selectedListId, request);
             await showToast(Toast.Style.Success, "Object created and added to collection");
           } else {
             await showToast(Toast.Style.Success, "Object created successfully");
@@ -184,7 +206,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     validation: {
       name: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : undefined;
-        if (!["ot-bookmark", "ot-note"].includes(selectedTypeUniqueKey) && !s) {
+        if (selectedTypeDef?.layout !== ObjectLayout.Note && selectedTypeDef?.layout !== ObjectLayout.Bookmark && !s) {
           return "Name is required";
         }
       },
@@ -195,7 +217,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       },
       source: (v: PropertyFieldValue) => {
         const s = typeof v === "string" ? v.trim() : undefined;
-        if (selectedTypeUniqueKey === "ot-bookmark" && !s) {
+        if (selectedTypeDef?.layout === ObjectLayout.Bookmark && !s) {
           return "Source is required for Bookmarks";
         }
       },
@@ -207,9 +229,9 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     const url = "raycast://extensions/any/anytype/create-object";
 
     const defaults: Record<string, unknown> = {
-      space: selectedSpace,
-      type: selectedType,
-      list: selectedList,
+      space: selectedSpaceId,
+      type: selectedTypeId,
+      list: selectedListId,
       name: itemProps.name.value,
       icon: itemProps.icon.value,
       description: itemProps.description.value,
@@ -227,10 +249,17 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     const launchContext = { defaults };
 
     return {
-      name: `Create ${types.find((type) => type.key === selectedTypeUniqueKey)?.name} in ${spaces.find((space) => space.id === selectedSpace)?.name}`,
+      name: `Create ${types.find((type) => type.id === selectedTypeId)?.name} in ${spaces.find((space) => space.id === selectedSpaceId)?.name}`,
       link: url + "?launchContext=" + encodeURIComponent(JSON.stringify(launchContext)),
     };
   }
+
+  const textFieldPlaceholderMap: Partial<Record<PropertyFormat, string>> = {
+    [PropertyFormat.Text]: "Add text",
+    [PropertyFormat.Url]: "Add URL",
+    [PropertyFormat.Email]: "Add email address",
+    [PropertyFormat.Phone]: "Add phone number",
+  };
 
   return (
     <Form
@@ -240,9 +269,9 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Create Object" icon={Icon.Plus} onSubmit={handleSubmit} />
-          {hasSelectedSpaceAndType && (
+          {hasSelectedSpaceIdAndType && (
             <Action.CreateQuicklink
-              title={`Create Quicklink: ${types.find((type) => type.key === selectedTypeUniqueKey)?.name}`}
+              title={`Create Quicklink: ${types.find((type) => type.id === selectedTypeId)?.name}`}
               quicklink={getQuicklink()}
             />
           )}
@@ -250,14 +279,14 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       }
     >
       <Form.Dropdown
-        id="space"
+        id="spaceId"
         title="Space"
-        value={selectedSpace}
+        value={selectedSpaceId}
         onChange={(v) => {
-          setSelectedSpace(v);
-          setSelectedType("");
-          setSelectedTemplate("");
-          setSelectedList("");
+          setSelectedSpaceId(v);
+          setSelectedTypeId("");
+          setSelectedTemplateId("");
+          setSelectedListId("");
           setListSearchText("");
           setObjectSearchText("");
         }}
@@ -271,12 +300,12 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       </Form.Dropdown>
 
       <Form.Dropdown
-        id="type"
+        id="typeId"
         title="Type"
-        value={selectedType}
-        onChange={setSelectedType}
+        value={selectedTypeId}
+        onChange={setSelectedTypeId}
         storeValue={true} // TODO: storeValue does not work here
-        placeholder={`Search types in '${spaces.find((space) => space.id === selectedSpace)?.name}'...`}
+        placeholder={`Search types in '${spaces.find((space) => space.id === selectedSpaceId)?.name}'...`}
         info="Select the type of object to create"
       >
         {types.map((type) => (
@@ -285,12 +314,12 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       </Form.Dropdown>
 
       <Form.Dropdown
-        id="template"
+        id="templateId"
         title="Template"
-        value={selectedTemplate}
-        onChange={setSelectedTemplate}
+        value={selectedTemplateId}
+        onChange={setSelectedTemplateId}
         storeValue={true}
-        placeholder={`Search templates for '${types.find((type) => type.id === selectedType)?.name}'...`}
+        placeholder={`Search templates for '${types.find((type) => type.id === selectedTypeId)?.name}'...`}
         info="Select the template to use for the object"
       >
         <Form.Dropdown.Item
@@ -305,14 +334,14 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       </Form.Dropdown>
 
       <Form.Dropdown
-        id="list"
+        id="listId"
         title="Collection"
-        value={selectedList}
-        onChange={setSelectedList}
+        value={selectedListId}
+        onChange={setSelectedListId}
         onSearchTextChange={setListSearchText}
         throttle={true}
         storeValue={true}
-        placeholder={`Search collections in '${spaces.find((space) => space.id === selectedSpace)?.name}'...`}
+        placeholder={`Search collections in '${spaces.find((space) => space.id === selectedSpaceId)?.name}'...`}
         info="Select the collection where the object will be added"
       >
         {!listSearchText && (
@@ -330,40 +359,36 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
 
       <Form.Separator />
 
-      {hasSelectedSpaceAndType && (
+      {hasSelectedSpaceIdAndType && (
         <>
-          {selectedTypeUniqueKey === "ot-bookmark" ? (
+          {selectedTypeDef?.layout !== ObjectLayout.Note && selectedTypeDef?.layout !== ObjectLayout.Bookmark && (
             <Form.TextField
-              {...itemProps.source}
-              title="URL"
-              placeholder="Add link"
-              info="Provide the source URL for the bookmark"
+              {...itemProps.name}
+              title="Name"
+              placeholder="Add name"
+              info="Enter the name of the object"
             />
-          ) : (
+          )}
+          {selectedTypeDef?.layout !== ObjectLayout.Bookmark &&
+            selectedTypeDef?.layout !== ObjectLayout.Note &&
+            selectedTypeDef?.layout !== ObjectLayout.Action &&
+            selectedTypeDef?.layout !== ObjectLayout.Profile && (
+              <Form.TextField
+                {...itemProps.icon}
+                title="Icon"
+                placeholder="Add emoji"
+                info="Enter a single emoji character to represent the object"
+              />
+            )}
+          {selectedTypeDef?.layout !== ObjectLayout.Bookmark ? (
             <>
-              {!["ot-note"].includes(selectedTypeUniqueKey) && (
-                <Form.TextField
-                  {...itemProps.name}
-                  title="Name"
-                  placeholder="Add a name"
-                  info="Enter the name of the object"
-                />
-              )}
-              {!["ot-task", "ot-note", "ot-profile"].includes(selectedTypeUniqueKey) && (
-                <Form.TextField
-                  {...itemProps.icon}
-                  title="Icon"
-                  placeholder="Add an emoji"
-                  info="Enter a single emoji character to represent the object"
-                />
-              )}
               <Form.TextField
                 {...itemProps.description}
                 title="Description"
-                placeholder="Add a description"
+                placeholder="Add description"
                 info="Provide a brief description of the object"
               />
-              {!typeKeysForLists.includes(selectedTypeUniqueKey) && (
+              {!typeKeysForLists.includes(selectedTypeKey) && (
                 <Form.TextArea
                   {...itemProps.body}
                   title="Body"
@@ -377,138 +402,138 @@ It supports:
 - Text formatting: bold, italics, strikethrough, inline code, hyperlinks"
                 />
               )}
-
-              <Form.Separator />
-
-              {properties.map((prop) => {
-                const tags = (tagsMap && tagsMap[prop.id]) ?? [];
-                const id = prop.key;
-                const title = prop.name;
-
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                const { value, defaultValue, ...restItemProps } = itemProps[id];
-
-                switch (prop.format) {
-                  case PropertyFormat.Text:
-                  case PropertyFormat.Url:
-                  case PropertyFormat.Email:
-                  case PropertyFormat.Phone:
-                    return (
-                      <Form.TextField
-                        key={prop.key}
-                        {...restItemProps}
-                        title={title}
-                        placeholder="Add text"
-                        value={String(value ?? "")}
-                      />
-                    );
-                  case PropertyFormat.Number:
-                    return (
-                      <Form.TextField
-                        key={prop.key}
-                        {...restItemProps}
-                        title={title}
-                        placeholder="Add number"
-                        value={String(value ?? "")}
-                      />
-                    );
-                  case PropertyFormat.Select:
-                    return (
-                      <Form.Dropdown
-                        key={prop.key}
-                        {...restItemProps}
-                        title={title}
-                        value={String(value ?? "")}
-                        placeholder={`Select tags for '${title}'...`}
-                      >
-                        <Form.Dropdown.Item
-                          key="none"
-                          value=""
-                          title="No Tag"
-                          icon={{ source: "icons/type/pricetag.svg", tintColor: defaultTintColor }}
-                        />
-                        {tags.map((tag) => (
-                          <Form.Dropdown.Item
-                            key={tag.id}
-                            value={tag.id}
-                            title={tag.name}
-                            icon={{ source: "icons/type/pricetag.svg", tintColor: tag.color }}
-                          />
-                        ))}
-                      </Form.Dropdown>
-                    );
-                  case PropertyFormat.MultiSelect:
-                    return (
-                      <Form.TagPicker
-                        {...restItemProps}
-                        key={prop.key}
-                        title={title}
-                        value={Array.isArray(value) ? (value as string[]) : []}
-                        placeholder="Add tags"
-                      >
-                        {tags.map((tag) => (
-                          <Form.TagPicker.Item
-                            key={tag.id}
-                            value={tag.id}
-                            title={tag.name}
-                            icon={{ source: "icons/type/pricetag.svg", tintColor: tag.color }}
-                          />
-                        ))}
-                      </Form.TagPicker>
-                    );
-                  case PropertyFormat.Date:
-                    return (
-                      <Form.DatePicker
-                        {...restItemProps}
-                        key={prop.key}
-                        title={title}
-                        defaultValue={value as Date | undefined}
-                      />
-                    );
-                  case PropertyFormat.Files:
-                    // TODO: implement
-                    return null;
-                  case PropertyFormat.Checkbox:
-                    return (
-                      <Form.Checkbox key={prop.key} {...restItemProps} title={title} label="" value={Boolean(value)} />
-                    );
-                  case PropertyFormat.Objects:
-                    return (
-                      // TODO: TagPicker would be the more appropriate component, but it does not support onSearchTextChange
-                      <Form.Dropdown
-                        {...restItemProps}
-                        key={prop.key}
-                        title={title}
-                        value={String(value ?? "")}
-                        onSearchTextChange={setObjectSearchText}
-                        throttle={true}
-                        placeholder={`Search objects in '${spaces.find((space) => space.id === selectedSpace)?.name}'...`}
-                      >
-                        {!objectSearchText && (
-                          <Form.Dropdown.Item
-                            key="none"
-                            value=""
-                            title="No Object"
-                            icon={{ source: "icons/type/document.svg", tintColor: defaultTintColor }}
-                          />
-                        )}
-                        {objects.map((object) => (
-                          <Form.Dropdown.Item
-                            key={object.id}
-                            value={object.id}
-                            title={object.name}
-                            icon={object.icon}
-                          />
-                        ))}
-                      </Form.Dropdown>
-                    );
-                  default:
-                    console.warn(`Unsupported property format: ${prop.format}`);
-                    return null;
-                }
-              })}
             </>
+          ) : (
+            <Form.TextField
+              {...itemProps.source}
+              title="Source"
+              placeholder="Add source URL"
+              info="Enter the URL of the source for bookmarks"
+            />
           )}
+          <Form.Separator />
+
+          {properties.map((property) => {
+            const tags = (tagsMap && tagsMap[property.id]) ?? [];
+            const title = property.name;
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { value, defaultValue, ...restItemProps } = itemProps[property.key];
+
+            switch (property.format) {
+              case PropertyFormat.Text:
+              case PropertyFormat.Url:
+              case PropertyFormat.Email:
+              case PropertyFormat.Phone:
+                return (
+                  <Form.TextField
+                    key={property.id}
+                    {...restItemProps}
+                    title={title}
+                    placeholder={textFieldPlaceholderMap[property.format]}
+                    value={String(value ?? "")}
+                  />
+                );
+              case PropertyFormat.Number:
+                return (
+                  <Form.TextField
+                    key={property.id}
+                    {...restItemProps}
+                    title={title}
+                    placeholder="Add number"
+                    value={String(value ?? "")}
+                  />
+                );
+              case PropertyFormat.Select:
+                return (
+                  <Form.Dropdown
+                    key={property.id}
+                    {...restItemProps}
+                    title={title}
+                    value={String(value ?? "")}
+                    placeholder={`Select tags for '${title}'...`}
+                  >
+                    <Form.Dropdown.Item
+                      key="none"
+                      value=""
+                      title="No Tag"
+                      icon={{ source: "icons/type/pricetag.svg", tintColor: defaultTintColor }}
+                    />
+                    {tags.map((tag) => (
+                      <Form.Dropdown.Item
+                        key={tag.id}
+                        value={tag.id}
+                        title={tag.name}
+                        icon={{ source: "icons/type/pricetag.svg", tintColor: tag.color }}
+                      />
+                    ))}
+                  </Form.Dropdown>
+                );
+              case PropertyFormat.MultiSelect:
+                return (
+                  <Form.TagPicker
+                    {...restItemProps}
+                    key={property.id}
+                    title={title}
+                    value={Array.isArray(value) ? (value as string[]) : []}
+                    placeholder="Add tags"
+                  >
+                    {tags.map((tag) => (
+                      <Form.TagPicker.Item
+                        key={tag.id}
+                        value={tag.id}
+                        title={tag.name}
+                        icon={{ source: "icons/type/pricetag.svg", tintColor: tag.color }}
+                      />
+                    ))}
+                  </Form.TagPicker>
+                );
+              case PropertyFormat.Date:
+                return (
+                  <Form.DatePicker
+                    {...restItemProps}
+                    key={property.id}
+                    title={title}
+                    defaultValue={value as Date | undefined}
+                  />
+                );
+              case PropertyFormat.Files:
+                // TODO: implement
+                return null;
+              case PropertyFormat.Checkbox:
+                return (
+                  <Form.Checkbox key={property.id} {...restItemProps} title={title} label="" value={Boolean(value)} />
+                );
+              case PropertyFormat.Objects:
+                return (
+                  // TODO: TagPicker would be the more appropriate component, but it does not support onSearchTextChange
+                  <Form.Dropdown
+                    {...restItemProps}
+                    key={property.id}
+                    title={title}
+                    value={String(value ?? "")}
+                    onSearchTextChange={setObjectSearchText}
+                    throttle={true}
+                    placeholder={`Search objects in '${spaces.find((space) => space.id === selectedSpaceId)?.name}'...`}
+                  >
+                    {!objectSearchText && (
+                      <Form.Dropdown.Item
+                        key="none"
+                        value=""
+                        title="No Object"
+                        icon={{ source: "icons/type/document.svg", tintColor: defaultTintColor }}
+                      />
+                    )}
+                    {objects.map((object) => (
+                      <Form.Dropdown.Item key={object.id} value={object.id} title={object.name} icon={object.icon} />
+                    ))}
+                  </Form.Dropdown>
+                );
+              default:
+                console.warn(`Unsupported property format: ${property.format}`);
+                return null;
+            }
+          })}
         </>
       )}
     </Form>

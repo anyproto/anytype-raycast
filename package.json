@@ -2,7 +2,7 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "anytype",
   "title": "Anytype",
-  "description": "Create, browse and search in Anytype - right at your fingertips, anywhere on your Mac.",
+  "description": "Create, browse, search and edit within Anytype - right at your fingertips, anywhere on your Mac.",
   "icon": "anytype-icon.png",
   "author": "jmetrikat",
   "owner": "any",
@@ -39,6 +39,13 @@
       "title": "Add to List",
       "subtitle": "Anytype",
       "description": "Add an existing object to a list.",
+      "mode": "view"
+    },
+    {
+      "name": "create-type",
+      "title": "Create Type",
+      "subtitle": "Anytype",
+      "description": "Create a new type.",
       "mode": "view"
     }
   ],
@@ -121,8 +128,8 @@
               "object": "type",
               "name": "Task",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1mm",
-              "type_key": "ot-task",
-              "recommended_layout": "todo"
+              "type_key": "task",
+              "layout": "action"
             }
           ],
           "search-space": [
@@ -180,12 +187,15 @@
                 "types": {
                   "or": [
                     {
-                      "includes": "ot-task"
+                      "includes": "task"
+                    },
+                    {
+                      "includes": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1mm"
                     },
                     {
                       "includes": [
-                        "ot-collection",
-                        "ot-set"
+                        "collection",
+                        "set"
                       ]
                     }
                   ]
@@ -215,67 +225,6 @@
         "usedAsExample": true
       },
       {
-        "input": "@anytype approve bob as an editor in my personal space",
-        "mocks": {
-          "get-spaces": [
-            {
-              "object": "space",
-              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
-              "name": "My Personal Space"
-            }
-          ],
-          "get-members": [
-            {
-              "object": "member",
-              "name": "Bob",
-              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "global_name": "bob",
-              "status": "pending",
-              "role": "no_permissions"
-            }
-          ],
-          "approve-member": [
-            {
-              "object": "member",
-              "name": "Bob",
-              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "global_name": "bob",
-              "status": "active",
-              "role": "editor"
-            }
-          ]
-        },
-        "expected": [
-          {
-            "callsTool": {
-              "name": "get-spaces",
-              "arguments": {}
-            }
-          },
-          {
-            "callsTool": {
-              "name": "get-members",
-              "arguments": {
-                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
-              }
-            }
-          },
-          {
-            "callsTool": {
-              "name": "approve-member",
-              "arguments": {
-                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
-                "memberIdentity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-                "role": "editor"
-              }
-            }
-          }
-        ],
-        "usedAsExample": false
-      },
-      {
         "input": "@anytype create a new page in my personal space explaining the concept of privacy",
         "mocks": {
           "get-spaces": [
@@ -290,8 +239,8 @@
               "object": "type",
               "name": "Page",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1pp",
-              "type_key": "ot-page",
-              "recommended_layout": "basic"
+              "type_key": "page",
+              "layout": "basic"
             }
           ],
           "create-object": [
@@ -303,7 +252,7 @@
               "type": {
                 "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1mm",
                 "name": "Page",
-                "type_key": "ot-page"
+                "type_key": "page"
               },
               "snippet": "This is the snippet of the object."
             }
@@ -329,7 +278,7 @@
               "name": "create-object",
               "arguments": {
                 "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
-                "type_key": "ot-page",
+                "type_key": "page",
                 "name": {
                   "includes": "Privacy"
                 }
@@ -546,8 +495,8 @@
               "object": "type",
               "name": "Page",
               "id": "bafyreigs5crqbryk2sq45ig4p6uqkcbmntuyosc1djvdeqoydj23b6d1pp",
-              "type_key": "ot-page",
-              "recommended_layout": "basic"
+              "type_key": "page",
+              "layout": "basic"
             }
           ]
         },
@@ -562,66 +511,6 @@
             "callsTool": {
               "name": "get-types",
               "arguments": {
-                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
-              }
-            }
-          }
-        ],
-        "usedAsExample": false
-      },
-      {
-        "input": "@anytype reject bob's request to join my personal space",
-        "mocks": {
-          "get-spaces": [
-            {
-              "object": "space",
-              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
-              "name": "My Personal Space"
-            }
-          ],
-          "get-members": [
-            {
-              "object": "member",
-              "name": "Bob",
-              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "global_name": "bob",
-              "status": "pending",
-              "role": "no_permissions"
-            }
-          ],
-          "reject-member": [
-            {
-              "object": "member",
-              "name": "Bob",
-              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "global_name": "bob",
-              "status": "rejected",
-              "role": "no_permissions"
-            }
-          ]
-        },
-        "expected": [
-          {
-            "callsTool": {
-              "name": "get-spaces",
-              "arguments": {}
-            }
-          },
-          {
-            "callsTool": {
-              "name": "get-members",
-              "arguments": {
-                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
-              }
-            }
-          },
-          {
-            "callsTool": {
-              "name": "reject-member",
-              "arguments": {
-                "memberIdentity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
                 "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
               }
             }
@@ -698,65 +587,6 @@
         "usedAsExample": true
       },
       {
-        "input": "@anytype remove bob from my personal space",
-        "mocks": {
-          "get-spaces": [
-            {
-              "object": "space",
-              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
-              "name": "My Personal Space"
-            }
-          ],
-          "get-members": [
-            {
-              "object": "member",
-              "name": "Alice",
-              "id": "_participant_bafyreihliylimyqct7vbyc2jqsoanibku612jj4uwwhulx9tctb4qw346q_2lcu0r85yg10d_AAHTtt1wuQEnaYBNZ5Cyfcvs6DqPqxgn8KXDVa4avsUkMuha",
-              "identity": "AAHTtt1wuQEnaYBNZ5Cyfcvs6DqPqxgn8KXDVa4avsUkMuha",
-              "global_name": "alice",
-              "status": "active",
-              "role": "owner"
-            },
-            {
-              "object": "member",
-              "name": "Bob",
-              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "global_name": "bob",
-              "status": "active",
-              "role": "editor"
-            }
-          ],
-          "remove-member": []
-        },
-        "expected": [
-          {
-            "callsTool": {
-              "name": "get-spaces",
-              "arguments": {}
-            }
-          },
-          {
-            "callsTool": {
-              "name": "get-members",
-              "arguments": {
-                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
-              }
-            }
-          },
-          {
-            "callsTool": {
-              "name": "remove-member",
-              "arguments": {
-                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
-                "memberIdentity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun"
-              }
-            }
-          }
-        ],
-        "usedAsExample": false
-      },
-      {
         "input": "@anytype search for objects globally",
         "mocks": {
           "search-anytype": [
@@ -824,74 +654,13 @@
               "arguments": {
                 "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
                 "query": "",
-                "sort.property": "last_modified_date",
+                "sort.propertyKey": "last_modified_date",
                 "sort.direction": "desc"
               }
             }
           }
         ],
         "usedAsExample": true
-      },
-      {
-        "input": "@anytype make bob an editor in my personal space",
-        "mocks": {
-          "get-spaces": [
-            {
-              "object": "space",
-              "id": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
-              "name": "My Personal Space"
-            }
-          ],
-          "get-members": [
-            {
-              "object": "member",
-              "name": "Bob",
-              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "global_name": "bob",
-              "status": "active",
-              "role": "viewer"
-            }
-          ],
-          "update-member": [
-            {
-              "object": "member",
-              "name": "Bob",
-              "id": "_participant_bafyreihliylimyqct5vbyc2jqsoanibku656jj2uwwhulx4tctb4qw346q_1lcu0r85yg10d_ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "identity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-              "global_name": "bob",
-              "status": "active",
-              "role": "editor"
-            }
-          ]
-        },
-        "expected": [
-          {
-            "callsTool": {
-              "name": "get-spaces",
-              "arguments": {}
-            }
-          },
-          {
-            "callsTool": {
-              "name": "get-members",
-              "arguments": {
-                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d"
-              }
-            }
-          },
-          {
-            "callsTool": {
-              "name": "update-member",
-              "arguments": {
-                "spaceId": "bafyreihliylimyqct7vbyc2jqsoanibku656jj4uwwhulx4tctb4qw346q.2lcu0r85yg10d",
-                "memberIdentity": "ABKbJdn422NCyvSrwD2OW9N4YKbKTToDhWkvKzYLucMUGqun",
-                "role": "editor"
-              }
-            }
-          }
-        ],
-        "usedAsExample": false
       }
     ]
   },
@@ -987,6 +756,21 @@
       ],
       "default": "text",
       "required": false
+    },
+    {
+      "name": "apiUrl",
+      "title": "API URL",
+      "description": "The base URL of the Anytype API (default: http://127.0.0.1:31009).",
+      "type": "textfield",
+      "default": "http://127.0.0.1:31009",
+      "required": false
+    },
+    {
+      "name": "apiKey",
+      "title": "API Key",
+      "description": "Optional API key for the Anytype API. Leave empty to use the built-in authentication flow with your Anytype desktop app, or enter an API key (e.g., from a headless Anytype instance) to use manual authentication.",
+      "type": "password",
+      "required": false
     }
   ],
   "dependencies": {
@@ -994,11 +778,13 @@
     "@raycast/utils": "^1.17.0",
     "date-fns": "^4.1.0",
     "emoji-regex": "^10.4.0",
+    "lodash": "^4.17.21",
     "node-fetch": "^3.3.2",
     "remove-markdown": "^0.6.0"
   },
   "devDependencies": {
     "@raycast/eslint-config": "^1.0.11",
+    "@types/lodash": "^4.17.16",
     "@types/node": "20.8.10",
     "@types/react": "18.3.3",
     "eslint": "^8.57.0",

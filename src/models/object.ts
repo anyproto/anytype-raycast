@@ -10,6 +10,11 @@ import {
   Type,
 } from ".";
 
+export enum BodyFormat {
+  Markdown = "md",
+  JSON = "json",
+}
+
 export interface CreateObjectRequest {
   name: string;
   icon: ObjectIcon;
@@ -22,6 +27,7 @@ export interface CreateObjectRequest {
 export interface UpdateObjectRequest {
   name?: string;
   icon?: ObjectIcon;
+  type_key?: string; // TODO: add support in forms
   properties?: PropertyLinkWithValue[];
 }
 
@@ -38,8 +44,8 @@ export interface RawSpaceObject {
   properties: RawPropertyWithValue[];
 }
 
-export interface RawSpaceObjectWithBlocks extends RawSpaceObject {
-  blocks: Block[];
+export interface RawSpaceObjectWithBody extends RawSpaceObject {
+  markdown: string;
 }
 
 export interface SpaceObject extends Omit<RawSpaceObject, "icon" | "type" | "properties"> {
@@ -48,9 +54,9 @@ export interface SpaceObject extends Omit<RawSpaceObject, "icon" | "type" | "pro
   properties: PropertyWithValue[];
 }
 
-export interface SpaceObjectWithBlocks extends Omit<RawSpaceObjectWithBlocks, "icon" | "type" | "properties"> {
-  type: Type;
+export interface SpaceObjectWithBody extends Omit<RawSpaceObjectWithBody, "icon" | "type" | "properties"> {
   icon: Image.ImageLike;
+  type: Type;
   properties: PropertyWithValue[];
 }
 

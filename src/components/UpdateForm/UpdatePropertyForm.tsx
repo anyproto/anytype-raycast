@@ -1,31 +1,36 @@
-import { Action, ActionPanel, Form, Icon, popToRoot, showToast, Toast } from "@raycast/api";
-import { showFailureToast, useForm } from "@raycast/utils";
-import { updateProperty } from "../../api"; // ← import your new helper
+import { Action, ActionPanel, Form, Icon, showToast, Toast, useNavigation } from "@raycast/api";
+import { MutatePromise, showFailureToast, useForm } from "@raycast/utils";
+import { updateProperty } from "../../api";
 import { Property, PropertyFormat } from "../../models";
 
 export interface UpdatePropertyFormValues {
+  key: string;
   name: string;
-  format?: string;
+  format: string;
 }
 
 interface UpdatePropertyFormProps {
   spaceId: string;
   property: Property;
+  mutateProperties: MutatePromise<Property[]>[];
 }
 
-export function UpdatePropertyForm({ spaceId, property }: UpdatePropertyFormProps) {
+export function UpdatePropertyForm({ spaceId, property, mutateProperties }: UpdatePropertyFormProps) {
+  const { pop } = useNavigation();
   const { handleSubmit, itemProps } = useForm<UpdatePropertyFormValues>({
     initialValues: {
+      key: property.key,
       name: property.name,
     },
     onSubmit: async (values) => {
       try {
         await showToast({ style: Toast.Style.Animated, title: "Updating property..." });
 
-        await updateProperty(spaceId, property.id, { name: values.name || "" });
+        await updateProperty(spaceId, property.id, { key: values.key, name: values.name });
 
         showToast(Toast.Style.Success, "Property updated successfully");
-        popToRoot();
+        await Promise.all(mutateProperties.map((mutate) => mutate()));
+        pop();
       } catch (error) {
         await showFailureToast(error, { title: "Failed to update property" });
       }
@@ -46,14 +51,7 @@ export function UpdatePropertyForm({ spaceId, property }: UpdatePropertyFormProp
         </ActionPanel>
       }
     >
-      <Form.Dropdown
-        {...itemProps.format}
-        title="Format"
-        value={property.format}
-        onChange={() => {}}
-        onFocus={() => {}}
-        info="Format is read-only"
-      >
+      <Form.Dropdown {...itemProps.format} title="Format" value={property.format} info="Format is read-only">
         <Form.Dropdown.Item
           value={property.format}
           title={propertyFormatKeys.find((key) => PropertyFormat[key] === property.format) || property.format}
@@ -63,9 +61,15 @@ export function UpdatePropertyForm({ spaceId, property }: UpdatePropertyFormProp
       <Form.TextField
         {...itemProps.name}
         title="Name"
-        placeholder="Enter property name"
+        placeholder="Add name"
         autoFocus={true}
         info="The name of the property"
+      />
+      <Form.TextField
+        {...itemProps.key}
+        title="Key"
+        placeholder="Add key"
+        info="The key for the property must be unique and in snake_case format"
       />
     </Form>
   );

@@ -1,5 +1,4 @@
 export * from "./useCreateObjectData";
-export * from "./useExport";
 export * from "./useGlobalSearch";
 export * from "./useMembers";
 export * from "./useObject";
@@ -11,6 +10,7 @@ export * from "./usePinnedProperties";
 export * from "./usePinnedSpaces";
 export * from "./usePinnedTypes";
 export * from "./useProperties";
+export * from "./useProperty";
 export * from "./useSearch";
 export * from "./useSpaces";
 export * from "./useTags";
