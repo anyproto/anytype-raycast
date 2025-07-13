@@ -1,11 +1,19 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { fetchTypeKeysForPages } from './type';
+import { 
+  fetchTypeKeysForPages, 
+  fetchTypesKeysForTasks, 
+  fetchTypeKeysForLists,
+  fetchAllTypesForSpace,
+  getAllTypesFromSpaces,
+  fetchAllTemplatesForType
+} from './type';
 import { Space, Type, ObjectLayout } from '../models';
 import * as api from '../api';
 
 // Mock the API module
 vi.mock('../api', () => ({
   getTypes: vi.fn(),
+  getTemplates: vi.fn(),
 }));
 
 // Mock bundledTypeKeys

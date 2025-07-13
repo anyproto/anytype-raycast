@@ -1,13 +1,15 @@
 import { describe, expect, it, vi } from 'vitest';
-import { pluralize, formatMemberRole, isEmoji, injectEmojiIntoHeading } from './string';
-import { MemberRole } from '../models';
-
-// Mock getPreferenceValues from raycast
-vi.mock('@raycast/api', () => ({
-  getPreferenceValues: vi.fn(() => ({
-    sort: 'name',
-  })),
-}));
+import { 
+  pluralize, 
+  formatMemberRole, 
+  isEmoji, 
+  injectEmojiIntoHeading,
+  getDateLabel,
+  getShortDateLabel,
+  getSectionTitle
+} from './string';
+import { MemberRole, SortProperty } from '../models';
+import { getPreferenceValues } from '@raycast/api';
 
 describe('pluralize', () => {
   it('should handle regular pluralization', () => {
@@ -126,5 +128,76 @@ describe('injectEmojiIntoHeading', () => {
   it('should handle whitespace in emoji input', () => {
     expect(injectEmojiIntoHeading('# My Heading', ' 😀 ')).toBe('# 😀 My Heading');
     expect(injectEmojiIntoHeading('# My Heading', '  🎉  ')).toBe('# 🎉 My Heading');
+  });
+});
+
+describe('getDateLabel', () => {
+  it('should return Creation Date for CreatedDate sort', () => {
+    vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.CreatedDate } as any);
+    expect(getDateLabel()).toBe('Creation Date');
+  });
+
+  it('should return Last Modified Date for LastModifiedDate sort', () => {
+    vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.LastModifiedDate } as any);
+    expect(getDateLabel()).toBe('Last Modified Date');
+  });
+
+  it('should return Last Opened Date for LastOpenedDate sort', () => {
+    vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.LastOpenedDate } as any);
+    expect(getDateLabel()).toBe('Last Opened Date');
+  });
+
+  it('should return empty string for other sort types', () => {
+    vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.Name } as any);
+    expect(getDateLabel()).toBe('');
+  });
+});
+
+describe('getShortDateLabel', () => {
+  it('should return Created for CreatedDate sort', () => {
+    vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.CreatedDate } as any);
+    expect(getShortDateLabel()).toBe('Created');
+  });
+
+  it('should return Modified for LastModifiedDate sort', () => {
+    vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.LastModifiedDate } as any);
+    expect(getShortDateLabel()).toBe('Modified');
+  });
+
+  it('should return Opened for LastOpenedDate sort', () => {
+    vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.LastOpenedDate } as any);
+    expect(getShortDateLabel()).toBe('Opened');
+  });
+
+  it('should return empty string for other sort types', () => {
+    vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.Name } as any);
+    expect(getShortDateLabel()).toBe('');
+  });
+});
+
+describe('getSectionTitle', () => {
+  it('should return Search Results when search text is provided', () => {
+    vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.Name } as any);
+    expect(getSectionTitle('test search')).toBe('Search Results');
+  });
+
+  it('should return Alphabetical Order for Name sort without search', () => {
+    vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.Name } as any);
+    expect(getSectionTitle('')).toBe('Alphabetical Order');
+  });
+
+  it('should return Created Recently for CreatedDate sort without search', () => {
+    vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.CreatedDate } as any);
+    expect(getSectionTitle('')).toBe('Created Recently');
+  });
+
+  it('should return Modified Recently for LastModifiedDate sort without search', () => {
+    vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.LastModifiedDate } as any);
+    expect(getSectionTitle('')).toBe('Modified Recently');
+  });
+
+  it('should return Opened Recently for LastOpenedDate sort without search', () => {
+    vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.LastOpenedDate } as any);
+    expect(getSectionTitle('')).toBe('Opened Recently');
   });
 });

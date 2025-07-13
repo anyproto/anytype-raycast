@@ -4,6 +4,7 @@ import { vi } from 'vitest';
 export const getPreferenceValues = vi.fn(() => ({
   limit: 10,
   apiKey: '',
+  sort: 'name',
 }));
 
 export const LocalStorage = {
