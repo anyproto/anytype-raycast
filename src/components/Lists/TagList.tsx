@@ -15,7 +15,7 @@ interface TagListProps {
 
 export function TagList({ space, propertyId }: TagListProps) {
   const [searchText, setSearchText] = useState("");
-  const { tags, isLoadingTags, tagsError, mutateTags, tagsPagination } = useTags(space.id, propertyId);
+  const { tags, isLoadingTags, tagsError, mutateTags, tagsPagination } = useTags(space.id, propertyId, searchText);
 
   useEffect(() => {
     if (tagsError) {
@@ -36,8 +36,6 @@ export function TagList({ space, propertyId }: TagListProps) {
     }
   };
 
-  const filteredTags = tags?.filter((tag) => tag.name.toLowerCase().includes(searchText.toLowerCase()));
-
   return (
     <List
       isLoading={isLoadingTags}
@@ -47,8 +45,8 @@ export function TagList({ space, propertyId }: TagListProps) {
       pagination={tagsPagination}
       throttle={true}
     >
-      {filteredTags && filteredTags.length > 0 ? (
-        filteredTags.map((tag) => (
+      {tags && tags.length > 0 ? (
+        tags.map((tag) => (
           <List.Item
             key={tag.id}
             title={tag.name}

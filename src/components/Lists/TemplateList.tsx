@@ -18,6 +18,7 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
   const { templates, templatesError, isLoadingTemplates, mutateTemplates, templatesPagination } = useTemplates(
     space.id,
     typeId,
+    searchText,
   );
   const { objects, objectsError, isLoadingObjects, mutateObjects, objectsPagination } = useSearch(
     space.id,
@@ -37,15 +38,10 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
     }
   }, [objectsError]);
 
-  const filteredTemplates = templates?.filter((template: SpaceObject) =>
-    template.name.toLowerCase().includes(searchText.toLowerCase()),
-  );
-
-  const filteredObjects = objects
-    ?.filter((object) => object.name.toLowerCase().includes(searchText.toLowerCase()))
-    .map((object) => {
-      return processObject(object, false, mutateObjects);
-    });
+  const filteredTemplates = templates;
+  const filteredObjects = objects?.map((object) => {
+    return processObject(object, false, mutateObjects);
+  });
 
   return (
     <List
