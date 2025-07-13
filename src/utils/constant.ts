@@ -22,7 +22,7 @@ export const maxPinnedObjects = 5;
 
 // Local Storage Keys
 export const localStorageKeys = {
-  appKey: "app_key",
+  apiKey: "api_key",
   suffixForSpaces: "spaces",
   suffixForGlobalSearch: "global_search",
   suffixForViewsPerSpace(spaceId: string, viewType: ViewType): string {
@@ -107,12 +107,12 @@ export const defaultTintColor = { light: "black", dark: "white" };
 // API Endpoints
 export const apiEndpoints = {
   // auth
-  displayCode: (appName: string) => ({
-    url: `${apiUrl}/v1/auth/display_code?app_name=${appName}`,
+  createChallenge: () => ({
+    url: `${apiUrl}/v1/auth/challenges`,
     method: "POST",
   }),
-  getToken: (challengeId: string, code: string) => ({
-    url: `${apiUrl}/v1/auth/token?challenge_id=${challengeId}&code=${code}`,
+  createApiKey: () => ({
+    url: `${apiUrl}/v1/auth/api_keys`,
     method: "POST",
   }),
 
