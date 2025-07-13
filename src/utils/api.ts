@@ -27,7 +27,7 @@ export async function apiFetch<T>(url: string, options: FetchOptions): Promise<A
     const response = await fetch(url, {
       method: options.method,
       headers: {
-        Authorization: `Bearer ${token}`,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         "Content-Type": "application/json",
         "Anytype-Version": currentApiVersion,
         ...options.headers,
