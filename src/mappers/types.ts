@@ -15,8 +15,7 @@ export async function mapTypes(types: RawType[]): Promise<Type[]> {
 /**
  * Map raw `Type` object from the API into display-ready data (e.g., icon).
  */
-export async function mapType(type: RawType): Promise<Type> {
-  // Handle deleted types
+export async function mapType(type: RawType | null): Promise<Type> {
   if (!type || !type.id) {
     return {
       object: "type",

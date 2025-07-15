@@ -10,7 +10,11 @@ import { colorToHex, iconWidth } from "./constant";
  * @param type The type of the object .
  * @returns The base64 data URI or Raycast Icon.
  */
-export async function getIconWithFallback(icon: ObjectIcon, layout: string, type?: RawType): Promise<Image.ImageLike> {
+export async function getIconWithFallback(
+  icon: ObjectIcon | null,
+  layout: string,
+  type?: RawType | null,
+): Promise<Image.ImageLike> {
   if (icon && icon.format) {
     // type built-in icons
     if (icon.format === IconFormat.Icon && icon.name) {
@@ -32,7 +36,7 @@ export async function getIconWithFallback(icon: ObjectIcon, layout: string, type
   }
 
   // fallback to grey version of type built-in icon
-  if (type?.icon && type.icon.format === IconFormat.Icon && type.icon.name) {
+  if (type && type.icon && type.icon.format === IconFormat.Icon && type.icon.name) {
     return getCustomTypeIcon(type.icon.name, "grey");
   }
 

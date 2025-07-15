@@ -35,8 +35,8 @@ export interface RawSpaceObject {
   object: string;
   id: string;
   name: string;
-  icon: ObjectIcon;
-  type: RawType;
+  icon: ObjectIcon | null;
+  type: RawType | null;
   snippet: string;
   layout: ObjectLayout;
   space_id: string;

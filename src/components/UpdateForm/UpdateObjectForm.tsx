@@ -36,7 +36,7 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
   const { pop } = useNavigation();
   const [objectSearchText, setObjectSearchText] = useState("");
 
-  const properties = object.type.properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key));
+  const properties = object.type?.properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key)) ?? [];
   const numberFieldValidations = useMemo(() => getNumberFieldValidations(properties), [properties]);
 
   const { objects, objectsError, isLoadingObjects } = useSearch(spaceId, objectSearchText, []);
@@ -218,7 +218,7 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
 
   return (
     <Form
-      navigationTitle={`Edit ${object.type.name}`}
+      navigationTitle={`Edit ${object.type?.name ?? "Object"}`}
       isLoading={isLoadingObjects || isLoadingTags}
       actions={
         <ActionPanel>
