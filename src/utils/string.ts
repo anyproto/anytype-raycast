@@ -103,3 +103,17 @@ export function isEmoji(s: string) {
   const match = emojiRegex().exec(s);
   return match !== null && match[0] === s;
 }
+
+/**
+ * Get the name with 'Untitled' as fallback.
+ */
+export function getNameWithFallback(name: string) {
+  return name?.trim() || "Untitled";
+}
+
+/**
+ * Get the name with snippet as first fallback and 'Untitled' as second.
+ */
+export function getNameWithSnippetFallback(name: string, snippet: string) {
+  return name?.trim() || (snippet.includes("\n") ? `${snippet.split("\n")[0]}...` : snippet || "Untitled");
+}
