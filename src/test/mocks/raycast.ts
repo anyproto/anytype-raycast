@@ -62,3 +62,4 @@ export const Icon = {
 export const useForm = vi.fn();
 export const useFetch = vi.fn();
 export const usePromise = vi.fn();
+export const useCachedPromise = vi.fn();

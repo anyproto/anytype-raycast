@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">6.66% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/30</span>
+                <span class='fraction'>30/30</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">6.66% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/30</span>
+                <span class='fraction'>30/30</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -102,69 +102,69 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { showToast, Toast } from "@raycast/api";
 import { PaginatedResponse, RawSpace } from "../../models";
 import { apiEndpoints, apiFetch, currentApiVersion, errorConnectionMessage } from "../../utils";
 &nbsp;
 // Validate api version and token by checking if data can be fetched without errors
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >export async function checkApiTokenValidity(): Promise&lt;boolean&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >  try {</span>
-<span class="cstat-no" title="statement not covered" >    const { url, method } = apiEndpoints.getSpaces({ offset: 0, limit: 1 });</span>
-<span class="cstat-no" title="statement not covered" >    const response = await apiFetch&lt;PaginatedResponse&lt;RawSpace&gt;&gt;(url, { method: method });</span>
+export async function checkApiTokenValidity(): Promise&lt;boolean&gt; {
+  try {
+    const { url, method } = apiEndpoints.getSpaces({ offset: 0, limit: 1 });
+    const response = await apiFetch&lt;PaginatedResponse&lt;RawSpace&gt;&gt;(url, { method: method });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    const apiVersion = response.headers.get("Anytype-Version");</span>
-<span class="cstat-no" title="statement not covered" >    if (!apiVersion || apiVersion &lt; currentApiVersion) {</span>
-<span class="cstat-no" title="statement not covered" >      await showToast(</span>
-<span class="cstat-no" title="statement not covered" >        Toast.Style.Failure,</span>
-<span class="cstat-no" title="statement not covered" >        "App Update Required",</span>
-<span class="cstat-no" title="statement not covered" >        `Please update the Anytype app to match the extension's API version ${currentApiVersion}.`,</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    } else if (apiVersion &gt; currentApiVersion) {</span>
-<span class="cstat-no" title="statement not covered" >      await showToast(</span>
-<span class="cstat-no" title="statement not covered" >        Toast.Style.Failure,</span>
-<span class="cstat-no" title="statement not covered" >        "Extension Update Required",</span>
-<span class="cstat-no" title="statement not covered" >        `Please update the extension to match the Anytype app's API version ${apiVersion}.`,</span>
-<span class="cstat-no" title="statement not covered" >      );</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >    return true;</span>
-<span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    if (error instanceof Error) {</span>
-<span class="cstat-no" title="statement not covered" >      return error.message == errorConnectionMessage;</span>
-<span class="cstat-no" title="statement not covered" >    } else {</span>
-<span class="cstat-no" title="statement not covered" >      console.error("Unknown error:", error);</span>
-<span class="cstat-no" title="statement not covered" >      return false;</span>
-<span class="cstat-no" title="statement not covered" >    }</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+    const apiVersion = response.headers.get("Anytype-Version");
+    if (!apiVersion || apiVersion &lt; currentApiVersion) {
+      await showToast(
+        Toast.Style.Failure,
+        "App Update Required",
+        `Please update the Anytype app to match the extension's API version ${currentApiVersion}.`,
+      );
+    } else if (apiVersion &gt; currentApiVersion) {
+      await showToast(
+        Toast.Style.Failure,
+        "Extension Update Required",
+        `Please update the extension to match the Anytype app's API version ${apiVersion}.`,
+      );
+    }
+    return true;
+  } catch (error) {
+    if (error instanceof Error) {
+      return error.message == errorConnectionMessage;
+    } else {
+      console.error("Unknown error:", error);
+      return false;
+    }
+  }
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -172,7 +172,7 @@ import { apiEndpoints, apiFetch, currentApiVersion, errorConnectionMessage } fro
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-13T13:21:01.815Z
+                at 2025-07-16T22:49:26.692Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
