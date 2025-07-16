@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { PropertyFormat, RawPropertyWithValue } from "../models";
-import { getNumberFieldValidations } from "./form";
+import { PropertyFormat, RawPropertyWithValue } from "../../models";
+import { getNumberFieldValidations } from "../form";
 
 describe("getNumberFieldValidations", () => {
   it("should return empty object for empty properties array", () => {

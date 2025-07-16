@@ -1,7 +1,7 @@
 import { LocalStorage, showToast, Toast } from "@raycast/api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { localStorageKeys, maxPinnedObjects } from "./constant";
-import { addPinned, getPinned, moveDownInPinned, moveUpInPinned, removePinned, setPinned } from "./storage";
+import { localStorageKeys, maxPinnedObjects } from "../constant";
+import { addPinned, getPinned, moveDownInPinned, moveUpInPinned, removePinned, setPinned } from "../storage";
 
 // Mock Raycast API
 vi.mock("@raycast/api", () => ({

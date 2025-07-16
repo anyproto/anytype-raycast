@@ -1,18 +1,18 @@
 import { LocalStorage, getPreferenceValues } from "@raycast/api";
 import fetch from "node-fetch";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { apiFetch } from "./api";
+import { apiFetch } from "../api";
 
 // Mock dependencies
 vi.mock("node-fetch", () => ({
   default: vi.fn(),
 }));
 
-vi.mock("./error", () => ({
+vi.mock("../error", () => ({
   checkResponseError: vi.fn(),
 }));
 
-import { checkResponseError } from "./error";
+import { checkResponseError } from "../error";
 
 describe("apiFetch", () => {
   beforeEach(() => {

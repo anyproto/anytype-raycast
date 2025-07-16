@@ -1,36 +1,36 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import * as api from "../api";
-import { ObjectLayout, Space, Type } from "../models";
+import * as api from "../../api";
+import { ObjectLayout, Space, Type } from "../../models";
 import {
   fetchAllTypesForSpace,
   fetchTypeKeysForLists,
   fetchTypeKeysForPages,
   fetchTypesKeysForTasks,
   getAllTypesFromSpaces,
-} from "./type";
+} from "../type";
 
 // Mock the API module
-vi.mock("../api", () => ({
+vi.mock("../../api", () => ({
   getTypes: vi.fn(),
   getTemplates: vi.fn(),
 }));
 
 // Mock bundledTypeKeys
-vi.mock("./constant", () => ({
+vi.mock("../constant", () => ({
   apiLimitMax: 1000,
   bundledTypeKeys: {
-    audio: "ot-audio",
-    chat: "ot-chat",
-    file: "ot-file",
-    image: "ot-image",
-    object_type: "ot-objectType",
-    tag: "ot-tag",
-    template: "ot-template",
-    video: "ot-video",
-    set: "ot-set",
-    collection: "ot-collection",
-    bookmark: "ot-bookmark",
-    participant: "ot-participant",
+    audio: "audio",
+    chat: "chat",
+    file: "file",
+    image: "image",
+    object_type: "objectType",
+    tag: "tag",
+    template: "template",
+    video: "video",
+    set: "set",
+    collection: "collection",
+    bookmark: "bookmark",
+    participant: "participant",
   },
 }));
 
@@ -53,10 +53,10 @@ describe("fetchTypeKeysForPages", () => {
 
   it("should exclude bundled type keys", async () => {
     const mockTypes: Type[] = [
-      { key: "ot-page", layout: ObjectLayout.Basic } as Type,
-      { key: "ot-note", layout: ObjectLayout.Note } as Type,
-      { key: "ot-audio", layout: ObjectLayout.Basic } as Type, // Should be excluded
-      { key: "ot-tag", layout: ObjectLayout.Basic } as Type, // Should be excluded
+      { key: "page", layout: ObjectLayout.Basic } as Type,
+      { key: "note", layout: ObjectLayout.Note } as Type,
+      { key: "audio", layout: ObjectLayout.Basic } as Type, // Should be excluded
+      { key: "tag", layout: ObjectLayout.Basic } as Type, // Should be excluded
     ];
 
     vi.mocked(api.getTypes).mockResolvedValue({
@@ -65,16 +65,16 @@ describe("fetchTypeKeysForPages", () => {
     });
 
     const result = await fetchTypeKeysForPages(mockSpaces, [], []);
-    expect(result).toEqual(["ot-page", "ot-note"]);
-    expect(result).not.toContain("ot-audio");
-    expect(result).not.toContain("ot-tag");
+    expect(result).toEqual(["page", "note"]);
+    expect(result).not.toContain("audio");
+    expect(result).not.toContain("tag");
   });
 
   it("should exclude task type keys", async () => {
     const mockTypes: Type[] = [
-      { key: "ot-page", layout: ObjectLayout.Basic } as Type,
-      { key: "ot-task", layout: ObjectLayout.Action } as Type,
-      { key: "ot-custom-task", layout: ObjectLayout.Action } as Type,
+      { key: "page", layout: ObjectLayout.Basic } as Type,
+      { key: "task", layout: ObjectLayout.Action } as Type,
+      { key: "custom-task", layout: ObjectLayout.Action } as Type,
     ];
 
     vi.mocked(api.getTypes).mockResolvedValue({
@@ -82,16 +82,16 @@ describe("fetchTypeKeysForPages", () => {
       pagination: { total: 0, offset: 0, limit: 1000, has_more: false },
     });
 
-    const taskKeys = ["ot-task", "ot-custom-task"];
+    const taskKeys = ["task", "custom-task"];
     const result = await fetchTypeKeysForPages(mockSpaces, taskKeys, []);
-    expect(result).toEqual(["ot-page"]);
+    expect(result).toEqual(["page"]);
   });
 
   it("should exclude list type keys", async () => {
     const mockTypes: Type[] = [
-      { key: "ot-page", layout: ObjectLayout.Basic } as Type,
-      { key: "ot-kanban", layout: ObjectLayout.Set } as Type,
-      { key: "ot-gallery", layout: ObjectLayout.Collection } as Type,
+      { key: "page", layout: ObjectLayout.Basic } as Type,
+      { key: "kanban", layout: ObjectLayout.Set } as Type,
+      { key: "gallery", layout: ObjectLayout.Collection } as Type,
     ];
 
     vi.mocked(api.getTypes).mockResolvedValue({
@@ -99,17 +99,17 @@ describe("fetchTypeKeysForPages", () => {
       pagination: { total: 0, offset: 0, limit: 1000, has_more: false },
     });
 
-    const listKeys = ["ot-kanban", "ot-gallery"];
+    const listKeys = ["kanban", "gallery"];
     const result = await fetchTypeKeysForPages(mockSpaces, [], listKeys);
-    expect(result).toEqual(["ot-page"]);
+    expect(result).toEqual(["page"]);
   });
 
   it("should return unique type keys", async () => {
     const mockTypes: Type[] = [
-      { key: "ot-page", layout: ObjectLayout.Basic } as Type,
-      { key: "ot-page", layout: ObjectLayout.Basic } as Type, // Duplicate
-      { key: "ot-note", layout: ObjectLayout.Note } as Type,
-      { key: "ot-note", layout: ObjectLayout.Note } as Type, // Duplicate
+      { key: "page", layout: ObjectLayout.Basic } as Type,
+      { key: "page", layout: ObjectLayout.Basic } as Type, // Duplicate
+      { key: "note", layout: ObjectLayout.Note } as Type,
+      { key: "note", layout: ObjectLayout.Note } as Type, // Duplicate
     ];
 
     vi.mocked(api.getTypes)
@@ -123,17 +123,17 @@ describe("fetchTypeKeysForPages", () => {
       });
 
     const result = await fetchTypeKeysForPages(mockSpaces, [], []);
-    expect(result).toEqual(["ot-page", "ot-note"]);
+    expect(result).toEqual(["page", "note"]);
   });
 
   it("should handle multiple spaces", async () => {
     const space1Types: Type[] = [
-      { key: "ot-page", layout: ObjectLayout.Basic } as Type,
-      { key: "ot-note", layout: ObjectLayout.Note } as Type,
+      { key: "page", layout: ObjectLayout.Basic } as Type,
+      { key: "note", layout: ObjectLayout.Note } as Type,
     ];
     const space2Types: Type[] = [
-      { key: "ot-blog", layout: ObjectLayout.Basic } as Type,
-      { key: "ot-article", layout: ObjectLayout.Basic } as Type,
+      { key: "blog", layout: ObjectLayout.Basic } as Type,
+      { key: "article", layout: ObjectLayout.Basic } as Type,
     ];
 
     vi.mocked(api.getTypes)
@@ -147,13 +147,13 @@ describe("fetchTypeKeysForPages", () => {
       });
 
     const result = await fetchTypeKeysForPages(mockSpaces, [], []);
-    expect(result).toEqual(expect.arrayContaining(["ot-page", "ot-note", "ot-blog", "ot-article"]));
+    expect(result).toEqual(expect.arrayContaining(["page", "note", "blog", "article"]));
     expect(result).toHaveLength(4);
   });
 
   it("should handle pagination", async () => {
-    const firstBatch: Type[] = [{ key: "ot-page1", layout: ObjectLayout.Basic } as Type];
-    const secondBatch: Type[] = [{ key: "ot-page2", layout: ObjectLayout.Basic } as Type];
+    const firstBatch: Type[] = [{ key: "page1", layout: ObjectLayout.Basic } as Type];
+    const secondBatch: Type[] = [{ key: "page2", layout: ObjectLayout.Basic } as Type];
 
     vi.mocked(api.getTypes)
       .mockResolvedValueOnce({
@@ -166,29 +166,29 @@ describe("fetchTypeKeysForPages", () => {
       });
 
     const result = await fetchTypeKeysForPages([mockSpaces[0]], [], []);
-    expect(result).toEqual(expect.arrayContaining(["ot-page1", "ot-page2"]));
+    expect(result).toEqual(expect.arrayContaining(["page1", "page2"]));
     expect(result).toHaveLength(2);
   });
 
   it("should handle errors gracefully", async () => {
     vi.mocked(api.getTypes)
       .mockResolvedValueOnce({
-        types: [{ key: "ot-page", layout: ObjectLayout.Basic } as Type],
+        types: [{ key: "page", layout: ObjectLayout.Basic } as Type],
         pagination: { total: 0, offset: 0, limit: 1000, has_more: false },
       })
       .mockRejectedValueOnce(new Error("API Error"));
 
     const result = await fetchTypeKeysForPages(mockSpaces, [], []);
-    expect(result).toEqual(["ot-page"]); // Should still return results from successful space
+    expect(result).toEqual(["page"]); // Should still return results from successful space
   });
 
   it("should exclude all layout-specific types", async () => {
     const mockTypes: Type[] = [
-      { key: "ot-page", layout: ObjectLayout.Basic } as Type,
-      { key: "ot-set", layout: ObjectLayout.Set } as Type, // Excluded
-      { key: "ot-collection", layout: ObjectLayout.Collection } as Type, // Excluded
-      { key: "ot-bookmark", layout: ObjectLayout.Bookmark } as Type, // Excluded
-      { key: "ot-participant", layout: ObjectLayout.Participant } as Type, // Excluded
+      { key: "page", layout: ObjectLayout.Basic } as Type,
+      { key: "set", layout: ObjectLayout.Set } as Type, // Excluded
+      { key: "collection", layout: ObjectLayout.Collection } as Type, // Excluded
+      { key: "bookmark", layout: ObjectLayout.Bookmark } as Type, // Excluded
+      { key: "participant", layout: ObjectLayout.Participant } as Type, // Excluded
     ];
 
     vi.mocked(api.getTypes).mockResolvedValue({
@@ -197,7 +197,7 @@ describe("fetchTypeKeysForPages", () => {
     });
 
     const result = await fetchTypeKeysForPages(mockSpaces, [], []);
-    expect(result).toEqual(["ot-page"]);
+    expect(result).toEqual(["page"]);
   });
 });
 
@@ -208,10 +208,10 @@ describe("fetchTypesKeysForTasks", () => {
 
   it("should return only Action layout types", async () => {
     const mockTypes: Type[] = [
-      { key: "ot-task", layout: ObjectLayout.Action } as Type,
-      { key: "ot-todo", layout: ObjectLayout.Action } as Type,
-      { key: "ot-page", layout: ObjectLayout.Basic } as Type,
-      { key: "ot-note", layout: ObjectLayout.Note } as Type,
+      { key: "task", layout: ObjectLayout.Action } as Type,
+      { key: "todo", layout: ObjectLayout.Action } as Type,
+      { key: "page", layout: ObjectLayout.Basic } as Type,
+      { key: "note", layout: ObjectLayout.Note } as Type,
     ];
 
     vi.mocked(api.getTypes).mockResolvedValue({
@@ -221,13 +221,13 @@ describe("fetchTypesKeysForTasks", () => {
 
     const mockSpaces: Space[] = [{ id: "space1", name: "Space 1" } as Space];
     const result = await fetchTypesKeysForTasks(mockSpaces);
-    expect(result).toEqual(["ot-task", "ot-todo"]);
+    expect(result).toEqual(["task", "todo"]);
   });
 
   it("should return empty array when no Action types exist", async () => {
     const mockTypes: Type[] = [
-      { key: "ot-page", layout: ObjectLayout.Basic } as Type,
-      { key: "ot-note", layout: ObjectLayout.Note } as Type,
+      { key: "page", layout: ObjectLayout.Basic } as Type,
+      { key: "note", layout: ObjectLayout.Note } as Type,
     ];
 
     vi.mocked(api.getTypes).mockResolvedValue({
@@ -248,10 +248,10 @@ describe("fetchTypeKeysForLists", () => {
 
   it("should return only Set and Collection layout types", async () => {
     const mockTypes: Type[] = [
-      { key: "ot-kanban", layout: ObjectLayout.Set } as Type,
-      { key: "ot-gallery", layout: ObjectLayout.Collection } as Type,
-      { key: "ot-list", layout: ObjectLayout.Set } as Type,
-      { key: "ot-page", layout: ObjectLayout.Basic } as Type,
+      { key: "kanban", layout: ObjectLayout.Set } as Type,
+      { key: "gallery", layout: ObjectLayout.Collection } as Type,
+      { key: "list", layout: ObjectLayout.Set } as Type,
+      { key: "page", layout: ObjectLayout.Basic } as Type,
     ];
 
     vi.mocked(api.getTypes).mockResolvedValue({
@@ -261,14 +261,14 @@ describe("fetchTypeKeysForLists", () => {
 
     const mockSpaces: Space[] = [{ id: "space1", name: "Space 1" } as Space];
     const result = await fetchTypeKeysForLists(mockSpaces);
-    expect(result).toEqual(expect.arrayContaining(["ot-kanban", "ot-gallery", "ot-list"]));
+    expect(result).toEqual(expect.arrayContaining(["kanban", "gallery", "list"]));
     expect(result).toHaveLength(3);
   });
 
   it("should return empty array when no Set/Collection types exist", async () => {
     const mockTypes: Type[] = [
-      { key: "ot-page", layout: ObjectLayout.Basic } as Type,
-      { key: "ot-task", layout: ObjectLayout.Action } as Type,
+      { key: "page", layout: ObjectLayout.Basic } as Type,
+      { key: "task", layout: ObjectLayout.Action } as Type,
     ];
 
     vi.mocked(api.getTypes).mockResolvedValue({

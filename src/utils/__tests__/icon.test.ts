@@ -1,7 +1,7 @@
 import { Icon, Image } from "@raycast/api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { IconFormat, ObjectIcon, ObjectLayout, RawType } from "../models";
-import { fetchWithTimeout, getCustomTypeIcon, getFile, getIconWithFallback, getMaskForObject } from "./icon";
+import { IconFormat, ObjectIcon, ObjectLayout, RawType } from "../../models";
+import { fetchWithTimeout, getCustomTypeIcon, getFile, getIconWithFallback, getMaskForObject } from "../icon";
 
 // Mock node-fetch
 vi.mock("node-fetch", () => ({

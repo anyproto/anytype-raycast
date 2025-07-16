@@ -1,9 +1,9 @@
 import { getPreferenceValues, Icon } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { Member, ObjectLayout, Property, PropertyFormat, SortProperty, SpaceObject, Tag, Type } from "../models";
-import { getDateLabel, getShortDateLabel, propKeys } from "../utils";
-import { processObject } from "./object";
+import { Member, ObjectLayout, Property, PropertyFormat, SortProperty, SpaceObject, Tag, Type } from "../../models";
+import { getDateLabel, getShortDateLabel, propKeys } from "../../utils";
+import { processObject } from "../object";
 
 // Mock dependencies
 vi.mock("@raycast/api", () => ({
@@ -14,7 +14,7 @@ vi.mock("@raycast/api", () => ({
   },
 }));
 
-vi.mock("../utils", () => ({
+vi.mock("../../utils", () => ({
   getDateLabel: vi.fn(),
   getShortDateLabel: vi.fn(),
   propKeys: {

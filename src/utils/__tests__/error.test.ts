@@ -1,6 +1,6 @@
 import { Response } from "node-fetch";
 import { describe, expect, it, vi } from "vitest";
-import { checkResponseError, ErrorWithStatus } from "./error";
+import { checkResponseError, ErrorWithStatus } from "../error";
 
 // Mock Response class
 class MockResponse {

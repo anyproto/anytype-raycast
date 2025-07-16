@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { encodeQueryParams } from "./query";
+import { encodeQueryParams } from "../query";
 
 describe("encodeQueryParams", () => {
   it("should return empty string for empty params", () => {

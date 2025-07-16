@@ -1,6 +1,6 @@
 import { getPreferenceValues } from "@raycast/api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { getObjectWithoutMappedProperties } from "../api";
+import { getObjectWithoutMappedProperties } from "../../api";
 import {
   BodyFormat,
   Color,
@@ -16,10 +16,10 @@ import {
   RawType,
   SortProperty,
   SpaceObjectWithBody,
-} from "../models";
-import { bundledPropKeys, getIconWithFallback, propKeys } from "../utils";
-import { mapObject, mapObjects, mapObjectWithoutProperties } from "./objects";
-import { getIconForProperty, mapProperties, mapProperty, mapTag, mapTags } from "./properties";
+} from "../../models";
+import { bundledPropKeys, getIconWithFallback, propKeys } from "../../utils";
+import { mapObject, mapObjects, mapObjectWithoutProperties } from "../objects";
+import { getIconForProperty, mapProperties, mapProperty, mapTag, mapTags } from "../properties";
 
 // Mock dependencies
 vi.mock("@raycast/api", () => ({
@@ -27,7 +27,7 @@ vi.mock("@raycast/api", () => ({
   Image: {},
 }));
 
-vi.mock("../utils", () => ({
+vi.mock("../../utils", () => ({
   bundledPropKeys: { source: "source" },
   propKeys: { tag: "tag" },
   getIconWithFallback: vi.fn(),
@@ -45,11 +45,11 @@ vi.mock("../utils", () => ({
   },
 }));
 
-vi.mock("../api", () => ({
+vi.mock("../../api", () => ({
   getObjectWithoutMappedProperties: vi.fn(),
 }));
 
-vi.mock("./types", () => ({
+vi.mock("../types", () => ({
   mapType: vi.fn().mockImplementation((type) => ({
     ...type,
     name: type.name || "Unknown Type",

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { ViewType } from "../components/ObjectList";
-import { BodyFormat } from "../models";
+import { ViewType } from "../../components/ObjectList";
+import { BodyFormat } from "../../models";
 import {
   anytypeSpaceDeeplink,
   apiEndpoints,
@@ -8,7 +8,7 @@ import {
   defaultTintColor,
   hexToColor,
   localStorageKeys,
-} from "./constant";
+} from "../constant";
 
 // Mock getPreferenceValues
 vi.mock("@raycast/api", () => ({

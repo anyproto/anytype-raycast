@@ -1,11 +1,11 @@
 import { showToast, Toast } from "@raycast/api";
 import { Headers as FetchHeaders } from "node-fetch";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { DisplayCodeResponse, TokenResponse } from "../../models";
-import { apiEndpoints, apiFetch, errorConnectionMessage } from "../../utils";
-import { displayCode } from "./displayCode";
-import { getToken } from "./getToken";
-import { checkApiTokenValidity } from "./validateToken";
+import { DisplayCodeResponse, TokenResponse } from "../../../models";
+import { apiEndpoints, apiFetch, errorConnectionMessage } from "../../../utils";
+import { displayCode } from "../displayCode";
+import { getToken } from "../getToken";
+import { checkApiTokenValidity } from "../validateToken";
 
 // Mock dependencies
 vi.mock("@raycast/api", () => ({
@@ -18,7 +18,7 @@ vi.mock("@raycast/api", () => ({
   },
 }));
 
-vi.mock("../../utils", () => ({
+vi.mock("../../../utils", () => ({
   apiEndpoints: {
     getSpaces: vi.fn(),
     getToken: vi.fn(),

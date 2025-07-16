@@ -1,6 +1,6 @@
 import { getPreferenceValues } from "@raycast/api";
 import { describe, expect, it, vi } from "vitest";
-import { MemberRole, SortProperty } from "../models";
+import { MemberRole, SortProperty } from "../../models";
 import {
   formatMemberRole,
   getDateLabel,
@@ -9,7 +9,7 @@ import {
   injectEmojiIntoHeading,
   isEmoji,
   pluralize,
-} from "./string";
+} from "../string";
 
 describe("pluralize", () => {
   it("should handle regular pluralization", () => {
