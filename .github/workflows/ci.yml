@@ -48,7 +48,7 @@ jobs:
       - name: Build extension
         run: npm run build
 
-  type-check:
+  typecheck:
     runs-on: ubuntu-latest
 
     steps:
@@ -64,4 +64,20 @@ jobs:
         run: npm install
 
       - name: Run type checks
-        run: npm run type-check
+        run: npm run typecheck
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm run test
