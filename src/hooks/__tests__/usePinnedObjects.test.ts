@@ -74,15 +74,15 @@ describe("usePinnedObjects", () => {
       { spaceId: TEST_IDS.space, objectId: "obj3" },
     ];
 
-    const mockObject1 = createSpaceObject({ id: "obj1", archived: false });
-    const mockObject2 = createSpaceObject({ id: "obj2", archived: true });
-    const mockObject3 = createSpaceObject({ id: "obj3", archived: false });
+    const mockObject1 = createSpaceObjectWithBody({ id: "obj1", archived: false });
+    const mockObject2 = createSpaceObjectWithBody({ id: "obj2", archived: true });
+    const mockObject3 = createSpaceObjectWithBody({ id: "obj3", archived: false });
 
     vi.mocked(getPinned).mockResolvedValue(mockPinnedData);
     vi.mocked(getObject)
-      .mockResolvedValueOnce({ object: createSpaceObjectWithBody({ ...mockObject1 }) })
-      .mockResolvedValueOnce({ object: createSpaceObjectWithBody({ ...mockObject2 }) })
-      .mockResolvedValueOnce({ object: createSpaceObjectWithBody({ ...mockObject3 }) });
+      .mockResolvedValueOnce({ object: mockObject1 })
+      .mockResolvedValueOnce({ object: mockObject2 })
+      .mockResolvedValueOnce({ object: mockObject3 });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let cachedPromiseFunction: any;
@@ -109,13 +109,11 @@ describe("usePinnedObjects", () => {
       { spaceId: TEST_IDS.space, objectId: "obj2" },
     ];
 
-    const mockObject1 = createSpaceObject({ id: "obj1" });
+    const mockObject1 = createSpaceObjectWithBody({ id: "obj1" });
     const error404 = createApiError(API_ERRORS.NOT_FOUND, 404);
 
     vi.mocked(getPinned).mockResolvedValue(mockPinnedData);
-    vi.mocked(getObject)
-      .mockResolvedValueOnce({ object: createSpaceObjectWithBody({ ...mockObject1 }) })
-      .mockRejectedValueOnce(error404);
+    vi.mocked(getObject).mockResolvedValueOnce({ object: mockObject1 }).mockRejectedValueOnce(error404);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let cachedPromiseFunction: any;
@@ -140,13 +138,11 @@ describe("usePinnedObjects", () => {
       { spaceId: TEST_IDS.space, objectId: "obj2" },
     ];
 
-    const mockObject1 = createSpaceObject({ id: "obj1" });
+    const mockObject1 = createSpaceObjectWithBody({ id: "obj1" });
     const error410 = createApiError("Gone", 410);
 
     vi.mocked(getPinned).mockResolvedValue(mockPinnedData);
-    vi.mocked(getObject)
-      .mockResolvedValueOnce({ object: createSpaceObjectWithBody({ ...mockObject1 }) })
-      .mockRejectedValueOnce(error410);
+    vi.mocked(getObject).mockResolvedValueOnce({ object: mockObject1 }).mockRejectedValueOnce(error410);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let cachedPromiseFunction: any;
@@ -171,13 +167,11 @@ describe("usePinnedObjects", () => {
       { spaceId: TEST_IDS.space, objectId: "obj2" },
     ];
 
-    const mockObject1 = createSpaceObject({ id: "obj1" });
+    const mockObject1 = createSpaceObjectWithBody({ id: "obj1" });
     const connectionError = new Error(errorConnectionMessage);
 
     vi.mocked(getPinned).mockResolvedValue(mockPinnedData);
-    vi.mocked(getObject)
-      .mockResolvedValueOnce({ object: createSpaceObjectWithBody({ ...mockObject1 }) })
-      .mockRejectedValueOnce(connectionError);
+    vi.mocked(getObject).mockResolvedValueOnce({ object: mockObject1 }).mockRejectedValueOnce(connectionError);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let cachedPromiseFunction: any;
@@ -200,13 +194,11 @@ describe("usePinnedObjects", () => {
       { spaceId: TEST_IDS.space, objectId: "obj2" },
     ];
 
-    const mockObject1 = createSpaceObject({ id: "obj1" });
+    const mockObject1 = createSpaceObjectWithBody({ id: "obj1" });
     const genericError = new Error("Some other error");
 
     vi.mocked(getPinned).mockResolvedValue(mockPinnedData);
-    vi.mocked(getObject)
-      .mockResolvedValueOnce({ object: createSpaceObjectWithBody({ ...mockObject1 }) })
-      .mockRejectedValueOnce(genericError);
+    vi.mocked(getObject).mockResolvedValueOnce({ object: mockObject1 }).mockRejectedValueOnce(genericError);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let cachedPromiseFunction: any;
@@ -252,15 +244,15 @@ describe("usePinnedObjects", () => {
       { spaceId: TEST_IDS.space, objectId: "obj3" },
     ];
 
-    const mockObject1 = createSpaceObject({ id: "obj1" });
-    const mockObject3 = createSpaceObject({ id: "obj3" });
+    const mockObject1 = createSpaceObjectWithBody({ id: "obj1" });
+    const mockObject3 = createSpaceObjectWithBody({ id: "obj3" });
     const error404 = createApiError(API_ERRORS.NOT_FOUND, 404);
 
     vi.mocked(getPinned).mockResolvedValue(mockPinnedData);
     vi.mocked(getObject)
-      .mockResolvedValueOnce({ object: createSpaceObjectWithBody({ ...mockObject1 }) })
+      .mockResolvedValueOnce({ object: mockObject1 })
       .mockRejectedValueOnce(error404)
-      .mockResolvedValueOnce({ object: createSpaceObjectWithBody({ ...mockObject3 }) });
+      .mockResolvedValueOnce({ object: mockObject3 });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let cachedPromiseFunction: any;
