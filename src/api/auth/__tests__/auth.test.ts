@@ -1,15 +1,16 @@
 import { showToast, Toast } from "@raycast/api";
 import { Headers as FetchHeaders } from "node-fetch";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { DisplayCodeResponse, TokenResponse } from "../../../models";
+import {
+  CreateApiKeyRequest,
+  CreateApiKeyResponse,
+  CreateChallengeRequest,
+  CreateChallengeResponse,
+} from "../../../models";
 import { apiEndpoints, apiFetch, errorConnectionMessage } from "../../../utils";
-import { displayCode } from "../displayCode";
-import { getToken } from "../getToken";
+import { createApiKey } from "../createApiKey";
+import { createChallenge } from "../createChallenge";
 import { checkApiTokenValidity } from "../validateToken";
-// Using shared test utilities where applicable
-// Note: expectFailureToast from test utilities uses a different API format
-
-// Mock Raycast API
 vi.mock("@raycast/api", () => ({
   showToast: vi.fn(),
   Toast: {
@@ -23,8 +24,8 @@ vi.mock("@raycast/api", () => ({
 vi.mock("../../../utils", () => ({
   apiEndpoints: {
     getSpaces: vi.fn(),
-    getToken: vi.fn(),
-    displayCode: vi.fn(),
+    createChallenge: vi.fn(),
+    createApiKey: vi.fn(),
   },
   apiFetch: vi.fn(),
   currentApiVersion: "1.0.0",
@@ -176,103 +177,127 @@ describe("auth API functions", () => {
     });
   });
 
-  describe("getToken", () => {
-    it("should fetch and return token successfully", async () => {
-      const mockTokenResponse: TokenResponse = {
-        session_token: "test-token-123",
-        app_key: "app-key-123",
+  describe("createApiKey", () => {
+    it("should create API key successfully", async () => {
+      const mockRequest: CreateApiKeyRequest = {
+        challenge_id: "challenge-123",
+        code: "code-456",
+      };
+
+      const mockResponse: CreateApiKeyResponse = {
+        api_key: "test-api-key-123",
       };
 
       const mockHeaders = new FetchHeaders();
-      const mockResponse = {
-        payload: mockTokenResponse,
+      const mockApiResponse = {
+        payload: mockResponse,
         headers: mockHeaders,
       };
 
-      vi.mocked(apiEndpoints.getToken).mockReturnValue({
-        url: "/api/auth/token",
+      vi.mocked(apiEndpoints.createApiKey).mockReturnValue({
+        url: "/api/auth/api_keys",
         method: "POST",
       });
-      vi.mocked(apiFetch).mockResolvedValue(mockResponse);
+      vi.mocked(apiFetch).mockResolvedValue(mockApiResponse);
 
-      const result = await getToken("challenge123", "code456");
+      const result = await createApiKey(mockRequest);
 
-      expect(result).toEqual(mockTokenResponse);
-      expect(apiEndpoints.getToken).toHaveBeenCalledWith("challenge123", "code456");
-      expect(apiFetch).toHaveBeenCalledWith("/api/auth/token", { method: "POST" });
+      expect(result).toEqual(mockResponse);
+      expect(apiEndpoints.createApiKey).toHaveBeenCalled();
+      expect(apiFetch).toHaveBeenCalledWith("/api/auth/api_keys", {
+        method: "POST",
+        body: JSON.stringify(mockRequest),
+      });
     });
 
     it("should propagate errors from apiFetch", async () => {
       const error = new Error("Network error");
+      const mockRequest: CreateApiKeyRequest = {
+        challenge_id: "challenge-123",
+        code: "code-456",
+      };
 
-      vi.mocked(apiEndpoints.getToken).mockReturnValue({
-        url: "/api/auth/token",
+      vi.mocked(apiEndpoints.createApiKey).mockReturnValue({
+        url: "/api/auth/api_keys",
         method: "POST",
       });
       vi.mocked(apiFetch).mockRejectedValue(error);
 
-      await expect(getToken("challenge123", "code456")).rejects.toThrow("Network error");
+      await expect(createApiKey(mockRequest)).rejects.toThrow("Network error");
     });
   });
 
-  describe("displayCode", () => {
-    it("should fetch and return display code successfully", async () => {
-      const mockDisplayCodeResponse: DisplayCodeResponse = {
+  describe("createChallenge", () => {
+    it("should create challenge successfully", async () => {
+      const mockRequest: CreateChallengeRequest = {
+        app_name: "raycast-extension",
+      };
+
+      const mockResponse: CreateChallengeResponse = {
         challenge_id: "challenge-id-123",
       };
 
       const mockHeaders = new FetchHeaders();
-      const mockResponse = {
-        payload: mockDisplayCodeResponse,
+      const mockApiResponse = {
+        payload: mockResponse,
         headers: mockHeaders,
       };
 
-      vi.mocked(apiEndpoints.displayCode).mockReturnValue({
-        url: "/api/auth/display-code",
+      vi.mocked(apiEndpoints.createChallenge).mockReturnValue({
+        url: "/api/auth/challenges",
         method: "POST",
       });
-      vi.mocked(apiFetch).mockResolvedValue(mockResponse);
+      vi.mocked(apiFetch).mockResolvedValue(mockApiResponse);
 
-      const result = await displayCode("Raycast Extension");
+      const result = await createChallenge(mockRequest);
 
-      expect(result).toEqual(mockDisplayCodeResponse);
-      expect(apiEndpoints.displayCode).toHaveBeenCalledWith("Raycast Extension");
-      expect(apiFetch).toHaveBeenCalledWith("/api/auth/display-code", { method: "POST" });
+      expect(result).toEqual(mockResponse);
+      expect(apiEndpoints.createChallenge).toHaveBeenCalled();
+      expect(apiFetch).toHaveBeenCalledWith("/api/auth/challenges", {
+        method: "POST",
+        body: JSON.stringify(mockRequest),
+      });
     });
 
-    it("should handle different app names", async () => {
-      const mockDisplayCodeResponse: DisplayCodeResponse = {
+    it("should handle different client IDs", async () => {
+      const mockRequest: CreateChallengeRequest = {
+        app_name: "custom-app",
+      };
+
+      const mockResponse: CreateChallengeResponse = {
         challenge_id: "challenge-id-456",
       };
 
       const mockHeaders = new FetchHeaders();
-      const mockResponse = {
-        payload: mockDisplayCodeResponse,
+      const mockApiResponse = {
+        payload: mockResponse,
         headers: mockHeaders,
       };
 
-      vi.mocked(apiEndpoints.displayCode).mockReturnValue({
-        url: "/api/auth/display-code",
+      vi.mocked(apiEndpoints.createChallenge).mockReturnValue({
+        url: "/api/auth/challenges",
         method: "POST",
       });
-      vi.mocked(apiFetch).mockResolvedValue(mockResponse);
+      vi.mocked(apiFetch).mockResolvedValue(mockApiResponse);
 
-      const result = await displayCode("Custom App");
+      const result = await createChallenge(mockRequest);
 
-      expect(result).toEqual(mockDisplayCodeResponse);
-      expect(apiEndpoints.displayCode).toHaveBeenCalledWith("Custom App");
+      expect(result).toEqual(mockResponse);
     });
 
     it("should propagate errors from apiFetch", async () => {
       const error = new Error("API error");
+      const mockRequest: CreateChallengeRequest = {
+        app_name: "test-app",
+      };
 
-      vi.mocked(apiEndpoints.displayCode).mockReturnValue({
-        url: "/api/auth/display-code",
+      vi.mocked(apiEndpoints.createChallenge).mockReturnValue({
+        url: "/api/auth/challenges",
         method: "POST",
       });
       vi.mocked(apiFetch).mockRejectedValue(error);
 
-      await expect(displayCode("Test App")).rejects.toThrow("API error");
+      await expect(createChallenge(mockRequest)).rejects.toThrow("API error");
     });
   });
 });

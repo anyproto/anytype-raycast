@@ -10,12 +10,11 @@ import {
   SortProperty,
   SpaceObjectWithBody,
 } from "../../models";
-import { createRawSpaceObject, createRawSpaceObjectWithBody, createRawType, createTag, TEST_IDS } from "../../test";
+import { createRawSpaceObject, createRawSpaceObjectWithBody, createRawType, TEST_IDS } from "../../test";
 import { bundledPropKeys, getIconWithFallback, propKeys } from "../../utils";
 import { mapObject, mapObjects, mapObjectWithoutProperties } from "../objects";
 import { getIconForProperty, mapProperties, mapProperty, mapTag, mapTags } from "../properties";
 
-// Mock dependencies
 vi.mock("@raycast/api", () => ({
   getPreferenceValues: vi.fn(),
   Image: {},
@@ -25,6 +24,10 @@ vi.mock("../../utils", () => ({
   bundledPropKeys: { source: "source" },
   propKeys: { tag: "tag" },
   getIconWithFallback: vi.fn(),
+  getNameWithFallback: vi.fn((name: string) => name?.trim() || "Untitled"),
+  getNameWithSnippetFallback: vi.fn((name: string, snippet: string) => {
+    return name?.trim() || (snippet.includes("\n") ? `${snippet.split("\n")[0]}...` : snippet || "Untitled");
+  }),
   colorToHex: {
     [Color.Grey]: "#808080",
     [Color.Yellow]: "#FFFF00",
@@ -101,7 +104,7 @@ describe("mappers", () => {
           name: "Test Object",
           icon: "mapped-icon",
         });
-        expect(result[0].properties).toHaveLength(3); // Modified, tag, source
+        expect(result[0].properties).toHaveLength(3);
       });
 
       it("should map objects with sort by Name", async () => {
@@ -110,7 +113,6 @@ describe("mappers", () => {
 
         const result = await mapObjects([mockRawObject]);
 
-        // When sort is Name, only LastModifiedDate is kept
         expect(result[0].properties).toHaveLength(1);
         expect(result[0].properties[0].key).toBe(SortProperty.LastModifiedDate);
       });
@@ -189,14 +191,14 @@ describe("mappers", () => {
               key: "select",
               name: "Select",
               format: PropertyFormat.Select,
-              select: createTag({ id: "tag1", name: "Tag", color: Color.Red }),
+              select: { id: "tag1", key: "tag1", name: "Tag", color: Color.Red } as RawTag,
             },
             {
               id: "mul1",
               key: "multi",
               name: "Multi",
               format: PropertyFormat.MultiSelect,
-              multi_select: [createTag({ id: "tag2", name: "Tag2", color: Color.Blue })],
+              multi_select: [{ id: "tag2", key: "tag2", name: "Tag2", color: Color.Blue } as RawTag],
             },
             { id: "dat1", key: "date", name: "Date", format: PropertyFormat.Date, date: "2024-01-01T00:00:00Z" },
             { id: "fil1", key: "files", name: "Files", format: PropertyFormat.Files, files: ["file1"] },
@@ -219,7 +221,6 @@ describe("mappers", () => {
         expect(result.icon).toBe("mapped-icon");
         expect(result.name).toBe("Test Object");
 
-        // Check each property format
         const props = result.properties as PropertyWithValue[];
         expect(props.find((p) => p.key === "text")?.text).toBe("Hello");
         expect(props.find((p) => p.key === "number")?.number).toBe(42);
@@ -287,7 +288,7 @@ describe("mappers", () => {
           name: "Test Object",
           icon: "mapped-icon",
           properties: [],
-        } as SpaceObjectWithBody);
+        } as unknown as SpaceObjectWithBody);
 
         const result = await mapObjectWithoutProperties(TEST_IDS.space, [TEST_IDS.object]);
 
@@ -306,8 +307,8 @@ describe("mappers", () => {
     describe("mapTags", () => {
       it("should map tags correctly", () => {
         const rawTags: RawTag[] = [
-          createTag({ id: "tag1", key: "tag1", name: "Tag 1", color: Color.Red }),
-          createTag({ id: "tag2", key: "tag2", name: "Tag 2", color: Color.Blue }),
+          { id: "tag1", key: "tag1", name: "Tag 1", color: Color.Red },
+          { id: "tag2", key: "tag2", name: "Tag 2", color: Color.Blue },
         ];
 
         const result = mapTags(rawTags);
@@ -332,7 +333,7 @@ describe("mappers", () => {
 
     describe("mapTag", () => {
       it("should map single tag correctly", () => {
-        const rawTag = createTag({ id: "tag1", name: "Tag 1", color: Color.Purple });
+        const rawTag: RawTag = { id: "tag1", key: "tag1", name: "Tag 1", color: Color.Purple };
 
         const result = mapTag(rawTag);
 
@@ -351,52 +352,58 @@ describe("mappers", () => {
     describe("mapProperties", () => {
       it("should map all properties without filtering", () => {
         const properties: RawProperty[] = [
-          { id: "1", key: SortProperty.LastModifiedDate, name: "Modified", format: PropertyFormat.Date },
-          { id: "2", key: "custom", name: "Custom", format: PropertyFormat.Text },
-          { id: "3", key: propKeys.tag, name: "Tags", format: PropertyFormat.MultiSelect },
-          { id: "4", key: bundledPropKeys.source, name: "Source", format: PropertyFormat.Url },
+          { id: "1", key: SortProperty.LastModifiedDate, name: "Modified", format: PropertyFormat.Date, object: "" },
+          { id: "2", key: "custom", name: "Custom", format: PropertyFormat.Text, object: "" },
+          { id: "3", key: propKeys.tag, name: "Tags", format: PropertyFormat.MultiSelect, object: "" },
+          { id: "4", key: bundledPropKeys.source, name: "Source", format: PropertyFormat.Url, object: "" },
         ];
 
         const result = mapProperties(properties);
 
-        // mapProperties maps all properties
         expect(result).toHaveLength(4);
       });
     });
 
     describe("mapProperty", () => {
-      it("should handle date property format", () => {
+      it("should add icon and process name for property", () => {
         const property: RawProperty = {
           id: "1",
           key: "date",
-          name: "Date",
+          name: "Date Property",
           format: PropertyFormat.Date,
-          date: "2024-01-01T12:00:00Z",
+          object: "",
         };
 
         const result = mapProperty(property);
 
-        expect(result.date).toBe("2024-01-01T12:00:00Z"); // No transformation in mapProperty
+        expect(result).toMatchObject({
+          id: "1",
+          key: "date",
+          name: "Date Property",
+          format: PropertyFormat.Date,
+          object: "",
+          icon: expect.objectContaining({ source: expect.stringContaining("date.svg") }),
+        });
       });
 
-      it("should not trim text fields", () => {
-        const textProperty: RawProperty = {
+      it("should handle property with empty name", () => {
+        const property: RawProperty = {
           id: "1",
           key: "text",
-          name: "Text",
+          name: "",
           format: PropertyFormat.Text,
-          text: "  trimmed  ",
+          object: "",
         };
 
-        const result = mapProperty(textProperty);
+        const result = mapProperty(property);
 
-        expect(result.text).toBe("  trimmed  "); // No transformation in mapProperty
+        expect(result.name).toBe("Untitled");
+        expect(result.icon).toMatchObject({ source: expect.stringContaining("text.svg") });
       });
     });
 
     describe("getIconForProperty", () => {
       it("should return correct icons for property formats", () => {
-        // Icons are returned as objects with source and tintColor
         expect(getIconForProperty(PropertyFormat.Text)).toMatchObject({ source: expect.stringContaining("text.svg") });
         expect(getIconForProperty(PropertyFormat.Number)).toMatchObject({
           source: expect.stringContaining("number.svg"),

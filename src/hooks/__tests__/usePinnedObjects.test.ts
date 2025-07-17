@@ -16,7 +16,6 @@ import {
 import { errorConnectionMessage, getPinned, removePinned } from "../../utils";
 import { usePinnedObjects } from "../usePinnedObjects";
 
-// Mock dependencies
 vi.mock("../../api", () => ({
   getObject: vi.fn(),
 }));
@@ -46,8 +45,7 @@ describe("usePinnedObjects", () => {
     ];
 
     const mockReturn = mockCachedPromiseSuccess(mockObjects);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     const { result } = renderHook(() => usePinnedObjects("test-key"));
 
@@ -59,8 +57,7 @@ describe("usePinnedObjects", () => {
 
   it("should call useCachedPromise with correct parameters", () => {
     const mockReturn = mockCachedPromiseSuccess([]);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     renderHook(() => usePinnedObjects("test-key"));
 
@@ -84,18 +81,16 @@ describe("usePinnedObjects", () => {
       .mockResolvedValueOnce({ object: mockObject2 })
       .mockResolvedValueOnce({ object: mockObject3 });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let cachedPromiseFunction: any;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    vi.mocked(useCachedPromise).mockImplementation((fn, _deps, _options) => {
-      cachedPromiseFunction = fn;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return mockCachedPromiseSuccess([]) as any;
+    type PromiseFunction = (key: string) => Promise<SpaceObject[]>;
+    let cachedPromiseFunction: PromiseFunction;
+    vi.mocked(useCachedPromise).mockImplementation((fn) => {
+      cachedPromiseFunction = fn as PromiseFunction;
+      return mockCachedPromiseSuccess([]) as ReturnType<typeof useCachedPromise>;
     });
 
     renderHook(() => usePinnedObjects("test-key"));
 
-    const result = await cachedPromiseFunction("test-key");
+    const result = await cachedPromiseFunction!("test-key");
 
     expect(getPinned).toHaveBeenCalledWith("test-key");
     expect(getObject).toHaveBeenCalledTimes(3);
@@ -115,18 +110,16 @@ describe("usePinnedObjects", () => {
     vi.mocked(getPinned).mockResolvedValue(mockPinnedData);
     vi.mocked(getObject).mockResolvedValueOnce({ object: mockObject1 }).mockRejectedValueOnce(error404);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let cachedPromiseFunction: any;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    vi.mocked(useCachedPromise).mockImplementation((fn, _deps, _options) => {
-      cachedPromiseFunction = fn;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return mockCachedPromiseSuccess([]) as any;
+    type PromiseFunction = (key: string) => Promise<SpaceObject[]>;
+    let cachedPromiseFunction: PromiseFunction;
+    vi.mocked(useCachedPromise).mockImplementation((fn) => {
+      cachedPromiseFunction = fn as PromiseFunction;
+      return mockCachedPromiseSuccess([]) as ReturnType<typeof useCachedPromise>;
     });
 
     renderHook(() => usePinnedObjects("test-key"));
 
-    const result = await cachedPromiseFunction("test-key");
+    const result = await cachedPromiseFunction!("test-key");
 
     expect(removePinned).toHaveBeenCalledWith(TEST_IDS.space, "obj2", "test-key");
     expect(result).toEqual([mockObject1]);
@@ -144,18 +137,16 @@ describe("usePinnedObjects", () => {
     vi.mocked(getPinned).mockResolvedValue(mockPinnedData);
     vi.mocked(getObject).mockResolvedValueOnce({ object: mockObject1 }).mockRejectedValueOnce(error410);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let cachedPromiseFunction: any;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    vi.mocked(useCachedPromise).mockImplementation((fn, _deps, _options) => {
-      cachedPromiseFunction = fn;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return mockCachedPromiseSuccess([]) as any;
+    type PromiseFunction = (key: string) => Promise<SpaceObject[]>;
+    let cachedPromiseFunction: PromiseFunction;
+    vi.mocked(useCachedPromise).mockImplementation((fn) => {
+      cachedPromiseFunction = fn as PromiseFunction;
+      return mockCachedPromiseSuccess([]) as ReturnType<typeof useCachedPromise>;
     });
 
     renderHook(() => usePinnedObjects("test-key"));
 
-    const result = await cachedPromiseFunction("test-key");
+    const result = await cachedPromiseFunction!("test-key");
 
     expect(removePinned).toHaveBeenCalledWith(TEST_IDS.space, "obj2", "test-key");
     expect(result).toEqual([mockObject1]);
@@ -173,18 +164,16 @@ describe("usePinnedObjects", () => {
     vi.mocked(getPinned).mockResolvedValue(mockPinnedData);
     vi.mocked(getObject).mockResolvedValueOnce({ object: mockObject1 }).mockRejectedValueOnce(connectionError);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let cachedPromiseFunction: any;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    vi.mocked(useCachedPromise).mockImplementation((fn, _deps, _options) => {
-      cachedPromiseFunction = fn;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return mockCachedPromiseSuccess([]) as any;
+    type PromiseFunction = (key: string) => Promise<SpaceObject[]>;
+    let cachedPromiseFunction: PromiseFunction;
+    vi.mocked(useCachedPromise).mockImplementation((fn) => {
+      cachedPromiseFunction = fn as PromiseFunction;
+      return mockCachedPromiseSuccess([]) as ReturnType<typeof useCachedPromise>;
     });
 
     renderHook(() => usePinnedObjects("test-key"));
 
-    await expect(cachedPromiseFunction("test-key")).rejects.toThrow(errorConnectionMessage);
+    await expect(cachedPromiseFunction!("test-key")).rejects.toThrow(errorConnectionMessage);
     expect(removePinned).not.toHaveBeenCalled();
   });
 
@@ -200,18 +189,16 @@ describe("usePinnedObjects", () => {
     vi.mocked(getPinned).mockResolvedValue(mockPinnedData);
     vi.mocked(getObject).mockResolvedValueOnce({ object: mockObject1 }).mockRejectedValueOnce(genericError);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let cachedPromiseFunction: any;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    vi.mocked(useCachedPromise).mockImplementation((fn, _deps, _options) => {
-      cachedPromiseFunction = fn;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return mockCachedPromiseSuccess([]) as any;
+    type PromiseFunction = (key: string) => Promise<SpaceObject[]>;
+    let cachedPromiseFunction: PromiseFunction;
+    vi.mocked(useCachedPromise).mockImplementation((fn) => {
+      cachedPromiseFunction = fn as PromiseFunction;
+      return mockCachedPromiseSuccess([]) as ReturnType<typeof useCachedPromise>;
     });
 
     renderHook(() => usePinnedObjects("test-key"));
 
-    const result = await cachedPromiseFunction("test-key");
+    const result = await cachedPromiseFunction!("test-key");
 
     expect(removePinned).not.toHaveBeenCalled();
     expect(result).toEqual([mockObject1]);
@@ -220,18 +207,16 @@ describe("usePinnedObjects", () => {
   it("should handle empty pinned objects", async () => {
     vi.mocked(getPinned).mockResolvedValue([]);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let cachedPromiseFunction: any;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    vi.mocked(useCachedPromise).mockImplementation((fn, _deps, _options) => {
-      cachedPromiseFunction = fn;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return mockCachedPromiseSuccess([]) as any;
+    type PromiseFunction = (key: string) => Promise<SpaceObject[]>;
+    let cachedPromiseFunction: PromiseFunction;
+    vi.mocked(useCachedPromise).mockImplementation((fn) => {
+      cachedPromiseFunction = fn as PromiseFunction;
+      return mockCachedPromiseSuccess([]) as ReturnType<typeof useCachedPromise>;
     });
 
     renderHook(() => usePinnedObjects("test-key"));
 
-    const result = await cachedPromiseFunction("test-key");
+    const result = await cachedPromiseFunction!("test-key");
 
     expect(getObject).not.toHaveBeenCalled();
     expect(result).toEqual([]);
@@ -254,26 +239,23 @@ describe("usePinnedObjects", () => {
       .mockRejectedValueOnce(error404)
       .mockResolvedValueOnce({ object: mockObject3 });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let cachedPromiseFunction: any;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    vi.mocked(useCachedPromise).mockImplementation((fn, _deps, _options) => {
-      cachedPromiseFunction = fn;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return mockCachedPromiseSuccess([]) as any;
+    type PromiseFunction = (key: string) => Promise<SpaceObject[]>;
+    let cachedPromiseFunction: PromiseFunction;
+    vi.mocked(useCachedPromise).mockImplementation((fn) => {
+      cachedPromiseFunction = fn as PromiseFunction;
+      return mockCachedPromiseSuccess([]) as ReturnType<typeof useCachedPromise>;
     });
 
     renderHook(() => usePinnedObjects("test-key"));
 
-    const result = await cachedPromiseFunction("test-key");
+    const result = await cachedPromiseFunction!("test-key");
 
     expect(removePinned).toHaveBeenCalledWith(TEST_IDS.space, "obj2", "test-key");
     expect(result).toEqual([mockObject1, mockObject3]);
   });
 
   it("should handle loading state", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockCachedPromiseLoading() as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockCachedPromiseLoading() as ReturnType<typeof useCachedPromise>);
 
     const { result } = renderHook(() => usePinnedObjects("test-key"));
 
@@ -284,8 +266,9 @@ describe("usePinnedObjects", () => {
 
   it("should handle error state", () => {
     const mockError = new Error("Failed to load pinned objects");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockCachedPromiseError(mockError) as any);
+    vi.mocked(useCachedPromise).mockReturnValue(
+      mockCachedPromiseError(mockError) as ReturnType<typeof useCachedPromise>,
+    );
 
     const { result } = renderHook(() => usePinnedObjects("test-key"));
 
@@ -297,12 +280,10 @@ describe("usePinnedObjects", () => {
   it("should properly type the returned objects", () => {
     const mockData = [createSpaceObject({ id: "obj1" })];
     const mockReturn = mockCachedPromiseSuccess(mockData);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     const { result } = renderHook(() => usePinnedObjects("test-key"));
 
-    // Check that the type is correct
     const objects: SpaceObject[] = result.current.pinnedObjects;
     expect(objects).toEqual(mockData);
   });

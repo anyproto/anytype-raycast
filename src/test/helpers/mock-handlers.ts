@@ -10,8 +10,9 @@ export interface MockCachedPromiseReturn<T = unknown> {
   mutate: ReturnType<typeof vi.fn>;
   revalidate?: ReturnType<typeof vi.fn>;
   pagination?: {
+    pageSize: number;
     hasMore: boolean;
-    page: number;
+    onLoadMore: () => void;
   };
 }
 
@@ -85,12 +86,17 @@ export function mockCachedPromiseError<T>(error: Error | string): MockCachedProm
  */
 export function mockCachedPromisePaginated<T>(
   data: T,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   page: number = 0,
   hasMore: boolean = false,
 ): MockCachedPromiseReturn<T> {
   return createMockCachedPromise({
     data,
     isLoading: false,
-    pagination: { page, hasMore },
+    pagination: {
+      pageSize: 20,
+      hasMore,
+      onLoadMore: vi.fn(),
+    },
   });
 }

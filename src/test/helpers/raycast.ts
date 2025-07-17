@@ -1,5 +1,5 @@
 import { showToast, Toast } from "@raycast/api";
-import { vi } from "vitest";
+import { expect, vi } from "vitest";
 
 /**
  * Helper to assert a success toast was shown

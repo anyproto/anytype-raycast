@@ -14,7 +14,6 @@ import {
 import { apiLimit } from "../../utils";
 import { useGlobalSearch } from "../useGlobalSearch";
 
-// Mock dependencies
 vi.mock("../../api", () => ({
   globalSearch: vi.fn(),
 }));
@@ -38,12 +37,10 @@ describe("useGlobalSearch", () => {
     ];
 
     const mockReturn = mockCachedPromisePaginated(mockObjects, 0, true);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     const { result } = renderHook(() => useGlobalSearch("test query", ["type1", "type2"]));
 
-    // Should filter out null/undefined values
     expect(result.current.objects).toHaveLength(2);
     expect(result.current.objects[0]).toMatchObject({ id: "1", name: "Object 1" });
     expect(result.current.objects[1]).toMatchObject({ id: "2", name: "Object 2" });
@@ -55,8 +52,7 @@ describe("useGlobalSearch", () => {
 
   it("should call useCachedPromise with correct parameters", () => {
     const mockReturn = mockCachedPromisePaginated([], 0, false);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     renderHook(() => useGlobalSearch("test query", ["type1", "type2"]));
 
@@ -67,8 +63,7 @@ describe("useGlobalSearch", () => {
 
   it("should handle execute config option being false", () => {
     const mockReturn = mockCachedPromisePaginated([], 0, false);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     renderHook(() => useGlobalSearch("test query", ["type1"], { execute: false }));
 
@@ -78,19 +73,20 @@ describe("useGlobalSearch", () => {
   });
 
   it("should return empty data when execute is false in promise function", async () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let cachedPromiseFunction: any;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    vi.mocked(useCachedPromise).mockImplementation((fn, _deps, _options) => {
-      cachedPromiseFunction = fn;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return mockCachedPromisePaginated([], 0, false) as any;
+    type PromiseFunction = (
+      query: string,
+      types: string[],
+      shouldExecute: boolean,
+    ) => (options: { page: number }) => Promise<{ data: unknown[]; hasMore: boolean }>;
+    let cachedPromiseFunction: PromiseFunction;
+    vi.mocked(useCachedPromise).mockImplementation((fn) => {
+      cachedPromiseFunction = fn as unknown as PromiseFunction;
+      return mockCachedPromisePaginated([], 0, false) as ReturnType<typeof useCachedPromise>;
     });
 
     renderHook(() => useGlobalSearch("test query", ["type1"], { execute: false }));
 
-    // Execute the cached promise function with execute = false
-    const result = await cachedPromiseFunction("test query", ["type1"], false)({ page: 0 });
+    const result = await cachedPromiseFunction!("test query", ["type1"], false)({ page: 0 });
 
     expect(result).toEqual({
       data: [],
@@ -108,19 +104,20 @@ describe("useGlobalSearch", () => {
     vi.mocked(globalSearch).mockResolvedValue(mockResponse);
     vi.mocked(getPreferenceValues).mockReturnValue({ sort: "created_date" });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let cachedPromiseFunction: any;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    vi.mocked(useCachedPromise).mockImplementation((fn, _deps, _options) => {
-      cachedPromiseFunction = fn;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return mockCachedPromisePaginated([], 0, false) as any;
+    type PromiseFunction = (
+      query: string,
+      types: string[],
+      shouldExecute: boolean,
+    ) => (options: { page: number }) => Promise<{ data: unknown[]; hasMore: boolean }>;
+    let cachedPromiseFunction: PromiseFunction;
+    vi.mocked(useCachedPromise).mockImplementation((fn) => {
+      cachedPromiseFunction = fn as unknown as PromiseFunction;
+      return mockCachedPromisePaginated([], 0, false) as ReturnType<typeof useCachedPromise>;
     });
 
     renderHook(() => useGlobalSearch("test query", ["type1", "type2"]));
 
-    // Execute the cached promise function for page 2
-    const result = await cachedPromiseFunction("test query", ["type1", "type2"], true)({ page: 2 });
+    const result = await cachedPromiseFunction!("test query", ["type1", "type2"], true)({ page: 2 });
 
     expect(globalSearch).toHaveBeenCalledWith(
       {
@@ -147,18 +144,20 @@ describe("useGlobalSearch", () => {
     vi.mocked(getPreferenceValues).mockReturnValue({ sort: "name" });
     vi.mocked(globalSearch).mockResolvedValue(createPaginatedResponse([]));
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let cachedPromiseFunction: any;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    vi.mocked(useCachedPromise).mockImplementation((fn, _deps, _options) => {
-      cachedPromiseFunction = fn;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return mockCachedPromisePaginated([], 0, false) as any;
+    type PromiseFunction = (
+      query: string,
+      types: string[],
+      shouldExecute: boolean,
+    ) => (options: { page: number }) => Promise<{ data: unknown[]; hasMore: boolean }>;
+    let cachedPromiseFunction: PromiseFunction;
+    vi.mocked(useCachedPromise).mockImplementation((fn) => {
+      cachedPromiseFunction = fn as unknown as PromiseFunction;
+      return mockCachedPromisePaginated([], 0, false) as ReturnType<typeof useCachedPromise>;
     });
 
     renderHook(() => useGlobalSearch("test", ["type1"]));
 
-    await cachedPromiseFunction("test", ["type1"], true)({ page: 0 });
+    await cachedPromiseFunction!("test", ["type1"], true)({ page: 0 });
 
     expect(globalSearch).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -172,8 +171,7 @@ describe("useGlobalSearch", () => {
   });
 
   it("should handle loading state", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockCachedPromiseLoading() as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockCachedPromiseLoading() as ReturnType<typeof useCachedPromise>);
 
     const { result } = renderHook(() => useGlobalSearch("test", ["type1"]));
 
@@ -184,8 +182,9 @@ describe("useGlobalSearch", () => {
 
   it("should handle error state", () => {
     const mockError = new Error("Search failed");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockCachedPromiseError(mockError) as any);
+    vi.mocked(useCachedPromise).mockReturnValue(
+      mockCachedPromiseError(mockError) as ReturnType<typeof useCachedPromise>,
+    );
 
     const { result } = renderHook(() => useGlobalSearch("test", ["type1"]));
 
@@ -196,8 +195,7 @@ describe("useGlobalSearch", () => {
 
   it("should handle empty data", () => {
     const mockReturn = mockCachedPromisePaginated(undefined, 0, false);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     const { result } = renderHook(() => useGlobalSearch("", []));
 
@@ -216,12 +214,10 @@ describe("useGlobalSearch", () => {
     ] as (SpaceObject | null | undefined | false | "" | 0)[];
 
     const mockReturn = mockCachedPromisePaginated(mockObjects, 0, false);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     const { result } = renderHook(() => useGlobalSearch("test", ["type1"]));
 
-    // Should only include truthy objects
     expect(result.current.objects).toHaveLength(2);
     expect(result.current.objects[0]).toMatchObject({ id: "1", name: "Valid Object" });
     expect(result.current.objects[1]).toMatchObject({ id: "2", name: "Another Valid Object" });
@@ -236,18 +232,20 @@ describe("useGlobalSearch", () => {
     vi.mocked(getPreferenceValues).mockReturnValue({ sort: preference });
     vi.mocked(globalSearch).mockResolvedValue(createPaginatedResponse([]));
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let cachedPromiseFunction: any;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    vi.mocked(useCachedPromise).mockImplementation((fn, _deps, _options) => {
-      cachedPromiseFunction = fn;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return mockCachedPromisePaginated([], 0, false) as any;
+    type PromiseFunction = (
+      query: string,
+      types: string[],
+      shouldExecute: boolean,
+    ) => (options: { page: number }) => Promise<{ data: unknown[]; hasMore: boolean }>;
+    let cachedPromiseFunction: PromiseFunction;
+    vi.mocked(useCachedPromise).mockImplementation((fn) => {
+      cachedPromiseFunction = fn as unknown as PromiseFunction;
+      return mockCachedPromisePaginated([], 0, false) as ReturnType<typeof useCachedPromise>;
     });
 
     renderHook(() => useGlobalSearch("test", ["type1"]));
 
-    await cachedPromiseFunction("test", ["type1"], true)({ page: 0 });
+    await cachedPromiseFunction!("test", ["type1"], true)({ page: 0 });
 
     expect(globalSearch).toHaveBeenCalledWith(
       expect.objectContaining({

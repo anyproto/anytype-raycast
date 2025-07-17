@@ -42,7 +42,7 @@ describe("localStorageKeys", () => {
   });
 
   it("should have correct static keys", () => {
-    expect(localStorageKeys.appKey).toBe("app_key");
+    expect(localStorageKeys.apiKey).toBe("api_key");
     expect(localStorageKeys.suffixForSpaces).toBe("spaces");
     expect(localStorageKeys.suffixForGlobalSearch).toBe("global_search");
   });
@@ -50,15 +50,15 @@ describe("localStorageKeys", () => {
 
 describe("apiEndpoints", () => {
   it("should generate correct auth endpoints", () => {
-    const displayCode = apiEndpoints.displayCode("TestApp");
-    expect(displayCode).toEqual({
-      url: "https://custom-api.anytype.io/v1/auth/display_code?app_name=TestApp",
+    const createChallenge = apiEndpoints.createChallenge();
+    expect(createChallenge).toEqual({
+      url: "https://custom-api.anytype.io/v1/auth/challenges",
       method: "POST",
     });
 
-    const getToken = apiEndpoints.getToken("challenge123", "1234");
-    expect(getToken).toEqual({
-      url: "https://custom-api.anytype.io/v1/auth/token?challenge_id=challenge123&code=1234",
+    const createApiKey = apiEndpoints.createApiKey();
+    expect(createApiKey).toEqual({
+      url: "https://custom-api.anytype.io/v1/auth/api_keys",
       method: "POST",
     });
   });

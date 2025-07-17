@@ -1,7 +1,7 @@
 import { getPreferenceValues, Icon } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { Member, ObjectLayout, Property, SortProperty, SpaceObject } from "../../models";
+import { Member, ObjectLayout, Property, SortProperty, SpaceObject, Type } from "../../models";
 import { createProperty, createSpaceObject, createTag, createType, TEST_IDS } from "../../test";
 import { getDateLabel, getShortDateLabel, propKeys } from "../../utils";
 import { processObject } from "../object";

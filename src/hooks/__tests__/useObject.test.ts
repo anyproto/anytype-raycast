@@ -13,7 +13,6 @@ import {
 } from "../../test";
 import { useObject } from "../useObject";
 
-// Mock dependencies
 vi.mock("../../api", () => ({
   getObject: vi.fn(),
 }));
@@ -34,8 +33,7 @@ describe("useObject", () => {
     }) as SpaceObjectWithBody;
 
     const mockReturn = mockCachedPromiseSuccess(mockObject);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     const { result } = renderHook(() => useObject(TEST_IDS.space, TEST_IDS.object, BodyFormat.Markdown));
 
@@ -47,8 +45,7 @@ describe("useObject", () => {
 
   it("should call useCachedPromise with correct parameters", () => {
     const mockReturn = mockCachedPromiseLoading();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     renderHook(() => useObject(TEST_IDS.space, TEST_IDS.object, BodyFormat.Markdown));
 
@@ -64,8 +61,7 @@ describe("useObject", () => {
 
   it("should not execute when spaceId is empty", () => {
     const mockReturn = createMockCachedPromise();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     renderHook(() => useObject("", TEST_IDS.object, BodyFormat.Markdown));
 
@@ -77,8 +73,7 @@ describe("useObject", () => {
 
   it("should not execute when objectId is empty", () => {
     const mockReturn = createMockCachedPromise();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     renderHook(() => useObject(TEST_IDS.space, "", BodyFormat.Markdown));
 
@@ -90,8 +85,7 @@ describe("useObject", () => {
 
   it("should not execute when format is not provided", () => {
     const mockReturn = createMockCachedPromise();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     renderHook(() => useObject(TEST_IDS.space, TEST_IDS.object, null as unknown as BodyFormat));
 
@@ -102,8 +96,7 @@ describe("useObject", () => {
   });
 
   it("should handle loading state", () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockCachedPromiseLoading() as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockCachedPromiseLoading() as ReturnType<typeof useCachedPromise>);
 
     const { result } = renderHook(() => useObject(TEST_IDS.space, TEST_IDS.object, BodyFormat.Markdown));
 
@@ -114,8 +107,9 @@ describe("useObject", () => {
 
   it("should handle error state", () => {
     const mockError = new Error("Failed to fetch object");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockCachedPromiseError(mockError) as any);
+    vi.mocked(useCachedPromise).mockReturnValue(
+      mockCachedPromiseError(mockError) as ReturnType<typeof useCachedPromise>,
+    );
 
     const { result } = renderHook(() => useObject(TEST_IDS.space, TEST_IDS.object, BodyFormat.Markdown));
 
@@ -132,19 +126,16 @@ describe("useObject", () => {
 
     vi.mocked(getObject).mockResolvedValue({ object: mockObject });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    let cachedPromiseFunction: any;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    vi.mocked(useCachedPromise).mockImplementation((fn, _deps, _options) => {
-      cachedPromiseFunction = fn;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return mockCachedPromiseLoading() as any;
+    type PromiseFunction = (spaceId: string, objectId: string, format: BodyFormat) => Promise<SpaceObjectWithBody>;
+    let cachedPromiseFunction: PromiseFunction;
+    vi.mocked(useCachedPromise).mockImplementation((fn) => {
+      cachedPromiseFunction = fn as PromiseFunction;
+      return mockCachedPromiseLoading() as ReturnType<typeof useCachedPromise>;
     });
 
     renderHook(() => useObject(TEST_IDS.space, TEST_IDS.object, BodyFormat.Markdown));
 
-    // Execute the cached promise function
-    const result = await cachedPromiseFunction(TEST_IDS.space, TEST_IDS.object, BodyFormat.Markdown);
+    const result = await cachedPromiseFunction!(TEST_IDS.space, TEST_IDS.object, BodyFormat.Markdown);
 
     expect(getObject).toHaveBeenCalledWith(TEST_IDS.space, TEST_IDS.object, BodyFormat.Markdown);
     expect(result).toEqual(mockObject);
@@ -152,10 +143,8 @@ describe("useObject", () => {
 
   it("should handle different body formats", () => {
     const mockReturn = createMockCachedPromise();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
-    // Test with JSON format
     renderHook(() => useObject(TEST_IDS.space, TEST_IDS.object, BodyFormat.JSON));
 
     expect(useCachedPromise).toHaveBeenLastCalledWith(
@@ -180,12 +169,10 @@ describe("useObject", () => {
       mutate: mockMutate,
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as any);
+    vi.mocked(useCachedPromise).mockReturnValue(mockReturn as ReturnType<typeof useCachedPromise>);
 
     const { result } = renderHook(() => useObject(TEST_IDS.space, TEST_IDS.object, BodyFormat.Markdown));
 
-    // Check that values are properly renamed
     expect(result.current.object).toEqual(mockData);
     expect(result.current.objectError).toEqual(mockError);
     expect(result.current.isLoadingObject).toBe(true);
