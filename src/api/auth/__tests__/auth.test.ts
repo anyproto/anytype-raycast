@@ -6,8 +6,10 @@ import { apiEndpoints, apiFetch, errorConnectionMessage } from "../../../utils";
 import { displayCode } from "../displayCode";
 import { getToken } from "../getToken";
 import { checkApiTokenValidity } from "../validateToken";
+// Using shared test utilities where applicable
+// Note: expectFailureToast from test utilities uses a different API format
 
-// Mock dependencies
+// Mock Raycast API
 vi.mock("@raycast/api", () => ({
   showToast: vi.fn(),
   Toast: {

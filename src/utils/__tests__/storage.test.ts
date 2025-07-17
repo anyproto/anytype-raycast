@@ -1,5 +1,6 @@
-import { LocalStorage, showToast, Toast } from "@raycast/api";
+import { LocalStorage, showToast } from "@raycast/api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createPinnedObjects, expectFailureToast, expectSuccessToast } from "../../test";
 import { localStorageKeys, maxPinnedObjects } from "../constant";
 import { addPinned, getPinned, moveDownInPinned, moveUpInPinned, removePinned, setPinned } from "../storage";
 
@@ -26,10 +27,7 @@ describe("storage utils", () => {
 
   describe("getPinned", () => {
     it("should return parsed pinned objects when they exist", async () => {
-      const mockPinnedObjects = [
-        { spaceId: "space1", objectId: "obj1" },
-        { spaceId: "space2", objectId: "obj2" },
-      ];
+      const mockPinnedObjects = createPinnedObjects(2);
       vi.mocked(LocalStorage.getItem).mockResolvedValue(JSON.stringify(mockPinnedObjects));
 
       const result = await getPinned("test");
@@ -49,10 +47,7 @@ describe("storage utils", () => {
 
   describe("setPinned", () => {
     it("should save pinned objects to local storage", async () => {
-      const pinnedObjects = [
-        { spaceId: "space1", objectId: "obj1" },
-        { spaceId: "space2", objectId: "obj2" },
-      ];
+      const pinnedObjects = createPinnedObjects(2);
 
       await setPinned("test", pinnedObjects);
 
@@ -74,11 +69,7 @@ describe("storage utils", () => {
         localStorageKeys.pinnedObjectsWith("test"),
         JSON.stringify([...existingPinned, { spaceId: "space2", objectId: "obj2" }]),
       );
-      expect(showToast).toHaveBeenCalledWith({
-        style: Toast.Style.Success,
-        title: "Object pinned",
-        message: "Test Object",
-      });
+      expectSuccessToast("Object pinned", "Test Object");
     });
 
     it("should show error when object is already pinned", async () => {
@@ -88,50 +79,32 @@ describe("storage utils", () => {
       await addPinned("space1", "obj1", "test", "Test Object", "Object");
 
       expect(LocalStorage.setItem).not.toHaveBeenCalled();
-      expect(showToast).toHaveBeenCalledWith({
-        style: Toast.Style.Failure,
-        title: "Object is already pinned",
-      });
+      expectFailureToast("Object is already pinned");
     });
 
     it("should show error when max pinned objects reached", async () => {
-      const existingPinned = Array(maxPinnedObjects)
-        .fill(null)
-        .map((_, i) => ({
-          spaceId: `space${i}`,
-          objectId: `obj${i}`,
-        }));
+      const existingPinned = createPinnedObjects(maxPinnedObjects);
       vi.mocked(LocalStorage.getItem).mockResolvedValue(JSON.stringify(existingPinned));
 
       await addPinned("spaceNew", "objNew", "test", "Test Object", "Object");
 
       expect(LocalStorage.setItem).not.toHaveBeenCalled();
-      expect(showToast).toHaveBeenCalledWith({
-        style: Toast.Style.Failure,
-        title: `Can't pin more than ${maxPinnedObjects} items`,
-      });
+      expectFailureToast(`Can't pin more than ${maxPinnedObjects} items`);
     });
   });
 
   describe("removePinned", () => {
     it("should remove pinned object successfully", async () => {
-      const existingPinned = [
-        { spaceId: "space1", objectId: "obj1" },
-        { spaceId: "space2", objectId: "obj2" },
-      ];
+      const existingPinned = createPinnedObjects(2);
       vi.mocked(LocalStorage.getItem).mockResolvedValue(JSON.stringify(existingPinned));
 
-      await removePinned("space1", "obj1", "test", "Test Object", "Object");
+      await removePinned("space0", "obj0", "test", "Test Object", "Object");
 
       expect(LocalStorage.setItem).toHaveBeenCalledWith(
         localStorageKeys.pinnedObjectsWith("test"),
-        JSON.stringify([{ spaceId: "space2", objectId: "obj2" }]),
+        JSON.stringify([{ spaceId: "space1", objectId: "obj1" }]),
       );
-      expect(showToast).toHaveBeenCalledWith({
-        style: Toast.Style.Success,
-        title: "Object unpinned",
-        message: "Test Object",
-      });
+      expectSuccessToast("Object unpinned", "Test Object");
     });
 
     it("should show error when object is not pinned", async () => {
@@ -141,20 +114,14 @@ describe("storage utils", () => {
       await removePinned("space2", "obj2", "test", "Test Object", "Object");
 
       expect(LocalStorage.setItem).not.toHaveBeenCalled();
-      expect(showToast).toHaveBeenCalledWith({
-        style: Toast.Style.Failure,
-        title: "Object is not pinned",
-      });
+      expectFailureToast("Object is not pinned");
     });
 
     it("should remove without toast when title and contextLabel not provided", async () => {
-      const existingPinned = [
-        { spaceId: "space1", objectId: "obj1" },
-        { spaceId: "space2", objectId: "obj2" },
-      ];
+      const existingPinned = createPinnedObjects(2);
       vi.mocked(LocalStorage.getItem).mockResolvedValue(JSON.stringify(existingPinned));
 
-      await removePinned("space1", "obj1", "test");
+      await removePinned("space0", "obj0", "test");
 
       expect(LocalStorage.setItem).toHaveBeenCalled();
       expect(showToast).not.toHaveBeenCalled();
@@ -163,33 +130,26 @@ describe("storage utils", () => {
 
   describe("moveUpInPinned", () => {
     it("should move item up in the list", async () => {
-      const existingPinned = [
-        { spaceId: "space1", objectId: "obj1" },
-        { spaceId: "space2", objectId: "obj2" },
-        { spaceId: "space3", objectId: "obj3" },
-      ];
+      const existingPinned = createPinnedObjects(3);
       vi.mocked(LocalStorage.getItem).mockResolvedValue(JSON.stringify(existingPinned));
 
-      await moveUpInPinned("space2", "obj2", "test");
+      await moveUpInPinned("space1", "obj1", "test");
 
       expect(LocalStorage.setItem).toHaveBeenCalledWith(
         localStorageKeys.pinnedObjectsWith("test"),
         JSON.stringify([
-          { spaceId: "space2", objectId: "obj2" },
           { spaceId: "space1", objectId: "obj1" },
-          { spaceId: "space3", objectId: "obj3" },
+          { spaceId: "space0", objectId: "obj0" },
+          { spaceId: "space2", objectId: "obj2" },
         ]),
       );
     });
 
     it("should not move first item up", async () => {
-      const existingPinned = [
-        { spaceId: "space1", objectId: "obj1" },
-        { spaceId: "space2", objectId: "obj2" },
-      ];
+      const existingPinned = createPinnedObjects(2);
       vi.mocked(LocalStorage.getItem).mockResolvedValue(JSON.stringify(existingPinned));
 
-      await moveUpInPinned("space1", "obj1", "test");
+      await moveUpInPinned("space0", "obj0", "test");
 
       expect(LocalStorage.setItem).not.toHaveBeenCalled();
     });
@@ -206,33 +166,26 @@ describe("storage utils", () => {
 
   describe("moveDownInPinned", () => {
     it("should move item down in the list", async () => {
-      const existingPinned = [
-        { spaceId: "space1", objectId: "obj1" },
-        { spaceId: "space2", objectId: "obj2" },
-        { spaceId: "space3", objectId: "obj3" },
-      ];
+      const existingPinned = createPinnedObjects(3);
       vi.mocked(LocalStorage.getItem).mockResolvedValue(JSON.stringify(existingPinned));
 
-      await moveDownInPinned("space2", "obj2", "test");
+      await moveDownInPinned("space1", "obj1", "test");
 
       expect(LocalStorage.setItem).toHaveBeenCalledWith(
         localStorageKeys.pinnedObjectsWith("test"),
         JSON.stringify([
-          { spaceId: "space1", objectId: "obj1" },
-          { spaceId: "space3", objectId: "obj3" },
+          { spaceId: "space0", objectId: "obj0" },
           { spaceId: "space2", objectId: "obj2" },
+          { spaceId: "space1", objectId: "obj1" },
         ]),
       );
     });
 
     it("should not move last item down", async () => {
-      const existingPinned = [
-        { spaceId: "space1", objectId: "obj1" },
-        { spaceId: "space2", objectId: "obj2" },
-      ];
+      const existingPinned = createPinnedObjects(2);
       vi.mocked(LocalStorage.getItem).mockResolvedValue(JSON.stringify(existingPinned));
 
-      await moveDownInPinned("space2", "obj2", "test");
+      await moveDownInPinned("space1", "obj1", "test");
 
       expect(LocalStorage.setItem).not.toHaveBeenCalled();
     });

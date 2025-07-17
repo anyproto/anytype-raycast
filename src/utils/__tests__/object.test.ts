@@ -1,7 +1,8 @@
 import { getPreferenceValues, Icon } from "@raycast/api";
 import { MutatePromise } from "@raycast/utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { Member, ObjectLayout, Property, PropertyFormat, SortProperty, SpaceObject, Tag, Type } from "../../models";
+import { Member, ObjectLayout, Property, SortProperty, SpaceObject } from "../../models";
+import { createProperty, createSpaceObject, createTag, createType, TEST_IDS } from "../../test";
 import { getDateLabel, getShortDateLabel, propKeys } from "../../utils";
 import { processObject } from "../object";
 
@@ -26,30 +27,22 @@ describe("processObject", () => {
   const mockMutate = vi.fn() as unknown as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>;
   const mockMutatePinned = vi.fn() as unknown as MutatePromise<SpaceObject[] | Type[] | Property[] | Member[]>;
 
-  const mockType: Type = {
-    object: "type",
+  const mockType = createType({
     id: "type1",
     key: "document",
     name: "Document",
     plural_name: "Documents",
     icon: "doc-icon",
-    layout: ObjectLayout.Basic,
-    archived: false,
-    properties: [],
-  };
+  });
 
-  const mockObject: SpaceObject = {
-    object: "object",
-    id: "obj1",
+  const mockObject = createSpaceObject({
+    id: TEST_IDS.object,
     name: "Test Object",
     icon: "object-icon",
-    space_id: "space1",
-    layout: ObjectLayout.Basic,
+    space_id: TEST_IDS.space,
     snippet: "Test snippet",
-    archived: false,
     type: mockType,
-    properties: [],
-  };
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -62,8 +55,8 @@ describe("processObject", () => {
     const result = processObject(mockObject, false, mockMutate);
 
     expect(result).toEqual({
-      spaceId: "space1",
-      id: "obj1",
+      spaceId: TEST_IDS.space,
+      id: TEST_IDS.object,
       icon: "object-icon",
       title: "Test Object",
       subtitle: undefined,
@@ -98,18 +91,17 @@ describe("processObject", () => {
 
   it("should process object with valid date", () => {
     const dateValue = "2024-01-15T10:30:00Z";
-    const objectWithDate: SpaceObject = {
+    const objectWithDate = createSpaceObject({
       ...mockObject,
       properties: [
-        {
+        createProperty("date", {
           id: "prop1",
           key: SortProperty.LastModifiedDate,
           name: "Last Modified",
-          format: PropertyFormat.Date,
           date: dateValue,
-        },
+        }),
       ],
-    };
+    });
 
     const result = processObject(objectWithDate, false, mockMutate);
 
@@ -121,23 +113,22 @@ describe("processObject", () => {
   });
 
   it("should process object with tags", () => {
-    const tags: Tag[] = [
-      { id: "tag1", key: "tag1", name: "Important", color: "#FF0000" },
-      { id: "tag2", key: "tag2", name: "Work", color: "#0000FF" },
+    const tags = [
+      createTag({ id: "tag1", name: "Important", color: "#FF0000" }),
+      createTag({ id: "tag2", name: "Work", color: "#0000FF" }),
     ];
 
-    const objectWithTags: SpaceObject = {
+    const objectWithTags = createSpaceObject({
       ...mockObject,
       properties: [
-        {
+        createProperty("tags", {
           id: "prop2",
           key: propKeys.tag,
           name: "Tags",
-          format: PropertyFormat.MultiSelect,
           multi_select: tags,
-        },
+        }),
       ],
-    };
+    });
 
     const result = processObject(objectWithTags, false, mockMutate);
 
@@ -152,25 +143,23 @@ describe("processObject", () => {
     vi.mocked(getShortDateLabel).mockReturnValue("Modified");
 
     const dateValue = "2024-01-15T10:30:00Z";
-    const objectWithDates: SpaceObject = {
+    const objectWithDates = createSpaceObject({
       ...mockObject,
       properties: [
-        {
+        createProperty("text", {
           id: "prop3",
           key: SortProperty.Name,
           name: "Name",
-          format: PropertyFormat.Text,
           text: "Some name",
-        },
-        {
+        }),
+        createProperty("date", {
           id: "prop4",
           key: SortProperty.LastModifiedDate,
           name: "Last Modified",
-          format: PropertyFormat.Date,
           date: dateValue,
-        },
+        }),
       ],
-    };
+    });
 
     const result = processObject(objectWithDates, false, mockMutate);
 
@@ -180,18 +169,17 @@ describe("processObject", () => {
   });
 
   it("should handle invalid date (timestamp 0)", () => {
-    const objectWithInvalidDate: SpaceObject = {
+    const objectWithInvalidDate = createSpaceObject({
       ...mockObject,
       properties: [
-        {
+        createProperty("date", {
           id: "prop5",
           key: SortProperty.LastModifiedDate,
           name: "Last Modified",
-          format: PropertyFormat.Date,
           date: "1970-01-01T00:00:00Z", // Unix epoch 0
-        },
+        }),
       ],
-    };
+    });
 
     const result = processObject(objectWithInvalidDate, false, mockMutate);
 
@@ -203,27 +191,25 @@ describe("processObject", () => {
 
   it("should handle object with all features combined", () => {
     const dateValue = "2024-01-15T10:30:00Z";
-    const tags: Tag[] = [{ id: "tag1", key: "tag1", name: "Priority", color: "#FF0000" }];
+    const tags = [createTag({ id: "tag1", name: "Priority", color: "#FF0000" })];
 
-    const fullObject: SpaceObject = {
+    const fullObject = createSpaceObject({
       ...mockObject,
       properties: [
-        {
+        createProperty("date", {
           id: "prop6",
           key: SortProperty.LastModifiedDate,
           name: "Last Modified",
-          format: PropertyFormat.Date,
           date: dateValue,
-        },
-        {
+        }),
+        createProperty("tags", {
           id: "prop7",
           key: propKeys.tag,
           name: "Tags",
-          format: PropertyFormat.MultiSelect,
           multi_select: tags,
-        },
+        }),
       ],
-    };
+    });
 
     const result = processObject(fullObject, true, mockMutate, mockMutatePinned);
 
@@ -240,18 +226,17 @@ describe("processObject", () => {
     vi.mocked(getShortDateLabel).mockReturnValue("Created");
 
     const dateValue = "2024-01-10T08:00:00Z";
-    const objectWithCreatedDate: SpaceObject = {
+    const objectWithCreatedDate = createSpaceObject({
       ...mockObject,
       properties: [
-        {
+        createProperty("date", {
           id: "prop8",
           key: SortProperty.CreatedDate,
           name: "Created",
-          format: PropertyFormat.Date,
           date: dateValue,
-        },
+        }),
       ],
-    };
+    });
 
     const result = processObject(objectWithCreatedDate, false, mockMutate);
 

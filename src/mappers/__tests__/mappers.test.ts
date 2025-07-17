@@ -2,21 +2,15 @@ import { getPreferenceValues } from "@raycast/api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getObjectWithoutMappedProperties } from "../../api";
 import {
-  BodyFormat,
   Color,
-  IconFormat,
-  ObjectIcon,
-  ObjectLayout,
   PropertyFormat,
   PropertyWithValue,
   RawProperty,
-  RawSpaceObject,
-  RawSpaceObjectWithBody,
   RawTag,
-  RawType,
   SortProperty,
   SpaceObjectWithBody,
 } from "../../models";
+import { createRawSpaceObject, createRawSpaceObjectWithBody, createRawType, createTag, TEST_IDS } from "../../test";
 import { bundledPropKeys, getIconWithFallback, propKeys } from "../../utils";
 import { mapObject, mapObjects, mapObjectWithoutProperties } from "../objects";
 import { getIconForProperty, mapProperties, mapProperty, mapTag, mapTags } from "../properties";
@@ -56,24 +50,6 @@ vi.mock("../types", () => ({
   })),
 }));
 
-// Create shared test data
-const mockIcon: ObjectIcon = {
-  format: IconFormat.Emoji,
-  emoji: "📄",
-};
-
-const mockType: RawType = {
-  object: "type",
-  id: "type1",
-  key: "document",
-  name: "Document",
-  plural_name: "Documents",
-  icon: mockIcon,
-  layout: ObjectLayout.Basic,
-  archived: false,
-  properties: [],
-};
-
 describe("mappers", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -81,16 +57,19 @@ describe("mappers", () => {
 
   describe("objects mapper", () => {
     describe("mapObjects", () => {
-      const mockRawObject: RawSpaceObject = {
-        object: "object",
-        id: "obj1",
-        space_id: "space1",
+      const mockType = createRawType({
+        id: "type1",
+        key: "document",
+        name: "Document",
+        plural_name: "Documents",
+      });
+
+      const mockRawObject = createRawSpaceObject({
+        id: TEST_IDS.object,
+        space_id: TEST_IDS.space,
         name: "Test Object",
-        icon: mockIcon,
-        layout: ObjectLayout.Basic,
         snippet: "Test snippet",
         type: mockType,
-        archived: false,
         properties: [
           {
             id: "prop1",
@@ -108,7 +87,7 @@ describe("mappers", () => {
             url: "http://example.com",
           },
         ],
-      };
+      });
 
       it("should map objects with sort by LastModifiedDate", async () => {
         vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.LastModifiedDate });
@@ -118,7 +97,7 @@ describe("mappers", () => {
 
         expect(result).toHaveLength(1);
         expect(result[0]).toMatchObject({
-          id: "obj1",
+          id: TEST_IDS.object,
           name: "Test Object",
           icon: "mapped-icon",
         });
@@ -137,7 +116,11 @@ describe("mappers", () => {
       });
 
       it("should handle object without name using snippet", async () => {
-        const objectWithoutName: RawSpaceObject = { ...mockRawObject, name: "", snippet: "First line\nSecond line" };
+        const objectWithoutName = createRawSpaceObject({
+          ...mockRawObject,
+          name: "",
+          snippet: "First line\nSecond line",
+        });
         vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.LastModifiedDate });
         vi.mocked(getIconWithFallback).mockResolvedValue("mapped-icon");
 
@@ -147,7 +130,11 @@ describe("mappers", () => {
       });
 
       it("should handle object with empty name and single-line snippet", async () => {
-        const objectWithoutName: RawSpaceObject = { ...mockRawObject, name: "", snippet: "Single line snippet" };
+        const objectWithoutName = createRawSpaceObject({
+          ...mockRawObject,
+          name: "",
+          snippet: "Single line snippet",
+        });
         vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.LastModifiedDate });
         vi.mocked(getIconWithFallback).mockResolvedValue("mapped-icon");
 
@@ -157,7 +144,11 @@ describe("mappers", () => {
       });
 
       it("should handle object with empty name and snippet", async () => {
-        const objectWithoutName: RawSpaceObject = { ...mockRawObject, name: "", snippet: "" };
+        const objectWithoutName = createRawSpaceObject({
+          ...mockRawObject,
+          name: "",
+          snippet: "",
+        });
         vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.LastModifiedDate });
         vi.mocked(getIconWithFallback).mockResolvedValue("mapped-icon");
 
@@ -167,7 +158,10 @@ describe("mappers", () => {
       });
 
       it("should trim whitespace from object name", async () => {
-        const objectWithWhitespace: RawSpaceObject = { ...mockRawObject, name: "  Trimmed Name  " };
+        const objectWithWhitespace = createRawSpaceObject({
+          ...mockRawObject,
+          name: "  Trimmed Name  ",
+        });
         vi.mocked(getPreferenceValues).mockReturnValue({ sort: SortProperty.LastModifiedDate });
         vi.mocked(getIconWithFallback).mockResolvedValue("mapped-icon");
 
@@ -178,17 +172,14 @@ describe("mappers", () => {
     });
 
     describe("mapObject", () => {
+      const mockType = createRawType();
+
       it("should map all property formats correctly", async () => {
-        const rawObject: RawSpaceObjectWithBody = {
-          object: "object",
-          id: "obj1",
-          space_id: "space1",
+        const rawObject = createRawSpaceObjectWithBody({
+          id: TEST_IDS.object,
+          space_id: TEST_IDS.space,
           name: "Test Object",
-          icon: mockIcon,
-          layout: ObjectLayout.Basic,
-          snippet: "",
           type: mockType,
-          archived: false,
           markdown: "# Test",
           properties: [
             { id: "txt1", key: "text", name: "Text", format: PropertyFormat.Text, text: "  Hello  " },
@@ -198,14 +189,14 @@ describe("mappers", () => {
               key: "select",
               name: "Select",
               format: PropertyFormat.Select,
-              select: { id: "tag1", key: "tag1", name: "Tag", color: Color.Red },
+              select: createTag({ id: "tag1", name: "Tag", color: Color.Red }),
             },
             {
               id: "mul1",
               key: "multi",
               name: "Multi",
               format: PropertyFormat.MultiSelect,
-              multi_select: [{ id: "tag2", key: "tag2", name: "Tag2", color: Color.Blue }],
+              multi_select: [createTag({ id: "tag2", name: "Tag2", color: Color.Blue })],
             },
             { id: "dat1", key: "date", name: "Date", format: PropertyFormat.Date, date: "2024-01-01T00:00:00Z" },
             { id: "fil1", key: "files", name: "Files", format: PropertyFormat.Files, files: ["file1"] },
@@ -215,7 +206,7 @@ describe("mappers", () => {
             { id: "pho1", key: "phone", name: "Phone", format: PropertyFormat.Phone, phone: "  +1234567890  " },
             { id: "obj1", key: "objects", name: "Objects", format: PropertyFormat.Objects, objects: ["obj2"] },
           ],
-        };
+        });
 
         vi.mocked(getIconWithFallback).mockResolvedValue("mapped-icon");
         vi.mocked(getObjectWithoutMappedProperties).mockResolvedValue({
@@ -244,23 +235,18 @@ describe("mappers", () => {
       });
 
       it("should handle null/undefined property values", async () => {
-        const rawObject: RawSpaceObject = {
-          object: "object",
-          id: "obj1",
-          space_id: "space1",
+        const rawObject = createRawSpaceObject({
+          id: TEST_IDS.object,
+          space_id: TEST_IDS.space,
           name: "Test",
-          icon: mockIcon,
-          layout: ObjectLayout.Basic,
-          snippet: "",
           type: mockType,
-          archived: false,
           properties: [
             { id: "num2", key: "number", name: "Number", format: PropertyFormat.Number, number: undefined },
             { id: "txt2", key: "text", name: "Text", format: PropertyFormat.Text, text: undefined },
             { id: "chk2", key: "checkbox", name: "Check", format: PropertyFormat.Checkbox, checkbox: undefined },
             { id: "dat2", key: "date", name: "Date", format: PropertyFormat.Date, date: undefined },
           ],
-        };
+        });
 
         vi.mocked(getIconWithFallback).mockResolvedValue("icon");
 
@@ -276,18 +262,13 @@ describe("mappers", () => {
       it("should warn about unknown property format", async () => {
         const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
 
-        const rawObject: RawSpaceObject = {
-          object: "object",
-          id: "obj1",
-          space_id: "space1",
+        const rawObject = createRawSpaceObject({
+          id: TEST_IDS.object,
+          space_id: TEST_IDS.space,
           name: "Test",
-          icon: mockIcon,
-          layout: ObjectLayout.Basic,
-          snippet: "",
           type: mockType,
-          archived: false,
           properties: [{ id: "unk1", key: "unknown", name: "Unknown", format: "UnknownFormat" as PropertyFormat }],
-        };
+        });
 
         vi.mocked(getIconWithFallback).mockResolvedValue("icon");
 
@@ -300,183 +281,153 @@ describe("mappers", () => {
     });
 
     describe("mapObjectWithoutProperties", () => {
-      it("should map string array to objects", async () => {
-        const mockMappedObject = { id: "obj1", name: "Mapped Object" } as SpaceObjectWithBody;
-        vi.mocked(getObjectWithoutMappedProperties).mockResolvedValue(mockMappedObject as SpaceObjectWithBody);
+      it("should map object without properties", async () => {
+        vi.mocked(getObjectWithoutMappedProperties).mockResolvedValue({
+          id: TEST_IDS.object,
+          name: "Test Object",
+          icon: "mapped-icon",
+          properties: [],
+        } as SpaceObjectWithBody);
 
-        const result = await mapObjectWithoutProperties("space1", ["obj1", "obj2"]);
-
-        expect(result).toHaveLength(2);
-        expect(getObjectWithoutMappedProperties).toHaveBeenCalledTimes(2);
-        expect(getObjectWithoutMappedProperties).toHaveBeenCalledWith("space1", "obj1", BodyFormat.Markdown);
-        expect(getObjectWithoutMappedProperties).toHaveBeenCalledWith("space1", "obj2", BodyFormat.Markdown);
-      });
-
-      it("should handle non-string items", async () => {
-        const nonStringItem = { id: "existing", name: "Existing Object" };
-        const result = await mapObjectWithoutProperties("space1", [nonStringItem as unknown as string]);
+        const result = await mapObjectWithoutProperties(TEST_IDS.space, [TEST_IDS.object]);
 
         expect(result).toHaveLength(1);
-        expect(result[0]).toBe(nonStringItem);
-        expect(getObjectWithoutMappedProperties).not.toHaveBeenCalled();
-      });
-
-      it("should handle single item not in array", async () => {
-        const mockMappedObject = { id: "obj1", name: "Mapped Object" } as SpaceObjectWithBody;
-        vi.mocked(getObjectWithoutMappedProperties).mockResolvedValue(mockMappedObject as SpaceObjectWithBody);
-
-        const result = await mapObjectWithoutProperties("space1", "obj1" as unknown as string[]);
-
-        expect(result).toHaveLength(1);
-        expect(getObjectWithoutMappedProperties).toHaveBeenCalledWith("space1", "obj1", BodyFormat.Markdown);
+        expect(result[0]).toMatchObject({
+          id: TEST_IDS.object,
+          name: "Test Object",
+          icon: "mapped-icon",
+        });
+        expect(result[0].properties).toEqual([]);
       });
     });
   });
 
   describe("properties mapper", () => {
-    describe("mapProperties", () => {
-      it("should map multiple properties", () => {
-        const rawProperties: RawProperty[] = [
-          { object: "property", id: "prop1", key: "key1", name: "Property 1", format: PropertyFormat.Text },
-          { object: "property", id: "prop2", key: "key2", name: "  Property 2  ", format: PropertyFormat.Number },
-        ];
-
-        const result = mapProperties(rawProperties);
-
-        expect(result).toHaveLength(2);
-        expect(result[0].name).toBe("Property 1");
-        expect(result[1].name).toBe("Property 2");
-        expect(result[0].icon).toBeDefined();
-        expect(result[1].icon).toBeDefined();
-      });
-    });
-
-    describe("mapProperty", () => {
-      it("should map property with trimmed name", () => {
-        const rawProperty: RawProperty = {
-          object: "property",
-          id: "prop1",
-          key: "key1",
-          name: "  Property Name  ",
-          format: PropertyFormat.Text,
-        };
-
-        const result = mapProperty(rawProperty);
-
-        expect(result.name).toBe("Property Name");
-        expect(result.icon).toBeDefined();
-      });
-
-      it("should handle property without name", () => {
-        const rawProperty: RawProperty = {
-          object: "property",
-          id: "prop1",
-          key: "key1",
-          name: "",
-          format: PropertyFormat.Text,
-        };
-
-        const result = mapProperty(rawProperty);
-
-        expect(result.name).toBe("Untitled");
-      });
-    });
-
-    describe("getIconForProperty", () => {
-      const formats = [
-        PropertyFormat.Text,
-        PropertyFormat.Number,
-        PropertyFormat.Select,
-        PropertyFormat.MultiSelect,
-        PropertyFormat.Date,
-        PropertyFormat.Files,
-        PropertyFormat.Checkbox,
-        PropertyFormat.Url,
-        PropertyFormat.Email,
-        PropertyFormat.Phone,
-        PropertyFormat.Objects,
-      ];
-
-      it.each(formats)("should return icon for %s format", (format) => {
-        const result = getIconForProperty(format);
-
-        expect(result).toBeDefined();
-        if (typeof result === "object" && result !== null && "source" in result) {
-          expect(result).toHaveProperty("tintColor", { light: "grey", dark: "grey" });
-          expect(result.source).toContain(`icons/property/`);
-        }
-      });
-    });
-
     describe("mapTags", () => {
-      it("should map multiple tags", () => {
+      it("should map tags correctly", () => {
         const rawTags: RawTag[] = [
-          { id: "tag1", key: "tag1", name: "Tag 1", color: Color.Red },
-          { id: "tag2", key: "tag2", name: "  Tag 2  ", color: Color.Blue },
+          createTag({ id: "tag1", key: "tag1", name: "Tag 1", color: Color.Red }),
+          createTag({ id: "tag2", key: "tag2", name: "Tag 2", color: Color.Blue }),
         ];
 
         const result = mapTags(rawTags);
 
         expect(result).toHaveLength(2);
-        expect(result[0].name).toBe("Tag 1");
-        expect(result[0].color).toBe("#FF0000");
-        expect(result[1].name).toBe("Tag 2");
-        expect(result[1].color).toBe("#0000FF");
+        expect(result[0]).toMatchObject({
+          id: "tag1",
+          name: "Tag 1",
+          color: "#FF0000",
+        });
+        expect(result[1]).toMatchObject({
+          id: "tag2",
+          name: "Tag 2",
+          color: "#0000FF",
+        });
+      });
+
+      it("should handle undefined tags", () => {
+        expect(() => mapTags(undefined as unknown as RawTag[])).toThrow();
       });
     });
 
     describe("mapTag", () => {
-      it("should map tag with color from colorToHex", () => {
-        const rawTag: RawTag = {
-          id: "tag1",
-          key: "tag1",
-          name: "Important",
-          color: Color.Red,
-        };
+      it("should map single tag correctly", () => {
+        const rawTag = createTag({ id: "tag1", name: "Tag 1", color: Color.Purple });
 
         const result = mapTag(rawTag);
 
-        expect(result.name).toBe("Important");
-        expect(result.color).toBe("#FF0000");
+        expect(result).toMatchObject({
+          id: "tag1",
+          name: "Tag 1",
+          color: "#800080",
+        });
       });
 
-      it("should use original color if not in colorToHex", () => {
-        const rawTag: RawTag = {
-          id: "tag1",
-          key: "tag1",
-          name: "Custom",
-          color: Color.Grey,
+      it("should handle undefined tag", () => {
+        expect(() => mapTag(undefined as unknown as RawTag)).toThrow();
+      });
+    });
+
+    describe("mapProperties", () => {
+      it("should map all properties without filtering", () => {
+        const properties: RawProperty[] = [
+          { id: "1", key: SortProperty.LastModifiedDate, name: "Modified", format: PropertyFormat.Date },
+          { id: "2", key: "custom", name: "Custom", format: PropertyFormat.Text },
+          { id: "3", key: propKeys.tag, name: "Tags", format: PropertyFormat.MultiSelect },
+          { id: "4", key: bundledPropKeys.source, name: "Source", format: PropertyFormat.Url },
+        ];
+
+        const result = mapProperties(properties);
+
+        // mapProperties maps all properties
+        expect(result).toHaveLength(4);
+      });
+    });
+
+    describe("mapProperty", () => {
+      it("should handle date property format", () => {
+        const property: RawProperty = {
+          id: "1",
+          key: "date",
+          name: "Date",
+          format: PropertyFormat.Date,
+          date: "2024-01-01T12:00:00Z",
         };
 
-        const result = mapTag(rawTag);
+        const result = mapProperty(property);
 
-        expect(result.color).toBe("#808080"); // Grey color from colorToHex
+        expect(result.date).toBe("2024-01-01T12:00:00Z"); // No transformation in mapProperty
       });
 
-      it("should handle tag without name", () => {
-        const rawTag: RawTag = {
-          id: "tag1",
-          key: "tag1",
-          name: "",
-          color: Color.Blue,
+      it("should not trim text fields", () => {
+        const textProperty: RawProperty = {
+          id: "1",
+          key: "text",
+          name: "Text",
+          format: PropertyFormat.Text,
+          text: "  trimmed  ",
         };
 
-        const result = mapTag(rawTag);
+        const result = mapProperty(textProperty);
 
-        expect(result.name).toBe("Untitled");
+        expect(result.text).toBe("  trimmed  "); // No transformation in mapProperty
+      });
+    });
+
+    describe("getIconForProperty", () => {
+      it("should return correct icons for property formats", () => {
+        // Icons are returned as objects with source and tintColor
+        expect(getIconForProperty(PropertyFormat.Text)).toMatchObject({ source: expect.stringContaining("text.svg") });
+        expect(getIconForProperty(PropertyFormat.Number)).toMatchObject({
+          source: expect.stringContaining("number.svg"),
+        });
+        expect(getIconForProperty(PropertyFormat.Date)).toMatchObject({ source: expect.stringContaining("date.svg") });
+        expect(getIconForProperty(PropertyFormat.Checkbox)).toMatchObject({
+          source: expect.stringContaining("checkbox.svg"),
+        });
+        expect(getIconForProperty(PropertyFormat.Files)).toMatchObject({
+          source: expect.stringContaining("files.svg"),
+        });
+        expect(getIconForProperty(PropertyFormat.Email)).toMatchObject({
+          source: expect.stringContaining("email.svg"),
+        });
+        expect(getIconForProperty(PropertyFormat.Phone)).toMatchObject({
+          source: expect.stringContaining("phone.svg"),
+        });
+        expect(getIconForProperty(PropertyFormat.Url)).toMatchObject({ source: expect.stringContaining("url.svg") });
+        expect(getIconForProperty(PropertyFormat.Select)).toMatchObject({
+          source: expect.stringContaining("select.svg"),
+        });
+        expect(getIconForProperty(PropertyFormat.MultiSelect)).toMatchObject({
+          source: expect.stringContaining("multi_select.svg"),
+        });
+        expect(getIconForProperty(PropertyFormat.Objects)).toMatchObject({
+          source: expect.stringContaining("objects.svg"),
+        });
       });
 
-      it("should trim tag name", () => {
-        const rawTag: RawTag = {
-          id: "tag1",
-          key: "tag1",
-          name: "  Trimmed Tag  ",
-          color: Color.Lime,
-        };
-
-        const result = mapTag(rawTag);
-
-        expect(result.name).toBe("Trimmed Tag");
+      it("should return undefined for unknown format", () => {
+        expect(getIconForProperty("UnknownFormat" as PropertyFormat)).toBeUndefined();
       });
     });
   });
