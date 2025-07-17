@@ -22,7 +22,7 @@ export interface ApiResponse<T> {
  */
 export async function apiFetch<T>(url: string, options: FetchOptions): Promise<ApiResponse<T>> {
   try {
-    const token = getPreferenceValues().apiKey || (await LocalStorage.getItem(localStorageKeys.appKey));
+    const token = getPreferenceValues().apiKey || (await LocalStorage.getItem(localStorageKeys.apiKey));
 
     const response = await fetch(url, {
       method: options.method,

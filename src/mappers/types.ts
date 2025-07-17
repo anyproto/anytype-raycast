@@ -1,5 +1,5 @@
 import { Color, IconName, ObjectLayout, RawType, Type } from "../models";
-import { getCustomTypeIcon, getIconWithFallback } from "../utils";
+import { getCustomTypeIcon, getIconWithFallback, getNameWithFallback } from "../utils";
 
 /**
  * Map raw `Type` objects from the API into display-ready data (e.g., icon).
@@ -15,8 +15,7 @@ export async function mapTypes(types: RawType[]): Promise<Type[]> {
 /**
  * Map raw `Type` object from the API into display-ready data (e.g., icon).
  */
-export async function mapType(type: RawType): Promise<Type> {
-  // Handle deleted types
+export async function mapType(type: RawType | null): Promise<Type> {
   if (!type || !type.id) {
     return {
       object: "type",
@@ -35,8 +34,8 @@ export async function mapType(type: RawType): Promise<Type> {
 
   return {
     ...type,
-    name: type.name?.trim() || "Untitled", // empty string comes as \n
-    plural_name: type.plural_name?.trim() || "Untitled",
+    name: getNameWithFallback(type.name),
+    plural_name: getNameWithFallback(type.plural_name),
     icon: icon,
   };
 }

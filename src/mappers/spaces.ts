@@ -1,5 +1,5 @@
 import { RawSpace, Space } from "../models";
-import { getIconWithFallback } from "../utils";
+import { getIconWithFallback, getNameWithFallback } from "../utils";
 
 /**
  * Map raw `Space` objects from the API into display-ready data (e.g., icon).
@@ -24,7 +24,7 @@ export async function mapSpace(space: RawSpace): Promise<Space> {
 
   return {
     ...space,
-    name: space.name?.trim() || "Untitled",
+    name: getNameWithFallback(space.name),
     icon,
   };
 }

@@ -22,7 +22,7 @@ export const maxPinnedObjects = 5;
 
 // Local Storage Keys
 export const localStorageKeys = {
-  appKey: "app_key",
+  apiKey: "api_key",
   suffixForSpaces: "spaces",
   suffixForGlobalSearch: "global_search",
   suffixForViewsPerSpace(spaceId: string, viewType: ViewType): string {
@@ -33,48 +33,42 @@ export const localStorageKeys = {
   },
 };
 
-export const apiKeyPrefixes = {
-  properties: "",
-  types: "",
-  tags: "",
-};
-
 // API Property/Type Keys
 export const bundledPropKeys = {
-  description: `${apiKeyPrefixes.properties}description`,
-  type: `${apiKeyPrefixes.properties}type`,
-  addedDate: `${apiKeyPrefixes.properties}added_date`,
-  createdDate: `${apiKeyPrefixes.properties}created_date`,
-  createdBy: `${apiKeyPrefixes.properties}creator`,
-  lastModifiedDate: `${apiKeyPrefixes.properties}last_modified_date`,
-  lastModifiedBy: `${apiKeyPrefixes.properties}last_modified_by`,
-  lastOpenedDate: `${apiKeyPrefixes.properties}last_opened_date`,
-  links: `${apiKeyPrefixes.properties}links`,
-  backlinks: `${apiKeyPrefixes.properties}backlinks`,
-  source: `${apiKeyPrefixes.properties}source`,
+  description: "description",
+  type: "type",
+  addedDate: "added_date",
+  createdDate: "created_date",
+  createdBy: "creator",
+  lastModifiedDate: "last_modified_date",
+  lastModifiedBy: "last_modified_by",
+  lastOpenedDate: "last_opened_date",
+  links: "links",
+  backlinks: "backlinks",
+  source: "source",
 };
 
 export const propKeys = {
-  tag: `${apiKeyPrefixes.properties}tag`,
+  tag: "tag",
 };
 
 export const bundledTypeKeys = {
-  audio: `${apiKeyPrefixes.types}audio`,
-  bookmark: `${apiKeyPrefixes.types}bookmark`,
-  chat: `${apiKeyPrefixes.types}chat`,
-  collection: `${apiKeyPrefixes.types}collection`,
-  file: `${apiKeyPrefixes.types}file`,
-  note: `${apiKeyPrefixes.types}note`,
-  image: `${apiKeyPrefixes.types}image`,
-  object_type: `${apiKeyPrefixes.types}object_type`,
-  page: `${apiKeyPrefixes.types}page`,
-  participant: `${apiKeyPrefixes.types}participant`,
-  profile: `${apiKeyPrefixes.types}profile`,
-  set: `${apiKeyPrefixes.types}set`,
-  tag: `${apiKeyPrefixes.types}tag`,
-  task: `${apiKeyPrefixes.types}task`,
-  template: `${apiKeyPrefixes.types}template`,
-  video: `${apiKeyPrefixes.types}video`,
+  audio: "audio",
+  bookmark: "bookmark",
+  chat: "chat",
+  collection: "collection",
+  file: "file",
+  note: "note",
+  image: "image",
+  object_type: "object_type",
+  page: "page",
+  participant: "participant",
+  profile: "profile",
+  set: "set",
+  tag: "tag",
+  task: "task",
+  template: "template",
+  video: "video",
 };
 
 // Colors
@@ -107,12 +101,12 @@ export const defaultTintColor = { light: "black", dark: "white" };
 // API Endpoints
 export const apiEndpoints = {
   // auth
-  displayCode: (appName: string) => ({
-    url: `${apiUrl}/v1/auth/display_code?app_name=${appName}`,
+  createChallenge: () => ({
+    url: `${apiUrl}/v1/auth/challenges`,
     method: "POST",
   }),
-  getToken: (challengeId: string, code: string) => ({
-    url: `${apiUrl}/v1/auth/token?challenge_id=${challengeId}&code=${code}`,
+  createApiKey: () => ({
+    url: `${apiUrl}/v1/auth/api_keys`,
     method: "POST",
   }),
 
