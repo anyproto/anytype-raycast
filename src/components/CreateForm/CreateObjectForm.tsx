@@ -231,6 +231,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     const defaults: Record<string, PropertyFieldValue> = {
       [itemProps.spaceId.id]: selectedSpaceId,
       [itemProps.typeId.id]: selectedTypeId,
+      [itemProps.templateId.id]: selectedTemplateId,
       [itemProps.listId.id]: selectedListId,
       [itemProps.name.id]: itemProps.name.value,
       [itemProps.icon.id]: itemProps.icon.value,
