@@ -11,7 +11,9 @@ export const errorConnectionMessage = "Can't connect to API. Please ensure Anyty
 // URLs
 export const apiUrl = getPreferenceValues().apiUrl || "http://127.0.0.1:31009";
 export const downloadUrl = "https://download.anytype.io/";
-export const anytypeSpaceDeeplink = (spaceId: string) => `anytype://main/object/_blank_/space.id/${spaceId}`;
+export const anytypeSpaceDeeplink = (spaceId: string) => `anytype://main/object/_blank_/spaceId/${spaceId}`;
+export const anytypeObjectDeeplink = (spaceId: string, objectId: string) =>
+  `anytype://object?spaceId=${spaceId}&objectId=${objectId}`;
 
 // Numbers
 export const currentApiVersion = "2025-05-20";

@@ -42,6 +42,7 @@ import {
 } from "../../models";
 import {
   addPinned,
+  anytypeObjectDeeplink,
   bundledPropKeys,
   localStorageKeys,
   moveDownInPinned,
@@ -89,7 +90,7 @@ export function ObjectActions({
 }: ObjectActionsProps) {
   const { pop, push } = useNavigation();
   const { primaryAction } = getPreferenceValues();
-  const objectUrl = `anytype://object?objectId=${objectId}&spaceId=${space?.id}`;
+  const objectUrl = anytypeObjectDeeplink(space?.id, objectId);
   const pinSuffixForView = isGlobalSearch
     ? localStorageKeys.suffixForGlobalSearch
     : localStorageKeys.suffixForViewsPerSpace(space?.id, viewType);
