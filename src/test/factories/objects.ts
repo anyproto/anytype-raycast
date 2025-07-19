@@ -3,11 +3,16 @@ import {
   EmojiIcon,
   FileIcon,
   IconFormat,
+  Member,
+  MemberRole,
+  MemberStatus,
   NamedIcon,
   ObjectIcon,
   ObjectLayout,
+  Property,
   PropertyFormat,
   PropertyWithValue,
+  RawMember,
   RawSpaceObject,
   RawSpaceObjectWithBody,
   RawType,
@@ -111,6 +116,52 @@ export function createTag(overrides: Partial<Tag> = {}): Tag {
     color: Color.Blue,
     ...overrides,
   };
+}
+
+/**
+ * Creates a test PropertyMetadata (for property definitions)
+ */
+export function createPropertyMetadata(overrides: Partial<Property> = {}): Property {
+  return {
+    object: "property",
+    id: "prop-1",
+    key: "property",
+    name: "Test Property",
+    format: PropertyFormat.Text,
+    icon: "📝",
+    ...overrides,
+  };
+}
+
+/**
+ * Creates a test PropertyWithValue (property with a value)
+ * This is an alias for createProperty for backward compatibility
+ */
+export function createPropertyWithValue(overrides: Partial<PropertyWithValue> = {}): PropertyWithValue {
+  const { format, ...rest } = overrides;
+
+  switch (format) {
+    case PropertyFormat.Text:
+      return createProperty("text", rest);
+    case PropertyFormat.Number:
+      return createProperty("number", rest);
+    case PropertyFormat.Date:
+      return createProperty("date", rest);
+    case PropertyFormat.Checkbox:
+      return createProperty("checkbox", rest);
+    case PropertyFormat.Url:
+      return createProperty("url", rest);
+    case PropertyFormat.Email:
+      return createProperty("email", rest);
+    case PropertyFormat.Phone:
+      return createProperty("phone", rest);
+    case PropertyFormat.MultiSelect:
+      return createProperty("tags", rest);
+    case PropertyFormat.Select:
+      return createProperty("select", rest);
+    default:
+      return createProperty("text", rest);
+  }
 }
 
 /**
@@ -286,10 +337,47 @@ export function createSpaceObjectWithBody(overrides: Partial<SpaceObject> = {}) 
   };
 }
 
+/**
+ * Creates a test RawMember
+ */
+export function createRawMember(overrides: Partial<RawMember> = {}): RawMember {
+  return {
+    object: "member",
+    id: "member-1",
+    name: "Test Member",
+    icon: createObjectIcon(),
+    identity: "test-identity",
+    global_name: "Test Global Name",
+    status: MemberStatus.Active,
+    role: MemberRole.Editor,
+    ...overrides,
+  };
+}
+
+/**
+ * Creates a test Member
+ */
+export function createMember(overrides: Partial<Member> = {}): Member {
+  return {
+    object: "member",
+    id: "member-1",
+    name: "Test Member",
+    icon: "👤",
+    identity: "test-identity",
+    global_name: "Test Global Name",
+    status: MemberStatus.Active,
+    role: MemberRole.Editor,
+    ...overrides,
+  };
+}
+
 export const TEST_IDS = {
   space: "space-1",
   object: "obj-1",
   type: "type-1",
   tag: "tag-1",
   property: "prop-1",
+  list: "list-1",
+  template: "template-1",
+  member: "member-1",
 } as const;

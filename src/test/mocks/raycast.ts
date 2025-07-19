@@ -63,3 +63,23 @@ export const useForm = vi.fn();
 export const useFetch = vi.fn();
 export const usePromise = vi.fn();
 export const useCachedPromise = vi.fn();
+
+// Navigation
+export const popToRoot = vi.fn();
+export const useNavigation = vi.fn(() => ({
+  pop: vi.fn(),
+  push: vi.fn(),
+}));
+
+// Clipboard
+export const Clipboard = {
+  copy: vi.fn(),
+  paste: vi.fn(),
+  clear: vi.fn(),
+};
+
+// Open
+export const open = vi.fn();
+
+// Alert
+export const confirmAlert = vi.fn();
