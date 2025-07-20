@@ -37,6 +37,7 @@ export const localStorageKeys = {
 
 // API Property/Type Keys
 export const bundledPropKeys = {
+  name: "name",
   description: "description",
   type: "type",
   addedDate: "added_date",
