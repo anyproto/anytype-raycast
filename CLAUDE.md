@@ -1,10 +1,11 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with the Anytype Raycast extension codebase.
 
 ## Essential Commands
 
 ### Development
+
 - `npm run dev` - Start Raycast development mode
 - `npm run build` - Build the extension
 - `npm run lint` - Run ESLint
@@ -12,52 +13,149 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run typecheck` - Run TypeScript type checking
 
 ### Testing
+
 - `npm test` - Run tests with Vitest
 - `npm run test:ui` - Run tests with Vitest UI
 - `npm run test:coverage` - Run tests with coverage report
-
-### Single Test Execution
 - `npx vitest run <file-pattern>` - Run specific test files
-- `npx vitest run src/utils/api.test.ts` - Run single test file
 
-## Architecture Overview
+## Project Overview
 
-This is a Raycast extension for Anytype that enables users to interact with Anytype's local API directly from Raycast. The codebase follows a modular architecture:
+Raycast extension for Anytype that enables interaction with Anytype's local API. Built with TypeScript/React using Raycast's extension framework.
 
-### Core Structure
-- **`src/api/`** - API layer organized by feature domains (auth, objects, spaces, lists, members, etc.)
-- **`src/components/`** - React components for UI, organized by purpose (Forms, Actions, Lists, etc.)
-- **`src/hooks/`** - Custom React hooks for data fetching and state management
-- **`src/models/`** - TypeScript interfaces and types
-- **`src/utils/`** - Utility functions for API calls, error handling, form validation, etc.
-- **`src/tools/`** - AI-enabled tools for Raycast's AI integration
-- **`src/mappers/`** - Data transformation functions between API responses and UI models
+### Directory Structure
 
-### Key Architectural Patterns
+```
+src/
+├── api/           # API layer by domain (auth, objects, spaces, etc.)
+├── components/    # UI components (Forms, Actions, Lists, EmptyView)
+├── hooks/         # Custom React hooks for data fetching
+├── mappers/       # Data transformations between API and UI
+├── models/        # TypeScript interfaces and types
+├── utils/         # Utilities (api.ts, constants, helpers)
+├── tools/         # AI-enabled tools for Raycast AI
+├── test/          # Test utilities and mocks
+└── __tests__/     # Test files for commands
+```
 
-**API Layer**: Centralized in `src/utils/api.ts` with `apiFetch()` function that handles authentication, error handling, and response parsing. Each API endpoint is organized by domain (objects, spaces, members, etc.).
+### Key Patterns
 
-**Authentication**: Token-based authentication with local storage fallback. Supports both manual API keys and app-based pairing flow.
+**API Layer**: All requests go through `apiFetch()` in `src/utils/api.ts`:
 
-**Data Flow**: API → Hooks → Components. Custom hooks encapsulate data fetching logic and provide React Query-like patterns for caching and state management.
+```typescript
+const { url, method } = apiEndpoints.getObject(spaceId, objectId);
+const response = await apiFetch<ResponseType>(url, { method });
+```
 
-**Component Organization**:
-- Forms for creation/updates are in `CreateForm/` and `UpdateForm/`
-- List components for displaying collections
-- Action components for user interactions
-- Empty view components for no-data states
+**Data Flow**: API → Hooks → Components
 
-**AI Tools Integration**: Special tool files in `src/tools/` that interface with Raycast's AI system, allowing natural language interaction with Anytype data.
+- API functions return raw data
+- Hooks manage caching and state with `useCachedPromise`
+- Components handle UI and user interaction
 
-### Raycast Integration
-The extension integrates with Raycast through:
-- Commands defined in `package.json` that map to main component files
-- AI tools for natural language interaction
-- Preferences for API configuration and behavior customization
-- Local authentication flow with the Anytype desktop app
+**Authentication**:
 
-### Testing Setup
-- Vitest for testing with Happy DOM environment
-- Mocked Raycast API in `src/test/mocks/raycast.ts`
-- Coverage reporting configured
-- Test files follow `.test.ts` naming convention
+- Local pairing with Anytype desktop (default)
+- Manual API key (for headless instances)
+- Token stored in LocalStorage with `EnsureAuthenticated` wrapper
+
+**Error Handling**:
+
+```typescript
+try {
+  const result = await apiFetch("/endpoint");
+} catch (error) {
+  showToast({
+    style: Toast.Style.Failure,
+    title: error instanceof ApiError ? "API Error" : "Unexpected Error",
+    message: error.message,
+  });
+}
+```
+
+## Code Guidelines
+
+### TypeScript
+
+- Strict mode enabled - no implicit any
+- Define explicit return types for functions
+- Use interfaces for object shapes
+- Leverage discriminated unions for state
+
+### Components
+
+- Single responsibility principle
+- Extract logic into custom hooks
+- Follow Raycast UI patterns
+- Implement proper error boundaries
+
+### Testing
+
+- Test all new functionality
+- Mock external dependencies
+- Use descriptive test names
+- Test error cases and edge conditions
+
+## Common Workflows
+
+### Adding a New Command
+
+1. Define in `package.json` with metadata
+2. Create main component file in `src/`
+3. Implement hooks in `src/hooks/`
+4. Add API endpoints in `src/api/`
+5. Create tests and update types
+
+### Creating Forms
+
+1. Component in `src/components/Forms/`
+2. Define Zod schema for validation
+3. Use Raycast Form components
+4. Add success/failure toasts
+5. Test validation scenarios
+
+### Implementing API Endpoints
+
+1. Add to appropriate file in `src/api/`
+2. Define types in `src/models/`
+3. Create hook in `src/hooks/`
+4. Handle errors and loading states
+
+## Important Notes
+
+### Performance
+
+- Use pagination (configurable limits: 50, 100, 200)
+- Implement caching with `useCachedPromise`
+- Debounce search inputs
+- Lazy load when appropriate
+
+### Conventions
+
+- Commands: kebab-case (create-object.tsx)
+- Components: PascalCase (CreateForm.tsx)
+- Utilities: camelCase (api.ts)
+- Tests: .test.ts suffix
+
+### Unique Features
+
+- **AI Tools**: 12 tools for natural language interaction
+- **Icon System**: 200+ icons with dynamic resolution
+- **Draft System**: Auto-save unsaved form changes
+- **Quicklinks**: Pre-filled forms for rapid creation
+- **Deeplinks**: Direct integration with Anytype desktop
+
+### API Configuration
+
+- Default URL: `http://127.0.0.1:31009`
+- API version: `2025-05-20`
+- Configurable through Raycast preferences
+
+### Debugging Tips
+
+- Use `console.log` with `npm run dev`
+- Check Network tab for API requests
+- Common issues:
+  - Auth failures: Check API key/connection
+  - Empty lists: Verify space selection
+  - Form errors: Check validation schemas
