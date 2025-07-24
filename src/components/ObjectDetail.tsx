@@ -397,7 +397,14 @@ export function ObjectDetail({
   }
 
   const markdown = object?.markdown ?? "";
-  const updatedMarkdown = injectEmojiIntoHeading(markdown, object?.icon);
+  let updatedMarkdown = markdown;
+
+  if (object?.layout === ObjectLayout.Image && markdown) {
+    const imageUrl = `http://127.0.0.1:47800/image/${object?.id}`;
+    updatedMarkdown = `![${title}](${imageUrl})`;
+  }
+
+  updatedMarkdown = injectEmojiIntoHeading(updatedMarkdown, object?.icon);
 
   return (
     <Detail

@@ -17,6 +17,8 @@ export enum ObjectLayout {
   Set = "set",
   Collection = "collection",
   Participant = "participant",
+  Image = "image",
+  File = "file",
 }
 
 export interface CreateTypeRequest {
