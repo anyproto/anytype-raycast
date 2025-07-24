@@ -10,8 +10,7 @@ export function useGlobalSearch(query: string, types: string[], config?: { execu
   const authTs = useAuthTs();
 
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (query: string, types: string[], shouldExecute: boolean, authTs: string) => async (options: { page: number }) => {
+    (query: string, types: string[], shouldExecute: boolean, _authTs) => async (options: { page: number }) => {
       if (!shouldExecute) {
         return {
           data: [],

@@ -7,30 +7,29 @@ export function usePinnedObjects(key: string) {
   const authTs = useAuthTs();
 
   const { data, error, isLoading, mutate } = useCachedPromise(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async (key, authTs) => {
+    async (key, _authTs) => {
       const pinnedObjects = await getPinned(key);
-      const objects = await Promise.all(
-        pinnedObjects.map(async (pinned) => {
-          try {
-            const response = await getObject(pinned.spaceId, pinned.objectId, BodyFormat.Markdown);
-            if (response.object.archived) {
-              await removePinned(pinned.spaceId, pinned.objectId, key);
-              return null;
-            }
-            return response.object as SpaceObject;
-          } catch (error) {
-            const typedError = error as ErrorWithStatus;
-            if (typedError.message === errorConnectionMessage) {
-              throw error;
-            } else if (typedError.status === 404 || typedError.status === 410) {
-              await removePinned(pinned.spaceId, pinned.objectId, key);
-            }
-            return null;
+      const objects: SpaceObject[] = [];
+
+      for (const pinned of pinnedObjects) {
+        try {
+          const response = await getObject(pinned.spaceId, pinned.objectId, BodyFormat.Markdown);
+          if (response.object.archived) {
+            await removePinned(pinned.spaceId, pinned.objectId, key);
+          } else {
+            objects.push(response.object);
           }
-        }),
-      );
-      return objects.filter((object) => object !== null);
+        } catch (error) {
+          const typedError = error as ErrorWithStatus;
+          if (typedError.message === errorConnectionMessage) {
+            throw error;
+          } else if (typedError.status === 404 || typedError.status === 410) {
+            await removePinned(pinned.spaceId, pinned.objectId, key);
+          }
+        }
+      }
+
+      return objects;
     },
     [key, authTs],
     {

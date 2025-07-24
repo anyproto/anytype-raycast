@@ -7,8 +7,7 @@ export function useSpaces() {
   const authTs = useAuthTs();
 
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (authTs: string) => async (options: { page: number }) => {
+    (_authTs) => async (options: { page: number }) => {
       const offset = options.page * apiLimit;
       const response = await getSpaces({ offset, limit: apiLimit });
 
