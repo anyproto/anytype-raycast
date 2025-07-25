@@ -3,14 +3,13 @@ import { useCachedPromise } from "@raycast/utils";
 import { useMemo } from "react";
 import { globalSearch } from "../api";
 import { SortDirection } from "../models";
-import { apiLimit, useAuthTs } from "../utils";
+import { apiLimit } from "../utils";
 
 export function useGlobalSearch(query: string, types: string[], config?: { execute?: boolean }) {
   const shouldExecute = config?.execute !== false;
-  const authTs = useAuthTs();
 
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(
-    (query: string, types: string[], shouldExecute: boolean, _authTs) => async (options: { page: number }) => {
+    (query: string, types: string[], shouldExecute: boolean) => async (options: { page: number }) => {
       if (!shouldExecute) {
         return {
           data: [],
@@ -32,7 +31,7 @@ export function useGlobalSearch(query: string, types: string[], config?: { execu
         hasMore: response.pagination.has_more,
       };
     },
-    [query, types, shouldExecute, authTs],
+    [query, types, shouldExecute],
     {
       keepPreviousData: true,
     },

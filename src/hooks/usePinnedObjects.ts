@@ -1,13 +1,11 @@
 import { MutatePromise, useCachedPromise } from "@raycast/utils";
 import { getObject } from "../api";
 import { BodyFormat, Member, Property, SpaceObject, Type } from "../models";
-import { errorConnectionMessage, ErrorWithStatus, getPinned, removePinned, useAuthTs } from "../utils";
+import { errorConnectionMessage, ErrorWithStatus, getPinned, removePinned } from "../utils";
 
 export function usePinnedObjects(key: string) {
-  const authTs = useAuthTs();
-
   const { data, error, isLoading, mutate } = useCachedPromise(
-    async (key, _authTs) => {
+    async (key) => {
       const pinnedObjects = await getPinned(key);
       const objects: SpaceObject[] = [];
 
@@ -31,7 +29,7 @@ export function usePinnedObjects(key: string) {
 
       return objects;
     },
-    [key, authTs],
+    [key],
     {
       keepPreviousData: true,
     },

@@ -1,18 +1,5 @@
 import { LocalStorage, showToast, Toast } from "@raycast/api";
-import { useEffect, useState } from "react";
 import { localStorageKeys, maxPinnedObjects } from "./constant";
-
-export function useAuthTs() {
-  const [authTs, setAuthTs] = useState("0");
-
-  useEffect(() => {
-    LocalStorage.getItem<string>(localStorageKeys.authTs).then((ts) => {
-      setAuthTs(ts || "0");
-    });
-  }, []);
-
-  return authTs;
-}
 
 export async function getPinned(pinSuffix: string): Promise<{ spaceId: string; objectId: string }[]> {
   const pinnedObjects = await LocalStorage.getItem<string>(localStorageKeys.pinnedObjectsWith(pinSuffix));

@@ -1,5 +1,4 @@
 import { LocalStorage } from "@raycast/api";
-import { localStorageKeys } from "./constant";
 
 const OLD_KEY = "app_key";
 const NEW_KEY = "api_key";
@@ -37,7 +36,6 @@ async function performMigration(): Promise<boolean> {
     }
 
     await LocalStorage.setItem(NEW_KEY, oldValue);
-    await LocalStorage.setItem(localStorageKeys.authTs, Date.now().toString());
     await LocalStorage.removeItem(OLD_KEY);
 
     return true;

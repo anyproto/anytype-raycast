@@ -1,20 +1,11 @@
 import { useCachedPromise } from "@raycast/utils";
 import { getSpace } from "../api";
 import { Space } from "../models";
-import {
-  errorConnectionMessage,
-  ErrorWithStatus,
-  getPinned,
-  localStorageKeys,
-  removePinned,
-  useAuthTs,
-} from "../utils";
+import { errorConnectionMessage, ErrorWithStatus, getPinned, localStorageKeys, removePinned } from "../utils";
 
 export function usePinnedSpaces() {
-  const authTs = useAuthTs();
-
   const { data, error, isLoading, mutate } = useCachedPromise(
-    async (_authTs) => {
+    async () => {
       const key = localStorageKeys.suffixForSpaces;
       const pinnedSpaces = await getPinned(key);
       const spaces: Space[] = [];
@@ -35,7 +26,7 @@ export function usePinnedSpaces() {
 
       return spaces;
     },
-    [authTs],
+    [],
     {
       keepPreviousData: true,
       initialData: [],
