@@ -7,7 +7,6 @@ import { apiLimit } from "../utils";
 
 export function useGlobalSearch(query: string, types: string[], config?: { execute?: boolean }) {
   const shouldExecute = config?.execute !== false;
-
   const { data, error, isLoading, mutate, pagination } = useCachedPromise(
     (query: string, types: string[], shouldExecute: boolean) => async (options: { page: number }) => {
       if (!shouldExecute) {
