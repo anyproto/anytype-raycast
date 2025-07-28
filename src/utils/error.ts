@@ -18,7 +18,7 @@ export async function checkResponseError(response: Response): Promise<void> {
     if (errorText) {
       errorMessage += ` ${errorText}`;
     }
-  } catch (e) {
+  } catch {
     // ignore errors during error text parsing
   }
 
