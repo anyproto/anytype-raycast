@@ -800,6 +800,7 @@
     "dev": "ray develop",
     "lint": "ray lint",
     "lint:fix": "ray lint --fix",
+    "format": "prettier --write",
     "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -811,8 +812,9 @@
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
+      "npm run typecheck",
+      "npm run lint:fix",
+      "npm run format"
     ]
   }
 }
