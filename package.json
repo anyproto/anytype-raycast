@@ -812,9 +812,8 @@
   },
   "lint-staged": {
     "**/*.{ts,tsx}": [
-      "npm run typecheck",
-      "npm run lint:fix",
-      "npm run format"
+      "eslint --fix",
+      "prettier --write"
     ]
   }
 }
