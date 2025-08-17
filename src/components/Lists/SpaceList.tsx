@@ -85,8 +85,16 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
         >
           <List.Dropdown.Item title="All" value="all" icon={Icon.BullsEye} />
           <List.Dropdown.Section>
-            <List.Dropdown.Item title="Personal" value="personal" icon="icons/type/person.svg" />
-            <List.Dropdown.Item title="Shared" value="shared" icon="icons/type/people.svg" />
+            <List.Dropdown.Item
+              title="Personal"
+              value="personal"
+              icon={{ source: "icons/type/person.svg", tintColor: defaultTintColor }}
+            />
+            <List.Dropdown.Item
+              title="Shared"
+              value="shared"
+              icon={{ source: "icons/type/people.svg", tintColor: defaultTintColor }}
+            />
           </List.Dropdown.Section>
         </List.Dropdown>
       }
