@@ -29,7 +29,7 @@ export function TagSubmenu({ spaceId, object, mutate, mutateObject }: TagSubmenu
 
   // TODO: remove workaround once property retrieval by key is supported -> do:
   // const { property, isLoadingProperty } = useProperty(spaceId, propKeys.tag);
-  const { properties, isLoadingProperties } = useProperties(spaceId, { execute: isOpen });
+  const { properties, isLoadingProperties } = useProperties(spaceId, undefined, { execute: isOpen });
   const property = properties?.find((p) => p.key === propKeys.tag);
 
   const { tags, isLoadingTags } = useTags(spaceId, property?.id ?? "", searchText, { execute: isOpen });
