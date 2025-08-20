@@ -11,7 +11,9 @@ export const errorConnectionMessage = "Can't connect to API. Please ensure Anyty
 // URLs
 export const apiUrl = getPreferenceValues().apiUrl || "http://127.0.0.1:31009";
 export const downloadUrl = "https://download.anytype.io/";
-export const anytypeSpaceDeeplink = (spaceId: string) => `anytype://main/object/_blank_/space.id/${spaceId}`;
+export const anytypeSpaceDeeplink = (spaceId: string) => `anytype://main/object/_blank_/spaceId/${spaceId}`;
+export const anytypeObjectDeeplink = (spaceId: string, objectId: string) =>
+  `anytype://object?spaceId=${spaceId}&objectId=${objectId}`;
 
 // Numbers
 export const currentApiVersion = "2025-05-20";
@@ -33,48 +35,42 @@ export const localStorageKeys = {
   },
 };
 
-export const apiKeyPrefixes = {
-  properties: "",
-  types: "",
-  tags: "",
-};
-
 // API Property/Type Keys
 export const bundledPropKeys = {
-  description: `${apiKeyPrefixes.properties}description`,
-  type: `${apiKeyPrefixes.properties}type`,
-  addedDate: `${apiKeyPrefixes.properties}added_date`,
-  createdDate: `${apiKeyPrefixes.properties}created_date`,
-  createdBy: `${apiKeyPrefixes.properties}creator`,
-  lastModifiedDate: `${apiKeyPrefixes.properties}last_modified_date`,
-  lastModifiedBy: `${apiKeyPrefixes.properties}last_modified_by`,
-  lastOpenedDate: `${apiKeyPrefixes.properties}last_opened_date`,
-  links: `${apiKeyPrefixes.properties}links`,
-  backlinks: `${apiKeyPrefixes.properties}backlinks`,
-  source: `${apiKeyPrefixes.properties}source`,
+  description: "description",
+  type: "type",
+  addedDate: "added_date",
+  createdDate: "created_date",
+  createdBy: "creator",
+  lastModifiedDate: "last_modified_date",
+  lastModifiedBy: "last_modified_by",
+  lastOpenedDate: "last_opened_date",
+  links: "links",
+  backlinks: "backlinks",
+  source: "source",
 };
 
 export const propKeys = {
-  tag: `${apiKeyPrefixes.properties}tag`,
+  tag: "tag",
 };
 
 export const bundledTypeKeys = {
-  audio: `${apiKeyPrefixes.types}audio`,
-  bookmark: `${apiKeyPrefixes.types}bookmark`,
-  chat: `${apiKeyPrefixes.types}chat`,
-  collection: `${apiKeyPrefixes.types}collection`,
-  file: `${apiKeyPrefixes.types}file`,
-  note: `${apiKeyPrefixes.types}note`,
-  image: `${apiKeyPrefixes.types}image`,
-  object_type: `${apiKeyPrefixes.types}object_type`,
-  page: `${apiKeyPrefixes.types}page`,
-  participant: `${apiKeyPrefixes.types}participant`,
-  profile: `${apiKeyPrefixes.types}profile`,
-  set: `${apiKeyPrefixes.types}set`,
-  tag: `${apiKeyPrefixes.types}tag`,
-  task: `${apiKeyPrefixes.types}task`,
-  template: `${apiKeyPrefixes.types}template`,
-  video: `${apiKeyPrefixes.types}video`,
+  audio: "audio",
+  bookmark: "bookmark",
+  chat: "chat",
+  collection: "collection",
+  file: "file",
+  note: "note",
+  image: "image",
+  object_type: "object_type",
+  page: "page",
+  participant: "participant",
+  profile: "profile",
+  set: "set",
+  tag: "tag",
+  task: "task",
+  template: "template",
+  video: "video",
 };
 
 // Colors

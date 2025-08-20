@@ -228,15 +228,16 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
   function getQuicklink(): { name: string; link: string } {
     const url = "raycast://extensions/any/anytype/create-object";
 
-    const defaults: Record<string, unknown> = {
-      space: selectedSpaceId,
-      type: selectedTypeId,
-      list: selectedListId,
-      name: itemProps.name.value,
-      icon: itemProps.icon.value,
-      description: itemProps.description.value,
-      body: itemProps.body.value,
-      source: itemProps.source.value,
+    const defaults: Record<string, PropertyFieldValue> = {
+      [itemProps.spaceId.id]: selectedSpaceId,
+      [itemProps.typeId.id]: selectedTypeId,
+      [itemProps.templateId.id]: selectedTemplateId,
+      [itemProps.listId.id]: selectedListId,
+      [itemProps.name.id]: itemProps.name.value,
+      [itemProps.icon.id]: itemProps.icon.value,
+      [itemProps.description.id]: itemProps.description.value,
+      [itemProps.body.id]: itemProps.body.value,
+      [itemProps.source.id]: itemProps.source.value,
     };
 
     properties.forEach((prop) => {

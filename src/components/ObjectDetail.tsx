@@ -353,7 +353,7 @@ export function ObjectDetail({
     return null;
   }
 
-  const renderedDetailComponents: JSX.Element[] = [];
+  const renderedDetailComponents: React.JSX.Element[] = [];
   let previousGroup: string | null = null;
   orderedProperties.forEach((property) => {
     const currentGroup = property.format;

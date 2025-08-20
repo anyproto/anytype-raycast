@@ -48,7 +48,7 @@ jobs:
       - name: Build extension
         run: npm run build
 
-  type-check:
+  typecheck:
     runs-on: ubuntu-latest
 
     steps:
@@ -64,4 +64,4 @@ jobs:
         run: npm install
 
       - name: Run type checks
-        run: npm run type-check
+        run: npm run typecheck

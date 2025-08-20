@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getMembers } from "../../api";
 import { EmptyViewSpace, SpaceListItem } from "../../components";
 import { usePinnedSpaces, useSpaces } from "../../hooks";
+import { Space } from "../../models";
 import { defaultTintColor, pluralize } from "../../utils";
 
 type SpacesListProps = {
@@ -15,6 +16,7 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
   const [membersData, setMembersData] = useState<{ [spaceId: string]: number }>({});
   const { spaces, spacesError, mutateSpaces, isLoadingSpaces, spacesPagination } = useSpaces(searchText);
   const { pinnedSpaces, pinnedSpacesError, isLoadingPinnedSpaces, mutatePinnedSpaces } = usePinnedSpaces();
+  const [filterType, setFilterType] = useState<"all" | "personal" | "shared">("all");
 
   useEffect(() => {
     if (!spaces) return;
@@ -56,7 +58,19 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
     }
   }, [pinnedSpacesError]);
 
-  const regularSpaces = spaces?.filter((space) => !pinnedSpaces.some((pinned) => pinned.id === space.id));
+  const filteredSpaces = spaces?.filter((space) => {
+    const matchesSearch = space.name.toLowerCase().includes(searchText.toLowerCase());
+    if (!matchesSearch) return false;
+
+    const memberCount = membersData[space.id] || 0;
+    if (filterType === "personal") return memberCount <= 1;
+    if (filterType === "shared") return memberCount > 1;
+    return true;
+  });
+  const pinnedFiltered = pinnedSpaces
+    ?.map((pin) => filteredSpaces.find((space) => space.id === pin.id))
+    .filter(Boolean) as Space[];
+  const regularFilteredSpaces = filteredSpaces?.filter((space) => !pinnedFiltered?.includes(space));
 
   return (
     <List
@@ -65,6 +79,26 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
       searchBarPlaceholder={searchPlaceholder}
       pagination={spacesPagination}
       throttle={true}
+      searchBarAccessory={
+        <List.Dropdown
+          tooltip="Filter spaces by type"
+          onChange={(newValue) => setFilterType(newValue as "all" | "personal" | "shared")}
+        >
+          <List.Dropdown.Item title="All" value="all" icon={Icon.BullsEye} />
+          <List.Dropdown.Section>
+            <List.Dropdown.Item
+              title="Personal"
+              value="personal"
+              icon={{ source: "icons/type/person.svg", tintColor: defaultTintColor }}
+            />
+            <List.Dropdown.Item
+              title="Shared"
+              value="shared"
+              icon={{ source: "icons/type/people.svg", tintColor: defaultTintColor }}
+            />
+          </List.Dropdown.Section>
+        </List.Dropdown>
+      }
     >
       {pinnedSpaces.length > 0 && (
         <List.Section title="Pinned" subtitle={pluralize(pinnedSpaces.length, "space", { withNumber: true })}>
@@ -94,12 +128,12 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
           })}
         </List.Section>
       )}
-      {regularSpaces.length > 0 ? (
+      {regularFilteredSpaces.length > 0 ? (
         <List.Section
           title={searchText ? "Search Results" : "All Spaces"}
-          subtitle={pluralize(regularSpaces.length, "space", { withNumber: true })}
+          subtitle={pluralize(regularFilteredSpaces.length, "space", { withNumber: true })}
         >
-          {regularSpaces.map((space) => {
+          {regularFilteredSpaces.map((space) => {
             const memberCount = membersData[space.id] || 0;
             return (
               <SpaceListItem

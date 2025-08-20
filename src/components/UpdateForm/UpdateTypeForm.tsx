@@ -40,8 +40,8 @@ export function UpdateTypeForm({ spaceId, type, mutateTypes }: UpdateTypeFormPro
   const initialValues: UpdateTypeFormValues = {
     name: type.name,
     plural_name: type.plural_name,
-    iconName: type.icon.format === IconFormat.Icon ? type.icon.name : IconName.Document,
-    iconColor: type.icon.format === IconFormat.Icon ? type.icon.color : Color.Grey,
+    iconName: type.icon?.format === IconFormat.Icon ? type.icon.name : IconName.Document,
+    iconColor: type.icon?.format === IconFormat.Icon ? type.icon.color : Color.Grey,
     layout: type.layout,
     properties: type.properties?.map((p) => p.key) || [],
     key: type.key,

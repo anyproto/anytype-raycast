@@ -3,7 +3,7 @@ import { MutatePromise, showFailureToast, useForm } from "@raycast/utils";
 import { formatRFC3339 } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { updateObject } from "../../api";
-import { useSearch, useTagsMap } from "../../hooks";
+import { useMembers, useSearch, useTagsMap } from "../../hooks";
 import {
   IconFormat,
   ObjectIcon,
@@ -36,10 +36,11 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
   const { pop } = useNavigation();
   const [objectSearchText, setObjectSearchText] = useState("");
 
-  const properties = object.type.properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key));
+  const properties = object.type?.properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key)) ?? [];
   const numberFieldValidations = useMemo(() => getNumberFieldValidations(properties), [properties]);
 
   const { objects, objectsError, isLoadingObjects } = useSearch(spaceId, objectSearchText, []);
+  const { members, membersError, isLoadingMembers } = useMembers(spaceId);
   const { tagsMap, tagsError, isLoadingTags } = useTagsMap(
     spaceId,
     properties
@@ -47,11 +48,23 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
       .map((prop) => prop.id),
   );
 
+  const filteredMembers = useMemo(() => {
+    if (!objectSearchText) return members || [];
+    const lower = objectSearchText.toLowerCase();
+    return (members || []).filter(
+      (m) => m.name.toLowerCase().includes(lower) || m.global_name.toLowerCase().includes(lower),
+    );
+  }, [members, objectSearchText]);
+
+  const combinedObjects = useMemo(() => {
+    return [...(objects || []), ...filteredMembers];
+  }, [objects, filteredMembers]);
+
   useEffect(() => {
-    if (objectsError || tagsError) {
-      showFailureToast(objectsError || tagsError, { title: "Failed to load data" });
+    if (objectsError || tagsError || membersError) {
+      showFailureToast(objectsError || tagsError || membersError, { title: "Failed to load data" });
     }
-  }, [objectsError, tagsError]);
+  }, [objectsError, tagsError, membersError]);
 
   // Map existing property entries to form field values
   const initialPropertyValues: Record<string, PropertyFieldValue> = properties.reduce(
@@ -218,8 +231,8 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
 
   return (
     <Form
-      navigationTitle={`Edit ${object.type.name}`}
-      isLoading={isLoadingObjects || isLoadingTags}
+      navigationTitle={`Edit ${object.type?.name ?? "Object"}`}
+      isLoading={isLoadingObjects || isLoadingTags || isLoadingMembers}
       actions={
         <ActionPanel>
           <Action.SubmitForm title="Save Changes" icon={Icon.Check} onSubmit={handleSubmit} />
@@ -370,7 +383,7 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
                     icon={{ source: "icons/type/document.svg", tintColor: defaultTintColor }}
                   />
                 )}
-                {objects
+                {combinedObjects
                   .filter((candidate) => candidate.id !== object.id)
                   .map((object) => (
                     <Form.Dropdown.Item key={object.id} value={object.id} title={object.name} icon={object.icon} />
