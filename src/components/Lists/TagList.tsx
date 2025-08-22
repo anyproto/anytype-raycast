@@ -59,7 +59,7 @@ export function TagList({ space, propertyId }: TagListProps) {
     }
   };
 
-  const filteredTags = tags?.filter((tag) => tag.name.toLowerCase().includes(searchText.toLowerCase()));
+  const filteredTags = tags.filter((tag) => tag.name.toLowerCase().includes(searchText.toLowerCase()));
 
   return (
     <List

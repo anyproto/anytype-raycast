@@ -92,6 +92,14 @@ export function ObjectList({ space }: ObjectListProps) {
     }
   }, [pinnedObjectsError, pinnedTypesError, pinnedPropertiesError, pinnedMembersError]);
 
+  const filterItems = <T extends { name: string; snippet?: string }>(items: T[], searchText: string): T[] => {
+    return items.filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        item.snippet?.toLowerCase().includes(searchText.toLowerCase()),
+    );
+  };
+
   const processType = (type: Type, isPinned: boolean) => {
     return {
       spaceId: space.id,
@@ -154,7 +162,9 @@ export function ObjectList({ space }: ObjectListProps) {
     switch (currentView) {
       case ViewType.objects: {
         const processedPinned = pinnedObjects?.length
-          ? pinnedObjects.map((object) => processObject(object, true, mutateObjects, mutatePinnedObjects))
+          ? pinnedObjects
+              .filter((object) => filterItems([object], searchText).length > 0)
+              .map((object) => processObject(object, true, mutateObjects, mutatePinnedObjects))
           : [];
 
         const processedRegular = objects
@@ -162,16 +172,22 @@ export function ObjectList({ space }: ObjectListProps) {
             (object) =>
               !pinnedObjects?.some((pinned) => pinned.id === object.id && pinned.space_id === object.space_id),
           )
+          .filter((object) => filterItems([object], searchText).length > 0)
           .map((object) => processObject(object, false, mutateObjects, mutatePinnedObjects));
 
         return { processedPinned, processedRegular };
       }
 
       case ViewType.types: {
-        const processedPinned = pinnedTypes?.length ? pinnedTypes.map((type) => processType(type, true)) : [];
+        const processedPinned = pinnedTypes?.length
+          ? pinnedTypes
+              .filter((type) => filterItems([type], searchText).length > 0)
+              .map((type) => processType(type, true))
+          : [];
 
         const processedRegular = types
           .filter((type) => !pinnedTypes?.some((pinned) => pinned.id === type.id))
+          .filter((type) => filterItems([type], searchText).length > 0)
           .map((type) => processType(type, false));
 
         return { processedPinned, processedRegular };
@@ -179,20 +195,29 @@ export function ObjectList({ space }: ObjectListProps) {
 
       case ViewType.properties: {
         const processedPinned = pinnedProperties?.length
-          ? pinnedProperties.map((property) => processProperty(property, true))
+          ? pinnedProperties
+              .filter((property) => filterItems([property], searchText).length > 0)
+              .map((property) => processProperty(property, true))
           : [];
+
         const processedRegular = properties
           .filter((property) => !pinnedProperties?.some((pinned) => pinned.id === property.id))
+          .filter((property) => filterItems([property], searchText).length > 0)
           .map((property) => processProperty(property, false));
 
         return { processedPinned, processedRegular };
       }
 
       case ViewType.members: {
-        const processedPinned = pinnedMembers?.length ? pinnedMembers.map((member) => processMember(member, true)) : [];
+        const processedPinned = pinnedMembers?.length
+          ? pinnedMembers
+              .filter((member) => filterItems([member], searchText).length > 0)
+              .map((member) => processMember(member, true))
+          : [];
 
         const processedRegular = members
           .filter((member) => !pinnedMembers?.some((pinned) => pinned.id === member.id))
+          .filter((member) => filterItems([member], searchText).length > 0)
           .map((member) => processMember(member, false));
 
         return { processedPinned, processedRegular };

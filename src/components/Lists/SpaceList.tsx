@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import { getMembers } from "../../api";
 import { EmptyViewSpace, SpaceListItem } from "../../components";
 import { usePinnedSpaces, useSpaces } from "../../hooks";
-import { Space } from "../../models";
 import { defaultTintColor, pluralize } from "../../utils";
 
 type SpacesListProps = {
@@ -58,8 +57,10 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
     }
   }, [pinnedSpacesError]);
 
-  const filteredSpaces = spaces?.filter((space) => {
-    const matchesSearch = space.name.toLowerCase().includes(searchText.toLowerCase());
+  const filteredSpaces = spaces.filter((space) => {
+    const matchesSearch =
+      space.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      space.description.toLowerCase().includes(searchText.toLowerCase());
     if (!matchesSearch) return false;
 
     const memberCount = membersData[space.id] || 0;
@@ -67,10 +68,8 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
     if (filterType === "shared") return memberCount > 1;
     return true;
   });
-  const pinnedFiltered = pinnedSpaces
-    ?.map((pin) => filteredSpaces.find((space) => space.id === pin.id))
-    .filter(Boolean) as Space[];
-  const regularFilteredSpaces = filteredSpaces?.filter((space) => !pinnedFiltered?.includes(space));
+  const pinnedFiltered = pinnedSpaces.map((pin) => filteredSpaces.find((space) => space.id === pin.id));
+  const regularFiltered = filteredSpaces.filter((space) => !pinnedFiltered?.includes(space));
 
   return (
     <List
@@ -128,12 +127,12 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
           })}
         </List.Section>
       )}
-      {regularFilteredSpaces.length > 0 ? (
+      {regularFiltered.length > 0 ? (
         <List.Section
           title={searchText ? "Search Results" : "All Spaces"}
-          subtitle={pluralize(regularFilteredSpaces.length, "space", { withNumber: true })}
+          subtitle={pluralize(regularFiltered.length, "space", { withNumber: true })}
         >
-          {regularFilteredSpaces.map((space) => {
+          {regularFiltered.map((space) => {
             const memberCount = membersData[space.id] || 0;
             return (
               <SpaceListItem

@@ -38,10 +38,21 @@ export function TemplateList({ space, typeId, isGlobalSearch, isPinned }: Templa
     }
   }, [objectsError]);
 
-  const filteredTemplates = templates;
-  const filteredObjects = objects?.map((object) => {
-    return processObject(object, false, mutateObjects);
-  });
+  const filteredTemplates = templates.filter(
+    (template: SpaceObject) =>
+      template.name.toLowerCase().includes(searchText.toLowerCase()) ||
+      template.snippet.toLowerCase().includes(searchText.toLowerCase()),
+  );
+
+  const filteredObjects = objects
+    .filter(
+      (object) =>
+        object.name.toLowerCase().includes(searchText.toLowerCase()) ||
+        object.snippet.toLowerCase().includes(searchText.toLowerCase()),
+    )
+    .map((object) => {
+      return processObject(object, false, mutateObjects);
+    });
 
   return (
     <List
