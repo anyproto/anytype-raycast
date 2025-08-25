@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { deleteTag } from "../../api";
 import { useTags } from "../../hooks/useTags";
 import { Space } from "../../models";
-import { hexToColor } from "../../utils";
+import { hexToColor, tagMatchesSearch } from "../../utils";
 import { CreateTagForm } from "../CreateForm/CreateTagForm";
 import { EmptyViewTag } from "../EmptyView/EmptyViewTag";
 import { UpdateTagForm } from "../UpdateForm/UpdateTagForm";
@@ -59,7 +59,7 @@ export function TagList({ space, propertyId }: TagListProps) {
     }
   };
 
-  const filteredTags = tags.filter((tag) => tag.name.toLowerCase().includes(searchText.toLowerCase()));
+  const filteredTags = tags.filter((tag) => tagMatchesSearch(tag, searchText));
 
   return (
     <List

@@ -1,7 +1,7 @@
 import { showFailureToast, useCachedPromise } from "@raycast/utils";
 import { useEffect, useMemo, useState } from "react";
 import { CreateObjectFormValues } from "../components";
-import { bundledTypeKeys, fetchAllTemplatesForSpace, fetchAllTypesForSpace } from "../utils";
+import { bundledTypeKeys, fetchAllTemplatesForSpace, fetchAllTypesForSpace, memberMatchesSearch } from "../utils";
 import { useMembers } from "./useMembers";
 import { useSearch } from "./useSearch";
 import { useSpaces } from "./useSpaces";
@@ -54,14 +54,10 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
   });
 
   const { objects, objectsError, isLoadingObjects } = useSearch(selectedSpaceId, objectSearchText, []);
-  const { members, membersError, isLoadingMembers } = useMembers(selectedSpaceId);
+  const { members, membersError, isLoadingMembers } = useMembers(selectedSpaceId, objectSearchText);
 
   const filteredMembers = useMemo(() => {
-    if (!objectSearchText) return members || [];
-    const lower = objectSearchText.toLowerCase();
-    return (members || []).filter(
-      (m) => m.name.toLowerCase().includes(lower) || m.global_name.toLowerCase().includes(lower),
-    );
+    return members.filter((member) => memberMatchesSearch(member, objectSearchText));
   }, [members, objectSearchText]);
 
   const combinedObjects = useMemo(() => {

@@ -13,7 +13,14 @@ import {
   useTypes,
 } from "../hooks";
 import { Member, MemberStatus, Property, Space, SpaceObject, Type } from "../models";
-import { defaultTintColor, formatMemberRole, localStorageKeys, pluralize, processObject } from "../utils";
+import {
+  defaultTintColor,
+  formatMemberRole,
+  itemMatchesSearch,
+  localStorageKeys,
+  pluralize,
+  processObject,
+} from "../utils";
 
 type ObjectListProps = {
   space: Space;
@@ -93,11 +100,7 @@ export function ObjectList({ space }: ObjectListProps) {
   }, [pinnedObjectsError, pinnedTypesError, pinnedPropertiesError, pinnedMembersError]);
 
   const filterItems = <T extends { name: string; snippet?: string }>(items: T[], searchText: string): T[] => {
-    return items.filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        item.snippet?.toLowerCase().includes(searchText.toLowerCase()),
-    );
+    return items.filter((item) => itemMatchesSearch(item, searchText));
   };
 
   const processType = (type: Type, isPinned: boolean) => {

@@ -1,4 +1,4 @@
-import { Member, Space, SpaceObject } from "../models";
+import { Member, Space, SpaceObject, Tag } from "../models";
 
 /**
  * Case-insensitive search that checks if any field contains the search text
@@ -35,4 +35,11 @@ export function memberMatchesSearch(member: Member, searchText: string): boolean
  */
 export function spaceMatchesSearch(space: Space, searchText: string): boolean {
   return searchInFields(searchText, space.name, space.description);
+}
+
+/**
+ * Check if a tag matches search text by name
+ */
+export function tagMatchesSearch(tag: Tag, searchText: string): boolean {
+  return searchInFields(searchText, tag.name);
 }

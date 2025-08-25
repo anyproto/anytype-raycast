@@ -5,7 +5,7 @@ import { EmptyViewObject, ObjectListItem, ViewType } from "..";
 import { useObjectsInList } from "../../hooks";
 import { useListViews } from "../../hooks/useListViews";
 import { Space, ViewLayout } from "../../models";
-import { isEmoji, pluralize, processObject } from "../../utils";
+import { isEmoji, objectMatchesSearch, pluralize, processObject } from "../../utils";
 import { defaultTintColor } from "../../utils/constant";
 
 type CollectionListProps = {
@@ -32,11 +32,7 @@ export function CollectionList({ space, listId, listName }: CollectionListProps)
   }, [viewsError, objectsError]);
 
   const filteredObjects = objects
-    .filter(
-      (object) =>
-        object.name.toLowerCase().includes(searchText.toLowerCase()) ||
-        object.snippet.toLowerCase().includes(searchText.toLowerCase()),
-    )
+    .filter((object) => objectMatchesSearch(object, searchText))
     .map((object) => {
       return processObject(object, false, mutateObjects);
     });
