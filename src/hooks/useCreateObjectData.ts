@@ -76,7 +76,7 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
     }
   }, [spacesError, typesError, templatesError, listsError, objectsError, membersError]);
 
-  const isLoading =
+  const isLoadingData =
     isLoadingSpaces || isLoadingTypes || isLoadingTemplates || isLoadingLists || isLoadingObjects || isLoadingMembers;
 
   return {
@@ -97,6 +97,6 @@ export function useCreateObjectData(initialValues?: CreateObjectFormValues) {
     setListSearchText,
     objectSearchText,
     setObjectSearchText,
-    isLoading,
+    isLoadingData,
   };
 }
