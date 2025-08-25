@@ -136,7 +136,7 @@ function Search() {
     );
   };
 
-  // Process pinned objects and filter by search term
+  // Process pinned objects
   const processedPinnedObjects = pinnedObjects?.length
     ? pinnedObjects
         .filter((object) => types.length === 0 || types.includes(object.type.key))
@@ -149,6 +149,7 @@ function Search() {
     .filter(
       (object) => !pinnedObjects?.some((pinned) => pinned.id === object.id && pinned.space_id === object.space_id),
     )
+    .filter((object) => filterObjectsBySearchTerm([object], searchText).length > 0)
     .map((object) => processObjectWithSpaceIcon(object, false));
 
   return (

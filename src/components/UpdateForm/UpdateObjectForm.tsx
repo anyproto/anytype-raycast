@@ -49,11 +49,7 @@ export function UpdateObjectForm({ spaceId, object, mutateObjects, mutateObject 
   );
 
   const filteredMembers = useMemo(() => {
-    if (!objectSearchText) return members || [];
-    const lower = objectSearchText.toLowerCase();
-    return (members || []).filter(
-      (m) => m.name.toLowerCase().includes(lower) || m.global_name.toLowerCase().includes(lower),
-    );
+    return members.filter((member) => memberMatchesSearch(member, objectSearchText));
   }, [members, objectSearchText]);
 
   const combinedObjects = useMemo(() => {
