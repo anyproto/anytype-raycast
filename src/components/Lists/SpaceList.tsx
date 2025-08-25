@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getMembers } from "../../api";
 import { EmptyViewSpace, SpaceListItem } from "../../components";
 import { usePinnedSpaces, useSpaces } from "../../hooks";
-import { defaultTintColor, pluralize } from "../../utils";
+import { defaultTintColor, pluralize, spaceMatchesSearch } from "../../utils";
 
 type SpacesListProps = {
   searchPlaceholder: string;
@@ -42,7 +42,7 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
 
   const isLoadingMembers = useMemo(() => {
     if (!spaces) return true;
-    return Object.keys(membersData).length !== spaces.length;
+    return spaces.some((space) => !(space.id in membersData));
   }, [spaces, membersData]);
 
   useEffect(() => {
@@ -58,9 +58,7 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
   }, [pinnedSpacesError]);
 
   const filteredSpaces = spaces.filter((space) => {
-    const matchesSearch =
-      space.name.toLowerCase().includes(searchText.toLowerCase()) ||
-      space.description.toLowerCase().includes(searchText.toLowerCase());
+    const matchesSearch = spaceMatchesSearch(space, searchText);
     if (!matchesSearch) return false;
 
     const memberCount = membersData[space.id] || 0;
@@ -68,8 +66,17 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
     if (filterType === "shared") return memberCount > 1;
     return true;
   });
-  const pinnedFiltered = pinnedSpaces.map((pin) => filteredSpaces.find((space) => space.id === pin.id));
-  const regularFiltered = filteredSpaces.filter((space) => !pinnedFiltered?.includes(space));
+
+  const pinnedFiltered = pinnedSpaces
+    .filter((pin) => spaceMatchesSearch(pin, searchText))
+    .filter((pin) => {
+      const memberCount = membersData[pin.id] || 0;
+      if (filterType === "personal") return memberCount <= 1;
+      if (filterType === "shared") return memberCount > 1;
+      return true;
+    });
+
+  const regularFiltered = filteredSpaces.filter((space) => !pinnedFiltered?.some((pin) => pin.id === space.id));
 
   return (
     <List
@@ -99,9 +106,9 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
         </List.Dropdown>
       }
     >
-      {pinnedSpaces.length > 0 && (
-        <List.Section title="Pinned" subtitle={pluralize(pinnedSpaces.length, "space", { withNumber: true })}>
-          {pinnedSpaces.map((space) => {
+      {pinnedFiltered.length > 0 && (
+        <List.Section title="Pinned" subtitle={pluralize(pinnedFiltered.length, "space", { withNumber: true })}>
+          {pinnedFiltered.map((space) => {
             const memberCount = membersData[space.id] || 0;
             return (
               <SpaceListItem
