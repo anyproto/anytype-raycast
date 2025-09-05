@@ -295,7 +295,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
         placeholder="Search spaces..."
         info="Select the space where the object will be created"
       >
-        {spaces?.map((space) => (
+        {spaces.map((space) => (
           <Form.Dropdown.Item key={space.id} value={space.id} title={space.name} icon={space.icon} />
         ))}
       </Form.Dropdown>

@@ -4,18 +4,17 @@ import { useEffect, useMemo, useState } from "react";
 import { getMembers } from "../../api";
 import { EmptyViewSpace, SpaceListItem } from "../../components";
 import { usePinnedSpaces, useSpaces } from "../../hooks";
-import { Space } from "../../models";
-import { defaultTintColor, pluralize } from "../../utils";
+import { defaultTintColor, pluralize, spaceMatchesSearch } from "../../utils";
 
 type SpacesListProps = {
   searchPlaceholder: string;
 };
 
 export function SpaceList({ searchPlaceholder }: SpacesListProps) {
-  const { spaces, spacesError, mutateSpaces, isLoadingSpaces, spacesPagination } = useSpaces();
-  const { pinnedSpaces, pinnedSpacesError, isLoadingPinnedSpaces, mutatePinnedSpaces } = usePinnedSpaces();
   const [searchText, setSearchText] = useState("");
   const [membersData, setMembersData] = useState<{ [spaceId: string]: number }>({});
+  const { spaces, spacesError, mutateSpaces, isLoadingSpaces, spacesPagination } = useSpaces(searchText);
+  const { pinnedSpaces, pinnedSpacesError, isLoadingPinnedSpaces, mutatePinnedSpaces } = usePinnedSpaces();
   const [filterType, setFilterType] = useState<"all" | "personal" | "shared">("all");
 
   useEffect(() => {
@@ -43,7 +42,7 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
 
   const isLoadingMembers = useMemo(() => {
     if (!spaces) return true;
-    return Object.keys(membersData).length !== spaces.length;
+    return spaces.some((space) => !(space.id in membersData));
   }, [spaces, membersData]);
 
   useEffect(() => {
@@ -58,8 +57,8 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
     }
   }, [pinnedSpacesError]);
 
-  const filteredSpaces = spaces?.filter((space) => {
-    const matchesSearch = space.name.toLowerCase().includes(searchText.toLowerCase());
+  const filteredSpaces = spaces.filter((space) => {
+    const matchesSearch = spaceMatchesSearch(space, searchText);
     if (!matchesSearch) return false;
 
     const memberCount = membersData[space.id] || 0;
@@ -67,10 +66,17 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
     if (filterType === "shared") return memberCount > 1;
     return true;
   });
+
   const pinnedFiltered = pinnedSpaces
-    ?.map((pin) => filteredSpaces.find((space) => space.id === pin.id))
-    .filter(Boolean) as Space[];
-  const regularFiltered = filteredSpaces?.filter((space) => !pinnedFiltered?.includes(space));
+    .filter((pin) => spaceMatchesSearch(pin, searchText))
+    .filter((pin) => {
+      const memberCount = membersData[pin.id] || 0;
+      if (filterType === "personal") return memberCount <= 1;
+      if (filterType === "shared") return memberCount > 1;
+      return true;
+    });
+
+  const regularFiltered = filteredSpaces.filter((space) => !pinnedFiltered?.some((pin) => pin.id === space.id));
 
   return (
     <List
@@ -78,6 +84,7 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
       onSearchTextChange={setSearchText}
       searchBarPlaceholder={searchPlaceholder}
       pagination={spacesPagination}
+      throttle={true}
       searchBarAccessory={
         <List.Dropdown
           tooltip="Filter spaces by type"

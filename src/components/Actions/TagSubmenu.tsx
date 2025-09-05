@@ -25,13 +25,14 @@ interface TagSubmenuProps {
 
 export function TagSubmenu({ spaceId, object, mutate, mutateObject }: TagSubmenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   // TODO: remove workaround once property retrieval by key is supported -> do:
   // const { property, isLoadingProperty } = useProperty(spaceId, propKeys.tag);
-  const { properties, isLoadingProperties } = useProperties(spaceId, { execute: isOpen });
+  const { properties, isLoadingProperties } = useProperties(spaceId, undefined, { execute: isOpen });
   const property = properties?.find((p) => p.key === propKeys.tag);
 
-  const { tags, isLoadingTags } = useTags(spaceId, property?.id ?? "", { execute: isOpen });
+  const { tags, isLoadingTags } = useTags(spaceId, property?.id ?? "", searchText, { execute: isOpen });
   const currentTags =
     (object?.properties as PropertyWithValue[])?.find((p) => p.key === propKeys.tag)?.multi_select || [];
 
@@ -97,6 +98,8 @@ export function TagSubmenu({ spaceId, object, mutate, mutateObject }: TagSubmenu
         shortcut={{ modifiers: ["cmd", "shift"], key: "t" }}
         isLoading={isLoadingProperties || isLoadingTags}
         onOpen={() => setIsOpen(true)}
+        onSearchTextChange={setSearchText}
+        throttle={true}
       >
         {availableTags.map((tag) => (
           <Action
