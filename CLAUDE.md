@@ -8,8 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run dev` - Start Raycast development mode
 - `npm run build` - Build the extension
 - `npm run lint` - Run ESLint
-- `npm run fix-lint` - Fix ESLint issues
-- `npm run type-check` - Run TypeScript type checking
+- `npm run lint:fix` - Fix ESLint issues
+- `npm run typecheck` - Run TypeScript type checking
 
 ### Testing
 - `npm test` - Run tests with Vitest
@@ -41,7 +41,7 @@ This is a Raycast extension for Anytype that enables users to interact with Anyt
 
 **Data Flow**: API → Hooks → Components. Custom hooks encapsulate data fetching logic and provide React Query-like patterns for caching and state management.
 
-**Component Organization**: 
+**Component Organization**:
 - Forms for creation/updates are in `CreateForm/` and `UpdateForm/`
 - List components for displaying collections
 - Action components for user interactions
@@ -61,3 +61,19 @@ The extension integrates with Raycast through:
 - Mocked Raycast API in `src/test/mocks/raycast.ts`
 - Coverage reporting configured
 - Test files follow `.test.ts` naming convention
+
+## Context Actions Pattern
+
+### Action Structure
+Actions are organized in `ActionPanel.Section` groups:
+1. **Primary actions**: Open/View actions (deeplinks, show details/list/tags)
+2. **Edit actions**: Edit, Delete, Pin/Unpin operations
+3. **Auxiliary actions**: Create, Refresh
+
+### Common Patterns
+- **Keyboard shortcuts**: Use `Keyboard.Shortcut.Common.*` (Edit, New, Remove, Refresh)
+- **Icons**: Standard Raycast icons (Icon.Pencil, Icon.Trash, Icon.Plus, Icon.RotateClockwise)
+- **Delete actions**: Always use `confirmAlert()` with red trash icon, `Action.Style.Destructive`
+- **Title format**: `{Action} {EntityType}` (e.g., "Edit Tag", "Delete Property")
+- **Handlers**: Async functions with try/catch, success/failure toasts, and mutate calls
+- **Deeplinks**: Use `anytypeObjectDeeplink(spaceId, objectId)` for Anytype navigation

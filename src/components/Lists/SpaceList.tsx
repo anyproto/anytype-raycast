@@ -16,6 +16,7 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
   const { pinnedSpaces, pinnedSpacesError, isLoadingPinnedSpaces, mutatePinnedSpaces } = usePinnedSpaces();
   const [searchText, setSearchText] = useState("");
   const [membersData, setMembersData] = useState<{ [spaceId: string]: number }>({});
+  const [filterType, setFilterType] = useState<"all" | "personal" | "shared">("all");
 
   useEffect(() => {
     if (!spaces) return;
@@ -57,7 +58,15 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
     }
   }, [pinnedSpacesError]);
 
-  const filteredSpaces = spaces?.filter((space) => space.name.toLowerCase().includes(searchText.toLowerCase()));
+  const filteredSpaces = spaces?.filter((space) => {
+    const matchesSearch = space.name.toLowerCase().includes(searchText.toLowerCase());
+    if (!matchesSearch) return false;
+
+    const memberCount = membersData[space.id] || 0;
+    if (filterType === "personal") return memberCount <= 1;
+    if (filterType === "shared") return memberCount > 1;
+    return true;
+  });
   const pinnedFiltered = pinnedSpaces
     ?.map((pin) => filteredSpaces.find((space) => space.id === pin.id))
     .filter(Boolean) as Space[];
@@ -69,6 +78,26 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
       onSearchTextChange={setSearchText}
       searchBarPlaceholder={searchPlaceholder}
       pagination={spacesPagination}
+      searchBarAccessory={
+        <List.Dropdown
+          tooltip="Filter spaces by type"
+          onChange={(newValue) => setFilterType(newValue as "all" | "personal" | "shared")}
+        >
+          <List.Dropdown.Item title="All" value="all" icon={Icon.BullsEye} />
+          <List.Dropdown.Section>
+            <List.Dropdown.Item
+              title="Personal"
+              value="personal"
+              icon={{ source: "icons/type/person.svg", tintColor: defaultTintColor }}
+            />
+            <List.Dropdown.Item
+              title="Shared"
+              value="shared"
+              icon={{ source: "icons/type/people.svg", tintColor: defaultTintColor }}
+            />
+          </List.Dropdown.Section>
+        </List.Dropdown>
+      }
     >
       {pinnedFiltered.length > 0 && (
         <List.Section title="Pinned" subtitle={pluralize(pinnedFiltered.length, "space", { withNumber: true })}>
