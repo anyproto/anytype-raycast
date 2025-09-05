@@ -400,14 +400,12 @@ export function ObjectDetail({
   const markdown = object?.markdown ?? "";
   const updatedMarkdown = injectEmojiIntoHeading(markdown, object?.icon);
 
-  const plainText = removeMd(updatedMarkdown);
-  const wordCount = plainText.split(/\s+/).filter((word) => word).length;
+  const plainText = removeMd(markdown);
+  const wordCount = plainText.split(/\s+/).filter((word: string) => word).length;
   const charCount = plainText.replace(/\s+/g, "").length;
-  renderedDetailComponents.push(<Detail.Metadata.Separator key="separator-wordcount" />);
-  renderedDetailComponents.push(<Detail.Metadata.Label key="word-count" title="Word Count" text={String(wordCount)} />);
-  renderedDetailComponents.push(
-    <Detail.Metadata.Label key="char-count" title="Character Count" text={String(charCount)} />,
-  );
+  renderedDetailComponents.push(<Detail.Metadata.Separator />);
+  renderedDetailComponents.push(<Detail.Metadata.Label title="Word Count" text={String(wordCount)} />);
+  renderedDetailComponents.push(<Detail.Metadata.Label title="Character Count" text={String(charCount)} />);
 
   return (
     <Detail
