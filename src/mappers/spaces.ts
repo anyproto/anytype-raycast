@@ -20,7 +20,7 @@ export async function mapSpaces(spaces: RawSpace[]): Promise<Space[]> {
  * @returns Display-ready `Space` object.
  */
 export async function mapSpace(space: RawSpace): Promise<Space> {
-  const icon = await getIconWithFallback(space.icon, "space");
+  const icon = await getIconWithFallback(space.icon, space.object);
 
   return {
     ...space,

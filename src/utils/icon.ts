@@ -66,6 +66,8 @@ async function fallbackToLayout(layout: string): Promise<Image.ImageLike> {
       return getCustomTypeIcon("copy", "grey");
     case "space":
       return Icon.BullsEye;
+    case "chat":
+      return Icon.SpeechBubbleActive;
     default:
       return getCustomTypeIcon("document", "grey");
   }
@@ -132,7 +134,8 @@ export async function fetchWithTimeout(url: string, timeout: number): Promise<st
  * @returns The mask to use for the object.
  */
 export function getMaskForObject(icon: Image.ImageLike, layout: string): Image.Mask {
-  return (layout === ObjectLayout.Participant || layout === ObjectLayout.Profile) && icon != Icon.Document
+  return (layout === ObjectLayout.Participant || layout === ObjectLayout.Profile || layout === "chat") &&
+    icon != Icon.Document
     ? Image.Mask.Circle
     : Image.Mask.RoundedRectangle;
 }

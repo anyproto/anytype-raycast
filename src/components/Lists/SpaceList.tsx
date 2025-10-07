@@ -15,7 +15,7 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
   const [membersData, setMembersData] = useState<{ [spaceId: string]: number }>({});
   const { spaces, spacesError, mutateSpaces, isLoadingSpaces, spacesPagination } = useSpaces(searchText);
   const { pinnedSpaces, pinnedSpacesError, isLoadingPinnedSpaces, mutatePinnedSpaces } = usePinnedSpaces();
-  const [filterType, setFilterType] = useState<"all" | "personal" | "shared">("all");
+  const [filterType, setFilterType] = useState<"all" | "chat" | "space">("all");
 
   useEffect(() => {
     if (!spaces) return;
@@ -61,18 +61,16 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
     const matchesSearch = spaceMatchesSearch(space, searchText);
     if (!matchesSearch) return false;
 
-    const memberCount = membersData[space.id] || 0;
-    if (filterType === "personal") return memberCount <= 1;
-    if (filterType === "shared") return memberCount > 1;
+    if (filterType === "chat") return space.object === "chat";
+    if (filterType === "space") return space.object === "space";
     return true;
   });
 
   const pinnedFiltered = pinnedSpaces
     .filter((pin) => spaceMatchesSearch(pin, searchText))
     .filter((pin) => {
-      const memberCount = membersData[pin.id] || 0;
-      if (filterType === "personal") return memberCount <= 1;
-      if (filterType === "shared") return memberCount > 1;
+      if (filterType === "chat") return pin.object === "chat";
+      if (filterType === "space") return pin.object === "space";
       return true;
     });
 
@@ -88,19 +86,19 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
       searchBarAccessory={
         <List.Dropdown
           tooltip="Filter spaces by type"
-          onChange={(newValue) => setFilterType(newValue as "all" | "personal" | "shared")}
+          onChange={(newValue) => setFilterType(newValue as "all" | "chat" | "space")}
         >
-          <List.Dropdown.Item title="All" value="all" icon={Icon.BullsEye} />
+          <List.Dropdown.Item title="All" value="all" icon={Icon.MagnifyingGlass} />
           <List.Dropdown.Section>
             <List.Dropdown.Item
-              title="Personal"
-              value="personal"
-              icon={{ source: "icons/type/person.svg", tintColor: defaultTintColor }}
+              title="Chats"
+              value="chat"
+              icon={{ source: Icon.SpeechBubbleActive, tintColor: defaultTintColor }}
             />
             <List.Dropdown.Item
-              title="Shared"
-              value="shared"
-              icon={{ source: "icons/type/people.svg", tintColor: defaultTintColor }}
+              title="Spaces"
+              value="space"
+              icon={{ source: Icon.BullsEye, tintColor: defaultTintColor }}
             />
           </List.Dropdown.Section>
         </List.Dropdown>

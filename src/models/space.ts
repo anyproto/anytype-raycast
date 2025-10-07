@@ -12,7 +12,7 @@ export interface UpdateSpaceRequest {
 }
 
 export interface RawSpace {
-  object: string;
+  object: "space" | "chat";
   id: string;
   name: string;
   icon: ObjectIcon | null;
