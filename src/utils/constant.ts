@@ -21,6 +21,8 @@ export const apiLimit = getPreferenceValues().limit;
 export const apiLimitMax = 1000;
 export const iconWidth = 64;
 export const maxPinnedObjects = 5;
+// Hard cap to avoid over-fetching linked items in detail views
+export const linkedItemsMax = 10;
 
 // Local Storage Keys
 export const localStorageKeys = {

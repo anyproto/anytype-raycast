@@ -1,4 +1,4 @@
-import { Color, Detail, getPreferenceValues, useNavigation } from "@raycast/api";
+import { Color, Detail, getPreferenceValues, open, useNavigation } from "@raycast/api";
 import { MutatePromise, showFailureToast } from "@raycast/utils";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
@@ -16,7 +16,7 @@ import {
   SpaceObject,
   Type,
 } from "../models";
-import { bundledPropKeys, injectEmojiIntoHeading } from "../utils";
+import { anytypeObjectDeeplink, bundledPropKeys, injectEmojiIntoHeading } from "../utils";
 import { CollectionList } from "./Lists/CollectionList";
 
 type ObjectDetailProps = {
@@ -194,11 +194,20 @@ export function ObjectDetail({
     if (property.format === PropertyFormat.Files) {
       const files = property.files;
       if (files && files.length > 0) {
+        const isTruncated = (property.moreCount || 0) > 0;
         return (
           <Detail.Metadata.TagList key={property.id} title={titleText}>
             {files.map((file) => (
               <Detail.Metadata.TagList.Item key={file.id} text={file.name} icon={file.icon} color="grey" />
             ))}
+            {isTruncated ? (
+              <Detail.Metadata.TagList.Item
+                key={`${property.id}-more`}
+                text={`+${property.moreCount} more (open to see all)`}
+                color="grey"
+                onAction={() => open(anytypeObjectDeeplink(space.id, objectId))}
+              />
+            ) : null}
           </Detail.Metadata.TagList>
         );
       } else {
@@ -308,6 +317,7 @@ export function ObjectDetail({
 
     if (property.format === PropertyFormat.Objects) {
       if (Array.isArray(property.objects) && property.objects.length > 0) {
+        const isTruncated = (property.moreCount || 0) > 0;
         return (
           <Detail.Metadata.TagList key={property.id} title={titleText}>
             {property.objects.map((objectItem, index) => {
@@ -338,6 +348,14 @@ export function ObjectDetail({
                 />
               );
             })}
+            {isTruncated ? (
+              <Detail.Metadata.TagList.Item
+                key={`${property.id}-more`}
+                text={`+${property.moreCount} more (open to see all)`}
+                color="grey"
+                onAction={() => open(anytypeObjectDeeplink(space.id, objectId))}
+              />
+            ) : null}
           </Detail.Metadata.TagList>
         );
       } else {
