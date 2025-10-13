@@ -398,7 +398,7 @@ export function ObjectDetail({
   }
 
   const markdown = object?.markdown ?? "";
-  const updatedMarkdown = injectEmojiIntoHeading(markdown, object?.icon);
+  const updatedMarkdown = injectEmojiIntoHeading(markdown, object?.icon, object?.name, object?.layout);
 
   const plainText = removeMd(markdown);
   const wordCount = plainText.trim() ? plainText.trim().split(/\s+/).length : 0;
