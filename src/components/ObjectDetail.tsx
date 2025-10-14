@@ -50,7 +50,7 @@ export function ObjectDetail({
     bundledPropKeys.addedDate,
     bundledPropKeys.lastModifiedDate,
     bundledPropKeys.lastOpenedDate,
-    bundledPropKeys.lastModifiedBy,
+    bundledPropKeys.createdBy,
     bundledPropKeys.links,
   ]);
   const additionalProperties = properties.filter((property) => !excludedPropertyKeys.has(property.key));
