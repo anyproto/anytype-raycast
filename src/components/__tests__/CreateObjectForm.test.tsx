@@ -296,7 +296,6 @@ describe("CreateObjectForm", () => {
       const properties = [
         createPropertyMetadata({ key: "custom_prop" }),
         createPropertyMetadata({ key: bundledPropKeys.description }),
-        createPropertyMetadata({ key: bundledPropKeys.name }),
       ];
 
       const filtered = properties.filter((p) => !Object.values(bundledPropKeys).includes(p.key));

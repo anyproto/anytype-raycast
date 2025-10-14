@@ -241,7 +241,6 @@ describe("UpdateObjectForm", () => {
     it("should filter out bundled properties", () => {
       const allProperties = [
         createPropertyMetadata({ key: "custom_prop" }),
-        createPropertyMetadata({ key: bundledPropKeys.name }),
         createPropertyMetadata({ key: bundledPropKeys.description }),
       ];
 

@@ -393,7 +393,6 @@ describe("defaultTintColor", () => {
 
 describe("bundledPropKeys", () => {
   it("should have all required bundled property keys", () => {
-    expect(bundledPropKeys.name).toBe("name");
     expect(bundledPropKeys.description).toBe("description");
     expect(bundledPropKeys.type).toBe("type");
     expect(bundledPropKeys.addedDate).toBe("added_date");
