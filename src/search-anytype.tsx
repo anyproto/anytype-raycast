@@ -120,7 +120,7 @@ function Search() {
         ...processedObject.accessories,
         {
           icon: spaceIcon,
-          tooltip: `Space: ${spaces?.find((space) => space.id === object.space_id)?.name}`,
+          tooltip: `${spaces?.find((space) => space.id === object.space_id)?.object === "chat" ? "Chat" : "Space"}: ${spaces?.find((space) => space.id === object.space_id)?.name}`,
         },
       ],
     };

@@ -1,6 +1,6 @@
 import { Icon, Image } from "@raycast/api";
 import fetch from "node-fetch";
-import { IconFormat, ObjectIcon, ObjectLayout, RawType } from "../models";
+import { IconFormat, IconName, ObjectIcon, ObjectLayout, RawType } from "../models";
 import { colorToHex, iconWidth } from "./constant";
 
 /**
@@ -52,24 +52,24 @@ export async function getIconWithFallback(
 async function fallbackToLayout(layout: string): Promise<Image.ImageLike> {
   switch (layout) {
     case ObjectLayout.Action:
-      return getCustomTypeIcon("checkbox", "grey");
+      return getCustomTypeIcon(IconName.Checkbox, "grey");
     case ObjectLayout.Set:
     case ObjectLayout.Collection:
-      return getCustomTypeIcon("layers", "grey");
+      return getCustomTypeIcon(IconName.Layers, "grey");
     case ObjectLayout.Participant:
-      return getCustomTypeIcon("person", "grey");
+      return getCustomTypeIcon(IconName.Person, "grey");
     case ObjectLayout.Bookmark:
-      return getCustomTypeIcon("bookmark", "grey");
+      return getCustomTypeIcon(IconName.Bookmark, "grey");
     case "type":
-      return getCustomTypeIcon("extension-puzzle", "grey");
+      return getCustomTypeIcon(IconName.ExtensionPuzzle, "grey");
     case "template":
-      return getCustomTypeIcon("copy", "grey");
+      return getCustomTypeIcon(IconName.Copy, "grey");
     case "space":
-      return Icon.BullsEye;
+      return { source: "icons/space/space.svg", tintColor: { light: colorToHex["grey"], dark: colorToHex["grey"] } };
     case "chat":
-      return Icon.SpeechBubbleActive;
+      return { source: "icons/space/chat.svg", tintColor: { light: colorToHex["grey"], dark: colorToHex["grey"] } };
     default:
-      return getCustomTypeIcon("document", "grey");
+      return getCustomTypeIcon(IconName.Document, "grey");
   }
 }
 

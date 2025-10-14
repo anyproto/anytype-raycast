@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { getMembers } from "../../api";
 import { EmptyViewSpace, SpaceListItem } from "../../components";
 import { usePinnedSpaces, useSpaces } from "../../hooks";
-import { defaultTintColor, pluralize, spaceMatchesSearch } from "../../utils";
+import { colorToHex, defaultTintColor, pluralize, spaceMatchesSearch } from "../../utils";
 
 type SpacesListProps = {
   searchPlaceholder: string;
@@ -93,12 +93,12 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
             <List.Dropdown.Item
               title="Chats"
               value="chat"
-              icon={{ source: Icon.SpeechBubbleActive, tintColor: defaultTintColor }}
+              icon={{ source: "icons/space/chat.svg", tintColor: defaultTintColor }}
             />
             <List.Dropdown.Item
               title="Spaces"
               value="space"
-              icon={{ source: Icon.BullsEye, tintColor: defaultTintColor }}
+              icon={{ source: "icons/space/space.svg", tintColor: defaultTintColor }}
             />
           </List.Dropdown.Section>
         </List.Dropdown>
@@ -118,7 +118,7 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
                   {
                     icon: {
                       source: memberCount === 1 ? "icons/type/person.svg" : "icons/type/people.svg",
-                      tintColor: defaultTintColor,
+                      tintColor: { light: colorToHex["grey"], dark: colorToHex["grey"] },
                     },
                     text: memberCount.toString(),
                     tooltip: `${pluralize(memberCount, "Member")}: ${memberCount}`,
@@ -148,7 +148,7 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
                   {
                     icon: {
                       source: memberCount === 1 ? "icons/type/person.svg" : "icons/type/people.svg",
-                      tintColor: defaultTintColor,
+                      tintColor: { light: colorToHex["grey"], dark: colorToHex["grey"] },
                     },
                     text: memberCount.toString(),
                     tooltip: `${pluralize(memberCount, "Member")}: ${memberCount}`,
