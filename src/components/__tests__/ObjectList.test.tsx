@@ -152,23 +152,18 @@ describe("ObjectList", () => {
       mutatePinnedMembers: vi.fn(),
     });
 
-    mockProcessObject.mockImplementation((object, isPinned) => {
-      const base = {
-        id: object.id,
-        spaceId: object.space_id,
-        title: object.name,
-        icon: object.icon,
-        accessories: isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : [],
-        isPinned,
-        object,
-        layout: object.layout,
-        mutate: [vi.fn(), vi.fn()],
-      };
-      if (object.snippet) {
-        return { ...base, subtitle: object.snippet };
-      }
-      return base;
-    });
+    mockProcessObject.mockImplementation((object, isPinned) => ({
+      id: object.id,
+      spaceId: object.space_id,
+      title: object.name,
+      subtitle: undefined,
+      icon: object.icon,
+      accessories: isPinned ? [{ icon: Icon.Star, tooltip: "Pinned" }] : [],
+      isPinned,
+      object,
+      layout: object.layout,
+      mutate: [vi.fn(), vi.fn()],
+    }));
   });
 
   describe("filtering", () => {

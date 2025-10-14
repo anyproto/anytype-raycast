@@ -22,7 +22,7 @@ export interface CreateTypeFormProps {
 }
 
 export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProps) {
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedSpaceId, setSelectedSpace] = useState<string>(draftValues?.spaceId || "");
 
   const { spaces, isLoadingSpaces, spacesError } = useSpaces();
@@ -37,7 +37,7 @@ export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProp
   const { handleSubmit, itemProps } = useForm<CreateTypeFormValues>({
     initialValues: draftValues,
     onSubmit: async (values) => {
-      setLoading(true);
+      setIsLoading(true);
       try {
         await showToast({ style: Toast.Style.Animated, title: "Creating type..." });
 
@@ -71,7 +71,7 @@ export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProp
       } catch (error) {
         await showFailureToast(error, { title: "Failed to create type" });
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     },
     validation: {
@@ -87,7 +87,7 @@ export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProp
   return (
     <Form
       navigationTitle="Create Type"
-      isLoading={loading || isLoadingSpaces || isLoadingProperties}
+      isLoading={isLoading || isLoadingSpaces || isLoadingProperties}
       enableDrafts={enableDrafts}
       actions={
         <ActionPanel>

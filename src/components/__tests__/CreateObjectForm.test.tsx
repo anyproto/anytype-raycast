@@ -48,7 +48,7 @@ describe("CreateObjectForm", () => {
     setListSearchText: vi.fn(),
     objectSearchText: "",
     setObjectSearchText: vi.fn(),
-    isLoading: false,
+    isLoadingData: false,
   };
 
   beforeEach(() => {

@@ -128,11 +128,11 @@ export function ObjectActions({
       }
       try {
         if (isType) {
-          await deleteType(space.id, objectId);
+          await deleteType(space?.id, objectId);
         } else if (isProperty) {
-          await deleteProperty(space.id, objectId);
+          await deleteProperty(space?.id, objectId);
         } else {
-          await deleteObject(space.id, objectId);
+          await deleteObject(space?.id, objectId);
         }
         if (mutate) {
           await Promise.all(mutate.map((m) => m()));
@@ -155,7 +155,7 @@ export function ObjectActions({
   }
 
   async function handleMoveUpInFavorites() {
-    await moveUpInPinned(space.id, objectId, pinSuffixForView);
+    await moveUpInPinned(space?.id, objectId, pinSuffixForView);
     if (mutate) {
       await Promise.all(mutate.map((m) => m()));
     }
@@ -167,7 +167,7 @@ export function ObjectActions({
   }
 
   async function handleMoveDownInFavorites() {
-    await moveDownInPinned(space.id, objectId, pinSuffixForView);
+    await moveDownInPinned(space?.id, objectId, pinSuffixForView);
     if (mutate) {
       await Promise.all(mutate.map((m) => m()));
     }
@@ -180,9 +180,9 @@ export function ObjectActions({
 
   async function handlePin() {
     if (isPinned) {
-      await removePinned(space.id, objectId, pinSuffixForView, title, getContextLabel());
+      await removePinned(space?.id, objectId, pinSuffixForView, title, getContextLabel());
     } else {
-      await addPinned(space.id, objectId, pinSuffixForView, title, getContextLabel());
+      await addPinned(space?.id, objectId, pinSuffixForView, title, getContextLabel());
     }
     if (mutate) {
       await Promise.all(mutate.map((m) => m()));
@@ -218,7 +218,7 @@ export function ObjectActions({
   //! Member management not enabled yet
   //   async function handleApproveMember(identity: string, name: string, role: UpdateMemberRole) {
   //     try {
-  //       await updateMember(space.id, identity, { status: MemberStatus.Active, role });
+  //       await updateMember(space?.id, identity, { status: MemberStatus.Active, role });
   //       if (mutate) {
   //         for (const m of mutate) {
   //           await m();
@@ -243,7 +243,7 @@ export function ObjectActions({
 
   //     if (confirm) {
   //       try {
-  //         await updateMember(space.id, identity, { status: MemberStatus.Declined });
+  //         await updateMember(space?.id, identity, { status: MemberStatus.Declined });
   //         if (mutate) {
   //           for (const m of mutate) {
   //             await m();
@@ -269,7 +269,7 @@ export function ObjectActions({
 
   //     if (confirm) {
   //       try {
-  //         await updateMember(space.id, identity, { status: MemberStatus.Removed });
+  //         await updateMember(space?.id, identity, { status: MemberStatus.Removed });
   //         if (mutate) {
   //           for (const m of mutate) {
   //             await m();
@@ -288,7 +288,7 @@ export function ObjectActions({
 
   //   async function handleChangeMemberRole(identity: string, name: string, role: UpdateMemberRole) {
   //     try {
-  //       await updateMember(space.id, identity, { status: MemberStatus.Active, role });
+  //       await updateMember(space?.id, identity, { status: MemberStatus.Active, role });
   //       if (mutate) {
   //         for (const m of mutate) {
   //           await m();
@@ -387,10 +387,10 @@ export function ObjectActions({
             title={"Edit Object"}
             shortcut={Keyboard.Shortcut.Common.Edit}
             onAction={async () => {
-              const { object } = await getRawObject(space.id, objectId, BodyFormat.Markdown);
+              const { object } = await getRawObject(space?.id, objectId, BodyFormat.Markdown);
               push(
                 <UpdateObjectForm
-                  spaceId={space.id}
+                  spaceId={space?.id}
                   object={object}
                   mutateObjects={mutate as MutatePromise<SpaceObject[]>[]}
                   mutateObject={mutateObject}
@@ -405,8 +405,8 @@ export function ObjectActions({
             title={"Edit Type"}
             shortcut={Keyboard.Shortcut.Common.Edit}
             onAction={async () => {
-              const { type } = await getRawType(space.id, objectId);
-              push(<UpdateTypeForm spaceId={space.id} type={type} mutateTypes={mutate as MutatePromise<Type[]>[]} />);
+              const { type } = await getRawType(space?.id, objectId);
+              push(<UpdateTypeForm spaceId={space?.id} type={type} mutateTypes={mutate as MutatePromise<Type[]>[]} />);
             }}
           />
         )}
@@ -417,7 +417,7 @@ export function ObjectActions({
             shortcut={Keyboard.Shortcut.Common.Edit}
             target={
               <UpdatePropertyForm
-                spaceId={space.id}
+                spaceId={space?.id}
                 property={object as Property}
                 mutateProperties={mutate as MutatePromise<Property[]>[]}
               />
@@ -433,9 +433,9 @@ export function ObjectActions({
         )}
         {!isType && !isProperty && !isMember && (
           <>
-            <ListSubmenu spaceId={space.id} objectId={objectId} />
+            <ListSubmenu spaceId={space?.id} objectId={objectId} />
             <TagSubmenu
-              spaceId={space.id}
+              spaceId={space?.id}
               object={object as SpaceObject | SpaceObjectWithBody}
               mutate={mutate}
               mutateObject={mutateObject}
@@ -460,13 +460,13 @@ export function ObjectActions({
               <>
                 <Action
                   icon={Icon.ArrowUp}
-                  title="Move Up in Pinned" // eslint-disable-line @raycast/prefer-title-case
+                  title="Move Up in Pinned"
                   shortcut={{ modifiers: ["opt", "cmd"], key: "arrowUp" }}
                   onAction={handleMoveUpInFavorites}
                 />
                 <Action
                   icon={Icon.ArrowDown}
-                  title="Move Down in Pinned" // eslint-disable-line @raycast/prefer-title-case
+                  title="Move Down in Pinned"
                   shortcut={{ modifiers: ["opt", "cmd"], key: "arrowDown" }}
                   onAction={handleMoveDownInFavorites}
                 />
@@ -493,11 +493,11 @@ export function ObjectActions({
             shortcut={Keyboard.Shortcut.Common.New}
             onAction={() => {
               if (isType) {
-                push(<CreateTypeForm draftValues={{ spaceId: space.id, name: searchText }} enableDrafts={false} />);
+                push(<CreateTypeForm draftValues={{ spaceId: space?.id, name: searchText }} enableDrafts={false} />);
               } else if (isProperty) {
-                push(<CreatePropertyForm spaceId={space.id} draftValues={{ name: searchText || "" }} />);
+                push(<CreatePropertyForm spaceId={space?.id} draftValues={{ name: searchText || "" }} />);
               } else {
-                push(<CreateObjectForm draftValues={{ spaceId: space.id, name: searchText }} enableDrafts={false} />);
+                push(<CreateObjectForm draftValues={{ spaceId: space?.id, name: searchText }} enableDrafts={false} />);
               }
             }}
           />

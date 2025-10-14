@@ -23,6 +23,7 @@ vi.mock("@raycast/api", () => ({
 vi.mock("../../utils", () => ({
   bundledPropKeys: { source: "source" },
   propKeys: { tag: "tag" },
+  linkedItemsMax: 10,
   getIconWithFallback: vi.fn(),
   getNameWithFallback: vi.fn((name: string) => name?.trim() || "Untitled"),
   getNameWithSnippetFallback: vi.fn((name: string, snippet: string) => {

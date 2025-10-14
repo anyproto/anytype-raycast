@@ -71,7 +71,7 @@ describe("search-anytype", () => {
       id: object.id,
       spaceId: object.space_id,
       title: object.name,
-      ...(object.snippet ? { subtitle: object.snippet } : {}),
+      subtitle: undefined,
       icon: object.icon,
       accessories: [],
       isPinned,

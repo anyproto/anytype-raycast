@@ -80,7 +80,7 @@ describe("AddToList", () => {
       setValidationError: vi.fn(),
       reset: vi.fn(),
       focus: vi.fn(),
-    } as ReturnType<typeof useForm<AddToListValues>>);
+    });
   });
 
   describe("form validation", () => {

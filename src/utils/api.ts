@@ -43,7 +43,7 @@ export async function apiFetch<T>(url: string, options: FetchOptions): Promise<A
         payload: json,
         headers: response.headers,
       };
-    } catch (jsonError) {
+    } catch {
       throw new Error("Failed to parse JSON response");
     }
   } catch (error) {

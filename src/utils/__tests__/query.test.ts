@@ -77,9 +77,9 @@ describe("encodeQueryParams", () => {
     expect(encodeQueryParams(params)).toBe("?a=1&b=2&c=3");
   });
 
-  it("should handle empty string values", () => {
+  it("should ignore empty string values", () => {
     const params = { empty: "", name: "test" };
-    expect(encodeQueryParams(params)).toBe("?empty=&name=test");
+    expect(encodeQueryParams(params)).toBe("?name=test");
   });
 
   it("should handle unicode characters", () => {

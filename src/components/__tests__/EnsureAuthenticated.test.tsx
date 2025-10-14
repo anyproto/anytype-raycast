@@ -117,7 +117,7 @@ describe("EnsureAuthenticated authentication logic", () => {
       await act(async () => {
         try {
           await createChallenge({ app_name: "Raycast for Anytype" });
-        } catch (e) {
+        } catch {
           // In the real component, this would show an error toast
           await showToast({
             style: Toast.Style.Failure,
@@ -227,7 +227,7 @@ describe("EnsureAuthenticated authentication logic", () => {
       await act(async () => {
         try {
           await migrateAuthKey();
-        } catch (e) {
+        } catch {
           // Should continue execution
         }
       });
@@ -244,7 +244,7 @@ describe("EnsureAuthenticated authentication logic", () => {
       await act(async () => {
         try {
           isValid = await checkApiTokenValidity();
-        } catch (e) {
+        } catch {
           isValid = false;
         }
       });

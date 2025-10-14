@@ -68,10 +68,10 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     setListSearchText,
     objectSearchText,
     setObjectSearchText,
-    isLoading,
+    isLoadingData,
   } = useCreateObjectData(draftValues);
 
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [typeKeysForLists, setTypeKeysForLists] = useState<string[]>([]);
 
   const selectedTypeDef = types.find((type) => type.id === selectedTypeId);
@@ -101,7 +101,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
   const { handleSubmit, itemProps } = useForm<CreateObjectFormValues>({
     initialValues: draftValues,
     onSubmit: async (values) => {
-      setLoading(true);
+      setIsLoading(true);
       try {
         await showToast({ style: Toast.Style.Animated, title: "Creating object..." });
         const propertiesEntries: PropertyLinkWithValue[] = [];
@@ -200,7 +200,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
       } catch (error) {
         await showFailureToast(error, { title: "Failed to create object" });
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     },
     validation: {
@@ -265,7 +265,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
   return (
     <Form
       navigationTitle="Create Object"
-      isLoading={loading || isLoading}
+      isLoading={isLoading || isLoadingData}
       enableDrafts={enableDrafts}
       actions={
         <ActionPanel>
@@ -295,7 +295,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
         placeholder="Search spaces..."
         info="Select the space where the object will be created"
       >
-        {spaces?.map((space) => (
+        {spaces.map((space) => (
           <Form.Dropdown.Item key={space.id} value={space.id} title={space.name} icon={space.icon} />
         ))}
       </Form.Dropdown>

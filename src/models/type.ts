@@ -23,7 +23,7 @@ export interface CreateTypeRequest {
   key?: string;
   name: string;
   plural_name: string;
-  icon: ObjectIcon;
+  icon: ObjectIcon | null;
   layout: TypeLayout;
   properties: PropertyLink[];
 }

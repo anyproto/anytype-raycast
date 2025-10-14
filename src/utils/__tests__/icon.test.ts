@@ -1,6 +1,6 @@
 import { Icon, Image } from "@raycast/api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { IconFormat, ObjectIcon, ObjectLayout, RawType } from "../../models";
+import { IconFormat, IconName, ObjectIcon, ObjectLayout, RawType } from "../../models";
 import { fetchWithTimeout, getCustomTypeIcon, getFile, getIconWithFallback, getMaskForObject } from "../icon";
 
 // Mock node-fetch
@@ -12,7 +12,7 @@ import fetch from "node-fetch";
 
 describe("getCustomTypeIcon", () => {
   it("should return icon with color tint", () => {
-    const icon = getCustomTypeIcon("document", "blue");
+    const icon = getCustomTypeIcon(IconName.Document, "blue");
     expect(icon).toEqual({
       source: "icons/type/document.svg",
       tintColor: {
@@ -23,7 +23,7 @@ describe("getCustomTypeIcon", () => {
   });
 
   it("should use grey color when no color is specified", () => {
-    const icon = getCustomTypeIcon("layers");
+    const icon = getCustomTypeIcon(IconName.Layers);
     expect(icon).toEqual({
       source: "icons/type/layers.svg",
       tintColor: {
@@ -34,7 +34,7 @@ describe("getCustomTypeIcon", () => {
   });
 
   it("should use grey color when undefined color is passed", () => {
-    const icon = getCustomTypeIcon("checkbox", undefined);
+    const icon = getCustomTypeIcon(IconName.Checkbox, undefined);
     expect(icon).toEqual({
       source: "icons/type/checkbox.svg",
       tintColor: {
@@ -46,14 +46,14 @@ describe("getCustomTypeIcon", () => {
 
   it("should handle different icon names", () => {
     const testCases = [
-      { name: "person", color: "red", expectedColor: "#f55522" },
-      { name: "bookmark", color: "lime", expectedColor: "#5dd400" },
-      { name: "extension-puzzle", color: "yellow", expectedColor: "#ecd91b" },
-      { name: "copy", color: "purple", expectedColor: "#ab50cc" },
+      { name: IconName.Person, color: "red", expectedColor: "#f55522" },
+      { name: IconName.Bookmark, color: "lime", expectedColor: "#5dd400" },
+      { name: IconName.ExtensionPuzzle, color: "yellow", expectedColor: "#ecd91b" },
+      { name: IconName.Copy, color: "purple", expectedColor: "#ab50cc" },
     ];
 
     testCases.forEach(({ name, color, expectedColor }) => {
-      const icon = getCustomTypeIcon(name, color);
+      const icon = getCustomTypeIcon(name as IconName, color);
       expect(icon).toEqual({
         source: `icons/type/${name}.svg`,
         tintColor: {
@@ -65,7 +65,7 @@ describe("getCustomTypeIcon", () => {
   });
 
   it("should handle unknown colors by falling back to grey", () => {
-    const icon = getCustomTypeIcon("document", "unknown-color");
+    const icon = getCustomTypeIcon(IconName.Document, "unknown-color");
     expect(icon).toEqual({
       source: "icons/type/document.svg",
       tintColor: {
@@ -138,7 +138,7 @@ describe("getIconWithFallback", () => {
   it("should return custom type icon when format is Icon", async () => {
     const icon: ObjectIcon = {
       format: IconFormat.Icon,
-      name: "document",
+      name: IconName.Document,
       color: "blue",
     };
     const result = await getIconWithFallback(icon, ObjectLayout.Basic);
@@ -164,12 +164,12 @@ describe("getIconWithFallback", () => {
     const type: RawType = {
       icon: {
         format: IconFormat.Icon,
-        name: "layers",
+        name: IconName.Layers,
       },
     } as RawType;
     const result = await getIconWithFallback({} as ObjectIcon, ObjectLayout.Basic, type);
     expect(result).toEqual({
-      source: "icons/type/layers.svg",
+      source: `icons/type/${IconName.Layers}.svg`,
       tintColor: {
         light: "#b6b6b6",
         dark: "#b6b6b6",
@@ -180,7 +180,7 @@ describe("getIconWithFallback", () => {
   it("should fallback to layout-specific icon for Action layout", async () => {
     const result = await getIconWithFallback({} as ObjectIcon, ObjectLayout.Action);
     expect(result).toEqual({
-      source: "icons/type/checkbox.svg",
+      source: `icons/type/${IconName.Checkbox}.svg`,
       tintColor: {
         light: "#b6b6b6",
         dark: "#b6b6b6",
@@ -191,7 +191,7 @@ describe("getIconWithFallback", () => {
   it("should fallback to layout-specific icon for Set layout", async () => {
     const result = await getIconWithFallback({} as ObjectIcon, ObjectLayout.Set);
     expect(result).toEqual({
-      source: "icons/type/layers.svg",
+      source: `icons/type/${IconName.Layers}.svg`,
       tintColor: {
         light: "#b6b6b6",
         dark: "#b6b6b6",
@@ -202,7 +202,7 @@ describe("getIconWithFallback", () => {
   it("should fallback to layout-specific icon for Collection layout", async () => {
     const result = await getIconWithFallback({} as ObjectIcon, ObjectLayout.Collection);
     expect(result).toEqual({
-      source: "icons/type/layers.svg",
+      source: `icons/type/${IconName.Layers}.svg`,
       tintColor: {
         light: "#b6b6b6",
         dark: "#b6b6b6",
@@ -213,7 +213,7 @@ describe("getIconWithFallback", () => {
   it("should fallback to layout-specific icon for Participant layout", async () => {
     const result = await getIconWithFallback({} as ObjectIcon, ObjectLayout.Participant);
     expect(result).toEqual({
-      source: "icons/type/person.svg",
+      source: `icons/type/${IconName.Person}.svg`,
       tintColor: {
         light: "#b6b6b6",
         dark: "#b6b6b6",
@@ -224,7 +224,7 @@ describe("getIconWithFallback", () => {
   it("should fallback to layout-specific icon for Bookmark layout", async () => {
     const result = await getIconWithFallback({} as ObjectIcon, ObjectLayout.Bookmark);
     expect(result).toEqual({
-      source: "icons/type/bookmark.svg",
+      source: `icons/type/${IconName.Bookmark}.svg`,
       tintColor: {
         light: "#b6b6b6",
         dark: "#b6b6b6",
@@ -232,15 +232,32 @@ describe("getIconWithFallback", () => {
     });
   });
 
-  it("should fallback to BullsEye icon for space layout", async () => {
+  it("should fallback to space icon for space layout", async () => {
     const result = await getIconWithFallback({} as ObjectIcon, "space");
-    expect(result).toBe(Icon.BullsEye);
+    expect(result).toEqual({
+      source: `icons/space/space.svg`,
+      tintColor: {
+        light: "#b6b6b6",
+        dark: "#b6b6b6",
+      },
+    });
+  });
+
+  it("should fallback to chat icon for chat layout", async () => {
+    const result = await getIconWithFallback({} as ObjectIcon, "chat");
+    expect(result).toEqual({
+      source: `icons/space/chat.svg`,
+      tintColor: {
+        light: "#b6b6b6",
+        dark: "#b6b6b6",
+      },
+    });
   });
 
   it("should fallback to copy icon for template layout", async () => {
     const result = await getIconWithFallback({} as ObjectIcon, "template");
     expect(result).toEqual({
-      source: "icons/type/copy.svg",
+      source: `icons/type/${IconName.Copy}.svg`,
       tintColor: {
         light: "#b6b6b6",
         dark: "#b6b6b6",
@@ -251,7 +268,7 @@ describe("getIconWithFallback", () => {
   it("should fallback to extension-puzzle icon for type layout", async () => {
     const result = await getIconWithFallback({} as ObjectIcon, "type");
     expect(result).toEqual({
-      source: "icons/type/extension-puzzle.svg",
+      source: `icons/type/${IconName.ExtensionPuzzle}.svg`,
       tintColor: {
         light: "#b6b6b6",
         dark: "#b6b6b6",
@@ -262,7 +279,7 @@ describe("getIconWithFallback", () => {
   it("should fallback to document icon for unknown layout", async () => {
     const result = await getIconWithFallback({} as ObjectIcon, "unknown-layout");
     expect(result).toEqual({
-      source: "icons/type/document.svg",
+      source: `icons/type/${IconName.Document}.svg`,
       tintColor: {
         light: "#b6b6b6",
         dark: "#b6b6b6",

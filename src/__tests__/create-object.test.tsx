@@ -3,7 +3,7 @@ import { CreateObjectFormValues } from "../components";
 import { TEST_IDS } from "../test";
 
 interface LaunchContext {
-  defaults: {
+  defaults?: {
     space: string;
     type: string;
     template: string;
@@ -67,8 +67,9 @@ describe("create-object", () => {
       };
 
       // Simulate merging logic
-      const mergedValues = {
-        ...(launchContext?.defaults || {}),
+      const defaults: Record<string, unknown> = (launchContext as unknown as LaunchContext | null)?.defaults || {};
+      const mergedValues: Record<string, unknown> = {
+        ...defaults,
         ...(draftValues || {}),
       };
 
@@ -108,8 +109,9 @@ describe("create-object", () => {
       const draftValues: Partial<CreateObjectFormValues> | undefined = undefined;
 
       // Simulate merging logic
+      const defaults = (launchContext as unknown as LaunchContext | null)?.defaults || {};
       const mergedValues = {
-        ...(launchContext?.defaults || {}),
+        ...defaults,
         ...(draftValues || {}),
       };
 

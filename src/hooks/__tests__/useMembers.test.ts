@@ -109,9 +109,10 @@ describe("useMembers", () => {
 
     expect(mockUseCachedPromise).toHaveBeenCalledWith(
       expect.any(Function),
-      [""],
+      ["", undefined],
       expect.objectContaining({
         execute: false,
+        keepPreviousData: true,
       }),
     );
   });
@@ -123,9 +124,10 @@ describe("useMembers", () => {
 
     expect(mockUseCachedPromise).toHaveBeenCalledWith(
       expect.any(Function),
-      [spaceId],
+      [spaceId, undefined],
       expect.objectContaining({
         keepPreviousData: true,
+        execute: true,
       }),
     );
   });

@@ -724,19 +724,19 @@
       "type": "dropdown",
       "data": [
         {
+          "title": "25",
+          "value": "25"
+        },
+        {
           "title": "50",
           "value": "50"
         },
         {
           "title": "100",
           "value": "100"
-        },
-        {
-          "title": "200",
-          "value": "200"
         }
       ],
-      "default": "100",
+      "default": "50",
       "required": false
     },
     {
@@ -777,11 +777,14 @@
     "@raycast/api": "^1.103.3",
     "@raycast/utils": "^2.2.1",
     "date-fns": "^4.1.0",
+    "remove-markdown": "^0.6.2",
     "emoji-regex": "^10.6.0",
     "lodash": "^4.17.21",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.37.0",
     "@raycast/eslint-config": "^2.1.1",
     "@testing-library/react": "^16.3.0",
     "@types/lodash": "^4.17.20",
@@ -803,6 +806,8 @@
     "dev": "ray develop",
     "lint": "ray lint",
     "lint:fix": "ray lint --fix",
+    "format": "prettier --write",
+    "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",

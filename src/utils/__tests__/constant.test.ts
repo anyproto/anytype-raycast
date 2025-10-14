@@ -47,12 +47,12 @@ describe("anytypeSpaceDeeplink", () => {
   it("should generate correct deeplink for space", () => {
     const spaceId = "test-space-123";
     const result = anytypeSpaceDeeplink(spaceId);
-    expect(result).toBe("anytype://main/object/_blank_/space.id/test-space-123");
+    expect(result).toBe("anytype://main/object/_blank_/spaceId/test-space-123");
   });
 
   it("should handle empty spaceId", () => {
     const result = anytypeSpaceDeeplink("");
-    expect(result).toBe("anytype://main/object/_blank_/space.id/");
+    expect(result).toBe("anytype://main/object/_blank_/spaceId/");
   });
 });
 

@@ -96,8 +96,9 @@ describe("ObjectListItem", () => {
     });
 
     it("should handle empty accessories", () => {
-      const accessories: Array<{ text?: string; icon?: unknown; tooltip?: string }> | undefined = undefined;
-      const mapped = accessories?.map(() => ({})) || [];
+      type AccessoryItem = { text?: string; icon?: Image.ImageLike; tooltip?: string; date?: Date; tag?: unknown };
+      const accessories: Array<AccessoryItem> | undefined = undefined;
+      const mapped: Array<Record<string, never>> = (accessories ?? []).map(() => ({}));
 
       expect(mapped).toEqual([]);
     });
@@ -140,9 +141,14 @@ describe("ObjectListItem", () => {
     });
 
     it("should handle undefined subtitle", () => {
-      const subtitle: { value: string; tooltip: string } | undefined = undefined;
+      type Subtitle = { value: string; tooltip: string };
+      const subtitle: Subtitle | undefined = undefined;
 
-      const result = subtitle ? { value: subtitle.value, tooltip: subtitle.tooltip } : undefined;
+      let result: Subtitle | undefined = undefined;
+      if (subtitle !== undefined) {
+        const sub = subtitle as Subtitle;
+        result = { value: sub.value, tooltip: sub.tooltip };
+      }
 
       expect(result).toBeUndefined();
     });
