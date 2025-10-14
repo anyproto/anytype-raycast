@@ -778,7 +778,6 @@
     "@raycast/utils": "^2.2.1",
     "date-fns": "^4.1.0",
     "emoji-regex": "^10.5.0",
-    "lodash": "^4.17.21",
     "node-fetch": "^3.3.2",
     "remove-markdown": "^0.6.2"
   },
