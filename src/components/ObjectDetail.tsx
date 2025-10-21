@@ -323,7 +323,14 @@ export function ObjectDetail({
             {property.objects.map((objectItem, index) => {
               const handleAction = () => {
                 if (objectItem.layout === ObjectLayout.Collection || objectItem.layout === ObjectLayout.Set) {
-                  push(<CollectionList space={space} listId={objectItem.id} listName={objectItem.name} />);
+                  push(
+                    <CollectionList
+                      space={space}
+                      listId={objectItem.id}
+                      listName={objectItem.name}
+                      listLayout={objectItem.layout}
+                    />,
+                  );
                 } else {
                   push(
                     <ObjectDetail

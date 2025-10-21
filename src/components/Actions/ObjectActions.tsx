@@ -28,7 +28,7 @@ import {
   UpdateTypeForm,
   ViewType,
 } from "..";
-import { deleteObject, deleteProperty, deleteType, getRawObject, getRawType } from "../../api";
+import { deleteObject, deleteProperty, deleteType, getRawObject, getRawType, removeObjectsFromList } from "../../api";
 import {
   BodyFormat,
   Member,
@@ -68,6 +68,9 @@ type ObjectActionsProps = {
   shouldShowSidebar?: boolean;
   onToggleSidebar?: () => void;
   searchText?: string;
+  listId?: string;
+  listName?: string;
+  listLayout?: ObjectLayout;
 };
 
 export function ObjectActions({
@@ -87,6 +90,9 @@ export function ObjectActions({
   shouldShowSidebar,
   onToggleSidebar,
   searchText,
+  listId,
+  listName,
+  listLayout,
 }: ObjectActionsProps) {
   const { pop, push } = useNavigation();
   const { primaryAction } = getPreferenceValues();
@@ -150,6 +156,38 @@ export function ObjectActions({
         });
       } catch (error) {
         await showFailureToast(error, { title: `Failed to delete ${getContextLabel()}` });
+      }
+    }
+  }
+
+  async function handleRemoveFromList() {
+    if (!listId || !listName) return;
+
+    const confirm = await confirmAlert({
+      title: `Remove from ${listName}`,
+      message: `Are you sure you want to remove "${title}" from ${listName}?`,
+      icon: { source: Icon.XMarkTopRightSquare, tintColor: Color.Orange },
+    });
+
+    if (confirm) {
+      try {
+        await removeObjectsFromList(space?.id, listId, [objectId]);
+        if (mutate) {
+          await Promise.all(mutate.map((m) => m()));
+        }
+        if (mutateObject) {
+          await mutateObject();
+        }
+        if (mutateViews) {
+          await mutateViews();
+        }
+        await showToast({
+          style: Toast.Style.Success,
+          title: "Removed from list",
+          message: `"${title}" has been removed from ${listName}.`,
+        });
+      } catch (error) {
+        await showFailureToast(error, { title: `Failed to remove from ${listName}` });
       }
     }
   }
@@ -344,7 +382,7 @@ export function ObjectActions({
           <Action.Push
             icon={Icon.List}
             title="Show List"
-            target={<CollectionList space={space} listId={objectId} listName={title} />}
+            target={<CollectionList space={space} listId={objectId} listName={title} listLayout={layout} />}
           />
         )}
         {isType && (
@@ -473,6 +511,14 @@ export function ObjectActions({
               </>
             )}
           </>
+        )}
+        {listId && listName && !isMember && listLayout !== ObjectLayout.Set && (
+          <Action
+            icon={Icon.XMarkTopRightSquare}
+            title={`Remove from ${listName}`}
+            style={Action.Style.Destructive}
+            onAction={handleRemoveFromList}
+          />
         )}
         {!isMember && (
           <Action
