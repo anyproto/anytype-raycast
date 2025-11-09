@@ -97,11 +97,11 @@ export function CreateTypeForm({ draftValues, enableDrafts }: CreateTypeFormProp
     >
       <Form.Dropdown
         {...itemProps.spaceId}
-        title="Space"
+        title="Channel"
         onChange={setSelectedSpace}
         value={selectedSpaceId}
-        placeholder="Search spaces..."
-        info="Select the space where the type will be created"
+        placeholder="Search channels..."
+        info="Select the channel where the type will be created"
       >
         {spaces.map((space) => (
           <Form.Dropdown.Item key={space.id} value={space.id} title={space.name} icon={space.icon} />

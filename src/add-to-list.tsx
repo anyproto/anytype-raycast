@@ -99,8 +99,8 @@ export function AddToList() {
         {...itemProps.spaceId}
         title="Space"
         storeValue={true}
-        placeholder="Search spaces..."
-        info="The space containing the list"
+        placeholder="Search channels..."
+        info="The channel containing the list"
       >
         {spaces.map((space) => (
           <Form.Dropdown.Item key={space.id} value={space.id} title={space.name} icon={space.icon} />
