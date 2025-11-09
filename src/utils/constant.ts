@@ -4,7 +4,7 @@ import { BodyFormat } from "../models";
 import { encodeQueryParams } from "./query";
 
 // Strings
-export const apiAppName = "raycast_v4_0525";
+export const apiAppName = "raycast_v5_1125";
 export const anytypeNetwork = "N83gJpVd9MuNRZAuJLZ7LiMntTThhPc6DtzWWVjb1M3PouVU";
 export const errorConnectionMessage = "Can't connect to API. Please ensure Anytype is running and reachable.";
 
@@ -16,7 +16,7 @@ export const anytypeObjectDeeplink = (spaceId: string, objectId: string) =>
   `anytype://object?spaceId=${spaceId}&objectId=${objectId}`;
 
 // Numbers
-export const currentApiVersion = "2025-05-20";
+export const currentApiVersion = "2025-11-08";
 export const apiLimit = getPreferenceValues().limit;
 export const apiLimitMax = 1000;
 export const iconWidth = 64;
