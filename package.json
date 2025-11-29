@@ -774,26 +774,26 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.103.6",
-    "@raycast/utils": "^2.2.2",
-    "date-fns": "^4.1.0",
-    "emoji-regex": "^10.6.0",
-    "node-fetch": "^3.3.2",
-    "remove-markdown": "^0.6.2"
+    "@raycast/api": "1.103.9",
+    "@raycast/utils": "2.2.2",
+    "date-fns": "4.1.0",
+    "emoji-regex": "10.6.0",
+    "node-fetch": "3.3.2",
+    "remove-markdown": "0.6.2"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
-    "@eslint/js": "^9.39.1",
-    "@raycast/eslint-config": "^2.1.1",
-    "@types/lodash": "^4.17.20",
-    "@types/node": "^22.16.5",
-    "@types/react": "19.2.2",
-    "eslint": "^9.39.1",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.2.6",
-    "prettier": "^3.6.2",
-    "prettier-plugin-organize-imports": "^4.3.0",
-    "typescript": "^5.9.3"
+    "@eslint/eslintrc": "3.3.3",
+    "@eslint/js": "9.39.1",
+    "@raycast/eslint-config": "2.1.1",
+    "@types/lodash": "4.17.21",
+    "@types/node": "22.16.5",
+    "@types/react": "19.2.7",
+    "eslint": "9.39.1",
+    "husky": "9.1.7",
+    "lint-staged": "16.2.7",
+    "prettier": "3.7.3",
+    "prettier-plugin-organize-imports": "4.3.0",
+    "typescript": "5.9.3"
   },
   "scripts": {
     "build": "ray build",
