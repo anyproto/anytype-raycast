@@ -16,7 +16,7 @@ import {
   processObject,
 } from "./utils";
 
-const searchBarPlaceholder = "Globally search objects across spaces...";
+const searchBarPlaceholder = "Globally search objects across channels...";
 
 export default function Command() {
   return (

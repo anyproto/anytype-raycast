@@ -97,7 +97,7 @@ export function AddToList() {
     >
       <Form.Dropdown
         {...itemProps.spaceId}
-        title="Space"
+        title="Channel"
         storeValue={true}
         placeholder="Search channels..."
         info="The channel containing the list"

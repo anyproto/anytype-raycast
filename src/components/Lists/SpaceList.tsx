@@ -134,8 +134,8 @@ export function SpaceList({ searchPlaceholder }: SpacesListProps) {
       )}
       {regularFiltered.length > 0 ? (
         <List.Section
-          title={searchText ? "Search Results" : "All Spaces"}
-          subtitle={pluralize(regularFiltered.length, "space", { withNumber: true })}
+          title={searchText ? "Search Results" : "All Channels"}
+          subtitle={pluralize(regularFiltered.length, "channel", { withNumber: true })}
         >
           {regularFiltered.map((space) => {
             const memberCount = membersData[space.id] || 0;
