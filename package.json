@@ -21,17 +21,17 @@
       "mode": "view"
     },
     {
-      "name": "browse-spaces",
-      "title": "Browse Spaces",
+      "name": "browse-channels",
+      "title": "Browse Channels",
       "subtitle": "Anytype",
-      "description": "Browse your spaces one by one.",
+      "description": "Browse your channels one by one.",
       "mode": "view"
     },
     {
       "name": "search-anytype",
       "title": "Search Anytype",
       "subtitle": "Anytype",
-      "description": "Search objects globally in all spaces.",
+      "description": "Search objects globally in all channels.",
       "mode": "view"
     },
     {

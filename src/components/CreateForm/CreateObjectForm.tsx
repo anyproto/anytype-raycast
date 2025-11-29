@@ -281,7 +281,7 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
     >
       <Form.Dropdown
         id="spaceId"
-        title="Space"
+        title="Channel"
         value={selectedSpaceId}
         onChange={(v) => {
           setSelectedSpaceId(v);
@@ -292,8 +292,8 @@ export function CreateObjectForm({ draftValues, enableDrafts }: CreateObjectForm
           setObjectSearchText("");
         }}
         storeValue={true}
-        placeholder="Search spaces..."
-        info="Select the space where the object will be created"
+        placeholder="Search channels..."
+        info="Select the channel where the object will be created"
       >
         {spaces.map((space) => (
           <Form.Dropdown.Item key={space.id} value={space.id} title={space.name} icon={space.icon} />
