@@ -2,7 +2,7 @@
 
 ## [Bug Fixes & Dependency Updates] - {PR_MERGE_DATE}
 
-- Fix object property dropdowns in create form interfering with each other's search results
+- Fix object property dropdowns interfering with each other's search results in create and update forms
 - Update dependencies to latest versions
 
 ## [Terminology Updates & Enhancements] - 2025-12-15

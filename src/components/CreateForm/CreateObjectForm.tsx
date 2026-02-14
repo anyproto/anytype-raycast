@@ -3,7 +3,7 @@ import { showFailureToast, useForm } from "@raycast/utils";
 import { formatRFC3339 } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { addObjectsToList, createObject } from "../../api";
-import { useCreateObjectData, useMembers, useSearch, useTagsMap } from "../../hooks";
+import { useCreateObjectData, useTagsMap } from "../../hooks";
 import {
   AddObjectsToListRequest,
   CreateObjectRequest,
@@ -19,8 +19,8 @@ import {
   fetchTypeKeysForLists,
   getNumberFieldValidations,
   isEmoji,
-  memberMatchesSearch,
 } from "../../utils";
+import { ObjectPropertyDropdown } from "../ObjectPropertyDropdown";
 
 export interface CreateObjectFormValues {
   spaceId?: string;
@@ -43,62 +43,6 @@ export interface CreateObjectFormValues {
    * - "checkbox"         -> boolean
    */
   [key: string]: PropertyFieldValue;
-}
-
-interface ObjectPropertyDropdownProps {
-  propertyKey: string;
-  title: string;
-  value: string;
-  spaceId: string;
-  spaceName: string;
-  restItemProps: Record<string, unknown>;
-}
-
-function ObjectPropertyDropdown({
-  propertyKey,
-  title,
-  value,
-  spaceId,
-  spaceName,
-  restItemProps,
-}: ObjectPropertyDropdownProps) {
-  const [searchText, setSearchText] = useState("");
-
-  const { objects: searchObjects } = useSearch(spaceId, searchText, []);
-  const { members } = useMembers(spaceId, searchText);
-
-  const filteredMembers = useMemo(() => {
-    return members.filter((member) => memberMatchesSearch(member, searchText));
-  }, [members, searchText]);
-
-  const objects = useMemo(() => {
-    return [...(searchObjects || []), ...filteredMembers];
-  }, [searchObjects, filteredMembers]);
-
-  return (
-    <Form.Dropdown
-      {...restItemProps}
-      id={propertyKey}
-      key={propertyKey}
-      title={title}
-      value={value}
-      onSearchTextChange={setSearchText}
-      throttle={true}
-      placeholder={`Search objects in '${spaceName}'...`}
-    >
-      {!searchText.trim() && (
-        <Form.Dropdown.Item
-          key="none"
-          value=""
-          title="No Object"
-          icon={{ source: "icons/type/document.svg", tintColor: defaultTintColor }}
-        />
-      )}
-      {objects.map((object) => (
-        <Form.Dropdown.Item key={object.id} value={object.id} title={object.name} icon={object.icon} />
-      ))}
-    </Form.Dropdown>
-  );
 }
 
 interface CreateObjectFormProps {
