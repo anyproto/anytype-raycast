@@ -671,12 +671,9 @@
     {
       "name": "anytypeApp",
       "title": "Anytype App",
-      "description": "The Anytype desktop application.",
+      "description": "The Anytype app on your Mac.",
       "type": "appPicker",
-      "default": {
-        "macOS": "com.anytype.anytype",
-        "Windows": "~\\AppData\\Local\\Programs\\anytype\\Anytype.exe"
-      },
+      "default": "com.anytype.anytype",
       "required": false
     },
     {
@@ -820,7 +817,6 @@
     ]
   },
   "platforms": [
-    "macOS",
-    "Windows"
+    "macOS"
   ]
 }

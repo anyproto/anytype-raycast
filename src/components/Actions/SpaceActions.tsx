@@ -98,10 +98,7 @@ export function SpaceActions({ space, mutate, isPinned, searchText }: SpaceActio
       <Action
         icon={isPinned ? Icon.StarDisabled : Icon.Star}
         title={isPinned ? "Unpin Space" : "Pin Space"}
-        shortcut={{
-          macOS: { modifiers: ["cmd", "shift"], key: "f" },
-          Windows: { modifiers: ["ctrl", "shift"], key: "f" },
-        }}
+        shortcut={{ modifiers: ["cmd", "shift"], key: "f" }}
         onAction={handlePin}
       />
       {isPinned && (
@@ -109,19 +106,13 @@ export function SpaceActions({ space, mutate, isPinned, searchText }: SpaceActio
           <Action
             icon={Icon.ArrowUp}
             title="Move Up in Pinned"
-            shortcut={{
-              macOS: { modifiers: ["opt", "cmd"], key: "arrowUp" },
-              Windows: { modifiers: ["alt", "ctrl"], key: "arrowUp" },
-            }}
+            shortcut={{ modifiers: ["opt", "cmd"], key: "arrowUp" }}
             onAction={handleMoveUpInFavorites}
           />
           <Action
             icon={Icon.ArrowDown}
             title="Move Down in Pinned"
-            shortcut={{
-              macOS: { modifiers: ["opt", "cmd"], key: "arrowDown" },
-              Windows: { modifiers: ["alt", "ctrl"], key: "arrowDown" },
-            }}
+            shortcut={{ modifiers: ["opt", "cmd"], key: "arrowDown" }}
             onAction={handleMoveDownInFavorites}
           />
         </>

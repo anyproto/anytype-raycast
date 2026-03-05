@@ -133,10 +133,7 @@ export function TagSubmenu({ spaceId, object, mutate, mutateObject }: TagSubmenu
       <ActionPanel.Submenu
         title="Add Tag"
         icon={Icon.Tag}
-        shortcut={{
-          macOS: { modifiers: ["cmd", "shift"], key: "t" },
-          Windows: { modifiers: ["ctrl", "shift"], key: "t" },
-        }}
+        shortcut={{ modifiers: ["cmd", "shift"], key: "t" }}
         isLoading={isLoadingProperties || isLoadingTags}
         onOpen={() => {
           setIsOpen(true);
@@ -172,10 +169,7 @@ export function TagSubmenu({ spaceId, object, mutate, mutateObject }: TagSubmenu
         <ActionPanel.Submenu
           title="Remove Tag"
           icon={Icon.Tag}
-          shortcut={{
-            macOS: { modifiers: ["ctrl", "shift"], key: "t" },
-            Windows: { modifiers: ["alt", "shift"], key: "t" },
-          }}
+          shortcut={{ modifiers: ["ctrl", "shift"], key: "t" }}
           isLoading={isLoadingProperties || isLoadingTags}
         >
           {currentTags.map((tag: Tag) => (
