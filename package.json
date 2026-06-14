@@ -782,7 +782,7 @@
   "dependencies": {
     "@raycast/api": "1.104.6",
     "@raycast/utils": "2.2.2",
-    "date-fns": "4.1.0",
+    "date-fns": "4.4.0",
     "emoji-regex": "10.6.0",
     "node-fetch": "3.3.2",
     "remove-markdown": "0.6.3"
@@ -799,7 +799,7 @@
     "lint-staged": "17.0.3",
     "prettier": "3.8.1",
     "prettier-plugin-organize-imports": "4.3.0",
-    "typescript": "5.9.3"
+    "typescript": "6.0.3"
   },
   "scripts": {
     "build": "ray build",
