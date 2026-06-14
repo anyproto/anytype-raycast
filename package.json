@@ -804,6 +804,7 @@
   "scripts": {
     "build": "ray build",
     "dev": "ray develop",
+    "dev:beta": "ray develop --target x",
     "lint": "ray lint",
     "lint:fix": "ray lint --fix",
     "format": "prettier --write .",
