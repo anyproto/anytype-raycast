@@ -781,7 +781,7 @@
   ],
   "dependencies": {
     "@raycast/api": "^1.104.24",
-    "@raycast/utils": "^1.19.1",
+    "@raycast/utils": "^2.2.7",
     "date-fns": "4.4.0",
     "emoji-regex": "10.6.0",
     "node-fetch": "3.3.2",
@@ -789,11 +789,11 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.6",
-    "@eslint/js": "9.39.5",
+    "@eslint/js": "10.0.1",
     "@raycast/eslint-config": "2.2.0",
     "@types/node": "22.20.1",
     "@types/react": "19.2.18",
-    "eslint": "9.39.5",
+    "eslint": "10.8.0",
     "husky": "9.1.7",
     "lint-staged": "17.3.0",
     "prettier": "3.9.6",
