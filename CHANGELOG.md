@@ -1,5 +1,9 @@
 # Anytype Changelog
 
+## [Dependency Updates] - 2026-10-04
+
+- Update Raycast API to v2 and use the latest publishing CLI
+
 ## [Dependency Updates] - 2026-10-03
 
 - Update utilities and extension dependencies while retaining Raycast API v1 compatibility
