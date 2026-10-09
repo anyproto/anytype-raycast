@@ -785,7 +785,7 @@
     "date-fns": "4.4.0",
     "emoji-regex": "11.0.0",
     "node-fetch": "3.3.2",
-    "remove-markdown": "0.7.1"
+    "remove-markdown": "0.8.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.7",
@@ -798,7 +798,7 @@
     "lint-staged": "17.6.0",
     "prettier": "3.9.9",
     "prettier-plugin-organize-imports": "^4.3.0",
-    "typescript": "6.0.3"
+    "typescript": "7.0.2"
   },
   "scripts": {
     "build": "ray build",
